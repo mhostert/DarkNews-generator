@@ -1,0 +1,271 @@
+#!/usr/bin/python3
+
+import os
+import os.path
+import sys
+import argparse
+
+import math
+import numpy as np
+
+
+# Dark Neutrino and MC stuff
+import DarkNews as dn
+from DarkNews import const
+from DarkNews.const import ConfigureLogger
+from DarkNews import logger, prettyprinter
+
+import logging
+
+
+def dn_gen(argv):
+    
+    '''
+        Default options
+        
+            Default case implements the 3+2 model of 
+                Ballett et al, Phys. Rev. D 101, 115025 (2020) (https://arxiv.org/abs/1903.07589)
+        
+    '''
+
+    # --------------
+    # User specified
+    # particle masses
+    parser = argparse.ArgumentParser(description="Generate dark nu events", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+
+    ##### dark sector spectrum
+    parser.add_argument("--mzprime", type=float, help="Z' mass", default=1.25)
+    parser.add_argument("--m4", type=float, help="mass of the fourth neutrino", default=0.140)
+    parser.add_argument("--m5", type=float, help="mass of the fifth neutrino", default=None)
+    parser.add_argument("--m6", type=float, help="mass of the sixth neutrino", default=None)
+
+    parser.add_argument("--D_or_M", help="D_or_M: dirac or majorana", choices=["dirac", "majorana"], default="majorana")
+
+
+    # neutral lepton mixing
+    parser.add_argument("--ue4", type=float, help="Ue4", default=0.0)
+    parser.add_argument("--ue5", type=float, help="Ue5", default=0.0)
+    parser.add_argument("--ue6", type=float, help="Ue6", default=0.0)
+
+    parser.add_argument("--umu4", type=float, help="Umu4", default=math.sqrt(1.5e-6 * 7/4))
+    parser.add_argument("--umu5", type=float, help="Umu5", default=math.sqrt(11.5e-6))
+    parser.add_argument("--umu6", type=float, help="Umu6", default=math.sqrt(0.0))
+
+    parser.add_argument("--utau4", type=float, help="Utau4", default=0)
+    parser.add_argument("--utau5", type=float, help="Utau5", default=0)
+    parser.add_argument("--utau6", type=float, help="Utau6", default=0)
+
+    parser.add_argument("--ud4", type=float, help="UD4", default=1.0)
+    parser.add_argument("--ud5", type=float, help="UD5", default= 1.0)
+    parser.add_argument("--ud6", type=float, help="UD6", default= 1.0)
+
+    # dark coupling choices
+    parser.add_argument("--gD", type=float, help="U(1)_d dark coupling", default=1.0)
+    parser.add_argument("--alphaD", type=float, help="U(1)_d  alpha_dark = (g_dark^2 /4 pi)")
+    # kinetic mixing options
+    parser.add_argument("--epsilon", type=float, help="epsilon^2", default = 1e-2)
+    parser.add_argument("--epsilon2", type=float, help="epsilon^2")
+    parser.add_argument("--alpha_epsilon2", type=float, help="alpha_QED*epsilon^2")
+    parser.add_argument("--chi", type=float, help="chi")
+
+    # experiments    
+    parser.add_argument("--exp", type=str.lower, help="experiment", choices=["minerva_le",
+                                                                            "minerva_me",
+                                                                            "miniboone",
+                                                                            "microboone"],
+                                                                            default="miniboone")
+
+    # scattering types
+    parser.add_argument("--nopelastic", help="do not generate proton elastic events", action="store_true")
+    parser.add_argument("--nocoh", help="do not generate coherent events", action="store_true")
+    parser.set_defaults(nopelastic=False)
+    parser.set_defaults(nocoh=False)
+    
+    parser.add_argument("--noHC", help="do not include helicity conserving events", action="store_true")
+    parser.add_argument("--noHF", help="do not include helicity flipping events", action="store_true")
+    parser.set_defaults(noHC=False)
+    parser.set_defaults(noHF=False)
+
+
+    ###########
+    # verbose
+    parser.add_argument("--log", help="Logging level", default="INFO", choices=['ERROR','WARNING','INFO','DEBUG'])
+    parser.add_argument("--verbose", help="Verbose for logging", action="store_true")
+    parser.set_defaults(verbose=False)
+    parser.add_argument("--logfile", help="Path to logfile. If not set, use std output.")
+
+
+    # Vegas parameters 
+    parser.add_argument("--neval", type=int, help="number of evaluations of integrand", default=int(1e4))
+    parser.add_argument("--nint", type=int, help="number of adaptive iterations", default=20)
+    parser.add_argument("--neval_warmup", type=int, help="number of evaluations of integrand in warmup", default=int(1e3))
+    parser.add_argument("--nint_warmup", type=int, help="number of adaptive iterations in warmup", default=10)
+
+    # program options
+    parser.add_argument("--pandas", help="If true, prints events in .npy files", action="store_true")
+    parser.set_defaults(pandas=True)
+    parser.add_argument("--numpy", help="If true, prints events in .npy files", action="store_true")
+    parser.set_defaults(numpy=False)
+    parser.add_argument("--hepevt", help="If true, unweigh events and print them in HEPEVT-formatted text files", action="store_true")
+    parser.set_defaults(hepevt=False)    
+    parser.add_argument("--hepevt_unweigh", help="unweigh events when printing in HEPEVT format (needs large statistics)", action="store_true")
+    parser.set_defaults(hepevt_unweigh=False)
+    parser.add_argument("--hepevt_events", type=int, help="number of events to accept in HEPEVT format", default=100)
+    
+    parser.add_argument("--summary_plots", help="generate summary plots of kinematics", action="store_false")
+    parser.add_argument("--path", help="path where to save run's outputs", default="")
+
+
+    args = parser.parse_args(argv)
+
+
+    numeric_level = getattr(logging, args.log.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise ValueError('Invalid log level: %s' % args.log)  
+    ConfigureLogger(logger, level=numeric_level, prettyprinter = prettyprinter, verbose=args.verbose)
+
+    ######################################
+    # run generator
+
+    prettyprinter.info(r"""
+    #########################################################
+    #   ______           _        _   _                     #
+    #   |  _  \         | |      | \ | |                    #
+    #   | | | |__ _ _ __| | __   |  \| | _____      _____   #
+    #   | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|  #
+    #   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \  #
+    #   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  #
+    #                                                       #
+    #########################################################
+    """)
+
+    ##########################
+    # path
+    path = args.path
+    use_default_path = True if path == "" else False
+
+    ##########################
+    # MC evaluations and iterations
+    dn.MC.NEVAL_warmup = args.neval_warmup
+    dn.MC.NINT_warmup = args.nint_warmup
+    dn.MC.NEVAL = args.neval
+    dn.MC.NINT  = args.nint
+
+    #########################
+    # Set BSM parameters
+    bsm_model = dn.model.create_model(args)
+
+
+    ####################################################
+    # Set the model to use
+
+    threeplusone = (args.m4 and not args.m5 and not args.m6) or (args.m5>1e5)
+    threeplustwo = (args.m4 and args.m5 and not args.m6) or (args.m6>1e5)
+    threeplusthree = (args.m4 and args.m5 and args.m6)
+
+    if threeplusone:
+        logger.info(f'Theory model used: 3+1 {args.D_or_M} HNL model\n\n')
+        MODEL = dn.const.THREEPLUSONE
+        upscattered_nus = [dn.pdg.neutrino4]
+        outgoing_nus =[dn.pdg.numu]
+
+        ### NAMING 
+        ## HEPEVT Event file name
+        PATH_data = f'data/{args.exp}/3plus1/m4_{args.m4:.4g}_mzprime_{args.mzprime:.4g}_{args.D_or_M}/'
+        PATH = f'plots/{args.exp}/3plus1/m4_{args.m4:.4g}_mzprime_{args.mzprime:.4g}_{args.D_or_M}/'
+        
+        # title for plots
+        power = int(math.log10(args.umu4**2))-1
+        title = r"$m_{4} = \,$"+str(round(args.m4,4))+r" GeV, $M_{Z^\prime} = \,$"+str(round(args.mzprime,4))+r" GeV, $|U_{D4}|^2=%1.1g$, $|U_{\mu 4}|^2=%1.1f \times 10^{-%i}$"%(args.ud4**2,args.umu4**2/10**(power),-power)
+    
+
+    elif threeplustwo:
+        logger.info(f'Theory model used: 3+2 {args.D_or_M} HNL model\n\n')
+        MODEL = dn.const.THREEPLUSTWO
+        ## FIXING 3+2 process chain to be numu --> N5 --> N4
+        upscattered_nus = [dn.pdg.neutrino5]
+        outgoing_nus =[dn.pdg.neutrino4]
+        # upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5]
+        # outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4]
+    
+        PATH_data = f'data/{args.exp}/3plus2/m5_{args.m5:.4g}_m4_{args.m4:.4g}_mzprime_{args.mzprime:.4g}_{bsm_model.HNLtype}/'
+        PATH = f'plots/{args.exp}/3plus2/m5_{args.m5:.4g}_m4_{args.m4:.4g}_mzprime_{args.mzprime:.4g}_{bsm_model.HNLtype}/'
+        title = fr"$m_{4} = \,${round(args.m4,4)}GeV, $m_{5} = \,${round(args.m5,4)}GeV, \
+                        $M_{{Z^\prime}} = \,${round(args.mzprime,4)} GeV, \
+                        $|U_{{D4}}|^2={dn.const.sci_notation(args.ud4**2)}$, $|U_{{\mu 4}}|^2={dn.const.sci_notation(args.umu4**2)}$, \
+                        $|U_{{D5}}|^2={dn.const.sci_notation(args.ud5**2)}$, $|U_{{\mu 5}}|^2={dn.const.sci_notation(args.umu5**2)}$"   
+   
+
+
+    elif threeplusthree:
+        logger.info(f'Theory model used: 3+3 {args.D_or_M} HNL model\n\n')
+        MODEL = dn.const.THREEPLUSTHREE
+        upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
+        outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4,dn.pdg.neutrino5]
+        
+        PATH_data = f'data/{args.exp}/3plus3/m6_{args.m6:.4g}_m5_{args.m5:.4g}_m4_{args.m4:.4g}_mzprime_{args.mzprime:.4g}/'
+        PATH = f'plots/{args.exp}/3plus3/m6_{args.m6:.4g}_m5_{args.m5:.4g}_m4_{args.m4:.4g}_mzprime_{args.mzprime:.4g}/'
+        
+        # title for plots
+        title = fr"$m_{4} = \,${round(args.m4,4)}GeV, $m_{5} = \,${round(args.m5,4)}GeV, $m_{6} = \,${round(args.m6,4)}GeV,\
+                            $M_{{Z^\prime}} = \,${round(args.mzprime,4)} GeV, \
+                            $|U_{{D4}}|^2={dn.const.sci_notation(args.ud4**2)}$, $|U_{{\mu 4}}|^2={dn.const.sci_notation(args.umu4**2)}$, \
+                            $|U_{{D5}}|^2={dn.const.sci_notation(args.ud5**2)}$, $|U_{{\mu 5}}|^2={dn.const.sci_notation(args.umu5**2)}$, \
+                            $|U_{{D6}}|^2={dn.const.sci_notation(args.ud6**2)}$, $|U_{{\mu 6}}|^2={dn.const.sci_notation(args.umu6**2)}$"
+
+
+    else:
+        logger.error('ERROR! Mass spectrum not allowed.')
+        raise ValueError 
+
+
+    ####################################################
+    # Choose experiment and scope of simulation
+    myexp = dn.detector.Detector(args.exp)
+
+
+    kwargs = {  'INCLUDE_COH': ~args.nocoh,
+                'INCLUDE_PELASTIC': ~args.nopelastic,
+                'INCLUDE_HC': ~args.noHC,
+                'INCLUDE_HF': ~args.noHF,
+                'FLAVORS': [dn.pdg.numu],
+                'UPSCATTERED_NUS': upscattered_nus,
+                'OUTGOING_NUS': outgoing_nus,
+            }
+
+    ####################################################
+    # Run MC and get events
+    df_gen = dn.MC.run_MC(bsm_model, myexp, **kwargs)
+
+
+    ####################################################
+    # create directory if it does not exist: skip this if you're in a grid run
+    if not use_default_path:
+        logger.info(path)
+        PATH_data = os.path.join(path, "data", os.path.split(PATH_data.rstrip('/'))[-1])
+        PATH      = os.path.join(path, "plots", os.path.split(PATH.rstrip('/'))[-1])
+        for p in [os.path.join(path, "data"), os.path.join(path, "plots")]:
+            if not os.path.exists(p):
+                os.mkdir(p)
+    
+    df_gen['DATA_PATH'] = PATH_data
+    df_gen['PLOTS_PATH'] = PATH
+    df_gen['PLOTS_TITLE'] = title
+
+    ############################################################################
+    # Print events to file -- currently in data/exp/m4____mzprime____.dat 
+    if args.numpy:
+        dn.printer.print_events_to_ndarray(PATH_data, df_gen, bsm_model)
+    if args.pandas:
+        dn.printer.print_events_to_pandas(PATH_data, df_gen, bsm_model)
+    if args.hepevt:
+        dn.printer.print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh= args.hepevt_unweigh, TOT_EVENTS=args.hepevt_events)
+    logger.info(f"Outputs saved in {PATH_data}")
+    
+
+if __name__ == "__main__":
+    try:
+        dn_gen(sys.argv[1:])
+    except (KeyboardInterrupt, SystemExit):
+        raise
