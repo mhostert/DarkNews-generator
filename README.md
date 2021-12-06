@@ -31,17 +31,22 @@ Requirements:
 ---
 ## **USAGE**
 
-To generate N HEPevt events with a 4-th neutrino mass of `m_4` and a Zprime mass of `m_zprime` you can simply run
+To generate 100 HEPevt events with a 4-th neutrino mass of `m_4` and a Zprime mass of `m_zprime` you can simply run
 
-`dn_gen --mzprime=1.25 --m4=0.140 --neval=10000 --D_or_M=dirac --log=INFO --hepevt --exp=microboone`
+`dn_gen --mzprime=1.25 --m4=0.140 --neval=10000 --D_or_M=dirac --log=INFO --hepevt --hepevt_events=100 --exp=microboone `
 
-This will create two files:
+By default, the generator prints all events to a pandas dataframe:
 
 1) a pandas dataframe file (by default)
 > data/microboone/3plus1/m4_0.14_mzprime_1.25/pandas_df.pckl
 
+but the `--hepevet` flag will also print a HEPEVT file with the specified number of events in `hepevt_events`:
+
 2) a HEPEVT file
 > data/microboone/3plus1/m4_0.14_mzprime_1.25/HEPevt.dat
+
+To print unweighted events, use `--unweigh`. In this case, the number of `neval >> hepevt_events` in order for the accept-reject method to be successful.
+
 
 ***
 ## **OPTIONS**
