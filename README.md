@@ -9,35 +9,38 @@
     #                                                             #
     ###############################################################
 ```
+---
 
-Event generator for dark neutrino events -- in progress
+Event generator for dark neutrino events (in progress).
 
-## SETUP
+## **SETUP**
 
 Requirements:
 * numpy
 * scipy
 * cython
-* [VEGAS](https://pypi.org/project/vegas/)
+* [vegas](https://pypi.org/project/vegas/)
 * [Particle](https://github.com/scikit-hep/particle)
 
-
-
-
-## USAGE
+---
+## **USAGE**
 
 To generate N HEPevt events with a 4-th neutrino mass of `m_4` and a Zprime mass of `m_zprime` you can simply run
 
-`dn_gen --mzprime=1.25 --m4=0.140 --neval=10000 --D_or_M=dirac --log=INFO --hepevt`
+`dn_gen --mzprime=1.25 --m4=0.140 --neval=10000 --D_or_M=dirac --log=INFO --hepevt --exp=microboone`
 
-This will create a file "data/uboone/3plus1/m4_0.42_mzprime_0.03/MC_m4_0.42_mzprime_0.03.dat" for m_zprime=0.03 GeV and m_4 = 0.420 GeV, and will contain N events in HEPevt format.
+This will create two files:
 
-## Options
-  -h, --help            show this help message and exit
+1) a pandas dataframe file (by default)
+> data/microboone/3plus1/m4_0.14_mzprime_1.25/pandas_df.pckl
 
+2) a HEPEVT file
+> data/microboone/3plus1/m4_0.14_mzprime_1.25/HEPevt.dat
 
----
-## Usage
+***
+## **OPTIONS**
+    -h, --help            show this help message and exit
+
 ### Physics args
 
 #### dark sector spectrum
@@ -52,12 +55,15 @@ This will create a file "data/uboone/3plus1/m4_0.42_mzprime_0.03/MC_m4_0.42_mzpr
     --ue4 UE4             Ue4 (default: 0.0)
     --ue5 UE5             Ue5 (default: 0.0)
     --ue6 UE6             Ue6 (default: 0.0)
+
     --umu4 UMU4           Umu4 (default: 0.0016201851746019652)
     --umu5 UMU5           Umu5 (default: 0.003391164991562634)
     --umu6 UMU6           Umu6 (default: 0.0)
+
     --utau4 UTAU4         Utau4 (default: 0)
     --utau5 UTAU5         Utau5 (default: 0)
     --utau6 UTAU6         Utau6 (default: 0)
+
     --ud4 UD4             UD4 (default: 1.0)
     --ud5 UD5             UD5 (default: 1.0)
     --ud6 UD6             UD6 (default: 1.0)
@@ -65,8 +71,10 @@ This will create a file "data/uboone/3plus1/m4_0.42_mzprime_0.03/MC_m4_0.42_mzpr
 #### couplings
     --gD GD               U(1)_d dark coupling (default: 1.0)
     --alphaD ALPHAD       U(1)_d alpha_dark = (g_dark^2 /4 pi) (default: None)
+
     --epsilon EPSILON     epsilon^2 (default: 0.01)
     --epsilon2 EPSILON2   epsilon^2 (default: None)
+
     --alpha_epsilon2 ALPHA_EPSILON2 alpha_QED*epsilon^2 (default: None)
     --chi CHI             chi (default: None)
 
@@ -77,12 +85,13 @@ This will create a file "data/uboone/3plus1/m4_0.42_mzprime_0.03/MC_m4_0.42_mzpr
 #### monte-carlo scope
     --nopelastic          do not generate proton elastic events (default: False)
     --nocoh               do not generate coherent events (default: False)
+
     --noHC                do not include helicity conserving events (default: False)
     --noHF                do not include helicity flipping events (default: False)
 
 
 ---
-## Code behavior args
+### Code behavior args
 
 #### verbose
     --log {ERROR,WARNING,INFO,DEBUG}  Logging level (default: INFO)
@@ -92,13 +101,17 @@ This will create a file "data/uboone/3plus1/m4_0.42_mzprime_0.03/MC_m4_0.42_mzpr
 #### vegas integration arguments
     --neval NEVAL         number of evaluations of integrand (default: 10000)
     --nint NINT           number of adaptive iterations (default: 20)
+
     --neval_warmup NEVAL_WARMUP number of evaluations of integrand in warmup (default: 1000)
     --nint_warmup NINT_WARMUP number of adaptive iterations in warmup (default: 10)
 
 #### output format options
     --pandas              If true, prints events in .npy files (default: True)
+
     --numpy               If true, prints events in .npy files (default: False)
+
     --hepevt              If true, unweigh events and print them in HEPEVT-formatted text files (default: False)
     --hepevt_unweigh      unweigh events when printing in HEPEVT format (needs large statistics) (default: False)
     --hepevt_events HEPEVT_EVENTS number of events to accept in HEPEVT format (default: 100)
+
     --path PATH           path where to save run's outputs (default: )
