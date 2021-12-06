@@ -160,8 +160,8 @@ def dn_gen(argv):
     ####################################################
     # Set the model to use
 
-    threeplusone = (args.m4 and not args.m5 and not args.m6) or (args.m5>1e5)
-    threeplustwo = (args.m4 and args.m5 and not args.m6) or (args.m6>1e5)
+    threeplusone = (args.m4 and not args.m5 and not args.m6) 
+    threeplustwo = (args.m4 and args.m5 and not args.m6) 
     threeplusthree = (args.m4 and args.m5 and args.m6)
 
     if threeplusone:
