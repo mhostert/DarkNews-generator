@@ -334,11 +334,7 @@ class Model:
         self.A4 = self.Ue4**2 + self.Umu4**2 + self.Utau4**2
         self.A5 = self.Ue5**2 + self.Umu5**2 + self.Utau5**2
         self.A6 = self.Ue6**2 + self.Umu6**2 + self.Utau6**2
-
-        # Uactive4SQR = self.Ue4**2 + self.Umu4**2 + self.Utau4**2
-        # Uactive5SQR = self.Ue5**2 + self.Umu5**2 + self.Utau5**2
-        # Uactive6SQR = self.Ue6**2 + self.Umu6**2 + self.Utau6**2
-
+        
         self.D4 = self.UD4**2 #self.UD4#(1.0 - self.A4 - self.A5)/(1.0+self.R)
         self.D5 = self.UD5**2 #self.UD5#(1.0 - self.A4 - self.A5)/(1.0+1.0/self.R)
         self.D6 = self.UD6**2 #self.UD6#(1.0 - self.A4 - self.A5)/(1.0+1.0/self.R)
@@ -365,62 +361,55 @@ class Model:
         gschi = self.gD * const.sw * self.chi # constant repeated over and over
 
         self.epsilon = const.cw * self.chi
-        self.clight = const.gweak / const.cw / 2.
+        self.weak_vertex = const.gweak / const.cw / 2.
         self.dlight = 0.0
 
+        # UmuiUdi for i 1 to 3
+        self.UeiUDi = -(self.UD4 * self.Ue4 + self.UD5 * self.Ue5 + self.UD6 * self.Ue6)
+        self.UmuiUDi = -(self.UD4 * self.Umu4 + self.UD5 * self.Umu5 + self.UD6 * self.Umu6)
+        self.UtauiUDi = -(self.UD4 * self.Utau4 + self.UD5 * self.Utau5 + self.UD6 * self.Utau6)
+
         # Neutrino couplings ## CHECK THE SIGN IN THE SECOND TERM????
-        self.ce6 = self.clight * self.Ue5 \
-                 - self.UD5 * (self.UD4 * self.Ue4 + self.UD5 * self.Ue5) * gschi
-        self.cmu6 = self.clight * self.Umu5 \
-                  - self.UD5 * (self.UD4 * self.Umu4 + self.UD5 * self.Umu5) * gschi
-        self.ctau6 = self.clight * self.Utau5 \
-                   - self.UD5 * (self.UD4 * self.Utau4 + self.UD5*self.Utau5) * gschi
+        self.ce6 = self.weak_vertex * self.Ue6 + self.UD6 * self.UeiUDi * gschi 
+        self.cmu6 = self.weak_vertex * self.Umu6 + self.UD6 * self.UmuiUDi * gschi
+        self.ctau6 = self.weak_vertex * self.Utau6 + self.UD6 * self.UtauiUDi * gschi
 
-        self.de6 = - self.UD6 * self.gD \
-                  * (self.UD4 * self.Ue4 + self.UD5 * self.Ue5 + self.UD6 * self.Ue6)
-        self.dmu6 = - self.UD6 * self.gD \
-                   * (self.UD4 * self.Umu4 + self.UD5 * self.Umu5 + self.UD6 * self.Umu6)
-        self.dtau6 = - self.UD6 * self.gD \
-                    * (self.UD4 * self.Utau4 + self.UD5 * self.Utau5 + self.UD6 * self.Utau6)
+        self.de6 = self.UD6 * self.gD * self.UeiUDi
+        self.dmu6 = self.UD6 * self.gD * self.UmuiUDi
+        self.dtau6 = self.UD6 * self.gD * self.UtauiUDi
 
-        self.ce5 = self.clight * self.Ue5 \
-                 - self.UD5 * (self.UD4 * self.Ue4 + self.UD5 * self.Ue5) * gschi
-        self.cmu5 = self.clight * self.Umu5 \
-                 - self.UD5 * (self.UD4 * self.Umu4 + self.UD5 * self.Umu5) * gschi
-        self.ctau5 = self.clight * self.Utau5 \
-                 - self.UD5 * (self.UD4 * self.Utau4 + self.UD5 * self.Utau5) * gschi
+        self.ce5 = self.weak_vertex * self.Ue5 + self.UD5 * self.UeiUDi * gschi
+        self.cmu5 = self.weak_vertex * self.Umu5 + self.UD5 * self.UmuiUDi * gschi
+        self.ctau5 = self.weak_vertex * self.Utau5 + self.UD5 * self.UtauiUDi * gschi
 
-        self.de5 = - self.UD5 * self.gD * (self.UD4 * self.Ue5 + self.UD5 * self.Ue5)
-        self.dmu5 = - self.UD5 * self.gD * (self.UD4 * self.Umu5 + self.UD5 * self.Umu5)
-        self.dtau5 = - self.UD5 * self.gD * (self.UD4 * self.Utau5 + self.UD5 * self.Utau5)
+        self.de5 = self.UD5 * self.gD * self.UeiUDi
+        self.dmu5 = self.UD5 * self.gD * self.UmuiUDi
+        self.dtau5 = self.UD5 * self.gD * self.UtauiUDi
 
-        self.ce4 = self.clight * self.Ue4 \
-                 - self.UD4 * (self.UD4 * self.Ue4 + self.UD5 * self.Ue5) * gschi
-        self.cmu4 = self.clight * self.Umu4 \
-                  - self.UD4 * (self.UD4*self.Umu4 + self.UD5*self.Umu5) * gschi
-        self.ctau4 = self.clight * (self.Utau4) \
-                   - self.UD4 * (self.UD4 * self.Utau4 + self.UD5 * self.Utau5) * gschi
+        self.ce4 = self.weak_vertex * self.Ue4 + self.UD4 * self.UeiUDi * gschi
+        self.cmu4 = self.weak_vertex * self.Umu4 + self.UD4 * self.UmuiUDi * gschi
+        self.ctau4 = self.weak_vertex * self.Utau4 + self.UD4 * self.UtauiUDi * gschi
 
-        self.de4 = - self.UD4 * self.gD * (self.UD4 * self.Ue4 + self.UD5 * self.Ue4)
-        self.dmu4 = - self.UD4 * self.gD * (self.UD4 * self.Umu4 + self.UD5 * self.Umu4)
-        self.dtau4 = - self.UD4 * self.gD * (self.UD4 * self.Utau4 + self.UD5 * self.Utau4)
+        self.de4 = self.UD4 * self.gD * self.UeiUDi
+        self.dmu4 = self.UD4 * self.gD * self.UmuiUDi
+        self.dtau4 = self.UD4 * self.gD * self.UtauiUDi
 
-        self.clight4 = math.sqrt(self.ce4**2 + self.cmu4**2 + self.ctau4**2)
+        self.weak_vertex4 = math.sqrt(self.ce4**2 + self.cmu4**2 + self.ctau4**2)
         self.dlight4 = math.sqrt(self.de4**2 + self.dmu4**2 + self.dtau4**2)
 
-        self.clight5 = math.sqrt(self.ce5**2 + self.cmu5**2 + self.ctau5**2)
+        self.weak_vertex5 = math.sqrt(self.ce5**2 + self.cmu5**2 + self.ctau5**2)
         self.dlight5 = math.sqrt(self.de5**2 + self.dmu5**2 + self.dtau5**2)
 
-        self.clight6 = math.sqrt(self.ce6**2 + self.cmu6**2 + self.ctau6**2)
+        self.weak_vertex6 = math.sqrt(self.ce6**2 + self.cmu6**2 + self.ctau6**2)
         self.dlight6 = math.sqrt(self.de6**2 + self.dmu6**2 + self.dtau6**2)
 
         # combinations
-        self.c46 = self.clight * math.sqrt(self.A4 * self.A6) + self.UD6 * self.UD4 * gschi
-        self.c45 = self.clight * math.sqrt(self.A4 * self.A5) + self.UD5 * self.UD4 * gschi
-        self.c44 = self.clight * math.sqrt(self.A4 * self.A4) + self.UD4 * self.UD4 * gschi
-        self.c55 = self.clight * math.sqrt(self.A5 * self.A5) + self.UD5 * self.UD5 * gschi
-        self.c56 = self.clight * math.sqrt(self.A5 * self.A6) + self.UD6 * self.UD5 * gschi
-        self.c66 = self.clight * math.sqrt(self.A6 * self.A6) + self.UD6 * self.UD6 * gschi
+        self.c46 = self.weak_vertex * math.sqrt(self.A4 * self.A6) + self.UD6 * self.UD4 * gschi
+        self.c45 = self.weak_vertex * math.sqrt(self.A4 * self.A5) + self.UD5 * self.UD4 * gschi
+        self.c44 = self.weak_vertex * math.sqrt(self.A4 * self.A4) + self.UD4 * self.UD4 * gschi
+        self.c55 = self.weak_vertex * math.sqrt(self.A5 * self.A5) + self.UD5 * self.UD5 * gschi
+        self.c56 = self.weak_vertex * math.sqrt(self.A5 * self.A6) + self.UD6 * self.UD5 * gschi
+        self.c66 = self.weak_vertex * math.sqrt(self.A6 * self.A6) + self.UD6 * self.UD6 * gschi
 
         self.d56 = self.UD6 * self.UD5 * self.gD
         self.d46 = self.UD6 * self.UD4 * self.gD

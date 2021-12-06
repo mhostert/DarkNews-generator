@@ -16,11 +16,16 @@ Event generator for dark neutrino events (in progress).
 
 ## **SETUP**
 
+Currently set for local pip installation. From the main folder,
+
+`python3 -m pip install -e .`
+
 Requirements:
 * numpy
 * scipy
 * cython
 * [vegas](https://pypi.org/project/vegas/)
+* [scikit-hep](https://github.com/scikit-hep/)
 * [Particle](https://github.com/scikit-hep/particle)
 
 ---

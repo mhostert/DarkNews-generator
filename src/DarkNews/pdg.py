@@ -113,5 +113,4 @@ phi = new_particle(name='phi', pdgid=5902, latex_name='\varphi')
 alp = new_particle(name='alp', pdgid=5903, latex_name='a')
 
 
-
 ########################################################################################
