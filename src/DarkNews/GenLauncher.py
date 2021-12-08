@@ -69,7 +69,7 @@ class GenLauncher:
         for k, v in kwargs.items():
             setattr(self, k, v)
 
-    def run(self, log_level=None, verbose=None, logfile=None):
+    def run(self, log_level="INFO", verbose=None, logfile=None):
         args = {"log_level": log_level, "verbose": verbose, "logfile": logfile}
         for attr in ["log_level", "verbose", "logfile"]:
             if args[attr] is not None:
