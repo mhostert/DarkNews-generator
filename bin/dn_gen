@@ -21,38 +21,37 @@ DEFAULTS = GenLauncher()
 # use default=argparse.SUPPRESS so no defaults attributes are instantiated in the final Namespace
 parser = argparse.ArgumentParser(description="Generate dark nu events", formatter_class=argparse.ArgumentDefaultsHelpFormatter, default=argparse.SUPPRESS)
 
-
 ##### dark sector spectrum
-parser.add_argument("--mzprime", type=float, help="Z' mass", default=1.25)
-parser.add_argument("--m4", type=float, help="mass of the fourth neutrino", default=0.140)
-parser.add_argument("--m5", type=float, help="mass of the fifth neutrino", default=None)
-parser.add_argument("--m6", type=float, help="mass of the sixth neutrino", default=None)
+parser.add_argument("--mzprime", type=float, help="Z' mass", default=DEFAULTS.mzprime)
+parser.add_argument("--m4", type=float, help="mass of the fourth neutrino", default=DEFAULTS.m4)
+parser.add_argument("--m5", type=float, help="mass of the fifth neutrino", default=DEFAULTS.m5)
+parser.add_argument("--m6", type=float, help="mass of the sixth neutrino", default=DEFAULTS.m6)
 
-parser.add_argument("--D_or_M", help="D_or_M: dirac or majorana", choices=["dirac", "majorana"], default="majorana")
-
+parser.add_argument("--D_or_M", help="D_or_M: dirac or majorana", choices=["dirac", "majorana"], default=DEFAULTS.D_or_M)
 
 # neutral lepton mixing
-parser.add_argument("--ue4", type=float, help="Ue4", default=0.0)
-parser.add_argument("--ue5", type=float, help="Ue5", default=0.0)
-parser.add_argument("--ue6", type=float, help="Ue6", default=0.0)
+parser.add_argument("--ue4", type=float, help="Ue4", default=DEFAULTS.ue4)
+parser.add_argument("--ue5", type=float, help="Ue5", default=DEFAULTS.ue5)
+parser.add_argument("--ue6", type=float, help="Ue6", default=DEFAULTS.ue6)
 
-parser.add_argument("--umu4", type=float, help="Umu4", default=math.sqrt(1.5e-6 * 7/4))
-parser.add_argument("--umu5", type=float, help="Umu5", default=math.sqrt(11.5e-6))
-parser.add_argument("--umu6", type=float, help="Umu6", default=math.sqrt(0.0))
+parser.add_argument("--umu4", type=float, help="Umu4", default=DEFAULTS.umu4)
+parser.add_argument("--umu5", type=float, help="Umu5", default=DEFAULTS.umu5)
+parser.add_argument("--umu6", type=float, help="Umu6", default=DEFAULTS.umu6)
 
-parser.add_argument("--utau4", type=float, help="Utau4", default=0)
-parser.add_argument("--utau5", type=float, help="Utau5", default=0)
-parser.add_argument("--utau6", type=float, help="Utau6", default=0)
+parser.add_argument("--utau4", type=float, help="Utau4", default=DEFAULTS.utau4)
+parser.add_argument("--utau5", type=float, help="Utau5", default=DEFAULTS.utau5)
+parser.add_argument("--utau6", type=float, help="Utau6", default=DEFAULTS.utau6)
 
-parser.add_argument("--ud4", type=float, help="UD4", default=1.0)
-parser.add_argument("--ud5", type=float, help="UD5", default= 1.0)
-parser.add_argument("--ud6", type=float, help="UD6", default= 1.0)
+parser.add_argument("--ud4", type=float, help="UD4", default=DEFAULTS.ud4)
+parser.add_argument("--ud5", type=float, help="UD5", default=DEFAULTS.ud5)
+parser.add_argument("--ud6", type=float, help="UD6", default=DEFAULTS.ud6)
 
 # dark coupling choices
-parser.add_argument("--gD", type=float, help="U(1)_d dark coupling", default=1.0)
+parser.add_argument("--gD", type=float, help="U(1)_d dark coupling", default=DEFAULTS.gD)
 parser.add_argument("--alphaD", type=float, help="U(1)_d  alpha_dark = (g_dark^2 /4 pi)")
+
 # kinetic mixing options
-parser.add_argument("--epsilon", type=float, help="epsilon^2", default = 1e-2)
+parser.add_argument("--epsilon", type=float, help="epsilon^2", default=DEFAULTS.epsilon)
 parser.add_argument("--epsilon2", type=float, help="epsilon^2")
 parser.add_argument("--alpha_epsilon2", type=float, help="alpha_QED*epsilon^2")
 parser.add_argument("--chi", type=float, help="chi")
@@ -62,50 +61,49 @@ parser.add_argument("--exp", type=str.lower, help="experiment", choices=["minerv
                                                                         "minerva_me",
                                                                         "miniboone",
                                                                         "microboone"],
-                                                                        default="miniboone")
+                                                                        default=DEFAULTS.exp)
 
 # scattering types
 parser.add_argument("--nopelastic", help="do not generate proton elastic events", action="store_true")
 parser.add_argument("--nocoh", help="do not generate coherent events", action="store_true")
-parser.set_defaults(nopelastic=False)
-parser.set_defaults(nocoh=False)
+parser.set_defaults(nopelastic=DEFAULTS.nopelastic)
+parser.set_defaults(nocoh=DEFAULTS.nocoh)
 
 parser.add_argument("--noHC", help="do not include helicity conserving events", action="store_true")
 parser.add_argument("--noHF", help="do not include helicity flipping events", action="store_true")
-parser.set_defaults(noHC=False)
-parser.set_defaults(noHF=False)
+parser.set_defaults(noHC=DEFAULTS.noHC)
+parser.set_defaults(noHF=DEFAULTS.noHF)
 
 
 ###########
 # run related arguments
-parser.add_argument("--log", help="Logging level", default="INFO", choices=['ERROR','WARNING','INFO','DEBUG'])
+parser.add_argument("--log", help="Logging level", default=DEFAULTS.log)
 parser.add_argument("--verbose", help="Verbose for logging", action="store_true")
-parser.set_defaults(verbose=False)
-parser.add_argument("--logfile", help="Path to logfile. If not set, use std output.")
-parser.add_argument("--nb_cores", type=int, help="Number of cores to parallelise on.", default=1)
-
+parser.set_defaults(verbose=DEFAULTS.verbose)
+parser.add_argument("--logfile", help="Path to logfile. If not set, use std output.", default=DEFAULTS.logfile)
 
 # Vegas parameters 
-parser.add_argument("--neval", type=int, help="number of evaluations of integrand", default=int(1e4))
-parser.add_argument("--nint", type=int, help="number of adaptive iterations", default=20)
-parser.add_argument("--neval_warmup", type=int, help="number of evaluations of integrand in warmup", default=int(1e3))
-parser.add_argument("--nint_warmup", type=int, help="number of adaptive iterations in warmup", default=10)
+parser.add_argument("--neval", type=int, help="number of evaluations of integrand", default=DEFAULTS.neval)
+parser.add_argument("--nint", type=int, help="number of adaptive iterations", default=DEFAULTS.nint)
+parser.add_argument("--neval_warmup", type=int, help="number of evaluations of integrand in warmup", default=DEFAULTS.neval_warmup)
+parser.add_argument("--nint_warmup", type=int, help="number of adaptive iterations in warmup", default=DEFAULTS.nint_warmup)
 
 # program options
 parser.add_argument("--pandas", help="If true, prints events in .npy files", action="store_true")
-parser.set_defaults(pandas=True)
+parser.set_defaults(pandas=DEFAULTS.pandas)
 parser.add_argument("--numpy", help="If true, prints events in .npy files", action="store_true")
-parser.set_defaults(numpy=False)
+parser.set_defaults(numpy=DEFAULTS.numpy)
 parser.add_argument("--hepevt", help="If true, unweigh events and print them in HEPEVT-formatted text files", action="store_true")
-parser.set_defaults(hepevt=False)    
+parser.set_defaults(hepevt=DEFAULTS.hepevt)    
 parser.add_argument("--hepevt_unweigh", help="unweigh events when printing in HEPEVT format (needs large statistics)", action="store_true")
-parser.set_defaults(hepevt_unweigh=False)
-parser.add_argument("--hepevt_events", type=int, help="number of events to accept in HEPEVT format", default=100)
+parser.set_defaults(hepevt_unweigh=DEFAULTS.hepevt_unweigh)
+parser.add_argument("--hepevt_events", type=int, help="number of events to accept in HEPEVT format", default=DEFAULTS.hepevt_events)
 
 parser.add_argument("--summary_plots", help="generate summary plots of kinematics", action="store_false")
-parser.add_argument("--path", help="path where to save run's outputs", default="")
+parser.set_defaults(summary_plots=DEFAULTS.summary_plots)
+parser.add_argument("--path", help="path where to save run's outputs", default=DEFAULTS.path)
 
 args = parser.parse_args()
 
 gen_object = GenLauncher(vars(args))
-gen_object.run(nb_cores=args.nb_cores, log_level=args.log, verbose=args.verbose)
+gen_object.run(log_level=args.log, verbose=args.verbose, logfile=args.logfile)
