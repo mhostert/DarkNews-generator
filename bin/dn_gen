@@ -19,7 +19,7 @@ DEFAULTS = GenLauncher()
 # User specified
 # particle masses
 # use default=argparse.SUPPRESS so no defaults attributes are instantiated in the final Namespace
-parser = argparse.ArgumentParser(description="Generate dark nu events", formatter_class=argparse.ArgumentDefaultsHelpFormatter, default=argparse.SUPPRESS)
+parser = argparse.ArgumentParser(description="Generate dark nu events", formatter_class=argparse.ArgumentDefaultsHelpFormatter, argument_default=argparse.SUPPRESS)
 
 ##### dark sector spectrum
 parser.add_argument("--mzprime", type=float, help="Z' mass", default=DEFAULTS.mzprime)
