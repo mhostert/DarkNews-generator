@@ -3,7 +3,7 @@
 import sys
 import argparse
 
-from DarkNews import GenLauncher
+from DarkNews.GenLauncher import GenLauncher
 # obtain default values
 DEFAULTS = GenLauncher()
     
