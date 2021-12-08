@@ -204,7 +204,7 @@ class GenLauncher:
         if self.pandas:
             self.df = dn.printer.print_events_to_pandas(PATH_data, df_gen, bsm_model)
         if self.hepevt:
-            self._df_hepevt = dn.printer.print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh= self.hepevt_unweigh, TOT_EVENTS=self.hepevt_events)
+            dn.printer.print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh= self.hepevt_unweigh, TOT_EVENTS=self.hepevt_events)
         logger.info(f"Outputs saved in {PATH_data}")
 
     
