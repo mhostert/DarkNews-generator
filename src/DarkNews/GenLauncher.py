@@ -78,7 +78,7 @@ class GenLauncher:
         numeric_level = getattr(logging, log_level, None)
         if not isinstance(numeric_level, int):
             raise ValueError('Invalid log level: %s' % log_level)  
-        ConfigureLogger(logger, level=numeric_level, prettyprinter = prettyprinter, verbose=verbose)
+        ConfigureLogger(logger, level=numeric_level, prettyprinter=prettyprinter, verbose=verbose, logfile=logfile)
 
         ######################################
         # run generator
