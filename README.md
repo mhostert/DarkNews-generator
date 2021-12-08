@@ -43,6 +43,11 @@ This will create two files:
 2) a HEPEVT file
 > data/microboone/3plus1/m4_0.14_mzprime_1.25/HEPevt.dat
 
+
+### The pandas dataframe format:
+
+
+
 ***
 ## **OPTIONS**
     -h, --help            show this help message and exit
@@ -86,7 +91,7 @@ This will create two files:
 
 
 #### experiment
-    --exp {minerva_le,minerva_me,miniboone,microboone} experiment (default: miniboone)
+    --exp {miniboone_fhc,microboone,minerva_le_fhc,minerva_me_fhc,minos_le_fhc,minos_me_fhc,nova_le_fhc,nd280_fhc} experiment (default: miniboone_fhc)
 
 #### monte-carlo scope
     --nopelastic          do not generate proton elastic events (default: False)

@@ -85,8 +85,6 @@ class MC_events:
 
         # process being considered
         self.underl_process_name = f'{self.nu_projectile.name} + {self.target.name} -> {self.nu_upscattered.name} +  {self.target.name} -> {self.nu_outgoing.name} + {self.final_lepton.invert().name} + {self.final_lepton.name} + {self.target.name}'
-        logger.info(f"Generating helicity {self.helicity} upscattering events for:\n\t{self.underl_process_name}\n")
-
 
     def set_theory_params(self, params):
         """ 
@@ -173,6 +171,7 @@ class MC_events:
             The first integrand entry is the one VEGAS uses to optimize the importance sampling.
         """
 
+        logger.info(f"Generating helicity {self.helicity} upscattering events for:\n\t{self.underl_process_name}\n")
         #########################################3
         # Some experimental definitions
         #self.exp = experiment  # NO NEED TO STORE THIS
@@ -266,7 +265,9 @@ class MC_events:
         events['scattering_regime'] = np.full(np.size(events['w_event_rate']), regime)
         events['helicity'] = np.full(np.size(events['w_event_rate']), self.helicity)
         events['underlying_process'] = np.full(np.size(events['w_event_rate']), self.underl_process_name)
-        logger.debug(f"Inspecting dataframe\ndir(Events dataframe) = {dir(events)}.")
+        logger.debug(f"Inspecting dataframe\ndir(Events dataframe) = {events}.")
+
+
 
         return events
 
@@ -348,6 +349,10 @@ def run_MC(bsm_model, experiment, **kwargs):
     
     # Combine all cases into one object
     all_events = merge_MC_output(gen_cases_events)
+
+    all_events['bsm_model'] = bsm_model
+    all_events['experiment'] = experiment
+
 
     return all_events
 

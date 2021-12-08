@@ -70,11 +70,15 @@ def dn_gen(argv):
     parser.add_argument("--chi", type=float, help="chi")
 
     # experiments    
-    parser.add_argument("--exp", type=str.lower, help="experiment", choices=["minerva_le",
-                                                                            "minerva_me",
-                                                                            "miniboone",
-                                                                            "microboone"],
-                                                                            default="miniboone")
+    parser.add_argument("--exp", type=str.lower, help="experiment", choices=["miniboone_fhc",
+                                                                            "microboone",
+                                                                            "minerva_le_fhc",
+                                                                            "minerva_me_fhc",
+                                                                            "minos_le_fhc",
+                                                                            "minos_me_fhc",
+                                                                            "nova_le_fhc",
+                                                                            "nd280_fhc"],
+                                                                            default="miniboone_fhc")
 
     # scattering types
     parser.add_argument("--nopelastic", help="do not generate proton elastic events", action="store_true")
@@ -111,7 +115,7 @@ def dn_gen(argv):
     parser.set_defaults(hepevt=False)    
     parser.add_argument("--hepevt_unweigh", help="unweigh events when printing in HEPEVT format (needs large statistics)", action="store_true")
     parser.set_defaults(hepevt_unweigh=False)
-    parser.add_argument("--hepevt_events", type=int, help="number of events to accept in HEPEVT format", default=100)
+    parser.add_argument("--hepevt_events", type=int, help="number of events to accept in HEPEVT format")
     
     parser.add_argument("--summary_plots", help="generate summary plots of kinematics", action="store_false")
     parser.add_argument("--path", help="path where to save run's outputs", default="")
@@ -259,8 +263,12 @@ def dn_gen(argv):
         dn.printer.print_events_to_ndarray(PATH_data, df_gen, bsm_model)
     if args.pandas:
         dn.printer.print_events_to_pandas(PATH_data, df_gen, bsm_model)
-    if args.hepevt:
-        dn.printer.print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh= args.hepevt_unweigh, TOT_EVENTS=args.hepevt_events)
+    if args.hepevt or args.hepevt_unweigh or args.hepevt_events:
+        if args.hepevt_unweigh and not args.hepevt_events:
+            logger.error("ERROR! To unweigh events, you must specify the number of unweighted events you wish to save. This should be small compared to the total VEGAS samples (~ NEVAL*NINT).")
+            raise ValueError
+        else:
+            dn.printer.print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh= args.hepevt_unweigh, max_events=args.hepevt_events)
     logger.info(f"Outputs saved in {PATH_data}")
     
 
