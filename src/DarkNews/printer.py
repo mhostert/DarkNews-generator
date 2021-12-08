@@ -102,6 +102,8 @@ def print_events_to_pandas(PATH_data, df_gen, bsm_model):
 	aux_df.to_pickle(out_file_name)
 	# np.save(out_file_name, df_gen)
 
+	return aux_df
+
 
 def print_events_to_ndarray(PATH_data, df_gen, bsm_model):
 
@@ -122,6 +124,9 @@ def print_events_to_ndarray(PATH_data, df_gen, bsm_model):
 	###############################################
 	# SAVE ALL EVENTS AS A NUMPY BINARY
 	np.save(out_file_name, df_gen, allow_pickle=True)
+
+	return df_gen
+
 
 #######
 # not relevant anymore. 

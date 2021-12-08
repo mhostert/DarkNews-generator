@@ -200,9 +200,11 @@ class GenLauncher:
         ############################################################################
         # Print events to file -- currently in data/exp/m4____mzprime____.dat 
         if self.numpy:
-            dn.printer.print_events_to_ndarray(PATH_data, df_gen, bsm_model)
+            self.df = dn.printer.print_events_to_ndarray(PATH_data, df_gen, bsm_model)
         if self.pandas:
-            dn.printer.print_events_to_pandas(PATH_data, df_gen, bsm_model)
+            self.df = dn.printer.print_events_to_pandas(PATH_data, df_gen, bsm_model)
         if self.hepevt:
-            dn.printer.print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh= self.hepevt_unweigh, TOT_EVENTS=self.hepevt_events)
+            self._df_hepevt = dn.printer.print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh= self.hepevt_unweigh, TOT_EVENTS=self.hepevt_events)
         logger.info(f"Outputs saved in {PATH_data}")
+
+    
