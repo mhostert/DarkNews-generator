@@ -22,11 +22,9 @@ class GenLauncher:
 #                                                       #
 #########################################################
         """
-    LOG_LEVEL = "INFO"
-    VERBOSE = False
-    NB_CORES = 1
 
     def __init__(self, **kwargs):
+        # set defaults
         self.mzprime = 1.25
         self.m4 = 0.140
         self.m5 = None
@@ -35,29 +33,44 @@ class GenLauncher:
         self.ue4 = 0.0
         self.ue5 = 0.0
         self.ue6 = 0.0
-        self.umu4 = math.sqrt(1.5e-6 * 7/4)
-        self.umu5 = math.sqrt(11.5e-6)
-        self.umu6 = math.sqrt(0.0)
+        self.umu4 = np.sqrt(1.5e-6 * 7/4)
+        self.umu5 = np.sqrt(11.5e-6)
+        self.umu6 = np.sqrt(0.0)
         self.utau4 = 0
         self.utau5 = 0
         self.utau6 = 0
         self.ud4 = 1.0
-        self.ud5 =  1.0
-        self.ud6 =  1.0
+        self.ud5 = 1.0
+        self.ud6 = 1.0
         self.gD = 1.0
+        self.epsilon = 1e-2
+        self.exp = "miniboone"
+        self.nopelastic = False
+        self.nocoh = False
+        self.noHC = False
+        self.noHF = False
         self.log = "INFO"
         self.verbose = False
-        self.nb_cores = 1
         self.neval = int(1e4)
         self.nint = 20
         self.neval_warmup = int(1e3)
         self.nint_warmup = 10
         self.hepevt_events = 100
+        self.pandas = True
+        self.numpy = False
+        self.hepevt = False
+        self.hepevt_unweigh = False
+        self.hepevt_events = 100
+        self.summary_plots = True
         self.path = ""
 
-    def run(self, nb_cores=None, log_level=None, verbose=None, logfile=None):
-        args = {"nb_cores": nb_cores, "log_level": log_level, "verbose": verbose, "logfile": logfile}
-        for attr in ["nb_cores", "log_level", "verbose", "logfile"]:
+        # set parameters
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
+    def run(self, log_level=None, verbose=None, logfile=None):
+        args = {"log_level": log_level, "verbose": verbose, "logfile": logfile}
+        for attr in ["log_level", "verbose", "logfile"]:
             if args[attr] is not None:
                 setattr(self, attr, args[attr])
 
@@ -68,7 +81,6 @@ class GenLauncher:
 
         ######################################
         # run generator
-
         prettyprinter.info(self.banner)
 
         ##########################
