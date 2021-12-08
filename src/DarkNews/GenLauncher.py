@@ -51,6 +51,7 @@ class GenLauncher:
         self.noHF = False
         self.log = "INFO"
         self.verbose = False
+        self.logfile = None
         self.neval = int(1e4)
         self.nint = 20
         self.neval_warmup = int(1e3)
