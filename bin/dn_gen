@@ -72,6 +72,8 @@ def dn_gen(argv):
     # experiments    
     parser.add_argument("--exp", type=str.lower, help="experiment", choices=["miniboone_fhc",
                                                                             "microboone",
+                                                                            "dune_nd_fhc",
+                                                                            "dune_nd_rhc",
                                                                             "minerva_le_fhc",
                                                                             "minerva_me_fhc",
                                                                             "minos_le_fhc",

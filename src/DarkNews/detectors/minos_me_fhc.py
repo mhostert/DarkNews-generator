@@ -1,8 +1,6 @@
 # load in main code as detector.minos_me_fhc
 # valid python syntax can be used
 
-# configuration file for MiniBooNE experiment
-
 name = "NUMI_FHC_LE"
 
 # path to flux file

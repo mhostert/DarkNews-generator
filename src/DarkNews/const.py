@@ -20,14 +20,6 @@ import logging
 from DarkNews import logger
 from DarkNews import local_dir
 
-#CYTHON
-import pyximport
-pyximport.install(
-    language_level=3,
-    pyimport=False,
-    )
-from . import Cfourvec as Cfv
-
 
 #####################################
 # particle names and props
@@ -258,6 +250,8 @@ def get_decay_rate_in_s(G):
     return 1.0/G*invGeV_to_s
 def get_decay_rate_in_cm(G):
     return 1.0/G*invGeV_to_cm
+print(get_decay_rate_in_cm(0.2))
+print(1e-13*c_LIGHT)
 
 # phase space function
 def kallen(a,b,c):
