@@ -100,20 +100,18 @@ def print_events_to_pandas(PATH_data, df_gen, bsm_model):
 		PATH_data += '/'
 	out_file_name = PATH_data+f"pandas_df.pckl"
 
-
 	# saving the experiment class
 	aux_df.attrs['experiment'] = df_gen['experiment']
 
 	# saving the bsm_model class
 	aux_df.attrs['bsm_model'] = df_gen['bsm_model']
-
-
 	
 	# pickles DarkNews classes with support for lambda functions
 	dill.dump(aux_df, open(out_file_name, 'wb'))
 	
 	# aux_df.to_pickle(out_file_name)
 	# pickle.dump(aux_df, open(out_file_name, 'wb'	))
+	return aux_df
 	
 def print_events_to_ndarray(PATH_data, df_gen, bsm_model):
 
@@ -134,6 +132,9 @@ def print_events_to_ndarray(PATH_data, df_gen, bsm_model):
 	###############################################
 	# SAVE ALL EVENTS AS A NUMPY BINARY
 	np.save(out_file_name, df_gen, allow_pickle=True)
+
+	return df_gen
+
 
 #######
 # not relevant anymore. 
