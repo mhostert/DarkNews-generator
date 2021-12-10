@@ -35,7 +35,7 @@ class NuclearTarget:
             self.Z=0
             self.N=0
             self.A=0
-            self.pdgid = 11
+            self.pdgid=11
         #####################################
         # hadronic *nuclear* target
         else:
@@ -162,12 +162,12 @@ class Detector():
 
         # Detector targets
         self.NUCLEAR_TARGETS = [NuclearTarget(target) for target in det.nuclear_targets]
-        self.FIDUCIAL_MASS_PER_TARGET = det.fiducial_mass_per_target
+        self.FIDUCIAL_MASS_PER_TARGET = det.fiducial_mass_per_target # in tonnes
         
         # total number of targets
         self.NUMBER_OF_TARGETS = {}
         for fid_mass, target in zip(self.FIDUCIAL_MASS_PER_TARGET, self.NUCLEAR_TARGETS):
-            self.NUMBER_OF_TARGETS[f'{target.name}'] = fid_mass/target.A * NAvo 
+            self.NUMBER_OF_TARGETS[f'{target.name}'] = fid_mass*t_to_GeV/(target.mass)
 
         self.POTS = det.POTs
 

@@ -228,11 +228,11 @@ class MC_events:
             logger.debug(f"Vegas results for {decay_step}: {np.sum(weights[decay_step])}")
             
             # combining all decay rates into one factor
-            decay_rates *= result[decay_step].mean * batch_f.norm[decay_step]
+            decay_rates *= integrals[decay_step].mean * batch_f.norm[decay_step]
             
             # saving decay weights and integrals
-            events[f'w_{decay_step}'.replace('diff_','')] = weights[decay_step]
-            events[f'I_{decay_step}'.replace('diff_','')] = integrals[decay_step].mean
+            events[f'w_{decay_step}'.replace('diff_','')] = weights[decay_step] * batch_f.norm[decay_step]
+            events[f'I_{decay_step}'.replace('diff_','')] = integrals[decay_step].mean * batch_f.norm[decay_step]
 
 
         # How many constituent targets inside scattering regime? 
@@ -250,12 +250,10 @@ class MC_events:
 
 
         # differential rate weights
-        events['w_event_rate'] = weights['diff_event_rate']*const.attobarn_to_cm2/decay_rates*target_multiplicity*exposure
-        events['I_event_rate'] = integrals['diff_event_rate'].mean*const.attobarn_to_cm2/decay_rates*target_multiplicity*exposure
+        events['w_event_rate'] = weights['diff_event_rate']*const.attobarn_to_cm2/decay_rates*target_multiplicity*exposure*batch_f.norm['diff_event_rate']
 
         # flux averaged xsec weights (neglecting kinematics of decay)
-        events['w_flux_avg_xsec'] = weights['diff_flux_avg_xsec']*const.attobarn_to_cm2*target_multiplicity*exposure
-        events['I_flux_avg_xsec'] = integrals['diff_flux_avg_xsec'].mean*const.attobarn_to_cm2*target_multiplicity*exposure
+        events['w_flux_avg_xsec'] = weights['diff_flux_avg_xsec']*const.attobarn_to_cm2*target_multiplicity*exposure*batch_f.norm['diff_flux_avg_xsec']
 
         events['target'] = np.full(np.size(events['w_event_rate']), self.target.name)
         events['target_pdgid'] = np.full(np.size(events['w_event_rate']), self.target.pdgid)
@@ -265,9 +263,7 @@ class MC_events:
         events['scattering_regime'] = np.full(np.size(events['w_event_rate']), regime)
         events['helicity'] = np.full(np.size(events['w_event_rate']), self.helicity)
         events['underlying_process'] = np.full(np.size(events['w_event_rate']), self.underl_process_name)
-        logger.debug(f"Inspecting dataframe\ndir(Events dataframe) = {events}.")
-
-
+        logger.debug(f"Inspecting dataframe\nkeys of events dictionary = {events.keys()}.")
 
         return events
 

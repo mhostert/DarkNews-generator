@@ -23,6 +23,10 @@ from DarkNews import logger
 
 
 def upscattering_dxsec_dQ2(mandelstamm, process):
+    '''
+        Return the differential cross section for upscattering in attobarns
+
+    '''
 
     # kinematics
     s,t,u = mandelstamm
@@ -57,7 +61,7 @@ def upscattering_dxsec_dQ2(mandelstamm, process):
         FFga = 0.0
         FFgp = 0.0
 
-        FFNCf1 = target.F1_NC(Q2)  ### FIX ME 
+        FFNCf1 = target.F1_NC(Q2)
         FFNCf2 = 0.0
         FFNCga = 0.0
         FFNCgp = 0.0
@@ -75,7 +79,7 @@ def upscattering_dxsec_dQ2(mandelstamm, process):
         FFNCgp = 0.0
     
     else:
-        logger.error('upscattering on a lepton not implemented yet.')
+        logger.error('upscattering on a lepton not implemented.')
         
     ## Spin summed (but not averaged) matrix elements from MATHEMATICA
     # |M|^2 = | M_SM + M_kinmix + M_massmix|^2

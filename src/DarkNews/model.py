@@ -59,8 +59,10 @@ def create_model(args):
 
 
 class UpscatteringProcess:
-    """ Describes the process of upscattering with arbitrary vertices and masses
-    """
+    ''' 
+        Describes the process of upscattering with arbitrary vertices and masses
+    
+    '''
 
     def __init__(self, nu_projectile, nu_upscattered, target, TheoryModel, helicity):
 
@@ -87,23 +89,23 @@ class UpscatteringProcess:
         # leptonic vertices for upscattering 
         if nu_upscattered==pdg.neutrino4:
             self.m_ups = TheoryModel.m4
-            self.Cij=TheoryModel.Umu4*const.gweak/2.0/const.cw
+            self.Cij=TheoryModel.cmu4
             self.Cji=self.Cij
-            self.Vij=TheoryModel.UD4*TheoryModel.Umu4*TheoryModel.gD
+            self.Vij=TheoryModel.dmu4
             self.Vji=self.Vij
         
         elif nu_upscattered==pdg.neutrino5:
             self.m_ups = TheoryModel.m5
-            self.Cij=TheoryModel.Umu5*const.gweak/2.0/const.cw
+            self.Cij=TheoryModel.cmu5
             self.Cji=self.Cij
-            self.Vij=TheoryModel.UD5*TheoryModel.Umu5*TheoryModel.gD
+            self.Vij=TheoryModel.dmu5
             self.Vji=self.Vij
         
         elif nu_upscattered==pdg.neutrino6:
             self.m_ups = TheoryModel.m6
-            self.Cij=TheoryModel.Umu6*const.gweak/2.0/const.cw
+            self.Cij=TheoryModel.cmu6
             self.Cji=self.Cij
-            self.Vij=TheoryModel.UD6*TheoryModel.Umu6*TheoryModel.gD
+            self.Vij=TheoryModel.dmu6
             self.Vji=self.Vij
         else:
             logger.error(f"Error! Could not find particle produced in upscattering: {nu_upscattered}.")

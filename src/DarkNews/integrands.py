@@ -200,11 +200,13 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 			## JACOBIAN FOR DECAY 
 			dgamma *= (tmax - tmin)
 			dgamma *= (umax - umin)
+			dgamma *= (2) # c3
+			dgamma *= (2*np.pi) # phi34
 			self.int_dic['diff_decay_rate_0'] = dgamma
 
 
 		##############################################
-		# storing normalization for integrands to be of O(1) numbers
+		# storing normalization factor that guarantees that integrands are O(1) numbers
 		self.norm = {}
 		self.norm['diff_flux_avg_xsec'] = np.mean(self.int_dic['diff_flux_avg_xsec'])/len(x[0,:])
 		self.norm['diff_event_rate'] = self.norm['diff_flux_avg_xsec']
@@ -225,6 +227,7 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 			self.int_dic[k] /= self.norm[k]
 
 		logger.debug(f"Normalization factors: {self.norm}.")
+		
 		# return all differential quantities of interest
 		return self.int_dic
 
