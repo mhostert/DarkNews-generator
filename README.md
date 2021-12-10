@@ -45,8 +45,8 @@ but the `--hepevet` flag will also print a HEPEVT file with the specified number
 2) a HEPEVT file
 > data/microboone/3plus1/m4_0.14_mzprime_1.25/HEPevt.dat
 
-To print unweighted events, use `--unweigh`. In this case, the number of `neval >> hepevt_events` in order for the accept-reject method to be successful.
 
+To print unweighted events, use `--unweigh`. In this case, the number of `neval >> hepevt_events` in order for the accept-reject method to be successful.
 
 ***
 ## **OPTIONS**
@@ -91,7 +91,7 @@ To print unweighted events, use `--unweigh`. In this case, the number of `neval 
 
 
 #### experiment
-    --exp {minerva_le,minerva_me,miniboone,microboone} experiment (default: miniboone)
+    --exp {miniboone_fhc,microboone,minerva_le_fhc,minerva_me_fhc,minos_le_fhc,minos_me_fhc,nova_le_fhc,nd280_fhc} experiment (default: miniboone_fhc)
 
 #### monte-carlo scope
     --nopelastic          do not generate proton elastic events (default: False)

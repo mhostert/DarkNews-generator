@@ -85,8 +85,6 @@ class MC_events:
 
         # process being considered
         self.underl_process_name = f'{self.nu_projectile.name} + {self.target.name} -> {self.nu_upscattered.name} +  {self.target.name} -> {self.nu_outgoing.name} + {self.final_lepton.invert().name} + {self.final_lepton.name} + {self.target.name}'
-        logger.info(f"Generating helicity {self.helicity} upscattering events for:\n\t{self.underl_process_name}\n")
-
 
     def set_theory_params(self, params):
         """ 
@@ -173,6 +171,7 @@ class MC_events:
             The first integrand entry is the one VEGAS uses to optimize the importance sampling.
         """
 
+        logger.info(f"Generating helicity {self.helicity} upscattering events for:\n\t{self.underl_process_name}\n")
         #########################################3
         # Some experimental definitions
         #self.exp = experiment  # NO NEED TO STORE THIS
@@ -207,6 +206,7 @@ class MC_events:
         #########################################################################
         # GET THE INTEGRATION SAMPLES and translate to physical variables in MC events
         samples, weights = get_samples(DIM, integ, batch_f)
+        logger.debug(f"Normalization factors in MC: {batch_f.norm}.")
         logger.debug(f"Vegas results for diff_event_rate: {np.sum(weights['diff_event_rate'])}")
         logger.debug(f"Vegas results for diff_flux_avg_xsec: {np.sum(weights['diff_flux_avg_xsec'])}")
 
@@ -228,14 +228,12 @@ class MC_events:
         for decay_step in (k for k in batch_f.int_dic.keys() if 'decay_rate' in k):
             logger.debug(f"Vegas results for {decay_step}: {np.sum(weights[decay_step])}")
             
-            # combining all decay rates into one factor
-            decay_rates *= result[decay_step].mean * batch_f.norm[decay_step]
+            # saving decay weights 
+            events[f'w_{decay_step}'.replace('diff_','')] = weights[decay_step] * batch_f.norm[decay_step]
             
-            # saving decay weights and integrals
-            events[f'w_{decay_step}'.replace('diff_','')] = weights[decay_step]
-            events[f'I_{decay_step}'.replace('diff_','')] = integrals[decay_step].mean
-
-
+            # combining all decay rates into one factor
+            decay_rates *= np.sum(events[f'w_{decay_step}'.replace('diff_','')]) 
+            
         # How many constituent targets inside scattering regime? 
         if self.scope['scattering_regime'] == 'coherent':
             target_multiplicity = 1
@@ -251,12 +249,10 @@ class MC_events:
 
 
         # differential rate weights
-        events['w_event_rate'] = weights['diff_event_rate']*const.attobarn_to_cm2/decay_rates*target_multiplicity*exposure
-        events['I_event_rate'] = integrals['diff_event_rate'].mean*const.attobarn_to_cm2/decay_rates*target_multiplicity*exposure
+        events['w_event_rate'] = weights['diff_event_rate']*const.attobarn_to_cm2/decay_rates*target_multiplicity*exposure*batch_f.norm['diff_event_rate']
 
         # flux averaged xsec weights (neglecting kinematics of decay)
-        events['w_flux_avg_xsec'] = weights['diff_flux_avg_xsec']*const.attobarn_to_cm2*target_multiplicity*exposure
-        events['I_flux_avg_xsec'] = integrals['diff_flux_avg_xsec'].mean*const.attobarn_to_cm2*target_multiplicity*exposure
+        events['w_flux_avg_xsec'] = weights['diff_flux_avg_xsec']*const.attobarn_to_cm2*target_multiplicity*exposure*batch_f.norm['diff_flux_avg_xsec']
 
         events['target'] = np.full(np.size(events['w_event_rate']), self.target.name)
         events['target_pdgid'] = np.full(np.size(events['w_event_rate']), self.target.pdgid)
@@ -266,7 +262,7 @@ class MC_events:
         events['scattering_regime'] = np.full(np.size(events['w_event_rate']), regime)
         events['helicity'] = np.full(np.size(events['w_event_rate']), self.helicity)
         events['underlying_process'] = np.full(np.size(events['w_event_rate']), self.underl_process_name)
-        logger.debug(f"Inspecting dataframe\ndir(Events dataframe) = {dir(events)}.")
+        logger.debug(f"Inspecting dataframe\nkeys of events dictionary = {events.keys()}.")
 
         return events
 
@@ -348,6 +344,10 @@ def run_MC(bsm_model, experiment, **kwargs):
     
     # Combine all cases into one object
     all_events = merge_MC_output(gen_cases_events)
+
+    all_events['bsm_model'] = bsm_model
+    all_events['experiment'] = experiment
+
 
     return all_events
 

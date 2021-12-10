@@ -57,12 +57,18 @@ parser.add_argument("--alpha_epsilon2", type=float, help="alpha_QED*epsilon^2")
 parser.add_argument("--chi", type=float, help="chi")
 
 # experiments    
-parser.add_argument("--exp", type=str.lower, help="experiment", choices=["minerva_le",
-                                                                        "minerva_me",
-                                                                        "miniboone",
-                                                                        "microboone"],
-                                                                        default=DEFAULTS.exp)
-
+parser.add_argument("--exp", type=str.lower, help="experiment", choices = ["miniboone_fhc",
+                                                                           "microboone",
+                                                                           "dune_nd_fhc",
+                                                                           "dune_nd_rhc",
+                                                                           "minerva_le_fhc",
+                                                                           "minerva_me_fhc",
+                                                                           "minos_le_fhc",
+                                                                           "minos_me_fhc",
+                                                                           "nova_le_fhc",
+                                                                           "nd280_fhc"],
+                                                                           default=DEFAULTS.exp)
+                                                                
 # scattering types
 parser.add_argument("--nopelastic", help="do not generate proton elastic events", action="store_true")
 parser.add_argument("--nocoh", help="do not generate coherent events", action="store_true")

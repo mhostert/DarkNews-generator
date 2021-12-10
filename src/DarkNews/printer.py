@@ -2,6 +2,8 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+import pickle 
+import dill 
 
 from DarkNews import logger
 
@@ -11,6 +13,7 @@ from functools import partial
 from . import const
 from . import pdg
 from . import fourvec as fv
+from . import model
 
 from DarkNews.decayer import decay_position
 #CYTHON
@@ -30,7 +33,7 @@ def print_events_to_pandas(PATH_data, df_gen, bsm_model):
 	###############################################
 	# SAVE ALL EVENTS AS A PANDAS DATAFRAME
 	columns = [['P_projectile', 'P_decay_N_parent', 'P_target', 'P_recoil', 
-					'P_decay_ell_minus', 'P_decay_ell_plus','P_decay_N_daughter', 'decay_displacement'], ['t','x','y','z']]
+					'P_decay_ell_minus', 'P_decay_ell_plus','P_decay_N_daughter', 'decay_displacement'], ['0','1','2','3']]
 	columns_index = pd.MultiIndex.from_product(columns)
 	
 	aux_data = [
@@ -74,17 +77,15 @@ def print_events_to_pandas(PATH_data, df_gen, bsm_model):
 			y_decay,
 			z_decay,]
 	
-	# dic = {}
-	# for k in df_gen.keys():
-	# 	dic[k] = [df_gen[k]]
 
 	aux_df = pd.DataFrame(np.stack(aux_data, axis=-1), columns=columns_index)
-	# aux_df = pd.DataFrame(dic)
 
 	# differential weights
 	for column in df_gen:
-		if ("w_" in column or "I_" in column):
+		if ("w_" in column):
 			aux_df[column, ''] = df_gen[column]
+		elif ("I_" in column):
+			aux_df.attrs[column] = df_gen[column]
 
 	aux_df['target', ''] = df_gen['target']
 	aux_df['target_pdgid', ''] = df_gen['target_pdgid']
@@ -99,12 +100,19 @@ def print_events_to_pandas(PATH_data, df_gen, bsm_model):
 		PATH_data += '/'
 	out_file_name = PATH_data+f"pandas_df.pckl"
 
-	aux_df.to_pickle(out_file_name)
-	# np.save(out_file_name, df_gen)
+	# saving the experiment class
+	aux_df.attrs['experiment'] = df_gen['experiment']
 
+	# saving the bsm_model class
+	aux_df.attrs['bsm_model'] = df_gen['bsm_model']
+	
+	# pickles DarkNews classes with support for lambda functions
+	dill.dump(aux_df, open(out_file_name, 'wb'))
+	
+	# aux_df.to_pickle(out_file_name)
+	# pickle.dump(aux_df, open(out_file_name, 'wb'	))
 	return aux_df
-
-
+	
 def print_events_to_ndarray(PATH_data, df_gen, bsm_model):
 
 	# Decay events
@@ -130,19 +138,28 @@ def print_events_to_ndarray(PATH_data, df_gen, bsm_model):
 
 #######
 # not relevant anymore. 
-def print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh=False, geom=geometry_muboone, TOT_EVENTS=100):
+def print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh=False, geom=geometry_muboone, max_events=np.inf):
 	
-
-
 	# sample size (# of events)
 	tot_generated_events = np.shape(df_gen['w_event_rate'])[0]
 	AllEntries = np.array(range(tot_generated_events))
+	
+	# the event rate weight
+	w = df_gen['w_event_rate']
 
-	# Accept/reject method -- samples distributed according to their weights
 	if unweigh:
-		AccEntries = np.random.choice(AllEntries, size=TOT_EVENTS, replace=True, p=(w)/np.sum(w))
+		logger.info(f"Unweighing vegas events, and saving {max_events} HEPEVT events to file.")
+		if max_events < np.size(w):
+			# Accept/reject method -- samples distributed according to their weights
+			AccEntries = np.random.choice(AllEntries, size=max_events, replace=True, p=(np.abs(w))/np.sum(w))
 	else:
-		AccEntries = AllEntries
+		logger.info("Printing weighted HEPEVT events.")
+		if max_events<np.inf:
+			logger.info(f"Saving {max_events} weighted HEPEVT events to file.")
+			AccEntries = np.random.choice(AllEntries, size=max_events, replace=False)
+		else:
+			logger.info(f"Saving {len(AllEntries)} weighted HEPEVT events to file.")
+			AccEntries = AllEntries
 
 	# get scattering positions
 	t_scatter, x_scatter, y_scatter, z_scatter = geom(len(AccEntries))
@@ -157,28 +174,29 @@ def print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh=False, geom=geo
 	# Open file in write mode
 	f = open(hepevt_file_name,"w+") 
 	
-	f.write("%i\n"%TOT_EVENTS)
+	f.write("%i\n"%max_events)
 	
 	# loop over events
-	for i in AccEntries:
+	for i, i_df in zip(range(len(AccEntries)), AccEntries):
 		
 		# no particles & event id
 		if unweigh:
-			f.write("%i 7 %g\n" % (i, df_gen['w_event_rate'][i]))
-		else:
 			f.write("%i 7\n" % i)
+		else:
+			f.write("%i 7 %g\n" % (i, df_gen['w_event_rate'][i_df]))
 
 		# scattering inital states
-		f.write("0 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(pdg.numu.pdgid, *df_gen['P_projectile'][i][1:], df_gen['P_projectile'][i][0], 0.0, x_scatter[i], y_scatter[i], z_scatter[i], t_scatter[i]))
-		f.write("0 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(df_gen['target_pdgid'][i], *df_gen['P_target'][i][1:], df_gen['P_recoil'][i][0], fv.mass(df_gen['P_target'][i]), x_scatter[i],y_scatter[i],z_scatter[i],t_scatter[i]))
+		f.write("0 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(pdg.numu.pdgid, *df_gen['P_projectile'][i_df][1:], df_gen['P_projectile'][i_df][0], 0.0, x_scatter[i], y_scatter[i], z_scatter[i], t_scatter[i]))
+		f.write("0 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(df_gen['target_pdgid'][i_df], *df_gen['P_target'][i_df][1:], df_gen['P_recoil'][i_df][0], fv.mass(df_gen['P_target'][i_df]), x_scatter[i],y_scatter[i],z_scatter[i],t_scatter[i]))
 
 		# scatter final products
-		f.write("0 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(pdg.neutrino4.pdgid, *df_gen['P_decay_N_parent'][i][1:], df_gen['P_decay_N_parent'][i][0], fv.mass(df_gen['P_decay_N_parent'][i]), x_scatter[i], y_scatter[i], z_scatter[i], t_scatter[i]))
-		f.write("0 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(df_gen['target_pdgid'][i], *df_gen['P_recoil'][i][1:], df_gen['P_recoil'][i][0], fv.mass(df_gen['P_recoil'][i]), x_scatter[i],y_scatter[i],z_scatter[i],t_scatter[i]))
+		f.write("0 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(pdg.neutrino4.pdgid, *df_gen['P_decay_N_parent'][i_df][1:], df_gen['P_decay_N_parent'][i_df][0], fv.mass(df_gen['P_decay_N_parent'][i_df]), x_scatter[i], y_scatter[i], z_scatter[i], t_scatter[i]))
+		f.write("0 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(df_gen['target_pdgid'][i_df], *df_gen['P_recoil'][i_df][1:], df_gen['P_recoil'][i_df][0], fv.mass(df_gen['P_recoil'][i]), x_scatter[i],y_scatter[i],z_scatter[i],t_scatter[i]))
 
 		# decay final products
-		f.write("0 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(pdg.nulight.pdgid, *df_gen['P_decay_N_daughter'][i][1:], df_gen['P_decay_N_daughter'][i][0], fv.mass(df_gen['P_decay_N_daughter'][i]), x_decay[i], y_decay[i], z_decay[i], t_decay[i]))				
-		f.write("1 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(pdg.electron.pdgid, *df_gen['P_decay_ell_minus'][i][1:], df_gen['P_decay_ell_minus'][i][0], const.m_e, x_decay[i], y_decay[i], z_decay[i],t_decay[i]))
-		f.write("1 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(pdg.positron.pdgid, *df_gen['P_decay_ell_plus'][i][1:], df_gen['P_decay_ell_plus'][i][0], const.m_e, x_decay[i], y_decay[i], z_decay[i],t_decay[i]))
+		f.write("0 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(pdg.nulight.pdgid, *df_gen['P_decay_N_daughter'][i_df][1:], df_gen['P_decay_N_daughter'][i_df][0], fv.mass(df_gen['P_decay_N_daughter'][i_df])
+			, x_decay[i], y_decay[i], z_decay[i], t_decay[i]))				
+		f.write("1 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(pdg.electron.pdgid, *df_gen['P_decay_ell_minus'][i_df][1:], df_gen['P_decay_ell_minus'][i_df][0], const.m_e, x_decay[i], y_decay[i], z_decay[i],t_decay[i]))
+		f.write("1 %i 0 0 0 0 %g %g %g %g %g %g %g %g %g\n"%(pdg.positron.pdgid, *df_gen['P_decay_ell_plus'][i_df][1:], df_gen['P_decay_ell_plus'][i_df][0], const.m_e, x_decay[i], y_decay[i], z_decay[i],t_decay[i]))
 
 	f.close()

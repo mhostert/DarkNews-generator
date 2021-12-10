@@ -51,4 +51,3 @@ from DarkNews import xsecs
 from DarkNews import printer
 from DarkNews import decayer
 from DarkNews import geom
-

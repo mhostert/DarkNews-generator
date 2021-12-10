@@ -7,10 +7,10 @@ name = "MicroBooNE"
 
 # path to flux file
 # ALL FLUXES ARE NORMALIZED SO THAT THE UNITS ARE    nus/cm^2/GeV/POT      
-fluxfile = "fluxes/MiniBooNE_nu_mode_flux.dat"
+fluxfile = "fluxes/MiniBooNE_FHC.dat"
 
 # flux normalization factor
-flux_norm = 1.0/0.05 * (541.0/463.0)**2
+flux_norm = (541.0/463.0)**2
 
 # neutrino energy range
 erange = (0.05, 9)
