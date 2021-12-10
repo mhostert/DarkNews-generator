@@ -1,0 +1,19 @@
+{
+    "name": "MiniBooNE",
+    "fluxfile": "fluxes/MiniBooNE_nu_mode_flux.dat",
+    "flux_norm": 20.0,
+    "erange": [
+        0.1,
+        9
+    ],
+    "nuclear_targets": [
+        "C12",
+        "H1"
+    ],
+    "fiducial_mass": 818.0,
+    "fiducial_mass_per_target": [
+        701.1428571428571,
+        116.85714285714286
+    ],
+    "POTs": 18.75e+20
+}

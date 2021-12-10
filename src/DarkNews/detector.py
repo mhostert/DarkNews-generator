@@ -2,6 +2,8 @@ import importlib
 import numpy as np
 from scipy import interpolate
 from pathlib import Path
+import os.path
+import json
 local_dir = Path(__file__).parent
 
 from DarkNews import logger
@@ -143,33 +145,30 @@ class Detector():
                             the module should contain parameters specific for
                             that experiment if it is user defined.
     """
+    PATH_CONFIG_FILES = os.path.join(local_dir, "detectors")
 
+    def __init__(self, experiment_name):
+        file_path = os.path.join(self.PATH_CONFIG_FILES, experiment_name.lower(), ".json")
+        try:
+            with open(file_path, 'r') as f:
+                read_file = json.load(f)
+                self.NAME            = read_file['name']
+                self.FLUXFILE        = read_file['fluxfile']
+                self.FLUX_NORM       = read_file['flux_norm']
+                self.ERANGE          = read_file['erange']
+                #self.EMAX           = read_file['erange[1]']
+                # Detector targets
+                self.NUCLEAR_TARGETS = [NuclearTarget(target) for target in read_file['nuclear_targets']]
+                self.POTS            = read_file['POTs']
+        except FileNotFoundError:
+            raise FileNotFoundError("The experiment configuration file '{}.json' does not exist.".format(experiment_name.lower()))
+        except KeyError as err:
+            raise KeyError("No field '{}' specified in the the experiment configuration file '{}.json'.".format(err.args[0], experiment_name.lower()))
 
-    def __init__(self, exp_module):
-        try: # relative module
-            det = importlib.import_module('.' + exp_module, 'DarkNews.detectors')
-        except ModuleNotFoundError:
-            raise ImportError(f"Cannot import module \"{exp_module}\"")
-        #    pass
-        #try: # absolute module
-        #    det = importlib.import_module(exp_module)
-        #except ModuleNotFoundError:
-
-        self.NAME = det.name
-        self.FLUXFILE  = det.fluxfile
-        self.FLUX_NORM = det.flux_norm
-        self.ERANGE = det.erange
-        #self.EMAX = det.erange[1]
-
-        # Detector targets
-        self.NUCLEAR_TARGETS = [NuclearTarget(target) for target in det.nuclear_targets]
-                
         # total number of targets
         self.NUMBER_OF_TARGETS = {}
-        for fid_mass, target in zip(det.fiducial_mass_per_target, self.NUCLEAR_TARGETS):
+        for fid_mass, target in zip(read_file.fiducial_mass_per_target, self.NUCLEAR_TARGETS):
             self.NUMBER_OF_TARGETS[f'{target.name}'] = fid_mass/target.A * NAvo 
-
-        self.POTS = det.POTs
 
     # this one is too specific, need to make it more generic
     # and force the user to provide fluxes normalized in the right format!

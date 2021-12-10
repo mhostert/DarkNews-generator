@@ -1,0 +1,19 @@
+{
+    "name": "Minerva LE",
+    "fluxfile": "fluxes/MINERVA_LE_numu_flux.dat",
+    "flux_norm": 2.0e-10,
+    "erange": [
+        0.1,
+        19.0
+    ],
+    "nuclear_targets": [
+        "C12",
+        "H1"
+    ],
+    "fiducial_mass": 6.10,
+    "fiducial_mass_per_target": [
+        5.228571428571428,
+        0.8714285714285713
+    ],
+    "POTs": 2.5039e+20
+}
