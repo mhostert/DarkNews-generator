@@ -152,5 +152,6 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# Grid runs
-**/*__grid_run__
+# Data directories: where generations go
+examples/data/
+
