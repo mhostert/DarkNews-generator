@@ -100,9 +100,8 @@ def nuclear_F1_fourier_bessel_EM(Q2, array_coeff):
 # All units in GeV
 
 # approximate formula in D. Lunney, J.M. Pearson and C. Thibault, Rev. Mod. Phys.75, 1021 (2003)
-# eV
 def electron_binding_energy(Z):
-    return (14.4381*Z**2.39 + 1.55468e-6*Z**5.35)
+    return (14.4381*Z**2.39 + 1.55468e-6*Z**5.35) # eV
 
 # Nested dic containing all elements
 elements_dic = {}

@@ -21,14 +21,6 @@ from logging.handlers import RotatingFileHandler
 from DarkNews import logger
 from DarkNews import local_dir
 
-#CYTHON
-import pyximport
-pyximport.install(
-    language_level=3,
-    pyimport=False,
-    )
-from . import Cfourvec as Cfv
-
 
 #####################################
 # particle names and props
@@ -165,13 +157,20 @@ fm_to_GeV = 1/invGeV_to_cm*1e-15*1e2
 invGeV_to_s = invGeV_to_cm/c_LIGHT
 hb = 6.582119569e-25 # hbar in Gev s
 
-
-################
-# DM velocity at FREEZOUT
-V_DM_FREEZOUT = 0.3 # c 
-# SIGMAV_FREEZOUT = 4.8e-26 # cm^3/s
-SIGMAV_FREEZOUT = 6e-26 # cm^3/s
 GeV2_to_cm3s = invGeV2_to_cm2*c_LIGHT*1e2
+
+g_to_eV = 5.6095886031e32 # eV
+kg_to_eV = 5.6095886031e35 # eV
+t_to_eV = 5.6095886031e38 # eV
+
+
+g_to_GeV = g_to_eV*1e-9 # GeV
+kg_to_GeV = kg_to_eV*1e-9 # GeV
+t_to_GeV = t_to_eV*1e-9 # GeV
+
+m_proton_in_kg = 1.6726219236951e-27
+m_proton_in_g = 1.6726219236951e-24
+m_proton_in_t = 1.6726219236951e-30
 
 
 

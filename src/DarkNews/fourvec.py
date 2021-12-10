@@ -12,9 +12,7 @@ X = 0
 Y = 1
 Z = 2
 
-kz = [0,0,0,1]
-kx = [0,1,0,0]
-k0 = [1,0,0,0]
+THRESHOLD = 0.0
 
 ##############################
 # numpy functions
@@ -36,10 +34,13 @@ def cos_azimuthal(x):
 	return Cfv.get_cosTheta(x)
 
 def inv_mass(x,y):
-	return np.sqrt(Cfv.dot4(x,y))
+	mSQR = np.clip(dot4(x,y), THRESHOLD, np.inf)
+	if (mSQR < 0).any():
+		logger.warning("Warning! Trying to compute invariant mass with negative (p_a.p_b) product. Possible numerical instability?")
+	return np.sqrt(mSQR)
 
 def mass(x):
-	return np.sqrt(dot4(x,x))
+	return inv_mass(x,x)
 
 def get_3vec(x):
 	return x[1:]
