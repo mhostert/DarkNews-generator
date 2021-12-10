@@ -11,7 +11,7 @@ fluxfile = "fluxes/MiniBooNE_FHC.dat"
 flux_norm = 1
 
 # neutrino energy range
-erange = (0.1, 9)
+erange = (0.5, 9)
 
 # Detector materials -- homogeneous CH2
 nuclear_targets = ['C12','H1']

@@ -131,8 +131,8 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		vegas_jacobian = (Q2lmax - Q2lmin)*np.exp(Q2l) * (self.Emax - self.Emin)
 		diff_xsec *= vegas_jacobian
 
-		self.int_dic['diff_flux_avg_xsec'] = diff_xsec * self.MC_case.flux(Enu)
 		self.int_dic['diff_event_rate']    = diff_xsec * self.MC_case.flux(Enu)
+		self.int_dic['diff_flux_avg_xsec'] = diff_xsec * self.MC_case.flux(Enu)
 
 
 		if decay_case.on_shell:
@@ -226,9 +226,16 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		for k in self.norm.keys():
 			self.int_dic[k] /= self.norm[k]
 
-		logger.debug(f"Normalization factors: {self.norm}.")
+		logger.debug(f"Normalization factors in integrand: {self.norm}.")
 		
 		# return all differential quantities of interest
+		results = []
+		logger.debug("Mean integrand values %g"%np.mean(self.int_dic['diff_event_rate']))
+		for key in self.int_dic.keys():
+			logger.debug(key)
+			results.append(self.int_dic[key])
+		results = np.array(results)
+		logger.debug(f"results: {results}")
 		return self.int_dic
 
 
