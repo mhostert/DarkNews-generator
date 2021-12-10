@@ -37,7 +37,7 @@ class NuclearTarget:
             self.Z=0
             self.N=0
             self.A=0
-            self.pdgid = 11
+            self.pdgid=11
         #####################################
         # hadronic *nuclear* target
         else:
@@ -178,35 +178,20 @@ class Detector():
         Args:
             flavour (pdg.flavour) : neutrino flavour for required flux
 
-        TODO: unifying fluxes inputs
         """
-        if (self.FLUXFILE == "fluxes/MiniBooNE_nu_mode_flux.dat" and (flavor==pdg.numu or flavor==pdg.numubar)):
-            Elo, Ehi, numu, numub, nue, nueb = np.loadtxt(f'{local_dir}/{self.FLUXFILE}', unpack=True)
-            E = (Ehi+Elo)/2.0
-            if flavor==pdg.numu:
-                nf = numu
-            if flavor==pdg.numubar:
-                nf = numub
-        elif (self.FLUXFILE == "fluxes/MINERVA_ME_numu_flux.dat" and flavor==pdg.numu):
-            E, nf = np.loadtxt(f'{local_dir}/{self.FLUXFILE}', unpack=True)
-        elif (self.FLUXFILE == "fluxes/MINERVA_LE_numu_flux.dat" and flavor==pdg.numu):
-            E, nf = np.loadtxt(f'{local_dir}/{self.FLUXFILE}', unpack=True)
-        elif (self.FLUXFILE == "fluxes/CHARMII.dat" and flavor==pdg.numu):
-            E, nf = np.loadtxt(f'{local_dir}/{self.FLUXFILE}', unpack=True)
-        elif (self.FLUXFILE=="fluxes/T2Kflux2016/t2kflux_2016_nd280_minus250kA.txt" or 
-                self.FLUXFILE=="fluxes/T2Kflux2016/t2kflux_2016_nd280_plus250kA.txt"):
-            data = np.genfromtxt(f'{local_dir}/{self.FLUXFILE}',unpack=True,skip_header=3)
-            E = (data[1]+data[2])/2
-            if flavor==pdg.numu:
-                nf = data[3]
-            elif flavor==pdg.numubar:
-                nf = data[4]
-            elif flavor==pdg.nue:
-                nf = data[5]
-            elif flavor==pdg.nuebar:
-                nf = data[6]
+        data = np.genfromtxt(f'{local_dir}/{self.FLUXFILE}',unpack=True)
+        E = data[0]
+        if flavor==pdg.numu:
+            nf = data[2]
+        elif flavor==pdg.numubar:
+            nf = data[5]
+        elif flavor==pdg.nue:
+            nf = data[1]
+        elif flavor==pdg.nuebar:
+            nf = data[4]
         else:
-            raise ValueError(f"Unknown file \"{self.FLUXFILE}\"")
+            logger.error("ERROR! Neutrino flavor {flavor.name} not supported.")
+        # raise ValueError(f"Unknown file \"{self.FLUXFILE}\"")
 
         flux = interpolate.interp1d(E, nf*self.FLUX_NORM, fill_value=0.0, bounds_error=False)
         return flux

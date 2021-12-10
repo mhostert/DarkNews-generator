@@ -94,7 +94,7 @@ def print_events_to_pandas(PATH_data, df_gen, bsm_model):
 
 	# Create target Directory if it doesn't exist
 	if not os.path.exists(PATH_data):
-	    os.makedirs(PATH_data)
+		os.makedirs(PATH_data)
 	if PATH_data[-1] != '/':
 		PATH_data += '/'
 	out_file_name = PATH_data+f"pandas_df.pckl"
@@ -116,7 +116,7 @@ def print_events_to_ndarray(PATH_data, df_gen, bsm_model):
 
 	# Create target Directory if it doesn't exist 
 	if not os.path.exists(PATH_data): 
-	    os.makedirs(PATH_data) 
+		os.makedirs(PATH_data) 
 	if PATH_data[-1] != '/':
 		PATH_data += '/'
 	out_file_name = PATH_data+f"numpy_ndarray"
