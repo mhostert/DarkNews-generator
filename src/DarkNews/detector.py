@@ -167,7 +167,7 @@ class Detector():
 
         # total number of targets
         self.NUMBER_OF_TARGETS = {}
-        for fid_mass, target in zip(read_file.fiducial_mass_per_target, self.NUCLEAR_TARGETS):
+        for fid_mass, target in zip(read_file['fiducial_mass_per_target'], self.NUCLEAR_TARGETS):
             self.NUMBER_OF_TARGETS[f'{target.name}'] = fid_mass/target.A * NAvo 
 
     # this one is too specific, need to make it more generic
