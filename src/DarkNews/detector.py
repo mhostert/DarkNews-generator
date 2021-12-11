@@ -149,27 +149,29 @@ class Detector():
 
     def __init__(self, experiment_name):
         file_path = os.path.join(self.PATH_CONFIG_FILES, experiment_name.lower() + ".json")
+        with open(file_path, 'r') as f:
+            read_file = json.load(f)
         try:
-            with open(file_path, 'r') as f:
-                read_file = json.load(f)
-                self.NAME            = read_file['name']
-                self.FLUXFILE        = read_file['fluxfile']
-                self.FLUX_NORM       = read_file['flux_norm']
-                self.ERANGE          = read_file['erange']
-                #self.EMAX           = read_file['erange[1]']
-                # Detector targets
-                self.NUCLEAR_TARGETS = [NuclearTarget(target) for target in read_file['nuclear_targets']]
-                self.FIDUCIAL_MASS   = read_file['fiducial_mass']
-                self.POTS            = read_file['POTs']
+            self.NAME            = read_file['name']
+            self.FLUXFILE        = read_file['fluxfile']
+            self.FLUX_NORM       = read_file['flux_norm']
+            self.ERANGE          = read_file['erange']
+            #self.EMAX           = read_file['erange[1]']
+            # Detector targets
+            self.NUCLEAR_TARGETS = [NuclearTarget(target) for target in read_file['nuclear_targets']]
+            self.FIDUCIAL_MASS   = read_file['fiducial_mass']
+            self.POTS            = read_file['POTs']
+            # total number of targets
+            self.NUMBER_OF_TARGETS = {}
+            for fid_mass_fraction, target in zip(read_file['fiducial_mass_fraction_per_target'], self.NUCLEAR_TARGETS):
+                self.NUMBER_OF_TARGETS[f'{target.name}'] = self.FIDUCIAL_MASS*fid_mass_fraction/target.A * NAvo 
         except FileNotFoundError:
             raise FileNotFoundError("The experiment configuration file '{}.json' does not exist.".format(experiment_name.lower()))
         except KeyError as err:
-            raise KeyError("No field '{}' specified in the the experiment configuration file '{}.json'.".format(err.args[0], experiment_name.lower()))
-
-        # total number of targets
-        self.NUMBER_OF_TARGETS = {}
-        for fid_mass_fraction, target in zip(read_file['fiducial_mass_fraction_per_target'], self.NUCLEAR_TARGETS):
-            self.NUMBER_OF_TARGETS[f'{target.name}'] = self.FIDUCIAL_MASS*fid_mass_fraction/target.A * NAvo 
+            if err.args[0] in ["name", "fluxfile", "flux_norm", "erange", "nuclear_targets", "fiducial_mass", "fiducial_mass_fraction_per_target", "POTs"]:
+                # check that the error comes from reading the file and not elsewhere
+                raise KeyError("No field '{}' specified in the the experiment configuration file '{}.json'.".format(err.args[0], experiment_name.lower()))
+            raise
 
     # this one is too specific, need to make it more generic
     # and force the user to provide fluxes normalized in the right format!
