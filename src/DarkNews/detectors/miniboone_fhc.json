@@ -1,7 +1,7 @@
 {
-    "name": "MiniBooNE",
-    "fluxfile": "fluxes/MiniBooNE_nu_mode_flux.dat",
-    "flux_norm": 20.0,
+    "name": "MiniBooNE_FHC",
+    "fluxfile": "fluxes/MiniBooNE_FHC.dat",
+    "flux_norm": 1.0,
     "erange": [
         0.1,
         9

@@ -1,0 +1,27 @@
+{
+    "name": "ND280_FHC",
+    "fluxfile": "fluxes/ND280_FHC.dat",
+    "flux_norm": 1.0,
+    "erange": [
+        0.05,
+        9.0
+    ],
+    "nuclear_targets": [
+        "H1",
+        "C12",
+        "O16",
+        "Cu63",
+        "Zn64",
+        "Pb208"
+    ],
+    "fiducial_mass": 22.34,
+    "fiducial_mass_per_target": [
+        0.42,
+        5.4,
+        3.32,
+        0.4,
+        0.8,
+        12.0
+    ],
+    "POTs": 1.97e+21
+}

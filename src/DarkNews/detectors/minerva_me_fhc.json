@@ -1,7 +1,7 @@
 {
-    "name": "Minerva LE",
-    "fluxfile": "fluxes/MINERVA_LE_numu_flux.dat",
-    "flux_norm": 2.0e-10,
+    "name": "MINERVA_FHC_ME",
+    "fluxfile": "fluxes/NUMI_FHC_ME_unofficial.dat",
+    "flux_norm": 1.0,
     "erange": [
         0.1,
         19.0
@@ -15,5 +15,5 @@
         5.228571428571428,
         0.8714285714285713
     ],
-    "POTs": 2.5039e+20
+    "POTs": 8.468e+20
 }
