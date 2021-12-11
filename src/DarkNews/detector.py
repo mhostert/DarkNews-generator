@@ -148,7 +148,7 @@ class Detector():
     PATH_CONFIG_FILES = os.path.join(local_dir, "detectors")
 
     def __init__(self, experiment_name):
-        file_path = os.path.join(self.PATH_CONFIG_FILES, experiment_name.lower(), ".json")
+        file_path = os.path.join(self.PATH_CONFIG_FILES, experiment_name.lower() + ".json")
         try:
             with open(file_path, 'r') as f:
                 read_file = json.load(f)
@@ -159,6 +159,7 @@ class Detector():
                 #self.EMAX           = read_file['erange[1]']
                 # Detector targets
                 self.NUCLEAR_TARGETS = [NuclearTarget(target) for target in read_file['nuclear_targets']]
+                self.FIDUCIAL_MASS   = read_file['fiducial_mass']
                 self.POTS            = read_file['POTs']
         except FileNotFoundError:
             raise FileNotFoundError("The experiment configuration file '{}.json' does not exist.".format(experiment_name.lower()))
@@ -167,8 +168,8 @@ class Detector():
 
         # total number of targets
         self.NUMBER_OF_TARGETS = {}
-        for fid_mass, target in zip(read_file['fiducial_mass_per_target'], self.NUCLEAR_TARGETS):
-            self.NUMBER_OF_TARGETS[f'{target.name}'] = fid_mass/target.A * NAvo 
+        for fid_mass_fraction, target in zip(read_file['fiducial_mass_fraction_per_target'], self.NUCLEAR_TARGETS):
+            self.NUMBER_OF_TARGETS[f'{target.name}'] = self.FIDUCIAL_MASS*fid_mass_fraction/target.A * NAvo 
 
     # this one is too specific, need to make it more generic
     # and force the user to provide fluxes normalized in the right format!
