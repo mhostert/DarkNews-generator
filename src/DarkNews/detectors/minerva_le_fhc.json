@@ -11,9 +11,9 @@
         "H1"
     ],
     "fiducial_mass": 6.10,
-    "fiducial_mass_per_target": [
-        5.228571428571428,
-        0.8714285714285713
+    "fiducial_mass_fraction_per_target": [
+        0.8571,
+        0.1429
     ],
     "POTs": 2.5039e+20
 }

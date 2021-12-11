@@ -1,6 +1,6 @@
 {
-    "name": "NUMI_FHC_LE",
-    "fluxfile": "fluxes/NUMI_FHC_LE.dat",
+    "name": "NUMI_FHC_ME",
+    "fluxfile": "fluxes/NUMI_FHC_ME_unofficial.dat",
     "flux_norm": 1.0,
     "erange": [
         0.1,
@@ -11,9 +11,9 @@
         "Fe56"
     ],
     "fiducial_mass": 28.6,
-    "fiducial_mass_per_target": [
-        22.88,
-        5.72
+    "fiducial_mass_fraction_per_target": [
+        0.8,
+        0.2
     ],
     "POTs": 9.69e+20
 }

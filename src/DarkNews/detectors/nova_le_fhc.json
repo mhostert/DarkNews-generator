@@ -14,12 +14,12 @@
         "Ti48"
     ],
     "fiducial_mass": 193.0,
-    "fiducial_mass_per_target": [
-        20.844,
-        128.731,
-        5.79,
-        31.073,
-        6.176
+    "fiducial_mass_fraction_per_target": [
+        0.1080,
+        0.6670,
+        0.0300,
+        0.1610,
+        0.0320
     ],
     "POTs": 1.36e+21
 }

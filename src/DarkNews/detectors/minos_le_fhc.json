@@ -11,9 +11,9 @@
         "Fe56"
     ],
     "fiducial_mass": 28.6,
-    "fiducial_mass_per_target": [
-        22.88,
-        5.72
+    "fiducial_mass_fraction_per_target": [
+        0.8,
+        0.2
     ],
     "POTs": 10.56e+20
 }

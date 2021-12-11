@@ -15,13 +15,13 @@
         "Pb208"
     ],
     "fiducial_mass": 22.34,
-    "fiducial_mass_per_target": [
-        0.42,
-        5.4,
-        3.32,
-        0.4,
-        0.8,
-        12.0
+    "fiducial_mass_fraction_per_target": [
+        0.0188,
+        0.2417,
+        0.1486,
+        0.0179,
+        0.0358,
+        0.5372
     ],
     "POTs": 1.97e+21
 }

@@ -10,8 +10,8 @@
         "Ar40"
     ],
     "fiducial_mass": 85.0,
-    "fiducial_mass_per_target": [
-        85.0
+    "fiducial_mass_fraction_per_target": [
+        1.0
     ],
     "POTs": 12.25e+20
 }
