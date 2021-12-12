@@ -44,7 +44,7 @@ class GenLauncher:
         self.ud6 = 1.0
         self.gD = 1.0
         self.epsilon = 1e-2
-        self.exp = "miniboone"
+        self.exp = "miniboone_fhc"
         self.nopelastic = False
         self.nocoh = False
         self.noHC = False
@@ -69,15 +69,15 @@ class GenLauncher:
         for k, v in kwargs.items():
             setattr(self, k, v)
 
-    def run(self, log_level="INFO", verbose=None, logfile=None):
-        args = {"log_level": log_level, "verbose": verbose, "logfile": logfile}
-        for attr in ["log_level", "verbose", "logfile"]:
+    def run(self, log="INFO", verbose=None, logfile=None):
+        args = {"log": log, "verbose": verbose, "logfile": logfile}
+        for attr in ["log", "verbose", "logfile"]:
             if args[attr] is not None:
                 setattr(self, attr, args[attr])
 
-        numeric_level = getattr(logging, log_level, None)
+        numeric_level = getattr(logging, log, None)
         if not isinstance(numeric_level, int):
-            raise ValueError('Invalid log level: %s' % log_level)  
+            raise ValueError('Invalid log level: %s' % log)  
         ConfigureLogger(logger, level=numeric_level, prettyprinter=prettyprinter, verbose=verbose, logfile=logfile)
 
         ######################################
