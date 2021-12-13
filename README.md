@@ -45,7 +45,7 @@ Required dependencies:
 
 ## Installation
 
-*Currently set for local `pip` installation`*  
+*Currently set for local `pip` installation*  
 To install the package, clone the repository in a directory.
 Then enter in the main folder and run:
 ```sh
@@ -135,13 +135,13 @@ Parameters marked as *internal* can not be specified as they are automatically c
 ##### Couplings
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
-|:-------------------|:-------:|:-----------------------------------|-----------:|
-| **gD**             | `float` | U(1)<sub>d</sub> dark coupling g<sub>D</sub>             | 1.0        | 
+|:-------------------|:-------:|:-------------------------------------------------------------------------------|-----------:|
+| **gD**             | `float` | U(1)<sub>d</sub> dark coupling g<sub>D</sub>                                   | 1.0        | 
 | **alphaD**         | `float` | U(1)<sub>d</sub> &alpha;<sub>dark</sub> = (g<sub>D</sub><sup>2</sup> / 4 &pi;) | *internal* |
-| **epsilon**        | `float` | &epsilon;                                  | 0.01       |
-| **epsilon2**       | `float` | &epsilon;<sup>2</sup>                               | *internal* |
-| **alpha_epsilon2** | `float` | &alpha;<sub>QED</sub> &sdot; &epsilon;<sup>2</sup>                       | *internal* |
-| **chi**            | `float` |                                    | `None`     |
+| **epsilon**        | `float` | &epsilon;                                                                      | 0.01       |
+| **epsilon2**       | `float` | &epsilon;<sup>2</sup>                                                          | *internal* |
+| **alpha_epsilon2** | `float` | &alpha;<sub>QED</sub> &sdot; &epsilon;<sup>2</sup>                             | *internal* |
+| **chi**            | `float` |                                                                                | `None`     |
 
 ##### Experiment
 
