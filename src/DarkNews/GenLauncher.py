@@ -63,15 +63,15 @@ class GenLauncher:
         self.hepevt_unweigh = False
         self.hepevt_events = 100
         self.summary_plots = True
-        self.path = ""
+        self.path = "."
 
         # set parameters
         for k, v in kwargs.items():
             setattr(self, k, v)
 
-    def run(self, log="INFO", verbose=None, logfile=None):
-        args = {"log": log, "verbose": verbose, "logfile": logfile}
-        for attr in ["log", "verbose", "logfile"]:
+    def run(self, log="INFO", verbose=None, logfile=None, path="."):
+        args = {"log": log, "verbose": verbose, "logfile": logfile, "path": path}
+        for attr in args.keys():
             if args[attr] is not None:
                 setattr(self, attr, args[attr])
 
@@ -87,7 +87,6 @@ class GenLauncher:
         ##########################
         # path
         path = self.path
-        use_default_path = True if path == "" else False
 
         ##########################
         # MC evaluations and iterations
@@ -184,14 +183,9 @@ class GenLauncher:
 
 
         ####################################################
-        # create directory if it does not exist: skip this if you're in a grid run
-        if not use_default_path:
-            logger.info(path)
-            PATH_data = os.path.join(path, "data", os.path.split(PATH_data.rstrip('/'))[-1])
-            PATH      = os.path.join(path, "plots", os.path.split(PATH.rstrip('/'))[-1])
-            for p in [os.path.join(path, "data"), os.path.join(path, "plots")]:
-                if not os.path.exists(p):
-                    os.mkdir(p)
+        # Paths
+        PATH_data = os.path.join(path, PATH_data)
+        PATH = os.path.join(path, PATH)
         
         df_gen['DATA_PATH'] = PATH_data
         df_gen['PLOTS_PATH'] = PATH
