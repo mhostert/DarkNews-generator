@@ -1,3 +1,7 @@
+<h1 align="center"> Dark News </h1> <br>
+
+*Here place the logo*
+
 <!-- ```
     ###############################################################
     #    ______           _        _   _                          #
@@ -12,117 +16,264 @@
 ---
 -->
 
-Event generator for dark neutrino events (in progress).
+*Here place the relevant badges*
 
-## **SETUP**
+## Table of Contents
 
-Currently set for local pip installation. From the main folder,
+- [Introduction](#introduction)
+- [Dependencies](#dependencies)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Generated events dataframe](#generated-events-dataframe)
 
-`python3 -m pip install -e .`
+## Introduction
+DarkNews is an event generator for dark neutrino events (in progress).
+*write introduction on what's the project aim, its capabilities*
 
-Requirements:
-* numpy
-* scipy
-* cython
+## Dependencies
+
+Required dependencies:
+* [Python](http://www.python.org/) 3.6.1 or above
+* [NumPy](http://www.numpy.org/)
+* [pandas](https://pandas.pydata.org/) 1.0 or above
+* [Cython](https://cython.org/)
+* [Requests](https://docs.python-requests.org/en/master/index.html)
 * [vegas](https://pypi.org/project/vegas/)
-* [scikit-hep](https://github.com/scikit-hep/)
-* [Particle](https://github.com/scikit-hep/particle)
+* [Scikit-HEP](https://scikit-hep.org/)
+* [Particle](https://pypi.org/project/particle/)
+* [dill](https://pypi.org/project/dill/)
 
----
-## **USAGE**
+## Installation
 
-To generate 100 HEPevt events with a 4-th neutrino mass of `m_4` and a Zprime mass of `m_zprime` you can simply run
+*Currently set for local `pip` installation`*  
+To install the package, clone the repository in a directory.
+Then enter in the main folder and run:
+```sh
+python3 -m pip install -e . --ignore-installed certifi
+```
 
-`dn_gen --mzprime=1.25 --m4=0.140 --neval=10000 --D_or_M=dirac --log=INFO --hepevt --hepevt_events=100 --exp=microboone `
+The package will be installed locally in editable mode.  
+The command will take care of installing any missing dependencies.
+In any case, it is necessary to have Python 3.6.1 with at least NumPy installed prior to run it.
 
-By default, the generator prints all events to a pandas dataframe:
+## Usage
 
-1) a pandas dataframe file (by default)
-> data/microboone/3plus1/m4_0.14_mzprime_1.25/pandas_df.pckl
+The main usage of DarkNews is covered in depth in the notebook `Example_0_start_here.ipynb` in the `examples` folder.
 
-but the `--hepevet` flag will also print a HEPEVT file with the specified number of events in `hepevt_events`:
+It is possible to run the generator in two ways.
+In both cases, the generated dataset is saved into a directory tree which is created by default in the same folder the generator is run.  
+The directory tree has the following form:
+```
+<path>/data/<exp>/<model_name>/<relevant_masses>_<D_or_M>/
+```
+where:
+* `<path>`: is the value of the `path` argument (or option), default to `./`
+* `<exp>`: is the value of the `exp` argument (or option), default set to `miniboone_fhc`
+* `<model_name>`: is the name of the chosen model according to the values of the chosen parameters; it can be `3plus1`, `3plus2`, `3plus3`
+* `<relevant_masses>`: it is a string made of strings of the kind `"<parameter>_<mass>"` separated by underscores, where `<parameter>` is the name of a mass parameter among `mzprime`, `m4`, `m5`, `m6`; while `<mass>` is a the value, formatted as float, of `<parameter>`
+* `<D_or_M>`: is the value of the `D_or_M` argument (or option), default set to `majorana`
 
-2) a HEPEVT file
-> data/microboone/3plus1/m4_0.14_mzprime_1.25/HEPevt.dat
+### Command line functionality
 
+It is possible to run the generator through the script `bin/dn_gen`, passing the parameters as options.
+```sh
+dn_gen --mzprime=1.25 --m4=0.140 --neval=1000 --D_or_M=dirac --log=INFO
+```
+Run `dn_gen --help` to inspect the meaning of each parameter.
 
-To print unweighted events, use `--unweigh`. In this case, the number of `neval >> hepevt_events` in order for the accept-reject method to be successful.
+### Scripting functionality
 
-***
-## **OPTIONS**
-    -h, --help            show this help message and exit
+It is possible to run the generator by creating an instance of the `DarkNews.GenLauncher.GenLauncher` class and calling its `run` method.
+```python
+from DarkNews.GenLauncher import GenLauncher
+gen_object = GenLauncher(mzprime=1.25, m4=0.140, neval=1000, D_or_M="dirac")
+gen_object.run(log="INFO")
+```
+The parameters are passed directly while instantiating the `GenLauncher` object.
+Some parameters (`log`, `verbose`, `logfile`, `path`) related to the run itself can be passed also within the call of the `run()` method.
 
-### Physics args
+### List of parameters
 
-#### dark sector spectrum
-    --mzprime MZPRIME     Z' mass (default: 1.25)
-    --m4 M4               mass of the fourth neutrino (default: 0.14)
-    --m5 M5               mass of the fifth neutrino (default: None)
-    --m6 M6               mass of the sixth neutrino (default: None)
-    --D_or_M {dirac,majorana}
-                    D_or_M: dirac or majorana (default: majorana)
+This is an exhaustive list of the parameters that can be passed to the program.
+They can be passed in the command line mode by prepending `--` to the name.
+This summary can also be accessed by running
+```sh
+dn_gen --help
+```
+The first column is the name of the parameter, the second is the type or the list of allowed values, the third is a brief explanation and the fourth is the default.
+Parameters marked as *internal* can not be specified as they are automatically computed on the basis of other parameters.
 
-#### mixings
-    --ue4 UE4             Ue4 (default: 0.0)
-    --ue5 UE5             Ue5 (default: 0.0)
-    --ue6 UE6             Ue6 (default: 0.0)
+#### Physics args
 
-    --umu4 UMU4           Umu4 (default: 0.0016201851746019652)
-    --umu5 UMU5           Umu5 (default: 0.003391164991562634)
-    --umu6 UMU6           Umu6 (default: 0.0)
+##### Dark sector spectrum
 
-    --utau4 UTAU4         Utau4 (default: 0)
-    --utau5 UTAU5         Utau5 (default: 0)
-    --utau6 UTAU6         Utau6 (default: 0)
+|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+|:------------|:-----------------------:|:----------------------------|-------------:|
+| **mzprime** | `float`                 | Mass of Z'                  | 1.25         |
+| **m4**      | `float`                 | Mass of the fourth neutrino | 0.14         |
+| **m5**      | `float`                 | Mass of the fifth neutrino  | `None`       |
+| **m6**      | `float`                 | Mass of the sixth neutrino  | `None`       |
+| **D_or_M**  | `["dirac", "majorana"]` | Dirac or majorana           | `"majorana"` |
 
-    --ud4 UD4             UD4 (default: 1.0)
-    --ud5 UD5             UD5 (default: 1.0)
-    --ud6 UD6             UD6 (default: 1.0)
+##### Mixings
 
-#### couplings
-    --gD GD               U(1)_d dark coupling (default: 1.0)
-    --alphaD ALPHAD       U(1)_d alpha_dark = (g_dark^2 /4 pi) (default: None)
+|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+|:----------|:--------:|:----|----------:|
+| **ue4**   | `float`  |     | 0.0       |
+| **ue5**   | `float`  |     | 0.0       |
+| **ue6**   | `float`  |     | 0.0       |
+| **umu4**  | `float`  |     | 0.0016202 |
+| **umu5**  | `float`  |     | 0.0033912 |
+| **umu6**  | `float`  |     | 0.0       |
+| **utau4** | `float`  |     | 0.0       |
+| **utau5** | `float`  |     | 0.0       |
+| **utau6** | `float`  |     | 0.0       |
+| **ud4**   | `float`  |     | 1.0       |
+| **ud5**   | `float`  |     | 1.0       |
+| **ud6**   | `float`  |     | 1.0       |
 
-    --epsilon EPSILON     epsilon^2 (default: 0.01)
-    --epsilon2 EPSILON2   epsilon^2 (default: None)
+##### Couplings
 
-    --alpha_epsilon2 ALPHA_EPSILON2 alpha_QED*epsilon^2 (default: None)
-    --chi CHI             chi (default: None)
+|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+|:-------------------|:-------:|:-----------------------------------|-----------:|
+| **gD**             | `float` | U(1)<sub>d</sub> dark coupling g<sub>D</sub>             | 1.0        | 
+| **alphaD**         | `float` | U(1)<sub>d</sub> &alpha;<sub>dark</sub> = (g<sub>D</sub><sup>2</sup> / 4 &pi;) | *internal* |
+| **epsilon**        | `float` | &epsilon;                                  | 0.01       |
+| **epsilon2**       | `float` | &epsilon;<sup>2</sup>                               | *internal* |
+| **alpha_epsilon2** | `float` | &alpha;<sub>QED</sub> &sdot; &epsilon;<sup>2</sup>                       | *internal* |
+| **chi**            | `float` |                                    | `None`     |
 
+##### Experiment
 
-#### experiment
-    --exp {miniboone_fhc,microboone,minerva_le_fhc,minerva_me_fhc,minos_le_fhc,minos_me_fhc,nova_le_fhc,nd280_fhc} experiment (default: miniboone_fhc)
+|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+|:--------|:--------:|:-----------------------------------------------------------------|------------------:|
+| **exp** | `string` | The experiment to consider: see [this section](#the-experiments) | `"miniboone_fhc"` |
 
-#### monte-carlo scope
-    --nopelastic          do not generate proton elastic events (default: False)
-    --nocoh               do not generate coherent events (default: False)
+##### Monte-Carlo scope
 
-    --noHC                do not include helicity conserving events (default: False)
-    --noHF                do not include helicity flipping events (default: False)
+|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+|:---------------|:------:|:------------------------------------------|--------:|
+| **nopelastic** | `bool` | Do not generate proton elastic events     | `False` | 
+| **nocoh**      | `bool` | Do not generate coherent events           | `False` | 
+| **noHC**       | `bool` | Do not include helicity conserving events | `False` | 
+| **noHF**       | `bool` | Do not include helicity flipping events   | `False` | 
 
+#### Code behavior options
 
----
-### Code behavior args
+##### Verbose
 
-#### verbose
-    --log {ERROR,WARNING,INFO,DEBUG}  Logging level (default: INFO)
-    --verbose             Verbose for logging (default: False)
-    --logfile LOGFILE     Path to logfile. If not set, use std output. (default: None)
+|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+|:------------|:---------------------------------------:|:---------------------------------------------|---------:|
+| **log**     | `["INFO", "WARNING", "ERROR", "DEBUG"]` | Logging level                                | `"INFO"` | 
+| **verbose** | `bool`                                  | Verbose for logging                          | `False`  | 
+| **logfile** | `string`                                | Path to log file; if not set, use std output | `None`   | 
 
-#### vegas integration arguments
-    --neval NEVAL         number of evaluations of integrand (default: 10000)
-    --nint NINT           number of adaptive iterations (default: 20)
+##### `vegas` integration arguments
 
-    --neval_warmup NEVAL_WARMUP number of evaluations of integrand in warmup (default: 1000)
-    --nint_warmup NINT_WARMUP number of adaptive iterations in warmup (default: 10)
+|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+|:-----------------|:-----:|:---------------------------------------------|------:|
+| **neval**        | `int` | Number of evaluations of integrand           | 10000 | 
+| **nint**         | `int` | Number of adaptive iterations                | 20    | 
+| **neval_warmup** | `int` | Number of evaluations of integrand in warmup | 1000  | 
+| **nint_warmup**  | `int` | Number of adaptive iterations in warmup      | 10    | 
 
-#### output format options
-    --pandas              If true, prints events in .npy files (default: True)
+##### Output formats
 
-    --numpy               If true, prints events in .npy files (default: False)
+|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+|:------------------|:--------:|:-----------------------------------------------------------------------|--------:|
+| **pandas**        | `bool`   | Save `pandas.DataFrame` as `.pckl` file                                | `True`  | 
+| **numpy**         | `bool`   | Save events in `.npy` files                                            | `False` | 
+| **hepevt**        | `bool`   | Save events in HEPEVT-formatted text files                             | `False` | 
+| **hepvt_unweigh** | `bool`   | Unweigh events when printing in HEPEVT format (needs large statistics) | `False` | 
+| **hepvt_events**  | `int`    | Number of events to accept in HEPEVT format                            | 100     | 
+| **path**          | `string` | Path where to save run's outputs                                       | `"./"`  | 
 
-    --hepevt              If true, unweigh events and print them in HEPEVT-formatted text files (default: False)
-    --hepevt_unweigh      unweigh events when printing in HEPEVT format (needs large statistics) (default: False)
-    --hepevt_events HEPEVT_EVENTS number of events to accept in HEPEVT format (default: 100)
+### The experiments
 
-    --path PATH           path where to save run's outputs (default: )
+The experiments to which pass the generated events are saved as `.json` files, contained in the `src/DarkNews/detectors/` folder.
+Currently, the following experiments are defined:
+* DUNE FHC ND (`dune_nd_fhc.json`)
+* DUNE RHC ND (`dune_nd_rhc.json`)
+* MicroBooNE (`microboone.json`)
+* MINERVA FHC LE (`minerva_le_fhc.json`)
+* MINERVA FHC ME (`minerva_me_fhc.json`)
+* MiniBooNE FHC (`miniboone_fhc.json`)
+* NUMI FHC ME (`minos_le_fhc.json`)
+* NUMI FHC LE (`minos_me_fhc.json`)
+* ND280 FHC (`nd280_fhc.json`)
+* NOva FHC (`nova_le_fhc.json`)
+
+The experiment can be specified with the filename (without the extension) in the `exp` argument.
+
+It is possible to add user-defined experiments, by creating similar files in the same directory.
+A template `user.json` is already present in that folder, in order to explain the various parameters.
+
+|<!-- -->|<!-- -->|<!-- -->|
+|:--------------------------------------|:-----------------:|:-----------------------------------------------------------------------------------------------------------|
+| **name**                              | `string`          | Name of the experiment                                |
+| **fluxfile**                          | `string`          | Path of the fluxes file with respect to the parent directory, it will have the form `fluxes/flux_file.dat` |
+| **flux_norm**                         | `float`           | Flux normalization factor: **all fluxes should be normalized so that the units are nus/cm&sup2;/GeV/POT**      |
+| **erange**                            | list of `float`   | Neutrino energy range in GeV                                                                               |
+| **nuclear_targets**                   | list of `strings` | Detector materials in the form of `"<element_name><mass_number>"` (e.g. `"Ar40"`)                          |
+| **fiducial_mass**                     | `float`           | Fiducial mass in tons                                                                                      |
+| **fiducial_mass_fraction_per_target** | list of `float`   | Fiducial mass fraction for each target in order, the total sum should be 1                                 |
+| **POTs**                              | `float`           | Protons on target                                                                                          |
+
+### Generated events dataframe
+
+If the argument `pandas = True` (as it is by default), a dataframe containing the generated events is saved in the directory tree.
+
+The dataframe is multi-indexed, where the second column is empty, then there is only the first index.  
+The process described is:
+
+neutrino (P\_projectile) + Nucleus (P\_target) &#8594; HNL\_parent (P\_decay\_N\_parent) + Recoiled Nucleus (P\_recoil)
+
+Followed by:
+
+HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughter) + e<sup>-</sup> (P\_decay\_ell\_plus) + e<sup>-</sup> (P\_decay\_ell\_minus)
+
+|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+|:--------------------------|:--------:|:--------:|:-----------------------------------|
+| **P\_projectile**         | **t**    | `float`  | 4-momenta of beam neutrino |
+| <!-- -->                  | **x**    | `float`  | <!-- --> |
+| <!-- -->                  | **y**    | `float`  | <!-- --> |
+| <!-- -->                  | **z**    | `float`  | <!-- --> |
+| **P\_decay\_N\_parent**   | **t**    | `float`  | 4-momenta of HNL\_parent |
+| <!-- -->                  | **x**    | `float`  | <!-- --> |
+| <!-- -->                  | **y**    | `float`  | <!-- --> |
+| <!-- -->                  | **z**    | `float`  | <!-- --> |
+| **P\_target**             | **t**    | `float`  | 4-momenta of nucleus |
+| <!-- -->                  | **x**    | `float`  | <!-- --> |
+| <!-- -->                  | **y**    | `float`  | <!-- --> |
+| <!-- -->                  | **z**    | `float`  | <!-- --> |
+| **P\_recoil**             | **t**    | `float`  | 4-momenta of recoiled nucleus |
+| <!-- -->                  | **x**    | `float`  | <!-- --> |
+| <!-- -->                  | **y**    | `float`  | <!-- --> |
+| <!-- -->                  | **z**    | `float`  | <!-- --> |
+| **P\_decay\_ell\_minus**  | **t**    | `float`  | 4-momenta of e- |
+| <!-- -->                  | **x**    | `float`  | <!-- --> |
+| <!-- -->                  | **y**    | `float`  | <!-- --> |
+| <!-- -->                  | **z**    | `float`  | <!-- --> |
+| **P\_decay\_ell\_plus**   | **t**    | `float`  | 4-momenta of e+ |
+| <!-- -->                  | **x**    | `float`  | <!-- --> |
+| <!-- -->                  | **y**    | `float`  | <!-- --> |
+| <!-- -->                  | **z**    | `float`  | <!-- --> |
+| **P\_decay\_N\_daughter** | **t**    | `float`  | 4-momenta of HNL\_daughter / nu\_daughter |
+| <!-- -->                  | **x**    | `float`  | <!-- --> |
+| <!-- -->                  | **y**    | `float`  | <!-- --> |
+| <!-- -->                  | **z**    | `float`  | <!-- --> |
+| **decay\_displacement**   | **t**    | `float`  | Distance travelled by N\_parent |
+| <!-- -->                  | **x**    | `float`  | <!-- --> |
+| <!-- -->                  | **y**    | `float`  | <!-- --> |
+| <!-- -->                  | **z**    | `float`  | <!-- --> |
+| **w\_decay\_rate\_0**     | <!-- --> | `float`  | Weight of the decay rate: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>N</sub> |
+| **I\_decay\_rate\_0**     | <!-- --> | `float`  | Total rate &Gamma;<sub>N</sub> |
+| **w\_event\_rate**        | <!-- --> | `float`  | Weight for the event rate: &Sigma;<sub>i</sub> w<sub>i</sub> = event rate |
+| **I\_event\_rate**        | <!-- --> | `float`  | Total event rate |
+| **w\_flux\_avg\_xsec**    | <!-- --> | `float`  | Weight of the flux averaged cross section: &Sigma;<sub>i</sub> w<sub>i</sub> = int(sigma &sdot; flux) &sdot; exposure |
+| **I\_flux\_avg\_xsec**    | <!-- --> | `float`  | int(sigma &sdot; flux) &sdot; exposure |
+| **target**                | <!-- --> | *object* | Target object, it will typically be a nucleus |
+| **target\_pdgid**         | <!-- --> | `int`    | PDG id of the target |
+| **scattering\_regime**    | <!-- --> | *object* | Regime can be coherent or p-elastic |
+| **helicity**              | <!-- --> | *object* | Helicity process: can be flipping or conserving; flipping is suppressed |
+| **underlying\_process**   | <!-- --> | *object* | String of the underlying process, e.g, "nu(mu) + proton_in_C12 -> N4 +  proton_in_C12 -> nu(mu) + e+ + e- + proton_in_C12" |
