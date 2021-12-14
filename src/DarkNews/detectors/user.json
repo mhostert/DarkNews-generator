@@ -1,0 +1,32 @@
+{
+    "__INFO_FOR_USER__": {
+        "name"                              : ["string"         , "Name of the experiment (your are free to use capital letters, when needed)"],
+        "fluxfile"                          : ["string"         , "Path of the fluxes file with respect to the parent directory, it will have the form 'fluxes/flux_file.dat'"],
+        "flux_norm"                         : ["float"          , "flux normalization factor: ALL FLUXES ARE NORMALIZED SO THAT THE UNITS ARE nus/cm^2/GeV/POT"],
+        "erange"                            : ["list of float"  , "Neutrino energy range in GeV"],
+        "nuclear_targets"                   : ["list of strings", "Detector materials in the form of '<element_name><mass_number>' (e.g. 'Ar40')"],
+        "fiducial_mass"                     : ["float"          , "Fiducial mass in tons"],
+        "fiducial_mass_fraction_per_target" : ["list of float"  , "Fiducial mass fraction for each target in order, the total sum should be 1"],
+        "POTs"                              : ["float"          , "Protons on target"]
+    },
+    
+    "name": "my experiment",
+    "fluxfile": "fluxes/my_experiment_fluxes.dat",
+    "flux_norm": 1.0,
+    "erange": [
+        0.05,
+        20.0
+    ],
+    "nuclear_targets": [
+        "H1",
+        "He3",
+        "Li3"
+    ],
+    "fiducial_mass": 1.0,
+    "fiducial_mass_fraction_per_target": [
+        0.3333,
+        0.3333,
+        0.3334
+    ],
+    "POTs": 1.0e+20
+}

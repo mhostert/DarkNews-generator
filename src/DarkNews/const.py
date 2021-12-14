@@ -16,6 +16,7 @@ from scipy import interpolate
 import os
 import itertools
 import logging
+from logging.handlers import RotatingFileHandler
 
 from DarkNews import logger
 from DarkNews import local_dir
@@ -218,7 +219,7 @@ def ConfigureLogger(logger, level=logging.INFO, prettyprinter = None, logfile = 
 
     if logfile:
         # log to files with max 1 MB with up to 4 files of backup
-        handler = logging.handlers.RotatingFileHandler(f"{logfile}", maxBytes=1000000, backupCount=4)
+        handler = RotatingFileHandler(f"{logfile}", maxBytes=1000000, backupCount=4)
 
     else:
         # stdout only

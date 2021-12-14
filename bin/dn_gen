@@ -2,10 +2,18 @@
 
 import sys
 import argparse
+import os
+import os.path
 
 from DarkNews.GenLauncher import GenLauncher
 # obtain default values
 DEFAULTS = GenLauncher()
+
+def detectors_list(extension=".json"):
+    root_path = os.path.split(os.path.dirname(os.path.realpath( __file__ )))[0]
+    detectors_path = os.path.join(root_path, "src", "DarkNews", "detectors")
+    file_list = filter(lambda item: item.endswith(extension), os.listdir(detectors_path))
+    return list(map(lambda item: item.rstrip(".json"), file_list))
     
 '''
     Default options
@@ -57,17 +65,7 @@ parser.add_argument("--alpha_epsilon2", type=float, help="alpha_QED*epsilon^2")
 parser.add_argument("--chi", type=float, help="chi")
 
 # experiments    
-parser.add_argument("--exp", type=str.lower, help="experiment", choices = ["miniboone_fhc",
-                                                                           "microboone",
-                                                                           "dune_nd_fhc",
-                                                                           "dune_nd_rhc",
-                                                                           "minerva_le_fhc",
-                                                                           "minerva_me_fhc",
-                                                                           "minos_le_fhc",
-                                                                           "minos_me_fhc",
-                                                                           "nova_le_fhc",
-                                                                           "nd280_fhc"],
-                                                                           default=DEFAULTS.exp)
+parser.add_argument("--exp", type=str.lower, help="experiment", choices=detectors_list(extension=".json"), default=DEFAULTS.exp)
                                                                 
 # scattering types
 parser.add_argument("--nopelastic", help="do not generate proton elastic events", action="store_true")

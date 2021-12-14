@@ -1,0 +1,25 @@
+{
+    "name": "NOvA_FHC",
+    "fluxfile": "fluxes/NOvA_FHC.dat",
+    "flux_norm": 1.0,
+    "erange": [
+        0.05,
+        9.0
+    ],
+    "nuclear_targets": [
+        "H1",
+        "C12",
+        "O16",
+        "Cl35",
+        "Ti48"
+    ],
+    "fiducial_mass": 193.0,
+    "fiducial_mass_fraction_per_target": [
+        0.1080,
+        0.6670,
+        0.0300,
+        0.1610,
+        0.0320
+    ],
+    "POTs": 1.36e+21
+}

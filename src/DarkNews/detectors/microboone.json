@@ -1,0 +1,17 @@
+{
+    "name": "MicroBooNE",
+    "fluxfile": "fluxes/MicroBooNE_BNB_numu_flux.dat",
+    "flux_norm": 1.0,
+    "erange": [
+        0.05,
+        9
+    ],
+    "nuclear_targets": [
+        "Ar40"
+    ],
+    "fiducial_mass": 85.0,
+    "fiducial_mass_fraction_per_target": [
+        1.0
+    ],
+    "POTs": 12.25e+20
+}
