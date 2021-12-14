@@ -69,6 +69,28 @@ def dn_gen(argv):
     parser.add_argument("--alpha_epsilon2", type=float, help="alpha_QED*epsilon^2")
     parser.add_argument("--chi", type=float, help="chi")
 
+    # TMM in GeV^-1
+    parser.add_argument("--mu_tr_e4", type=float, help="TMM mu_tr_e4", default=0.0)
+    parser.add_argument("--mu_tr_e5", type=float, help="TMM mu_tr_e5", default=0.0)
+    parser.add_argument("--mu_tr_e6", type=float, help="TMM mu_tr_e6", default=0.0)
+
+    parser.add_argument("--mu_tr_mu4", type=float, help="TMM mu_tr_mu4", default=0.0)
+    parser.add_argument("--mu_tr_mu5", type=float, help="TMM mu_tr_mu5", default=0.0)
+    parser.add_argument("--mu_tr_mu6", type=float, help="TMM mu_tr_mu6", default=0.0)
+
+    parser.add_argument("--mu_tr_tau4", type=float, help="TMM mu_tr_tau4", default=0.0)
+    parser.add_argument("--mu_tr_tau5", type=float, help="TMM mu_tr_tau5", default=0.0)
+    parser.add_argument("--mu_tr_tau6", type=float, help="TMM mu_tr_tau6", default=0.0)
+
+    parser.add_argument("--mu_tr_44", type=float, help="TMM mu_tr_tau4", default=0.0)
+    parser.add_argument("--mu_tr_45", type=float, help="TMM mu_tr_tau5", default=0.0)
+    parser.add_argument("--mu_tr_46", type=float, help="TMM mu_tr_tau6", default=0.0)
+    
+    parser.add_argument("--mu_tr_55", type=float, help="TMM mu_tr_tau5", default=0.0)
+    parser.add_argument("--mu_tr_56", type=float, help="TMM mu_tr_tau6", default=0.0)
+    
+    parser.add_argument("--mu_tr_66", type=float, help="TMM mu_tr_tau6", default=0.0)
+
     # experiments    
     parser.add_argument("--exp", type=str.lower, help="experiment", choices=["miniboone_fhc",
                                                                             "microboone",
@@ -92,6 +114,9 @@ def dn_gen(argv):
     parser.add_argument("--noHF", help="do not include helicity flipping events", action="store_true")
     parser.set_defaults(noHC=False)
     parser.set_defaults(noHF=False)
+    
+    # scattering types
+    parser.add_argument("--decay_products", help="decay process of interest", choices=["e+e-","mu+mu-","photon"], default="e+e-")
 
 
     ###########
@@ -238,6 +263,7 @@ def dn_gen(argv):
                 'FLAVORS': [dn.pdg.numu],
                 'UPSCATTERED_NUS': upscattered_nus,
                 'OUTGOING_NUS': outgoing_nus,
+                'DECAY_PRODUCTS': [args.decay_products],
             }
 
     ####################################################

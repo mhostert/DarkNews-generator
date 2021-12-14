@@ -20,6 +20,3 @@ fiducial_mass_per_target = [fiducial_mass*12/14, fiducial_mass*2/14] # tons
 
 # total number of protons on target
 POTs = 18.75e20
-
-
-
