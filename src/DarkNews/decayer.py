@@ -18,6 +18,7 @@ def decay_position(pN, l_decay_proper_cm):
 	# decay the particle
 	M4 = np.sqrt(Cfv.dot4(pN,pN))
 	gammabeta_inv = M4/(np.sqrt(pN[:,0]**2 -  M4*M4 ))
+
 	######################
 	# Sample from decay propability
 	d_decay = np.random.exponential(scale=l_decay_proper_cm/gammabeta_inv) # centimeters

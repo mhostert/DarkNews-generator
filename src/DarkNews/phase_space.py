@@ -81,7 +81,7 @@ def two_to_two_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0):
 	elif 'Q2' in samples.keys():
 		Q2 = samples['Q2']
 	else: 
-		logger.info("INFO: Could not find Q2 samples, using uniform distribution instead.")
+		logger.debug("DEBUG: Could not find Q2 samples, using uniform distribution instead.")
 		Q2 = Cfv.random_generator(sample_size, Q2min, Q2max)
 
 	# KINEMATICS TO LAB FRAME
@@ -146,7 +146,7 @@ def two_to_three_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0, m5=0.0):
 	elif 'Q2' in samples.keys():
 		Q2 = samples['Q2']
 	else: 
-		logger.info("INFO: Could not find Q2 samples, using uniform distribution instead.")
+		logger.debug("DEBUG: Could not find Q2 samples, using uniform distribution instead.")
 		Q2 = Cfv.random_generator(sample_size, Q2min, Q2max)
 
 	# KINEMATICS TO LAB FRAME
@@ -184,7 +184,7 @@ def two_to_three_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0, m5=0.0):
 def two_body_decay(samples, boost=False, m1=1, m2=0, m3=0):
 
 	if not samples:
-		logger.info("INFO: No samples were passed to two_body_decay. Assuming uniform phase space.")
+		logger.debug("DEBUG: No samples were passed to two_body_decay. Assuming uniform phase space.")
 		sample_size = np.shape(list(boost.values())[0])[0]
 	else:
 		# get sample size of the first item
@@ -196,7 +196,7 @@ def two_body_decay(samples, boost=False, m1=1, m2=0, m3=0):
 	elif 'cost' in samples.keys():
 		cost = samples['cost']
 	else: 
-		logger.info("INFO: Could not find cost samples, using uniform distribution instead.")
+		logger.debug("DEBUG: Could not find cost samples, using uniform distribution instead.")
 		cost = Cfv.random_generator(sample_size, -1, 1)
 
 	E1CM_decay = np.full_like(cost, m1)
@@ -212,7 +212,7 @@ def two_body_decay(samples, boost=False, m1=1, m2=0, m3=0):
 	elif 'phiz' in samples.keys():
 		phiz = samples['phiz']
 	else: 
-		logger.info("INFO: Could not find phiz samples, using uniform distribution instead.")
+		logger.debug("DEBUG: Could not find phiz samples, using uniform distribution instead.")
 		phiz = Cfv.random_generator(sample_size, 0.0, 2*np.pi)
 
 	P1CM_decay = Cfv.build_fourvec(E1CM_decay, p2CM_decay*0.0, cost/cost, phiz*0)
@@ -266,7 +266,7 @@ def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0):
 	elif 't' in samples.keys():
 		t = samples['t']
 	else: 
-		logger.info("INFO: Could not find t samples, using uniform distribution instead.")
+		logger.debug("DEBUG: Could not find t samples, using uniform distribution instead.")
 		t = Cfv.random_generator(sample_size, tminus, tplus)
 
 	# Mandelstam u = m_24^2
@@ -279,7 +279,7 @@ def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0):
 	elif 'u' in samples.keys():
 		u = samples['u']
 	else: 
-		logger.info("INFO: Could not find u samples, using uniform distribution instead.")
+		logger.debug("DEBUG: Could not find u samples, using uniform distribution instead.")
 		u = Cfv.random_generator(sample_size, uminus, uplus)
 
 	# Mandelstam v = m_34^2
@@ -299,7 +299,7 @@ def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0):
 	elif 'c3' in samples.keys():
 		c_theta3 = samples['c3']
 	else: 
-		logger.info("INFO: Could not find c3 samples, using uniform distribution instead.")
+		logger.debug("DEBUG: Could not find c3 samples, using uniform distribution instead.")
 		c_theta3 = Cfv.random_generator(sample_size, -1, 1)
 
 	phi3 = Cfv.random_generator(sample_size, 0.0, 2*np.pi)
@@ -310,7 +310,7 @@ def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0):
 	elif 'phi34' in samples.keys():
 		phi34 = samples['phi34']
 	else: 
-		logger.info("INFO: Could not find phi34 samples, using uniform distribution instead.")
+		logger.debug("DEBUG: Could not find phi34 samples, using uniform distribution instead.")
 		phi34 = Cfv.random_generator(sample_size, 0, 2*np.pi)
 
 	# polar angle of P_4 wrt to P_3 is a known function of u and v

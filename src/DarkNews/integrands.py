@@ -135,74 +135,94 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		self.int_dic['diff_flux_avg_xsec'] = diff_xsec * self.MC_case.flux(Enu)
 
 
-		if decay_case.on_shell:
-			##############################################
-			# decay nu_parent -> nu_daughter mediator
+		if self.MC_case.decays_to_dilepton:
+			if decay_case.on_shell:
+				##############################################
+				# decay nu_parent -> nu_daughter mediator
 
-			# angle between nu_daughter and z axis
-			cost = -1.0 + (2.0) * x[:, i_var]
-			i_var += 1 
+				# angle between nu_daughter and z axis
+				cost = -1.0 + (2.0) * x[:, i_var]
+				i_var += 1 
 
-			params = decay_case.TheoryModel
-			vertexSQR = params.UD4**2 * (params.Ue4**2 + params.Umu4**2 + params.Utau4**2)*params.gD**2
+				params = decay_case.TheoryModel
+				vertexSQR = params.UD4**2 * (params.Ue4**2 + params.Umu4**2 + params.Utau4**2)*params.gD**2
 
-			self.int_dic['diff_decay_rate_0'] = dr.diff_gamma_Ni_to_Nj_V(cost=cost, 
-												vertex_ij = np.sqrt(vertexSQR), 
-												mi=m_parent, 
-												mj=m_daughter, 
-												mV=mzprime, 
-												HNLtype = decay_case.HNLtype, 
-												h=decay_case.h_parent)
-			self.int_dic['diff_decay_rate_0'] *= 2 # Vegas jacobian
-			
-
-			##############################################
-			# mediator decay M --> ell+ ell-
-			self.int_dic['diff_decay_rate_1'] = dr.gamma_V_to_ell_ell(vertex=const.eQED*decay_case.TheoryModel.epsilon, 
+				self.int_dic['diff_decay_rate_0'] = dr.diff_gamma_Ni_to_Nj_V(cost=cost, 
+													vertex_ij = np.sqrt(vertexSQR), 
+													mi=m_parent, 
+													mj=m_daughter, 
 													mV=mzprime, 
-													m_ell=decay_case.mm)\
-													*np.full_like(self.int_dic['diff_decay_rate_0'],1.0)
+													HNLtype = decay_case.HNLtype, 
+													h=decay_case.h_parent)
+				self.int_dic['diff_decay_rate_0'] *= 2 # Vegas jacobian
+				
 
+				##############################################
+				# mediator decay M --> ell+ ell-
+				self.int_dic['diff_decay_rate_1'] = dr.gamma_V_to_ell_ell(vertex=const.eQED*decay_case.TheoryModel.epsilon, 
+														mV=mzprime, 
+														m_ell=decay_case.mm)\
+														*np.full_like(self.int_dic['diff_decay_rate_0'],1.0)
+
+			elif decay_case.off_shell:
+				##############################################
+				# decay nu_parent -> nu_daughter ell+ ell-
+
+				m1 = decay_case.m_parent
+				m2 = decay_case.mm
+				m3 = decay_case.mp
+				m4 = decay_case.m_daughter
+				masses = np.array([m1,m2,m3,m4])
+
+				# limits
+				tmax = phase_space.three_body_tmax(*masses)
+				tmin = phase_space.three_body_tmin(*masses)
+				t = (tmax - tmin)*x[:,i_var] + tmin
+				i_var += 1 
+
+				umax  = phase_space.three_body_umax(*masses,t)
+				umin = phase_space.three_body_umin(*masses,t)
+				u = (umax - umin)*x[:,i_var] + umin
+				i_var += 1 
+
+				v = np.sum(masses**2) - u - t
+
+				c3 = (2.0)*x[:,i_var]-1.0				
+				i_var += 1 
+				phi34 = (2.0*np.pi)*x[:,i_var]	
+				i_var += 1 
+
+				dgamma = dr.diff_gamma_Ni_to_Nj_ell_ell([t,u,v,c3,phi34], decay_case)
+
+				# integrating in phi34 and ct3 explicitly
+				dgamma /= 2*np.pi*2.0
+
+				## JACOBIAN FOR DECAY 
+				dgamma *= (tmax - tmin)
+				dgamma *= (umax - umin)
+				dgamma *= (2) # c3
+				dgamma *= (2*np.pi) # phi34
+				self.int_dic['diff_decay_rate_0'] = dgamma
+			
+		elif self.MC_case.decays_to_singlephoton:
+				##############################################
+				# decay nu_parent -> nu_daughter gamma
+
+				# angle between nu_daughter and z axis
+				cost = -1.0 + (2.0) * x[:, i_var]
+				i_var += 1 
+
+				self.int_dic['diff_decay_rate_0'] = dr.diff_gamma_Ni_to_Nj_gamma(cost=cost, 
+													vertex_ij = decay_case.Tih, 
+													mi=m_parent, 
+													mj=m_daughter,  
+													HNLtype = decay_case.HNLtype, 
+													h=decay_case.h_parent)
+				self.int_dic['diff_decay_rate_0'] *= 2 # Vegas jacobian	
 
 		else:
-			##############################################
-			# decay nu_parent -> nu_daughter ell+ ell-
-
-			m1 = decay_case.m_parent
-			m2 = decay_case.mm
-			m3 = decay_case.mp
-			m4 = decay_case.m_daughter
-			masses = np.array([m1,m2,m3,m4])
-
-			# limits
-			tmax = phase_space.three_body_tmax(*masses)
-			tmin = phase_space.three_body_tmin(*masses)
-			t = (tmax - tmin)*x[:,i_var] + tmin
-			i_var += 1 
-
-			umax  = phase_space.three_body_umax(*masses,t)
-			umin = phase_space.three_body_umin(*masses,t)
-			u = (umax - umin)*x[:,i_var] + umin
-			i_var += 1 
-
-			v = np.sum(masses**2) - u - t
-
-			c3 = (2.0)*x[:,i_var]-1.0				
-			i_var += 1 
-			phi34 = (2.0*np.pi)*x[:,i_var]	
-			i_var += 1 
-
-			dgamma = dr.diff_gamma_Ni_to_Nj_ell_ell([t,u,v,c3,phi34], decay_case)
-
-			# integrating in phi34 and ct3 explicitly
-			dgamma /= 2*np.pi*2.0
-
-			## JACOBIAN FOR DECAY 
-			dgamma *= (tmax - tmin)
-			dgamma *= (umax - umin)
-			dgamma *= (2) # c3
-			dgamma *= (2*np.pi) # phi34
-			self.int_dic['diff_decay_rate_0'] = dgamma
+			logger.error("ERROR: Could not determine decay process in vegas integral.")
+			raise ValueError
 
 
 		##############################################
@@ -239,20 +259,17 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		return self.int_dic
 
 
-def get_four_momenta_from_vsamples_onshell(vsamples=None, MC_case=None, w=None, I=None):
+def get_momenta_from_vegas_samples(vsamples=None, MC_case=None, w=None, I=None):
 
 
+	four_momenta = {}
+
+	########################	
+	### upscattering
+	# Ni(k1) target(k2) -->  Nj(k3) target(k4)
 	mh = MC_case.ups_case.m_ups
 	MA = MC_case.ups_case.MA
 
-	mf = MC_case.decay_case.m_daughter
-	mm = MC_case.decay_case.mm
-	mp = MC_case.decay_case.mm
-	mzprime = MC_case.decay_case.mzprime
-
-	########################	
-	### scattering
-	# Ni(k1) target(k2) -->  Nj(k3) target(k4)
 	# energy of projectile
 	Eprojectile = (MC_case.EMAX - MC_case.EMIN) * vsamples[0] + MC_case.EMIN
 	scatter_samples = {  'Eprojectile': Eprojectile, 'unit_Q2': vsamples[1]} 
@@ -270,108 +287,99 @@ def get_four_momenta_from_vsamples_onshell(vsamples=None, MC_case=None, w=None, 
 						'phiP_LAB':  np.arctan2(P3LAB.T[2], P3LAB.T[1])}
 	
 
-	########################
-	### HNL decay		
-	N_decay_samples = {'unit_cost' : np.array(vsamples[2])}
-	# Ni (k1) --> Nj (k2)  Z' (k3)
-	masses_decay = {'m1': mh,		# Ni
-					'm2': mf,		# Nj
-					'm3': mzprime,	# Z'
-					}
-	# Phnl, pe-, pe+, pnu
-	P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
 
-	# Z' boost parameters
-		# N boost parameters
-	boost_Z = {'EP_LAB':   P3LAB_decay.T[0],
-				'costP_LAB': Cfv.get_cosTheta(P3LAB_decay),
-				'phiP_LAB':  np.arctan2(P3LAB_decay.T[2], P3LAB_decay.T[1])}
+	four_momenta["P_projectile"] = P1LAB
+	four_momenta["P_target"]	 = P2LAB
+	four_momenta["P_recoil"]	 = P4LAB
 
-	########################
-	### Z' decay		
-	Z_decay_samples = {} # all uniform
-	# Z'(k1) --> ell- (k2)  ell+ (k3)
-	masses_decay = {'m1': mzprime,	# Ni
-					'm2': mp,	# \ell+
-					'm3': mm,	# \ell-
-					}
-	# Phnl, pe-, pe+, pnu
-	P1LAB_decayZ, P2LAB_decayZ, P3LAB_decayZ = phase_space.two_body_decay(Z_decay_samples, boost=boost_Z, **masses_decay)
-
-
-	# returing dictionary
-	return  {"P_projectile" :	P1LAB,
-			"P_target" :		P2LAB,
-			"P_scattered" :		P3LAB,
-			"P_recoil" :		P4LAB,
-			#
-			"P_decay_N_parent" :	P1LAB_decay, 
-			"P_decay_N_daughter" :	P2LAB_decay,
-			"P_decay_Z_parent" :	P3LAB_decay, 
-			#
-			"P_decay_ell_minus" :	P2LAB_decayZ, 
-			"P_decay_ell_plus" :	P3LAB_decayZ, 
-			}
-
-def get_four_momenta_from_vsamples_offshell(vsamples=None, MC_case=None):
-
-		mh = MC_case.ups_case.m_ups
-		MA = MC_case.ups_case.MA
+	#######################
+	# DECAY PROCESSES
+	
+	if MC_case.decays_to_dilepton:
 
 		mf = MC_case.decay_case.m_daughter
 		mm = MC_case.decay_case.mm
 		mp = MC_case.decay_case.mm
+		mzprime = MC_case.decay_case.mzprime
 
+		if MC_case.decay_case.on_shell:
 
-		########################		
-		# scattering
-		# Ni(k1) target(k2) -->  Nj(k3) target(k4)
-		Eprojectile = (MC_case.EMAX - MC_case.EMIN) * vsamples[0] + MC_case.EMIN
-		scatter_samples = {  	
-								'Eprojectile': Eprojectile,
-								'unit_Q2': vsamples[1]
-							} 
-
-		masses_scatter = {	'm1': 0.0, # nu_projectile
-							'm2': MA,  # target
-							'm3': mh,  # nu_upscattered
-							'm4': MA   # final target
-						}
-		
-		P1LAB, P2LAB, P3LAB, P4LAB = phase_space.two_to_two_scatter(scatter_samples, **masses_scatter)
-
-		# N boost parameters
-		boost_scattered_N = {'EP_LAB':   P3LAB.T[0],
-							'costP_LAB': Cfv.get_cosTheta(P3LAB),
-							'phiP_LAB':  np.arctan2(P3LAB.T[2], P3LAB.T[1])}
-		
-		
-		########################
-		# HNL decay		
-		N_decay_samples = {
-							'unit_t' : vsamples[2],
-							'unit_u' : vsamples[3],
-							'unit_c3' : vsamples[4],
-							'unit_phi34' : vsamples[5],
+			########################
+			### HNL decay		
+			N_decay_samples = {'unit_cost' : np.array(vsamples[2])}
+			# Ni (k1) --> Nj (k2)  Z' (k3)
+			masses_decay = {'m1': mh,		# Ni
+							'm2': mf,		# Nj
+							'm3': mzprime,	# Z'
 							}
-		
-		# Ni (k1) --> ell-(k2)  ell+(k3)  Nj(k4)
-		masses_decay = {'m1': mh, # Ni
-						'm2': mm, # ell-
-						'm3': mp, # ell+
-						'm4': mf} # Nj
-		# Phnl, pe-, pe+, pnu
-		P1LAB_decay, P2LAB_decay, P3LAB_decay, P4LAB_decay = phase_space.three_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
+			# Phnl, Phnl_daughter, Pz'
+			P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
+
+			# Z' boost parameters
+			boost_Z = {'EP_LAB':   P3LAB_decay.T[0],
+						'costP_LAB': Cfv.get_cosTheta(P3LAB_decay),
+						'phiP_LAB':  np.arctan2(P3LAB_decay.T[2], P3LAB_decay.T[1])}
+
+			########################
+			### Z' decay		
+			Z_decay_samples = {} # all uniform
+			# Z'(k1) --> ell- (k2)  ell+ (k3)
+			masses_decay = {'m1': mzprime,	# Ni
+							'm2': mp,	# \ell+
+							'm3': mm,	# \ell-
+							}
+			# PZ', pe-, pe+
+			P1LAB_decayZ, P2LAB_decayZ, P3LAB_decayZ = phase_space.two_body_decay(Z_decay_samples, boost=boost_Z, **masses_decay)
 
 
-		# returing dictionary
-		return  {"P_projectile" :	P1LAB,
-				"P_target" :		P2LAB,
-				"P_scattered" :		P3LAB,
-				"P_recoil" :		P4LAB,
-				#
-				"P_decay_N_parent" :	P1LAB_decay, 
-				"P_decay_ell_minus" :	P2LAB_decay, 
-				"P_decay_ell_plus" :	P3LAB_decay, 
-				"P_decay_N_daughter" :	P4LAB_decay,
-				}
+			four_momenta["P_decay_N_parent"]	= P1LAB_decay
+			four_momenta["P_decay_N_daughter"]	= P2LAB_decay
+			four_momenta["P_decay_ell_minus"]	= P2LAB_decayZ
+			four_momenta["P_decay_ell_plus"]	= P3LAB_decayZ
+
+		elif MC_case.decay_case.off_shell:
+
+			########################
+			# HNL decay		
+			N_decay_samples = {
+								'unit_t' : vsamples[2],
+								'unit_u' : vsamples[3],
+								'unit_c3' : vsamples[4],
+								'unit_phi34' : vsamples[5],
+								}
+
+			# Ni (k1) --> ell-(k2)  ell+(k3)  Nj(k4)
+			masses_decay = {'m1': mh, # Ni
+							'm2': mm, # ell-
+							'm3': mp, # ell+
+							'm4': mf} # Nj
+			# Phnl, pe-, pe+, pnu
+			P1LAB_decay, P2LAB_decay, P3LAB_decay, P4LAB_decay = phase_space.three_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
+
+
+			four_momenta["P_decay_N_parent"]	= P1LAB_decay
+			four_momenta["P_decay_ell_minus"]	= P2LAB_decay
+			four_momenta["P_decay_ell_plus"]	= P3LAB_decay
+			four_momenta["P_decay_N_daughter"]	= P4LAB_decay
+
+	elif MC_case.decays_to_singlephoton:
+
+		mf = MC_case.decay_case.m_daughter
+
+		########################
+		### HNL decay		
+		N_decay_samples = {'unit_cost' : np.array(vsamples[2])}
+		# Ni (k1) --> Nj (k2)  gamma (k3)
+		masses_decay = {'m1': mh,		# Ni
+						'm2': mf,		# Nj
+						'm3': 0.0,		# gamma
+						}
+		# Phnl, Phnl', Pgamma
+		P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
+
+		four_momenta["P_decay_N_parent"]	= P1LAB_decay 
+		four_momenta["P_decay_N_daughter"]	= P2LAB_decay
+		four_momenta["P_decay_gamma"]		= P3LAB_decay
+
+
+	return four_momenta

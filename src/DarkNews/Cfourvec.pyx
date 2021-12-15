@@ -1,6 +1,5 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 
-
 #cython: boundscheck=False
 #cython: language_level=3
 #cython: wraparound=False
@@ -311,44 +310,6 @@ def rotationx(ndarray[double, ndim=2] v4, ndarray[double] theta):
 		    
 	return res
 
-# #******************************
-# def rotationy(ndarray[double, ndim=2] v4, ndarray[double] theta):
-
-# 	cdef int i, m;
-
-# 	m = v4.shape[0]
-
-# 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
-# 	cdef ndarray[double, ndim=3] R = np.empty((m,4,4))
-
-# 	with nogil:
-# 		for i in range(m):
-# 			R[i,0,0] = 1.0
-# 			R[i,0,1] = 0.0
-# 			R[i,0,2] = 0.0
-# 			R[i,0,3] = 0.0
-
-# 			R[i,1,0] = 0.0
-# 			R[i,1,1] = cos(theta[i])
-# 			R[i,1,2] = 0.0
-# 			R[i,1,3] = -sin(theta[i])
-
-# 			R[i,2,0] = 0.0
-# 			R[i,2,1] = 0.0
-# 			R[i,2,2] = 1.0
-# 			R[i,2,3] = 0.0
-
-# 			R[i,3,0] = 0.0
-# 			R[i,3,1] = sin(theta[i])
-# 			R[i,3,2] = 0.0
-# 			R[i,3,3] = cos(theta[i])
-
-# 			res[i,0] = R[i,0,0]*v4[i,0] + R[i,0,1]*v4[i,1] + R[i,0,2]*v4[i,2] + R[i,0,3]*v4[i,3]
-# 			res[i,1] = R[i,1,0]*v4[i,0] + R[i,1,1]*v4[i,1] + R[i,1,2]*v4[i,2] + R[i,1,3]*v4[i,3]
-# 			res[i,2] = R[i,2,0]*v4[i,0] + R[i,2,1]*v4[i,1] + R[i,2,2]*v4[i,2] + R[i,2,3]*v4[i,3]
-# 			res[i,3] = R[i,3,0]*v4[i,0] + R[i,3,1]*v4[i,1] + R[i,3,2]*v4[i,2] + R[i,3,3]*v4[i,3]
-		    
-# 	return res
 #******************************
 def rotationy(ndarray[double, ndim=2] v4, ndarray[double] theta):
 
@@ -437,44 +398,6 @@ def rotationz_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign =
 			res[i,3] = v4[i,3]
 		    
 	return res
-#******************************
-# def rotationz(ndarray[double, ndim=2] v4, ndarray[double] theta):
-
-# 	cdef int i, m;
-
-# 	m = v4.shape[0]
-
-# 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
-# 	cdef ndarray[double, ndim=3] R = np.empty((m,4,4))
-
-# 	with nogil:
-# 		for i in range(m):
-# 			R[i,0,0] = 1.0
-# 			R[i,0,1] = 0.0
-# 			R[i,0,2] = 0.0
-# 			R[i,0,3] = 0.0
-
-# 			R[i,1,0] = 0.0
-# 			R[i,1,1] = cos(theta[i])
-# 			R[i,1,2] = -sin(theta[i])
-# 			R[i,1,3] = 0.0
-
-# 			R[i,2,0] = 0.0
-# 			R[i,2,1] = sin(theta[i])
-# 			R[i,2,2] = cos(theta[i])
-# 			R[i,2,3] = 0.0
-
-# 			R[i,3,0] = 0.0
-# 			R[i,3,1] = 0.0
-# 			R[i,3,2] = 0.0
-# 			R[i,3,3] = 1.0
-
-# 			res[i,0] = R[i,0,0]*v4[i,0] + R[i,0,1]*v4[i,1] + R[i,0,2]*v4[i,2] + R[i,0,3]*v4[i,3]
-# 			res[i,1] = R[i,1,0]*v4[i,0] + R[i,1,1]*v4[i,1] + R[i,1,2]*v4[i,2] + R[i,1,3]*v4[i,3]
-# 			res[i,2] = R[i,2,0]*v4[i,0] + R[i,2,1]*v4[i,1] + R[i,2,2]*v4[i,2] + R[i,2,3]*v4[i,3]
-# 			res[i,3] = R[i,3,0]*v4[i,0] + R[i,3,1]*v4[i,1] + R[i,3,2]*v4[i,2] + R[i,3,3]*v4[i,3]
-		    
-# 	return res
 
 #******************************
 def L(ndarray[double, ndim=2] v4, ndarray[double] beta):

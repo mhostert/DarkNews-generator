@@ -15,6 +15,7 @@ def detectors_list(extension=".json"):
     file_list = filter(lambda item: item.endswith(extension), os.listdir(detectors_path))
     return list(map(lambda item: item.rstrip(".json"), file_list))
     
+
 '''
     Default options
     
@@ -64,6 +65,31 @@ parser.add_argument("--epsilon2", type=float, help="epsilon^2")
 parser.add_argument("--alpha_epsilon2", type=float, help="alpha_QED*epsilon^2")
 parser.add_argument("--chi", type=float, help="chi")
 
+# TMM in GeV^-1
+parser.add_argument("--mu_tr_e4", type=float, help="TMM mu_tr_e4", default=DEFAULTS.mu_tr_e4)
+parser.add_argument("--mu_tr_e5", type=float, help="TMM mu_tr_e5", default=DEFAULTS.mu_tr_e5)
+parser.add_argument("--mu_tr_e6", type=float, help="TMM mu_tr_e6", default=DEFAULTS.mu_tr_e6)
+
+parser.add_argument("--mu_tr_mu4", type=float, help="TMM mu_tr_mu4", default=DEFAULTS.mu_tr_mu4)
+parser.add_argument("--mu_tr_mu5", type=float, help="TMM mu_tr_mu5", default=DEFAULTS.mu_tr_mu5)
+parser.add_argument("--mu_tr_mu6", type=float, help="TMM mu_tr_mu6", default=DEFAULTS.mu_tr_mu6)
+
+parser.add_argument("--mu_tr_tau4", type=float, help="TMM mu_tr_tau4", default=DEFAULTS.mu_tr_tau4)
+parser.add_argument("--mu_tr_tau5", type=float, help="TMM mu_tr_tau5", default=DEFAULTS.mu_tr_tau5)
+parser.add_argument("--mu_tr_tau6", type=float, help="TMM mu_tr_tau6", default=DEFAULTS.mu_tr_tau6)
+
+parser.add_argument("--mu_tr_44", type=float, help="TMM mu_tr_tau4", default=DEFAULTS.mu_tr_44)
+parser.add_argument("--mu_tr_45", type=float, help="TMM mu_tr_tau5", default=DEFAULTS.mu_tr_45)
+parser.add_argument("--mu_tr_46", type=float, help="TMM mu_tr_tau6", default=DEFAULTS.mu_tr_46)
+
+parser.add_argument("--mu_tr_55", type=float, help="TMM mu_tr_tau5", default=DEFAULTS.mu_tr_55)
+parser.add_argument("--mu_tr_56", type=float, help="TMM mu_tr_tau6", default=DEFAULTS.mu_tr_56)
+
+parser.add_argument("--mu_tr_66", type=float, help="TMM mu_tr_tau6", default=DEFAULTS.mu_tr_66)
+
+# visible final states in HNL decay
+parser.add_argument("--decay_products", help="decay process of interest", choices=["e+e-","mu+mu-","photon"], default=DEFAULTS.decay_products)
+
 # experiments    
 parser.add_argument("--exp", type=str.lower, help="experiment", choices=detectors_list(extension=".json"), default=DEFAULTS.exp)
                                                                 
@@ -110,4 +136,4 @@ parser.add_argument("--path", help="path where to save run's outputs", default=D
 args = parser.parse_args()
 
 gen_object = GenLauncher(**vars(args))
-gen_object.run(log_level=args.log, verbose=args.verbose, logfile=args.logfile)
+gen_object.run(log=args.log, verbose=args.verbose, logfile=args.logfile)

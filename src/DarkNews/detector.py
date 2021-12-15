@@ -6,7 +6,7 @@ import os.path
 import json
 local_dir = Path(__file__).parent
 
-from DarkNews import logger
+from DarkNews import logger, prettyprinter
 
 from .const import *
 from . import pdg
@@ -164,7 +164,10 @@ class Detector():
             # total number of targets
             self.NUMBER_OF_TARGETS = {}
             for fid_mass_fraction, target in zip(read_file['fiducial_mass_fraction_per_target'], self.NUCLEAR_TARGETS):
-                self.NUMBER_OF_TARGETS[f'{target.name}'] = self.FIDUCIAL_MASS*fid_mass_fraction/target.A * NAvo 
+                self.NUMBER_OF_TARGETS[f'{target.name}'] = self.FIDUCIAL_MASS*fid_mass_fraction*t_to_GeV/(target.mass)
+
+            prettyprinter.info(f"Experiment: \n\t{self.NAME}\n\tfluxfile: {self.FLUXFILE}\n\tPOT: {self.POTS}\n\tnuclear targets: {[n.name for n in self.NUCLEAR_TARGETS]}\n\tfiducial mass: {[self.FIDUCIAL_MASS*frac for frac in read_file['fiducial_mass_fraction_per_target']]} tonnes")
+
         except FileNotFoundError:
             raise FileNotFoundError("The experiment configuration file '{}.json' does not exist.".format(experiment_name.lower()))
         except KeyError as err:
@@ -173,8 +176,6 @@ class Detector():
                 raise KeyError("No field '{}' specified in the the experiment configuration file '{}.json'.".format(err.args[0], experiment_name.lower()))
             raise
 
-    # this one is too specific, need to make it more generic
-    # and force the user to provide fluxes normalized in the right format!
     def get_flux_func(self, flavor = pdg.numu):
         """ Return flux interpolating function using scipy interp1d
 
@@ -194,7 +195,6 @@ class Detector():
             nf = data[4]
         else:
             logger.error("ERROR! Neutrino flavor {flavor.name} not supported.")
-        # raise ValueError(f"Unknown file \"{self.FLUXFILE}\"")
 
         flux = interpolate.interp1d(E, nf*self.FLUX_NORM, fill_value=0.0, bounds_error=False)
         return flux

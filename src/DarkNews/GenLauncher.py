@@ -11,17 +11,12 @@ from DarkNews import logger, prettyprinter
 
 class GenLauncher:
 
-    banner = r"""
-#########################################################
-#   ______           _        _   _                     #
-#   |  _  \         | |      | \ | |                    #
-#   | | | |__ _ _ __| | __   |  \| | _____      _____   #
-#   | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|  #
-#   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \  #
-#   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  #
-#                                                       #
-#########################################################
-        """
+    banner = r"""|   ______           _        _   _                     |
+|   |  _  \         | |      | \ | |                    |
+|   | | | |__ _ _ __| | __   |  \| | _____      _____   |
+|   | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|  |
+|   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \  |
+|   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  |"""
 
     def __init__(self, **kwargs):
         # set defaults
@@ -44,6 +39,22 @@ class GenLauncher:
         self.ud6 = 1.0
         self.gD = 1.0
         self.epsilon = 1e-2
+        self.mu_tr_e4 = 0.0
+        self.mu_tr_e5 = 0.0
+        self.mu_tr_e6 = 0.0
+        self.mu_tr_mu4 = 0.0
+        self.mu_tr_mu5 = 0.0
+        self.mu_tr_mu6 = 0.0
+        self.mu_tr_tau4 = 0.0
+        self.mu_tr_tau5 = 0.0
+        self.mu_tr_tau6 = 0.0
+        self.mu_tr_44 = 0.0
+        self.mu_tr_45 = 0.0
+        self.mu_tr_46 = 0.0
+        self.mu_tr_55 = 0.0
+        self.mu_tr_56 = 0.0
+        self.mu_tr_66 = 0.0
+        self.decay_products="e+e-"
         self.exp = "miniboone_fhc"
         self.nopelastic = False
         self.nocoh = False
@@ -108,10 +119,9 @@ class GenLauncher:
         threeplusthree = (self.m4 and self.m5 and self.m6)
 
         if threeplusone:
-            logger.info(f'Theory model used: 3+1 {self.D_or_M} HNL model\n\n')
             MODEL = dn.const.THREEPLUSONE
             upscattered_nus = [dn.pdg.neutrino4]
-            outgoing_nus =[dn.pdg.numu]
+            outgoing_nus =[dn.pdg.nulight]
 
             ### NAMING 
             ## HEPEVT Event file name
@@ -124,7 +134,6 @@ class GenLauncher:
         
 
         elif threeplustwo:
-            logger.info(f'Theory model used: 3+2 {self.D_or_M} HNL model\n\n')
             MODEL = dn.const.THREEPLUSTWO
             ## FIXING 3+2 process chain to be numu --> N5 --> N4
             upscattered_nus = [dn.pdg.neutrino5]
@@ -142,10 +151,9 @@ class GenLauncher:
 
 
         elif threeplusthree:
-            logger.info(f'Theory model used: 3+3 {self.D_or_M} HNL model\n\n')
             MODEL = dn.const.THREEPLUSTHREE
             upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
-            outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4,dn.pdg.neutrino5]
+            outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
             
             PATH_data = f'data/{self.exp}/3plus3/m6_{self.m6:.4g}_m5_{self.m5:.4g}_m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}/'
             PATH = f'plots/{self.exp}/3plus3/m6_{self.m6:.4g}_m5_{self.m5:.4g}_m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}/'
@@ -175,6 +183,8 @@ class GenLauncher:
                     'FLAVORS': [dn.pdg.numu],
                     'UPSCATTERED_NUS': upscattered_nus,
                     'OUTGOING_NUS': outgoing_nus,
+                    'DECAY_PRODUCTS': [self.decay_products],
+
                 }
 
         ####################################################
@@ -199,6 +209,5 @@ class GenLauncher:
             self.df = dn.printer.print_events_to_pandas(PATH_data, df_gen, bsm_model)
         if self.hepevt:
             dn.printer.print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh= self.hepevt_unweigh, TOT_EVENTS=self.hepevt_events)
-        logger.info(f"Outputs saved in {PATH_data}")
 
     

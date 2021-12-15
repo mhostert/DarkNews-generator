@@ -1,3 +1,4 @@
+import numpy as np
 from DarkNews import logger
 
 #####################################
@@ -16,13 +17,13 @@ def in_same_doublet(p1,p2):
         return None
 
 def in_e_doublet(p):
-    return p.pdgid in [11,12]
+    return (np.abs(p.pdgid) in [11,12])
 
 def in_mu_doublet(p):
-    return p.pdgid in [13,14]
+    return (np.abs(p.pdgid) in [13,14])
 
 def in_tau_doublet(p):
-    return p.pdgid in [15,16]
+    return (np.abs(p.pdgid) in [15,16])
 
 def get_doublet(p):
     if in_e_doublet(p):
@@ -34,6 +35,7 @@ def get_doublet(p):
     else:
         logger.error(f"Could not find doublet of {p.name}.")
         return 0
+
 def same_doublet(p1,p2):
     return get_doublet(p1) == get_doublet(p2)
 def same_particle(p1,p2):
@@ -43,6 +45,17 @@ def is_particle(p):
 def is_antiparticle(p):
     return p.pdgid < 0 
 
+#####
+# generational indices
+# 0 - e, 1 -mu, 2 - tau, 3 - N4, 4 - N5, ...
+def get_HNL_index(particle):
+    return int(particle.name.strip('nuN'))-1
+
+def get_lepton_index(particle):
+    return get_doublet(particle)
+
+# mediators
+photon = Particle.from_pdgid( 22)
 
 # Leptons
 electron = Particle.from_pdgid( 11)
@@ -74,6 +87,14 @@ Carbon12 = Particle.from_pdgid( 1000060120)
 
 ########################################################################################
 # Define new particles
+'''
+PDG code convention for new particles
+
+As advised by the PDG, we start the new particle system with 59. The full identifier is:
+    
+     PDGID  =  59(particle spin code: 0-scalar 1-fermion 2-vector)(generation number)
+
+'''
 def new_particle( name, pdgid, charge=0, mass=0, **kwargs):
     return Particle(pdg_name=name, pdgid=pdgid, three_charge=charge, mass=mass, **kwargs)
     ''' 
@@ -81,15 +102,15 @@ def new_particle( name, pdgid, charge=0, mass=0, **kwargs):
             https://github.com/scikit-hep/particle/blob/dd3c71e0b4319f729533ff0fc2e1e8cfa49684dd/src/particle/particle/particle.py#L91
     '''
 
-
 '''
 PDG code convention for new particles
 
 As advised by the PDG, we start the new system with 59. The full identifier is:
-	
-	 PDGID  =  59(particle spin code: 0-scalar 1-fermion 2-vector)(generation number)
+    
+     PDGID  =  59(particle spin code: 0-scalar 1-fermion 2-vector)(generation number)
 
 '''
+
 # pseudoparticle denoting all light neutrinos states
 nulight = new_particle(name='nu_light', pdgid=5910, latex_name='\nu_{\rm light}')
 
@@ -97,7 +118,6 @@ nulight = new_particle(name='nu_light', pdgid=5910, latex_name='\nu_{\rm light}'
 neutrino1 = new_particle(name='nu1', pdgid=5911, latex_name='\nu_1')
 neutrino2 = new_particle(name='nu2', pdgid=5912, latex_name='\nu_2')
 neutrino3 = new_particle(name='nu3', pdgid=5913, latex_name='\nu_3')
-
 
 # heavy neutrinos
 neutrino4 = new_particle(name='N4', pdgid=5914, latex_name='N_4')
@@ -111,6 +131,5 @@ zprime = new_particle(name='zprime', pdgid=5921, latex_name='Z^\prime')
 hprime = new_particle(name='hprime', pdgid=5901, latex_name='h^\prime')
 phi = new_particle(name='phi', pdgid=5902, latex_name='\varphi')
 alp = new_particle(name='alp', pdgid=5903, latex_name='a')
-
 
 ########################################################################################
