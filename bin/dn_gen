@@ -136,4 +136,4 @@ parser.add_argument("--path", help="path where to save run's outputs", default=D
 args = parser.parse_args()
 
 gen_object = GenLauncher(**vars(args))
-gen_object.run(log_level=args.log, verbose=args.verbose, logfile=args.logfile)
+gen_object.run(log=args.log, verbose=args.verbose, logfile=args.logfile)

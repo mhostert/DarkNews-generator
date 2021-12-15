@@ -59,7 +59,7 @@ class GenLauncher:
         self.mu_tr_55 = 0.0
         self.mu_tr_56 = 0.0
         self.mu_tr_66 = 0.0
-        self.decay_product="e+e-"
+        self.decay_products="e+e-"
         self.exp = "miniboone_fhc"
         self.nopelastic = False
         self.nocoh = False
@@ -127,7 +127,7 @@ class GenLauncher:
             logger.info(f'Theory model used: 3+1 {self.D_or_M} HNL model\n\n')
             MODEL = dn.const.THREEPLUSONE
             upscattered_nus = [dn.pdg.neutrino4]
-            outgoing_nus =[dn.pdg.numu]
+            outgoing_nus =[dn.pdg.nulight]
 
             ### NAMING 
             ## HEPEVT Event file name
@@ -161,7 +161,7 @@ class GenLauncher:
             logger.info(f'Theory model used: 3+3 {self.D_or_M} HNL model\n\n')
             MODEL = dn.const.THREEPLUSTHREE
             upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
-            outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4,dn.pdg.neutrino5]
+            outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
             
             PATH_data = f'data/{self.exp}/3plus3/m6_{self.m6:.4g}_m5_{self.m5:.4g}_m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}/'
             PATH = f'plots/{self.exp}/3plus3/m6_{self.m6:.4g}_m5_{self.m5:.4g}_m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}/'
@@ -191,7 +191,7 @@ class GenLauncher:
                     'FLAVORS': [dn.pdg.numu],
                     'UPSCATTERED_NUS': upscattered_nus,
                     'OUTGOING_NUS': outgoing_nus,
-                    'DECAY_PRODUCTS': [args.decay_products],
+                    'DECAY_PRODUCTS': [self.decay_products],
 
                 }
 

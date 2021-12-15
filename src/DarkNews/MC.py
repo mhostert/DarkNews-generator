@@ -299,8 +299,7 @@ class MC_events:
             df_gen[f'w_{decay_step}'.replace('diff_','')] = weights[decay_step] * batch_f.norm[decay_step]
             
             # combining all decay rates into one factor
-            decay_rates *= np.sum(events[f'w_{decay_step}'.replace('diff_','')]) 
-            df_gen[f'I_{decay_step}'.replace('diff_','')] = integrals[decay_step].mean * batch_f.norm[decay_step]
+            decay_rates *= np.sum(df_gen[f'w_{decay_step}'.replace('diff_','')]) 
 
         # How many constituent targets inside scattering regime? 
         if self.scope['scattering_regime'] == 'coherent':
