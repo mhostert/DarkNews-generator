@@ -206,7 +206,8 @@ class MC_events:
             The first integrand entry is the one VEGAS uses to optimize the importance sampling.
         """
 
-        logger.info(f"Generating helicity {self.helicity} upscattering events for:\n\t{self.underl_process_name}\n")
+        prettyprinter.info(f"{self.underl_process_name}")
+        logger.info(f"Helicity {self.helicity} upscattering.")
         #########################################3
         # Some experimental definitions
         #self.exp = experiment  # NO NEED TO STORE THIS
@@ -219,13 +220,13 @@ class MC_events:
 
             if self.decay_case.on_shell:
                 DIM = 3
-                logger.info(f"decaying {self.nu_upscattered.name} using on-shell Z' mediator.")
+                logger.info(f"{self.nu_upscattered.name} decays via on-shell Z'.")
             elif self.decay_case.off_shell:
                 DIM = 6
-                logger.info(f"decaying {self.nu_upscattered.name} using off-shell Z' mediator.")
+                logger.info(f"{self.nu_upscattered.name} decays via off-shell Z'.")
         elif self.decays_to_singlephoton:
             DIM = 3
-            logger.info(f"decaying {self.nu_upscattered.name} using TMM.")
+            logger.info(f"{self.nu_upscattered.name} decays via TMM.")
         else:
             logger.error(f"ERROR! Could not find decay process.")
 
@@ -335,7 +336,7 @@ class MC_events:
 
         # saving the bsm_model class
         df_gen.attrs['bsm_model'] = self.bsm_model
-        prettyprinter.info(f"Predicted {np.sum(df_gen['w_event_rate']):.2g} events.\n---------")
+        logger.info(f"Predicted ({np.sum(df_gen['w_event_rate']):.3g} +/- {np.sqrt(np.sum(df_gen['w_event_rate']**2)):.3g}) events.\n")
         # logger.debug(f"Inspecting dataframe\nkeys of events dictionary = {df_gen.columns}.")
 
         return df_gen
@@ -427,7 +428,7 @@ def run_MC(bsm_model, experiment, **kwargs):
         mc.set_theory_params(bsm_model)
         merge_MC_output(gen_cases_dfs, mc.get_MC_events())
     
-    prettyprinter.info(f"----------------------------------\nGeneration successful\nTotal events predicted:\n({np.sum(gen_cases_dfs['w_event_rate']):.2g} +/- {np.sqrt(np.sum(gen_cases_dfs['w_event_rate']**2)):.2g}) events.\n----------------------------------")
+    prettyprinter.info(f"* Generation successful\n\nTotal events predicted:\n({np.sum(gen_cases_dfs['w_event_rate']):.3g} +/- {np.sqrt(np.sum(gen_cases_dfs['w_event_rate']**2)):.3g}) events.")
 
     return gen_cases_dfs
 

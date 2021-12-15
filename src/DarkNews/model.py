@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-from DarkNews import logger
+from DarkNews import logger, prettyprinter
 
 from particle import Particle
 from particle import literals as lp
@@ -292,6 +292,7 @@ class Model:
             set all other variables starting from base members
         
         """
+        self._spectrum = ""
         self.hnl_masses = np.empty(0)
         if self.m4:
             self.hnl_masses = np.append(self.m4,self.hnl_masses)
@@ -317,8 +318,7 @@ class Model:
         self.HNL_spectrum = self.nu_spectrum[3:]
         self.n_nus = len(self.nu_spectrum)
         self.n_HNLs = len(self.HNL_spectrum)
-
-
+        self._spectrum += f"\n\t{self.n_HNLs} {self.HNLtype} heavy neutrino(s)."
 
         # create the vector mediator scope
         self.is_kinetically_mixed = (self.epsilon != 0)
@@ -326,6 +326,7 @@ class Model:
         if self.is_kinetically_mixed or self.is_mass_mixed:
             # dark photon 
             self.zprime = pdg.new_particle(name='zprime', pdgid=5921, latex_name='Z^\prime')
+            self._spectrum+="\n\tkinetically mixed Z'"
 
         # create the transition mag moment scope
         self.t_aj = np.array([\
@@ -337,7 +338,10 @@ class Model:
                                 [0,0,0, self.mu_tr_46,   self.mu_tr_56,    self.mu_tr_66],
                                 ])
         self.is_TMM = np.any(self.t_aj != 0)
+        if self.is_TMM:
+            self._spectrum += f"\n\t{len(self.t_aj!=0)} non-zero transition magnetic moment(s)."
 
+        prettyprinter.info(f"Model:{self._spectrum}")
 
         ####################################################
         # CHARGED FERMION VERTICES 

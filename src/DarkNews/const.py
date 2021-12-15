@@ -241,7 +241,7 @@ def ConfigureLogger(logger, level=logging.INFO, prettyprinter = None, logfile = 
         
         logger --> main logger of DarkNews. It handles all debug, info, warning, and error messages
 
-        prettyprint --> secondary logger for pretty print messages. Cannot override the main logger level
+        prettyprint --> secondary logger for pretty-print messages. Cannot override the main logger level
 
     '''
     
@@ -257,7 +257,8 @@ def ConfigureLogger(logger, level=logging.INFO, prettyprinter = None, logfile = 
         if prettyprinter:
             pretty_handler = logging.StreamHandler(stream=sys.stdout)
             pretty_handler.setLevel(level)
-            pretty_handler.setFormatter(logging.Formatter('\n%(message)s'))
+            delimiter = '---------------------------------------------------------'
+            pretty_handler.setFormatter(logging.Formatter(delimiter+'\n%(message)s\n'+delimiter+"\n"))
             # update pretty printer 
             if (prettyprinter.hasHandlers()):
                 prettyprinter.handlers.clear()

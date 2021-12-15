@@ -13,7 +13,6 @@ prettyprinter = logging.getLogger(__name__+'.pretty_printer')
 prettyprinter.setLevel(logging.INFO)
 handler = logging.StreamHandler(stream=sys.stdout)
 handler.setLevel(logging.INFO)
-handler.setFormatter(logging.Formatter(''))
 prettyprinter.addHandler(handler)
 
 

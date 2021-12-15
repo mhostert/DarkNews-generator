@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import dill 
 
-from DarkNews import logger
+from DarkNews import logger, prettyprinter
 
 from collections import defaultdict
 from functools import partial
@@ -35,7 +35,7 @@ def print_events_to_pandas(PATH_data, df_gen, bsm_model):
 	
 	# pickles DarkNews classes with support for lambda functions
 	dill.dump(df_gen, open(out_file_name, 'wb'))
-	
+	prettyprinter.info(f"* Events saved to file successfully:\n\n{out_file_name}")
 	# aux_df.to_pickle(out_file_name)
 	# pickle.dump(aux_df, open(out_file_name, 'wb'	))
 
