@@ -1,0 +1,19 @@
+{
+    "name": "MINERVA_FHC_ME",
+    "fluxfile": "fluxes/NUMI_FHC_ME_unofficial.dat",
+    "flux_norm": 1.0,
+    "erange": [
+        0.1,
+        19.0
+    ],
+    "nuclear_targets": [
+        "C12",
+        "H1"
+    ],
+    "fiducial_mass": 6.10,
+    "fiducial_mass_fraction_per_target": [
+        0.8571,
+        0.1429
+    ],
+    "POTs": 8.468e+20
+}

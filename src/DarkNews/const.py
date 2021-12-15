@@ -16,6 +16,7 @@ from scipy import interpolate
 import os
 import itertools
 import logging
+from logging.handlers import RotatingFileHandler
 
 from DarkNews import logger
 from DarkNews import local_dir
@@ -49,7 +50,6 @@ GeV2_to_cm3s = invGeV2_to_cm2*c_LIGHT*1e2
 g_to_eV = 5.6095886031e32 # eV
 kg_to_eV = 5.6095886031e35 # eV
 t_to_eV = 5.6095886031e38 # eV
-
 
 g_to_GeV = g_to_eV*1e-9 # GeV
 kg_to_GeV = kg_to_eV*1e-9 # GeV
@@ -249,7 +249,7 @@ def ConfigureLogger(logger, level=logging.INFO, prettyprinter = None, logfile = 
 
     if logfile:
         # log to files with max 1 MB with up to 4 files of backup
-        handler = logging.handlers.RotatingFileHandler(f"{logfile}", maxBytes=1000000, backupCount=4)
+        handler = RotatingFileHandler(f"{logfile}", maxBytes=1000000, backupCount=4)
 
     else:
         # stdout only

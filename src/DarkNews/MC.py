@@ -248,6 +248,7 @@ class MC_events:
         #########################################################################
         # GET THE INTEGRATION SAMPLES and translate to physical variables in MC events
         samples, weights = get_samples(DIM, integ, batch_f)
+        logger.debug(f"Normalization factors in MC: {batch_f.norm}.")
         logger.debug(f"Vegas results for diff_event_rate: {np.sum(weights['diff_event_rate'])}")
         logger.debug(f"Vegas results for diff_flux_avg_xsec: {np.sum(weights['diff_flux_avg_xsec'])}")
 
@@ -294,13 +295,12 @@ class MC_events:
         for decay_step in (k for k in batch_f.int_dic.keys() if 'decay_rate' in k):
             logger.debug(f"Vegas results for {decay_step}: {np.sum(weights[decay_step])}")
             
-            # combining all decay rates into one factor
-            decay_rates *= integrals[decay_step].mean * batch_f.norm[decay_step]
-            
             # saving decay weights and integrals
             df_gen[f'w_{decay_step}'.replace('diff_','')] = weights[decay_step] * batch_f.norm[decay_step]
+            
+            # combining all decay rates into one factor
+            decay_rates *= np.sum(events[f'w_{decay_step}'.replace('diff_','')]) 
             df_gen[f'I_{decay_step}'.replace('diff_','')] = integrals[decay_step].mean * batch_f.norm[decay_step]
-
 
         # How many constituent targets inside scattering regime? 
         if self.scope['scattering_regime'] == 'coherent':

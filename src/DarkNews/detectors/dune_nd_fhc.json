@@ -1,0 +1,22 @@
+{
+    "name": "dune_nd_fhc",
+    "fluxfile": "fluxes/DUNE_ND_FHC.dat",
+    "flux_norm": 1.0,
+    "erange": [
+        0.05,
+        9
+    ],
+    "nuclear_targets": [
+        "Ar40"
+    ],
+    "fiducial_mass": 30.0,
+    "fiducial_mass_fraction_per_target": [
+        1.0
+    ],
+    "POTs": 1.0e+22,
+    "__REF__": [
+        "fluxes from https://arxiv.org/pdf/2103.04797",
+        "based on a '1.2-MW, 120-GeV primary proton beam and a 2.2m long, 16mm diameter cylindrical graphite target'",
+        "near detector location 574 m from start of Horn 1"
+    ]
+}
