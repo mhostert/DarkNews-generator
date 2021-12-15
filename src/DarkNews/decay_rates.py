@@ -230,7 +230,7 @@ def diff_gamma_Ni_to_Nj_gamma(cost, vertex_ij, mi, mj, HNLtype = const.MAJORANA,
     r1 = np.full_like(cost, mj/mi)
 
     diff_gamma = mi**3 / 16 / np.pi
-    diff_gamma *= const.kallen_sqrt(1, r1**2, r2**2)
+    diff_gamma *= const.kallen_sqrt(1, r1**2, 0.0)
 
     if HNLtype == const.MAJORANA:
         # Majorana -- independent of cost 
@@ -772,7 +772,7 @@ def nui_l_P(params, initial_neutrino, final_lepton, final_hadron):
     mh = initial_neutrino.mass/1e3
     ml = final_lepton.mass/1e3
     CC_mixing = params.Ulep[pdg.get_lepton_index(final_lepton)]
-    
+
     if (initial_neutrino==pdg.neutrino6):
         mh = params.m6
         if (final_lepton==const.tau):

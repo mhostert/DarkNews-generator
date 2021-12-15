@@ -199,7 +199,7 @@ def dn_gen(argv):
         logger.info(f'Theory model used: 3+1 {args.D_or_M} HNL model\n\n')
         MODEL = dn.const.THREEPLUSONE
         upscattered_nus = [dn.pdg.neutrino4]
-        outgoing_nus =[dn.pdg.numu]
+        outgoing_nus =[dn.pdg.nulight]
 
         ### NAMING 
         ## HEPEVT Event file name
@@ -233,7 +233,7 @@ def dn_gen(argv):
         logger.info(f'Theory model used: 3+3 {args.D_or_M} HNL model\n\n')
         MODEL = dn.const.THREEPLUSTHREE
         upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
-        outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4,dn.pdg.neutrino5]
+        outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
         
         PATH_data = f'data/{args.exp}/3plus3/m6_{args.m6:.4g}_m5_{args.m5:.4g}_m4_{args.m4:.4g}_mzprime_{args.mzprime:.4g}/'
         PATH = f'plots/{args.exp}/3plus3/m6_{args.m6:.4g}_m5_{args.m5:.4g}_m4_{args.m4:.4g}_mzprime_{args.mzprime:.4g}/'

@@ -283,7 +283,6 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None, w=None, I=None):
 
 	four_momenta["P_projectile"] = P1LAB
 	four_momenta["P_target"]	 = P2LAB
-	# four_momenta["P_scattered"]	 = P3LAB
 	four_momenta["P_recoil"]	 = P4LAB
 
 	#######################
@@ -358,6 +357,8 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None, w=None, I=None):
 
 	elif MC_case.decays_to_singlephoton:
 
+		mf = MC_case.decay_case.m_daughter
+
 		########################
 		### HNL decay		
 		N_decay_samples = {'unit_cost' : np.array(vsamples[2])}
@@ -369,80 +370,9 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None, w=None, I=None):
 		# Phnl, Phnl', Pgamma
 		P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
 
-		four_momenta["P_decay_N_parent"]	= P1LAB_decay, 
-		four_momenta["P_decay_N_daughter"]	= P2LAB_decay,
-		four_momenta["P_decay_gamma"]		= P3LAB_decay, 
+		four_momenta["P_decay_N_parent"]	= P1LAB_decay 
+		four_momenta["P_decay_N_daughter"]	= P2LAB_decay
+		four_momenta["P_decay_gamma"]		= P3LAB_decay
 
 
 	return four_momenta
-
-
-
-# def get_four_momenta_from_vsamples_onshell(vsamples=None, MC_case=None, w=None, I=None):
-
-# 	########################	
-# 	### scattering
-# 	# Ni(k1) target(k2) -->  Nj(k3) target(k4)
-# 	# energy of projectile
-# 	Eprojectile = (MC_case.EMAX - MC_case.EMIN) * vsamples[0] + MC_case.EMIN
-# 	scatter_samples = {  'Eprojectile': Eprojectile, 'unit_Q2': vsamples[1]} 
-# 	masses_scatter = {	'm1': 0.0,	# nu_projectile
-# 						'm2': MA,		# target
-# 						'm3': mh,		# nu_upscattered
-# 						'm4': MA		# final target
-# 					}
-	
-# 	P1LAB, P2LAB, P3LAB, P4LAB = phase_space.two_to_two_scatter(scatter_samples, **masses_scatter)
-
-# 	# N boost parameters
-# 	boost_scattered_N = {'EP_LAB':   P3LAB.T[0],
-# 						'costP_LAB': Cfv.get_cosTheta(P3LAB),
-# 						'phiP_LAB':  np.arctan2(P3LAB.T[2], P3LAB.T[1])}
-	
-
-# def get_four_momenta_from_vsamples_offshell(vsamples=None, MC_case=None):
-
-		# mh = MC_case.ups_case.m_ups
-		# MA = MC_case.ups_case.MA
-
-		# mf = MC_case.decay_case.m_daughter
-		# mm = MC_case.decay_case.mm
-		# mp = MC_case.decay_case.mm
-
-
-		# ########################		
-		# # scattering
-		# # Ni(k1) target(k2) -->  Nj(k3) target(k4)
-		# Eprojectile = (MC_case.EMAX - MC_case.EMIN) * vsamples[0] + MC_case.EMIN
-		# scatter_samples = {  	
-		# 						'Eprojectile': Eprojectile,
-		# 						'unit_Q2': vsamples[1]
-		# 					} 
-
-		# masses_scatter = {	'm1': 0.0, # nu_projectile
-		# 					'm2': MA,  # target
-		# 					'm3': mh,  # nu_upscattered
-		# 					'm4': MA   # final target
-		# 				}
-		
-		# P1LAB, P2LAB, P3LAB, P4LAB = phase_space.two_to_two_scatter(scatter_samples, **masses_scatter)
-
-		# # N boost parameters
-		# boost_scattered_N = {'EP_LAB':   P3LAB.T[0],
-		# 					'costP_LAB': Cfv.get_cosTheta(P3LAB),
-		# 					'phiP_LAB':  np.arctan2(P3LAB.T[2], P3LAB.T[1])}
-		
-		
-
-
-		# # returing dictionary
-		# return  {"P_projectile" :	P1LAB,
-		# 		"P_target" :		P2LAB,
-		# 		"P_scattered" :		P3LAB,
-		# 		"P_recoil" :		P4LAB,
-		# 		#
-		# 		"P_decay_N_parent" :	P1LAB_decay, 
-		# 		"P_decay_ell_minus" :	P2LAB_decay, 
-		# 		"P_decay_ell_plus" :	P3LAB_decay, 
-		# 		"P_decay_N_daughter" :	P4LAB_decay,
-		# 		}

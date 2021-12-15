@@ -215,13 +215,15 @@ class MC_events:
         self.EMAX = self.experiment.ERANGE[1]
 
 
-        if self.decay_case.on_shell:
-            DIM = 3
-            logger.info(f"decaying {self.nu_upscattered.name} using on-shell Z' mediator.")
-        elif self.decay_case.off_shell:
-            DIM = 6
-            logger.info(f"decaying {self.nu_upscattered.name} using off-shell Z' mediator.")
-        elif self.decay_case.TMM:
+        if self.decays_to_dilepton:
+
+            if self.decay_case.on_shell:
+                DIM = 3
+                logger.info(f"decaying {self.nu_upscattered.name} using on-shell Z' mediator.")
+            elif self.decay_case.off_shell:
+                DIM = 6
+                logger.info(f"decaying {self.nu_upscattered.name} using off-shell Z' mediator.")
+        elif self.decays_to_singlephoton:
             DIM = 3
             logger.info(f"decaying {self.nu_upscattered.name} using TMM.")
         else:
@@ -334,8 +336,8 @@ class MC_events:
 
         # saving the bsm_model class
         df_gen.attrs['bsm_model'] = self.bsm_model
-
-        logger.debug(f"Inspecting dataframe\nkeys of events dictionary = {df_gen.columns}.")
+        prettyprinter.info(f"Predicted {np.sum(df_gen['w_event_rate']):.2g} events.\n---------")
+        # logger.debug(f"Inspecting dataframe\nkeys of events dictionary = {df_gen.columns}.")
 
         return df_gen
 
@@ -375,6 +377,7 @@ def run_MC(bsm_model, experiment, **kwargs):
     scope.update(kwargs)
 
     # create instances of all MC cases of interest
+    logger.debug(f"Creating instances of MC cases:")
     gen_cases = []
     # neutrino flavor initiating scattering
     for flavor in scope['FLAVORS']:
@@ -414,55 +417,28 @@ def run_MC(bsm_model, experiment, **kwargs):
                             if scope['INCLUDE_HF']:  # helicity flipping scattering
                                 gen_cases.append(MC_events(experiment, **args, helicity = 'flipping'))
 
-    gen_cases_events=[]
-    # Set theory params and run generation of events
-    for mc in gen_cases:
-        mc.set_theory_params(bsm_model)
-        gen_cases_events.append(mc.get_MC_events())
+                            logger.debug(f"Created an MC instance of {gen_cases[-1].underl_process_name}.")
+
     
-    # Combine all cases into one object
-    all_events = merge_MC_output(gen_cases_events)
+    logger.debug(f"Now running the generator for each instance.")
+    # Set theory params and run generation of events
+    gen_cases[0].set_theory_params(bsm_model)
+    gen_cases_dfs = gen_cases[0].get_MC_events()
+    for mc in gen_cases[1:]:
+        mc.set_theory_params(bsm_model)
+        merge_MC_output(gen_cases_dfs, mc.get_MC_events())
+    
+    prettyprinter.info(f"----------------------------------\nGeneration successful\nTotal events predicted:\n({np.sum(gen_cases_dfs['w_event_rate']):.2g} +/- {np.sqrt(np.sum(gen_cases_dfs['w_event_rate']**2)):.2g}) events.\n----------------------------------")
 
-    all_events['bsm_model'] = bsm_model
-    all_events['experiment'] = experiment
-
-
-    return all_events
+    return gen_cases_dfs
 
 
 # merge all generation cases into one dictionary
-def merge_MC_output(cases):
+def merge_MC_output(df1,df2):
     
-    logger.debug(f"\n\nMerging MC events for {np.shape(cases)[0]} processes.")
-    # # merged dic
-    # dic ={}
-    # # initialize with first case
-    # for x in cases[0]:
-    #     dic[x] = cases[0][x]
-    
-    # # append all subsequent ones
-    # for i in range(1,np.shape(cases)[0]):
-    #     for x in cases[0]:
-    #         logger.debug(f"Merging {x} in case {i}.")
-            
-    #         # merge event kinematics and weights
-    #         if hasattr(cases[i][x], "__len__"):
-    #             dic[x] = np.array( np.append(dic[x], cases[i][x], axis=0) )
-        
-    #         # merge integrals
-    #         elif np.isscalar(cases[i][x]):
-        
-    #             # correct over-counting of total decay rate 
-    #             if "decay_rate" in x:
-    #                 dic[x] += cases[i][x]/np.size(cases)
-    #             else:
-    #                 dic[x] += cases[i][x]
-    #         else:
-    #             logger.error(f"Could not merge variable {x}, in {cases[i][x]}.")
-    #             raise ValueError
+    logger.debug(f"Appending {df2.underlying_process[0]}")
+    df = pd.concat([df1, df2], axis = 0).reset_index()    
 
-    
-    df = pd.concat([*cases], axis = 0).reset_index()    
     return df
 
 
@@ -492,4 +468,3 @@ def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=
 
         # sample again, now saving result
         return integ(batch_f,  nitn = NINT, neval = NEVAL)
-

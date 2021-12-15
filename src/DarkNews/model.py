@@ -95,6 +95,10 @@ class UpscatteringProcess:
         self.TheoryModel = TheoryModel
         self.helicity = helicity
 
+        self.MA = target.mass
+        self.mzprime = TheoryModel.mzprime
+        self.m_ups = self.nu_upscattered.mass
+
         if self.helicity == 'conserving':
             self.h_upscattered = -1
         elif self.helicity == 'flipping':
@@ -102,46 +106,14 @@ class UpscatteringProcess:
         else:
             logger.error(f"Error! Could not find helicity case {self.helicity}")
         
-        h = self.h_upscattered
 
-        self.mzprime = TheoryModel.mzprime
-
-
-        self.m_ups = self.nu_upscattered.mass
         self.Cij=TheoryModel.c_aj[pdg.get_lepton_index(nu_projectile), pdg.get_HNL_index(nu_upscattered)]
         self.Cji=self.Cij
         self.Vij=TheoryModel.d_aj[pdg.get_lepton_index(nu_projectile), pdg.get_HNL_index(nu_upscattered)]
         self.Vji=self.Vij
         self.mu_tr=TheoryModel.t_aj[pdg.get_lepton_index(nu_projectile), pdg.get_HNL_index(nu_upscattered)]
-    
 
         ###############
-        # leptonic vertices for upscattering 
-        if nu_upscattered==pdg.neutrino4:
-            self.m_ups = TheoryModel.m4
-            self.Cij=TheoryModel.cmu4
-            self.Cji=self.Cij
-            self.Vij=TheoryModel.dmu4
-            self.Vji=self.Vij
-        
-        elif nu_upscattered==pdg.neutrino5:
-            self.m_ups = TheoryModel.m5
-            self.Cij=TheoryModel.cmu5
-            self.Cji=self.Cij
-            self.Vij=TheoryModel.dmu5
-            self.Vji=self.Vij
-        
-        elif nu_upscattered==pdg.neutrino6:
-            self.m_ups = TheoryModel.m6
-            self.Cij=TheoryModel.cmu6
-            self.Cji=self.Cij
-            self.Vij=TheoryModel.dmu6
-            self.Vji=self.Vij
-
-        else:
-            logger.error(f"Error! Could not find particle produced in upscattering: {nu_upscattered}.")
-
-
         # Hadronic vertices
         if target.is_nucleus:
             self.Chad = const.gweak/2.0/const.cw*np.abs((1.0-4.0*const.s2w)*target.Z-target.N)
@@ -152,183 +124,107 @@ class UpscatteringProcess:
         elif target.is_neutron:
             self.Chad = TheoryModel.cVneutron
             self.Vhad = TheoryModel.dVneutron
-
         # mass mixed vertex
         self.Cprimehad = self.Chad*TheoryModel.epsilonZ
 
-        self.MA = target.mass
+
 
 class FermionDileptonDecay:
 
     def __init__(self, nu_parent, nu_daughter, final_lepton1, final_lepton2, TheoryModel, h_parent=-1):
 
-        params = TheoryModel
+
         self.TheoryModel = TheoryModel
-        self.HNLtype = params.HNLtype
+        self.HNLtype = TheoryModel.HNLtype
         self.h_parent = h_parent
-
-
-        ##############################
-        # CHARGED LEPTON MASSES 
-
+        
+        # particle masses
+        self.mzprime = TheoryModel.mzprime
         self.mm = final_lepton1.mass*const.MeV_to_GeV 
         self.mp = final_lepton2.mass*const.MeV_to_GeV 
 
-        if nu_parent==pdg.neutrino4:
-            self.m_parent = params.m4
-            if nu_daughter==pdg.nue:
-                self.Cih = params.ce4
-                self.Dih = params.de4
-                self.Tih = params.mu_tr_e4
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.numu:
-                self.Cih = params.cmu4
-                self.Dih = params.dmu4
-                self.Tih = params.mu_tr_mu4
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.nutau:
-                self.Cih = params.ctau4
-                self.Dih = params.dtau4
-                self.Tih = params.mu_tr_tau4
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.nulight:
-                self.Cih = params.clight4
-                self.Dih = params.dlight4
-                self.Tih = params.mu_tr_l4
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.neutrino4:
-                logger.error('ERROR! (nu4 -> nu4 l l) is kinematically not allowed!')
-        
-        elif nu_parent==pdg.neutrino5:
-            
-            self.m_parent = params.m5
-            if nu_daughter==pdg.nue:
-                self.Cih = params.ce5
-                self.Dih = params.de5
-                self.Tih = params.mu_tr_e5
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.numu:
-                self.Cih = params.cmu5
-                self.Dih = params.dmu5
-                self.Tih = params.mu_tr_mu5
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.nutau:
-                self.Cih = params.ctau5
-                self.Dih = params.dtau5
-                self.Tih = params.mu_tr_tau5
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.nulight:
-                self.Cih = params.clight5
-                self.Dih = params.dlight5
-                self.Tih = params.mu_tr_l5
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.neutrino4:
-                self.Cih = params.c45
-                self.Dih = params.d45
-                self.Tih = params.mu_tr_45
-                self.m_daughter = params.m4
-
-        elif nu_parent == pdg.neutrino6:
-
-            self.m_parent = params.m6
-            if nu_daughter==pdg.nue:
-                self.Cih = params.ce6
-                self.Dih = params.de6
-                self.Tih = params.mu_tr_e6
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.numu:
-                self.Cih = params.cmu6
-                self.Dih = params.dmu6
-                self.Tih = params.mu_tr_mu6
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.nutau:
-                self.Cih = params.ctau6
-                self.Dih = params.dtau6
-                self.Tih = params.mu_tr_tau6
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.nulight:
-                self.Cih = params.clight6
-                self.Dih = params.dlight
-                self.Tih = params.mu_tr_l6
-                self.m_daughter = 0.0
-            elif nu_daughter==pdg.neutrino4:
-                self.Cih = params.c46
-                self.Dih = params.d46
-                self.Tih = params.mu_tr_46
-                self.m_daughter = params.m4
-            elif nu_daughter==pdg.neutrino5:
-                self.Cih = params.c56
-                self.Dih = params.d56
-                self.Tih = params.mu_tr_56
-                self.m_daughter = params.m5
+        if nu_daughter == pdg.nulight:
+            self.Cih = np.sqrt(np.sum(np.abs(TheoryModel.c_ij[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
+            self.Dih = np.sqrt(np.sum(np.abs(TheoryModel.d_ij[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
+            self.Tih = np.sqrt(np.sum(np.abs(TheoryModel.t_aj[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
         else:
-            logger.error(f"Error! Could not find parent particle {nu_parent}.")
+            self.Cih = TheoryModel.c_ij[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
+            self.Dih = TheoryModel.d_ij[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
+            self.Tih = TheoryModel.t_aj[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
 
 
-        ################################################
-        # DECIDE ON CHARGED LEPTON
+        if nu_parent == pdg.neutrino4:
+            self.m_parent = TheoryModel.m4
+        elif nu_parent == pdg.neutrino5:
+            self.m_parent = TheoryModel.m5
+        elif nu_parent == pdg.neutrino6:
+            self.m_parent = TheoryModel.m6
+        else:
+            self.m_parent = 0.0
+
+
+        if nu_daughter == pdg.neutrino4:
+            self.m_daughter = TheoryModel.m4
+        elif nu_daughter == pdg.neutrino5:
+            self.m_daughter = TheoryModel.m5
+        elif nu_daughter == pdg.neutrino6:
+            self.m_daughter = TheoryModel.m6
+        else:
+            self.m_daughter = 0.0
+
+
+        # check if CC is allowed 
+        # CC_mixing1 = LNC, CC_mixing2 = LNV channel.
         if pdg.in_same_doublet(nu_daughter,final_lepton1):
-            # Mixing required for CC N-like
-            if (final_lepton1==pdg.tau):
-                self.CC_mixing1 = params.Utau4
-            elif(final_lepton1==pdg.muon):
-                self.CC_mixing1 = params.Umu4
-            elif(final_lepton1==pdg.electron):
-                self.CC_mixing1 = params.Ue4
-            else:
-                logger.warning("WARNING: Unable to set CC mixing parameter for decay. Assuming 0.")
-                self.CC_mixing1 = 0
-
-            # Mixing required for CC Nbar-like
-            if (final_lepton2==pdg.tau):
-                self.CC_mixing2 = params.Utau4
-            elif(final_lepton2==pdg.muon):
-                self.CC_mixing2 = params.Umu4
-            elif(final_lepton2==pdg.electron):
-                self.CC_mixing2 = params.Ue4
-            else:
-                logger.warning("WARNING: Unable to set CC mixing parameter for decay. Assuming 0.")
-                self.CC_mixing2 = 0
+            self.CC_mixing1 = TheoryModel.Ulep[pdg.get_lepton_index(final_lepton1), pdg.get_HNL_index(nu_parent)]
+            self.CC_mixing2 = TheoryModel.Ulep[pdg.get_lepton_index(final_lepton2), pdg.get_HNL_index(nu_parent)]
         else:
             self.CC_mixing1 = 0
             self.CC_mixing2 = 0
 
-        #######################################
-        ### WATCH OUT FOR THE MINUS SIGN HERE -- IMPORTANT FOR INTERFERENCE
-        ## Put required mixings in CCflags
+        ## Minus sign important for interference!
         self.CC_mixing2 *= -1
 
-
-
         ## Is the mediator on shell?
-        self.on_shell = (self.m_parent - self.m_daughter > params.mzprime)
+        self.on_shell = (self.m_parent - self.m_daughter > TheoryModel.mzprime)
         self.off_shell = ~self.on_shell
+        ## does it have transition magnetic moment?
         self.TMM = TheoryModel.is_TMM
-        self.TMM = TheoryModel.is_TMM
-
-        self.mzprime = TheoryModel.mzprime
-
 
 class FermionSinglePhotonDecay:
 
     def __init__(self, nu_parent, nu_daughter, TheoryModel, h_parent=-1):
 
-        params = TheoryModel
         self.TheoryModel = TheoryModel
-        self.HNLtype = params.HNLtype
+        self.HNLtype = TheoryModel.HNLtype
         self.h_parent = h_parent
 
         # mass of the HNLs
-        self.m_parent = nu_parent.mass*const.MeV_to_GeV
-        self.m_daughter = nu_daughter.mass*const.MeV_to_GeV
+        if nu_daughter == pdg.neutrino4:
+            self.m_daughter = TheoryModel.m4
+        elif nu_daughter == pdg.neutrino5:
+            self.m_daughter = TheoryModel.m5
+        elif nu_daughter == pdg.neutrino6:
+            self.m_daughter = TheoryModel.m6
+        else:
+            self.m_daughter = 0.0
+
+        if nu_parent == pdg.neutrino4:
+            self.m_parent = TheoryModel.m4
+        elif nu_parent == pdg.neutrino5:
+            self.m_parent = TheoryModel.m5
+        elif nu_parent == pdg.neutrino6:
+            self.m_parent = TheoryModel.m6
+        else:
+            self.m_parent = 0.0
 
         # transition magnetic moment parameter
         if nu_daughter == pdg.nulight:
             # |T| = sqrt(|T_ei|^2 + |T_mui|^2 + |T_taui|^2)
-            self.Tih = np.sqrt(np.sum(np.sum(self.TheoryModel.t_aj[inds_active,pdg.get_HNL_index(nu_parent)])**2))
+            self.Tih = np.sqrt(np.sum(np.abs(self.TheoryModel.t_aj[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
+            self.m_daughter = 0.0
         else:
             self.Tih = self.TheoryModel.t_aj[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
-
 
 
 class Model:
@@ -387,21 +283,7 @@ class Model:
             self.nu_spectrum = [lp.nu_e, lp.nu_mu, lp.nu_tau]
             
         else: 
-            #####################
             # Not supported yet
-            self.n_HNLs = len(self.HNLspectrum)
-
-            # # HNL masses
-            # self.mN = np.array(HNL_spectrum)
-
-            # # Zprime vertices
-            # self.V_alphaN =  np.zeros((3,self.number_of_HNLs)) # (e,mu,tau) (V_alphaN) (N1,N2,N3)^T
-
-            # # hprime vertices
-            # self.S_alphaN =  np.zeros((3,self.number_of_HNLs)) # (e,mu,tau) (S_alphaN) (N1,N2,N3)^T
-
-            # # transition magnetic moment
-            # self.TMM_alphaN = np.zeros((3,self.number_of_HNLs)) # (e,mu,tau) (TMM) (N1,N2,N3)^T
             pass
 
 
@@ -413,10 +295,16 @@ class Model:
         self.hnl_masses = np.empty(0)
         if self.m4:
             self.hnl_masses = np.append(self.m4,self.hnl_masses)
+            self.neutrino4 = pdg.neutrino4
+            self.neutrino4.mass = self.m4
         if self.m5:
             self.hnl_masses = np.append(self.m5,self.hnl_masses)
+            self.neutrino5 = pdg.neutrino5
+            self.neutrino5.mass = self.m5
         if self.m6:
             self.hnl_masses = np.append(self.m6,self.hnl_masses)
+            self.neutrino6 = pdg.neutrino6
+            self.neutrino6.mass = self.m6
 
         # define new HNL particles and pass the masses in MeV units (default units for Particle...)
         for i in range(len(self.hnl_masses)):
@@ -541,7 +429,9 @@ class Model:
         self.inds_dark = range(const.ind_tau+1,3+self.n_dark_HNLs)
 
         # Mixing matrices
-        self.Ulep = np.diag(np.full(self.n_nus,1,dtype=complex))
+        # if PMNS, use dtype=complex
+        self.Ulep = np.diag(np.full_like(self.Ue,1))
+        # self.Ulep = np.diag(np.full(self.n_nus,1,dtype=complex))
         # self.Ulep[:3,:3] = const.PMNS # massless light neutrinos
         
         # loop over HNL indices
@@ -557,6 +447,7 @@ class Model:
 
             self.Ulep[self.inds_dark,   i] = self.Udark[i]/self.n_dark_HNLs
             self.Ulep[i,   self.inds_dark] = self.Udark[i]/self.n_dark_HNLs
+            
 
 
         self.Ua = self.Ulep[const.inds_active,:]
@@ -604,16 +495,6 @@ class Model:
         self.D5 = self.UD5**2 # self.UD5#(1.0 - self.A4 - self.A5)/(1.0+1.0/self.R)
         self.D6 = self.UD6**2 # self.UD6#(1.0 - self.A4 - self.A5)/(1.0+1.0/self.R)
 
-        #########
-        # FIX ME -- this expression depends on a large cancellation -- can we make more stable?
-        # self.C45SQR =self.A5 * (1. - self.A5) - self.D5 * (1. - self.D4 - self.D5)
-        # self.D45SQR = self.dark_heavy_sqr_sum[] * self.D5
-
-
-        ########################################################
-        # all the following is true to leading order in chi
-
-
         # NEUTRAL LEPTON SECTOR VERTICES
         self.c_ij = self._weak_vertex * self.C_weak * self._g_weak_correction\
                                 + self.D_dark * self._gschi
@@ -632,66 +513,10 @@ class Model:
 
         self.dlight = 0.0
 
-        # UmuiUdi for i 1 to 3
-        self.UeiUDi = -(self.UD4 * self.Ue4 + self.UD5 * self.Ue5 + self.UD6 * self.Ue6)
-        self.UmuiUDi = -(self.UD4 * self.Umu4 + self.UD5 * self.Umu5 + self.UD6 * self.Umu6)
-        self.UtauiUDi = -(self.UD4 * self.Utau4 + self.UD5 * self.Utau5 + self.UD6 * self.Utau6)
-
-        # Neutrino couplings ## CHECK THE SIGN IN THE SECOND TERM????
-        self.ce6 = self._weak_vertex * self.Ue6 + self.UD6 * self.UeiUDi * self._gschi 
-        self.cmu6 = self._weak_vertex * self.Umu6 + self.UD6 * self.UmuiUDi * self._gschi
-        self.ctau6 = self._weak_vertex * self.Utau6 + self.UD6 * self.UtauiUDi * self._gschi
-
-        self.de6 = self.UD6 * self.gD * self.UeiUDi
-        self.dmu6 = self.UD6 * self.gD * self.UmuiUDi
-        self.dtau6 = self.UD6 * self.gD * self.UtauiUDi
-
-        self.ce5 = self._weak_vertex * self.Ue5 + self.UD5 * self.UeiUDi * self._gschi
-        self.cmu5 = self._weak_vertex * self.Umu5 + self.UD5 * self.UmuiUDi * self._gschi
-        self.ctau5 = self._weak_vertex * self.Utau5 + self.UD5 * self.UtauiUDi * self._gschi
-
-        self.de5 = self.UD5 * self.gD * self.UeiUDi
-        self.dmu5 = self.UD5 * self.gD * self.UmuiUDi
-        self.dtau5 = self.UD5 * self.gD * self.UtauiUDi
-
-        self.ce4 = self._weak_vertex * self.Ue4 + self.UD4 * self.UeiUDi * self._gschi
-        self.cmu4 = self._weak_vertex * self.Umu4 + self.UD4 * self.UmuiUDi * self._gschi
-        self.ctau4 = self._weak_vertex * self.Utau4 + self.UD4 * self.UtauiUDi * self._gschi
-
-        self.de4 = self.UD4 * self.gD * self.UeiUDi
-        self.dmu4 = self.UD4 * self.gD * self.UmuiUDi
-        self.dtau4 = self.UD4 * self.gD * self.UtauiUDi
-
-        self._weak_vertex4 = math.sqrt(self.ce4**2 + self.cmu4**2 + self.ctau4**2)
-        self.dlight4 = math.sqrt(self.de4**2 + self.dmu4**2 + self.dtau4**2)
-
-        self._weak_vertex5 = math.sqrt(self.ce5**2 + self.cmu5**2 + self.ctau5**2)
-        self.dlight5 = math.sqrt(self.de5**2 + self.dmu5**2 + self.dtau5**2)
-
-        self._weak_vertex6 = math.sqrt(self.ce6**2 + self.cmu6**2 + self.ctau6**2)
-        self.dlight6 = math.sqrt(self.de6**2 + self.dmu6**2 + self.dtau6**2)
-
-        # combinations
-        self.c46 = self._weak_vertex * math.sqrt(self.A4 * self.A6) + self.UD6 * self.UD4 * self._gschi
-        self.c45 = self._weak_vertex * math.sqrt(self.A4 * self.A5) + self.UD5 * self.UD4 * self._gschi
-        self.c44 = self._weak_vertex * math.sqrt(self.A4 * self.A4) + self.UD4 * self.UD4 * self._gschi
-        self.c55 = self._weak_vertex * math.sqrt(self.A5 * self.A5) + self.UD5 * self.UD5 * self._gschi
-        self.c56 = self._weak_vertex * math.sqrt(self.A5 * self.A6) + self.UD6 * self.UD5 * self._gschi
-        self.c66 = self._weak_vertex * math.sqrt(self.A6 * self.A6) + self.UD6 * self.UD6 * self._gschi
-
-        self.d56 = self.UD6 * self.UD5 * self.gD
-        self.d46 = self.UD6 * self.UD4 * self.gD
-        self.d45 = self.UD5 * self.UD4 * self.gD
-        self.d44 = self.UD4 * self.UD4 * self.gD
-        self.d55 = self.UD5 * self.UD5 * self.gD
-        self.d66 = self.UD6 * self.UD6 * self.gD
-
 
     def create_unstable_particles(self):
-        pritn('a')
-        # self.neutrino4 = 
-
-
+        # not yet implemented
+        pass
 
 
     def compute_rates(self):
