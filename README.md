@@ -150,6 +150,26 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **alpha_epsilon2** | `float` | &alpha;<sub>QED</sub> &sdot; &epsilon;<sup>2</sup>                             | *internal* |
 | **chi**            | `float` | Kinetic mixing parameter                                                       | `None`     |
 
+##### Transition magnetic moment
+|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+|:---------------|:--------:|:---------------|----:|
+| **mu_tr_e4**       | `float` | TMM mu_tr_e4   | 0.0 |
+| **mu_tr_e5**       | `float` | TMM mu_tr_e5   | 0.0 |
+| **mu_tr_e6**       | `float` | TMM mu_tr_e6   | 0.0 |
+| **mu_tr_mu4**      | `float` | TMM mu_tr_mu4  | 0.0 |
+| **mu_tr_mu5**      | `float` | TMM mu_tr_mu5  | 0.0 |
+| **mu_tr_mu6**      | `float` | TMM mu_tr_mu6  | 0.0 |
+| **mu_tr_tau4**     | `float` | TMM mu_tr_tau4 | 0.0 |
+| **mu_tr_tau5**     | `float` | TMM mu_tr_tau5 | 0.0 |
+| **mu_tr_tau6**     | `float` | TMM mu_tr_tau6 | 0.0 |
+| **mu_tr_44**       | `float` | TMM mu_tr_44   | 0.0 |
+| **mu_tr_45**       | `float` | TMM mu_tr_45   | 0.0 |
+| **mu_tr_46**       | `float` | TMM mu_tr_46   | 0.0 |
+| **mu_tr_55**       | `float` | TMM mu_tr_54   | 0.0 |
+| **mu_tr_56**       | `float` | TMM mu_tr_55   | 0.0 |
+| **mu_tr_56**       | `float` | TMM mu_tr_66   | 0.0 |
+| **decay_products** | `["e+e-","mu+mu-","photon"]` | Decay process of interest | "e+e-" |
+
 ##### Experiment
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
