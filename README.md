@@ -24,7 +24,11 @@
 - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Generated events dataframe](#generated-events-dataframe)
+    - [Command line functionality](#command-line-functionality)
+    - [Scripting functionality](#scripting-functionality)
+    - [List of parameters](#list-of-parameters)
+    - [The experiments](#the-experiments)
+    - [Generated events dataframe](#generated-events-dataframe)
 
 ## Introduction
 DarkNews is an event generator for dark neutrino events (in progress).
@@ -35,6 +39,8 @@ DarkNews is an event generator for dark neutrino events (in progress).
 Required dependencies:
 * [Python](http://www.python.org/) 3.6.1 or above
 * [NumPy](http://www.numpy.org/)
+
+The following dependencies (if missing) will be automatically installed during the main installation of the package:
 * [pandas](https://pandas.pydata.org/) 1.0 or above
 * [Cython](https://cython.org/)
 * [Requests](https://docs.python-requests.org/en/master/index.html)
@@ -46,7 +52,8 @@ Required dependencies:
 ## Installation
 
 *Currently set for local `pip` installation*  
-To install the package, clone the repository in a directory.
+To install the package, download the release for the stable version (or clone the repository for the development version).
+Save everything in a directory.
 Then enter in the main folder and run:
 ```sh
 python3 -m pip install -e . --ignore-installed certifi
@@ -103,7 +110,7 @@ dn_gen --help
 The first column is the name of the parameter, the second is the type or the list of allowed values, the third is a brief explanation and the fourth is the default.
 Parameters marked as *internal* can not be specified as they are automatically computed on the basis of other parameters.
 
-#### Physics args
+#### Physics parameters
 
 ##### Dark sector spectrum
 
@@ -141,7 +148,27 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **epsilon**        | `float` | &epsilon;                                                                      | 0.01       |
 | **epsilon2**       | `float` | &epsilon;<sup>2</sup>                                                          | *internal* |
 | **alpha_epsilon2** | `float` | &alpha;<sub>QED</sub> &sdot; &epsilon;<sup>2</sup>                             | *internal* |
-| **chi**            | `float` |                                                                                | `None`     |
+| **chi**            | `float` | Kinetic mixing parameter                                                       | `None`     |
+
+##### Transition magnetic moment
+|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+|:---------------|:--------:|:---------------|----:|
+| **mu_tr_e4**       | `float` | TMM mu_tr_e4   | 0.0 |
+| **mu_tr_e5**       | `float` | TMM mu_tr_e5   | 0.0 |
+| **mu_tr_e6**       | `float` | TMM mu_tr_e6   | 0.0 |
+| **mu_tr_mu4**      | `float` | TMM mu_tr_mu4  | 0.0 |
+| **mu_tr_mu5**      | `float` | TMM mu_tr_mu5  | 0.0 |
+| **mu_tr_mu6**      | `float` | TMM mu_tr_mu6  | 0.0 |
+| **mu_tr_tau4**     | `float` | TMM mu_tr_tau4 | 0.0 |
+| **mu_tr_tau5**     | `float` | TMM mu_tr_tau5 | 0.0 |
+| **mu_tr_tau6**     | `float` | TMM mu_tr_tau6 | 0.0 |
+| **mu_tr_44**       | `float` | TMM mu_tr_44   | 0.0 |
+| **mu_tr_45**       | `float` | TMM mu_tr_45   | 0.0 |
+| **mu_tr_46**       | `float` | TMM mu_tr_46   | 0.0 |
+| **mu_tr_55**       | `float` | TMM mu_tr_54   | 0.0 |
+| **mu_tr_56**       | `float` | TMM mu_tr_55   | 0.0 |
+| **mu_tr_56**       | `float` | TMM mu_tr_66   | 0.0 |
+| **decay_products** | `["e+e-","mu+mu-","photon"]` | Decay process of interest | "e+e-" |
 
 ##### Experiment
 
@@ -149,7 +176,7 @@ Parameters marked as *internal* can not be specified as they are automatically c
 |:--------|:--------:|:-----------------------------------------------------------------|------------------:|
 | **exp** | `string` | The experiment to consider: see [this section](#the-experiments) | `"miniboone_fhc"` |
 
-##### Monte-Carlo scope
+##### Monte-Carlo options
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:---------------|:------:|:------------------------------------------|--------:|
