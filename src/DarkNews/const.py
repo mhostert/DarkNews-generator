@@ -1,10 +1,10 @@
 """ Constant modules
 
-Here are defined the most common constants used in darknews.
+Here are defined the most common constants used in DarkNews.
 
 We use PDG2020 values for constants and SM masses.
 
-Some low-level auxialiary functions are defined.
+Some low-level auxiliary functions are defined.
 
 """
 import sys
@@ -13,8 +13,6 @@ import numpy as np
 from numpy import sqrt
 import math
 from scipy import interpolate
-import os
-import itertools
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -22,11 +20,16 @@ from DarkNews import logger
 from DarkNews import local_dir
 
 ################################################
-# speed of light cm/s
+# constants of light cm/s
 c_LIGHT = 29979245800
+hb = 6.582119569e-25 # hbar in Gev s
+
+m_proton_in_kg = 1.6726219236951e-27
+m_proton_in_g = m_proton_in_kg*1e3
+m_proton_in_t = m_proton_in_kg*1e-3
 
 ################################################
-# constants for normalization
+# constants for convertion
 MeV_to_GeV = 1e-3
 
 invm2_to_incm2=1e-4
@@ -35,15 +38,16 @@ NAvo = 6.02214076*1e23
 rad_to_deg = 180.0/np.pi
 deg_to_rad= 1/rad_to_deg
 
-invGeV2_to_cm2 = 3.89379372e-28 # hbar c = 197.3269804e-16 GeV.cm
-cm2_to_attobarn = 1e42
-attobarn_to_cm2 = 1e-42
-invGeV2_to_attobarn = invGeV2_to_cm2*cm2_to_attobarn
+invGeV_to_cm = hb*c_LIGHT # hbar c = 197.3269804e-16 GeV.cm
+invGeV2_to_cm2 = invGeV_to_cm**2 
 
-invGeV_to_cm = np.sqrt(invGeV2_to_cm2)
 fm_to_GeV = 1/invGeV_to_cm*1e-15*1e2
 invGeV_to_s = invGeV_to_cm/c_LIGHT
-hb = 6.582119569e-25 # hbar in Gev s
+
+cm2_to_attobarn = 1e42
+attobarn_to_cm2 = 1e-42
+
+invGeV2_to_attobarn = invGeV2_to_cm2*cm2_to_attobarn
 
 GeV2_to_cm3s = invGeV2_to_cm2*c_LIGHT*1e2
 
@@ -55,20 +59,12 @@ g_to_GeV = g_to_eV*1e-9 # GeV
 kg_to_GeV = kg_to_eV*1e-9 # GeV
 t_to_GeV = t_to_eV*1e-9 # GeV
 
-m_proton_in_kg = 1.6726219236951e-27
-m_proton_in_g = 1.6726219236951e-24
-m_proton_in_t = 1.6726219236951e-30
-
-
 #####################################
-# particle names and props
-from particle import Particle
-from particle import literals as lp
-
 # indices of neutral leptons
 ind_e  =0
 ind_mu =1
 ind_tau=2
+
 # list of active neutrino indices
 inds_active = range(ind_tau+1)
 
@@ -113,7 +109,6 @@ eQED = np.sqrt((4*np.pi)*alphaQED)
 # get running alphaQED
 Q, inv_alphaQED = np.genfromtxt(f'{local_dir}/aux_data/alphaQED/alpha_QED_running_posQ2.dat',unpack=True)
 runningAlphaQED = interpolate.interp1d(Q,1.0/inv_alphaQED)
-
 
 ################################################
 # Weak sector
@@ -182,6 +177,7 @@ Vtb = c23*c13;
 ################################################
 # PMNS parameters
 # NuFit Oct 2021 -- http://www.nu-fit.org/?q=node/238#label85
+
 s12 = np.sqrt(0.304);
 s23 = np.sqrt(0.450);
 s13 = np.sqrt(0.02246);
@@ -204,8 +200,11 @@ UPMNS = np.matrix([
                     [Umu1,Umu2,Umu3],
                     [Utau1,Utau2,Utau3]
                 ], dtype=complex);
+
+
 ################################################
 # low-level auxiliary functions
+################################################
 def is_odd(num):
     return num & 0x1
 np_is_odd = np.vectorize(is_odd)
@@ -296,6 +295,7 @@ def kallen(a,b,c):
 def kallen_sqrt(a,b,c):
     return np.sqrt(kallen(a,b,c))
 
+
 ################################################
 # New flags
 THREEPLUSONE = 89
@@ -305,7 +305,7 @@ THREEPLUSTHREE = 91
 MAJORANA = 'majorana'
 DIRAC    = 'dirac'
 
-#### Shorthands used in MATHEMATICA
+#### shorthands used in MATHEMATICA copy-paste
 MZBOSON = m_Z
 MW = m_W
 def Power(x,n):

@@ -1,20 +1,7 @@
 import numpy as np
-import scipy
 import vegas as vg
-import random 
-
-#CYTHON
-import pyximport
-pyximport.install(
-    language_level=3,
-    pyimport=False,
-    )
-from . import Cfourvec as Cfv
-
 
 from . import const
-from . import fourvec
-from . import decay_rates
 from . import pdg 
 from . import MC 
 
@@ -24,7 +11,6 @@ def lam(a,b,c):
 	return a**2 + b**2 + c**2 -2*a*b - 2*b*c - 2*a*c
 def Sqrt(x):
 	return np.sqrt(x)
-
 
 class dsigma_zprime(vg.BatchIntegrand):
 

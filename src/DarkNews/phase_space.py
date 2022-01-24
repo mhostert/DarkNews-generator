@@ -114,68 +114,126 @@ def two_to_two_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0):
 
 
 
-#######################
-# 2 -> 3 scattering
-# P1(p1) P2(p2) -->  P3(k3) P4(k4) P5(k5)
-def two_to_three_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0, m5=0.0):
-	
-	if 'Eprojectile' in samples.keys():
-		Eprojectile = samples['Eprojectile']
-		s = m2**2 + 2*Eprojectile*m2 + m1**2
-		sample_size = np.shape(Eprojectile)[0]
-	else:
-		logger.error('Error! Could not determine the projectile energy')
+# #######################
+# def two_to_three_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0, m5=0.0):
+# 	'''
+# 		2 -> 3 scattering
+# 		P1(p1) P2(p2) -->  P3(k3) P4(k4) P5(k5)
+
+# 		Phase space decomposition:
+
+# 		dPS(P; p3, p4, p5) = (dm34^2/2pi) dPS(p34; p3, p4) dPS(P, p34, p5)
+
+# 		dPS(p34; p3, p4) = sqrt(Kallen(1, m3^2/m34^2, m4^2/m34^2)) * dOmegaS/32pi^2
+# 			- cosThetaS: [-1, 1]
+# 			- phiS: [0,2pi]
+
+# 		dPS(P; p34, p5) = sqrt(Kallen(1, m34^2/s, m5^2/s)) * 
 		
 
-	E1CM = (s + m1**2 - m2**2)/2.0/np.sqrt(s)
-	E2CM = (s - m1**2 + m2**2)/2.0/np.sqrt(s)
-	E3CM = (s + m3**2 - m4**2)/2.0/np.sqrt(s)
-	E4CM = (s - m3**2 + m4**2)/2.0/np.sqrt(s)
+# 	'''
 
-	p1CM = np.sqrt(E1CM**2 - m1**2)
-	p2CM = np.sqrt(E2CM**2 - m2**2)	
-	p3CM = np.sqrt(E3CM**2 - m3**2)
-	p4CM = np.sqrt(E4CM**2 - m4**2)
-
-	Q2min = -(m1**2 + m3**2 - 2 * ( E1CM*E3CM - p1CM*p3CM) )
-	Q2max = -(m1**2 + m3**2 - 2 * ( E1CM*E3CM + p1CM*p3CM) )
 	
-	if 'unit_Q2' in samples.keys():
-		Q2l = (np.log(Q2max) - np.log(Q2min))*samples['unit_Q2'] + np.log(Q2min)
-		Q2 = np.exp(Q2l)
-	elif 'Q2' in samples.keys():
-		Q2 = samples['Q2']
-	else: 
-		logger.debug("DEBUG: Could not find Q2 samples, using uniform distribution instead.")
-		Q2 = Cfv.random_generator(sample_size, Q2min, Q2max)
+# 	if 'Eprojectile' in samples.keys():
+# 		Eprojectile = samples['Eprojectile']
+# 		s = m2**2 + 2*Eprojectile*m2 + m1**2
+# 		sqrt_s = np.sqrt(s)
+# 		sample_size = np.shape(Eprojectile)[0]
+# 	else:
+# 		logger.error('Error! Could not determine the projectile energy')
+		
+# 	n_samples = len(s)
 
-	# KINEMATICS TO LAB FRAME
-	costN = ( -Q2 - m1**2 - m3**2 + 2*E1CM*E3CM) / (2*p1CM*p3CM)
-	beta = -p2CM/E2CM # MINUS SIGN -- from CM to LAB
-	gamma = 1.0/np.sqrt(1.0 - beta*beta)
+# 	E1CM = (s + m1**2 - m2**2)/2.0/np.sqrt(s)
+# 	E2CM = (s - m1**2 + m2**2)/2.0/np.sqrt(s)
+# 	E3CM = (s + m3**2 - m4**2)/2.0/np.sqrt(s)
+# 	E4CM = (s - m3**2 + m4**2)/2.0/np.sqrt(s)
 
-	if 'unit_phi3' in samples.keys():
-		phi3 = 2*np.pi*samples['unit_phi3']
-	elif 'phi3' in samples.keys():
-		phi3 = samples['phi3']
-	else:
-		phi3 = Cfv.random_generator(sample_size, 0.0, 2*np.pi)
+# 	p1CM = np.sqrt(E1CM**2 - m1**2)
+# 	p2CM = np.sqrt(E2CM**2 - m2**2)	
+# 	p3CM = np.sqrt(E3CM**2 - m3**2)
+# 	p4CM = np.sqrt(E4CM**2 - m4**2)
 
-	P1CM = Cfv.build_fourvec(E1CM, p1CM, np.full_like(costN, 1.0), np.full_like(phi3, 0))
-	P2CM = Cfv.build_fourvec(E2CM, -p1CM, np.full_like(costN, 1.0), np.full_like(phi3, 0))
-	P3CM = Cfv.build_fourvec(E3CM, p3CM, costN, phi3)
-	P4CM = Cfv.build_fourvec(E4CM, -p3CM, costN, phi3)
+# 	Q2min = -(m1**2 + m3**2 - 2 * ( E1CM*E3CM - p1CM*p3CM) )
+# 	Q2max = -(m1**2 + m3**2 - 2 * ( E1CM*E3CM + p1CM*p3CM) )
+	
+# 	####
+# 	if 'unit_Q2' in samples.keys():
+# 		Q2l = (np.log(Q2max) - np.log(Q2min))*samples['unit_Q2'] + np.log(Q2min)
+# 		Q2 = np.exp(Q2l)
+# 	elif 'Q2' in samples.keys():
+# 		Q2 = samples['Q2']
+# 	else: 
+# 		logger.debug("DEBUG: Could not find Q2 samples, using uniform distribution instead.")
+# 		Q2 = Cfv.random_generator(sample_size, Q2min, Q2max)
+	
+# 	####
+# 	if 'unit_dm34' in samples.keys():
+# 		unit_dm34 = (dm34max - dm34min)*samples['unit_Q2'] + dm34min
+# 	elif 'dm34' in samples.keys():
+# 		unit_dm34 = samples['dm34']
+# 	else: 
+# 		logger.debug("DEBUG: Could not find Q2 samples, using uniform distribution instead.")
+# 		dm34 = Cfv.random_generator(sample_size, dm34min, dm34max)	
 
-	# incoming neutrino
-	P1LAB = Cfv.L(P1CM, beta)
-	# incoming Hadron		
-	P2LAB = Cfv.L(P2CM, beta)
-	# outgoing neutrino
-	P3LAB = Cfv.L(P3CM, beta)
-	# outgoing Hadron
-	P4LAB = Cfv.L(P4CM, beta)
+# 	####
+# 	if 'unit_phiS' in samples.keys():
+# 		phiS = 2*np.pi*samples['unit_phiS']
+# 	elif 'phiS' in samples.keys():
+# 		phiS = samples['phiS']
+# 	else:
+# 		phiS = Cfv.random_generator(sample_size, 0.0, 2*np.pi)
+# 		logger.debug("DEBUG: Could not find phiS samples, using uniform distribution instead.")
+	
+# 	####
+# 	if 'unit_costhetaS' in samples.keys():
+# 		costhetaS = 2*samples['unit_costhetaS'] - 1
+# 	elif 'costhetaS' in samples.keys():
+# 		costhetaS = samples['costhetaS']
+# 	else:
+# 		costhetaS = Cfv.random_generator(sample_size, -1, 1)
+# 		logger.debug("DEBUG: Could not find costheta_S samples, using uniform distribution instead.")
 
-	return P1LAB, P2LAB, P3LAB, P4LAB, P5LAB
+
+# 	#### 
+# 	# Frame COM = rest frame of p_1vec + p_2vec = 0vec
+
+# 	E34CM = (s+m34SQR-M**2)/2/sqrt_s
+# 	p34CM = np.sqrt(E34CM**2 - m34SQR)
+
+# 	#### 
+# 	# Frame S = rest frame of p_34 = p_3 + p_4
+
+# 	# P1S = Cfv.build_fourvec(E1CM, p1CM, np.full_like(costN, 1.0), np.full_like(phi3, 0))
+# 	# P2S = Cfv.build_fourvec(E2CM, -p1CM, np.full_like(costN, 1.0), np.full_like(phi3, 0))
+
+# 	P3S = Cfv.build_fourvec(E3S, p3S, costhetaS, phiS)
+# 	P4S = Cfv.build_fourvec(E4S, -p3S, costhetaS, phiS)
+
+# 	E5S = gammaS * (E5CM + betaS* 
+
+# 	P5S = Cfv.build_fourvec(E5S, -p5S, np.ones(n_samples), np.ones(n_samples))
+
+
+
+
+
+# 	# KINEMATICS TO LAB FRAME
+# 	costN = ( -Q2 - m1**2 - m3**2 + 2*E1CM*E3CM) / (2*p1CM*p3CM)
+# 	beta = -p2CM/E2CM # MINUS SIGN -- from CM to LAB
+# 	gamma = 1.0/np.sqrt(1.0 - beta*beta)
+
+
+# 	# incoming neutrino
+# 	P1LAB = Cfv.L(P1CM, beta)
+# 	# incoming Hadron		
+# 	P2LAB = Cfv.L(P2CM, beta)
+# 	# outgoing neutrino
+# 	P3LAB = Cfv.L(P3CM, beta)
+# 	# outgoing Hadron
+# 	P4LAB = Cfv.L(P4CM, beta)
+
+# 	return P1LAB, P2LAB, P3LAB, P4LAB, P5LAB
 
 
 

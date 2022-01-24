@@ -3,7 +3,6 @@ import math
 
 from DarkNews import logger, prettyprinter
 
-from particle import Particle
 from particle import literals as lp
 
 from DarkNews import const 

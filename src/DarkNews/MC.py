@@ -15,13 +15,11 @@ pyximport.install(
     pyimport=False,
     )
 
-from . import decay_rates
 from . import model 
 from . import integrands
 
 from . import const
 from . import pdg
-from . import detector
 from . import decayer
 
 NINT = 10
@@ -248,7 +246,7 @@ class MC_events:
 
         #########################################################################
         # GET THE INTEGRATION SAMPLES and translate to physical variables in MC events
-        samples, weights = get_samples(DIM, integ, batch_f)
+        samples, weights = get_samples(integ, batch_f)
         logger.debug(f"Normalization factors in MC: {batch_f.norm}.")
         logger.debug(f"Vegas results for diff_event_rate: {np.sum(weights['diff_event_rate'])}")
         logger.debug(f"Vegas results for diff_flux_avg_xsec: {np.sum(weights['diff_flux_avg_xsec'])}")
@@ -342,8 +340,6 @@ class MC_events:
         return df_gen
 
 
-#############################3
-# THIS FUNCTION NEEDS SOME OPTIMIZING... currently setting event flags by hand.
 def run_MC(bsm_model, experiment, **kwargs):
     """ Create MC_events objects and run the MC computations
 
@@ -443,28 +439,44 @@ def merge_MC_output(df1,df2):
 
 
 
-# get samples from VEGAS integration and their respective weights
-def get_samples(DIM, integ, batch_f):
-           
-        unit_samples = [[] for i in range(DIM)]
-        weights = defaultdict(partial(np.ndarray,0))
+def get_samples(integ, batch_integrand):
+    '''    
+        Accesses integration samples for a single iteration as in vegas/_vegas.pyx
+        
+        Args:  
+            integ:              Vegas integrator object initialized by the user.
+            batch_integrand:    Vegas batch_integrand object created by the user. These are defined in integrands.py
 
-        for x, wgt in integ.random_batch():
-            
-            # weights
-            for regime in batch_f(x).keys():
-                weights[regime] = np.append(weights[regime], wgt*(batch_f(x)[regime]))
-            
-            # MC samples in unit hypercube
-            for i in range(DIM):
-                unit_samples[i] = np.concatenate((unit_samples[i],x[:,i]))
+    '''
+    unit_samples = batch_integrand.dim*[[]]
+    weights = defaultdict(partial(np.ndarray,0))
 
-        return np.array(unit_samples), weights
+    for x, y, wgt in integ.random_batch(yield_y=True, fcn=batch_integrand):
+
+        # compute integrand on samples including jacobian factors
+        if integ.uses_jac:
+            fx = batch_integrand(x, jac=integ.map.jac1d(y))
+        else:
+            fx = batch_integrand(x, jac=None)
+
+        # weights
+        print(fx.keys())
+        for fx_i in fx.keys():
+            if np.any(np.isnan(fx[fx_i])):
+                raise ValueError(f'integrand {fx_i} evaluates to nan')
+            weights[fx_i] = np.append(weights[fx_i], wgt*fx[fx_i])
+        
+        # MC samples in unit hypercube
+        for i in range(batch_integrand.dim):
+            unit_samples[i] = np.append(unit_samples[i], x[:,i])
+
+    return np.array(unit_samples), weights
 
 def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=1000):
-        # warm up the MC
-        integ(batch_f, nitn=NINT_warmup, neval=NEVAL_warmup)
+        
+        # warm up the MC, adapting to the integrand
+        integ(batch_f, nitn=NINT_warmup, neval=NEVAL_warmup, uses_jac=True)
         logger.debug(f"VEGAS warm-up completed.")
 
-        # sample again, now saving result
-        return integ(batch_f,  nitn = NINT, neval = NEVAL)
+        # sample again, now saving result and turning off further adaption
+        return integ(batch_f,  nitn = NINT, neval = NEVAL, uses_jac=True, adapt=False)

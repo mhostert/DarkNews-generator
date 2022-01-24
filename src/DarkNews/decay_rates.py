@@ -30,7 +30,6 @@ def F_3nu_decay(a,b,c):
     # all effectively massless
     if a+b+c < 1e-6:
         return 1.0
-
     else:
 
         def DGammaDuDt(sab,sac,a,b,c):

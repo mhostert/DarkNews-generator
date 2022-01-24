@@ -1,19 +1,15 @@
 import os
-import sys
 import numpy as np
-import pandas as pd
 import dill 
 
 from DarkNews import logger, prettyprinter
-
-from collections import defaultdict
-from functools import partial
 
 from . import const
 from . import pdg
 from . import fourvec as fv
 
-from DarkNews.decayer import decay_position
+from .decayer import decay_position
+
 #CYTHON
 import pyximport
 pyximport.install(

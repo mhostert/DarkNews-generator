@@ -1,7 +1,4 @@
 import numpy as np
-import scipy
-import vegas as vg
-import random 
 
 #CYTHON
 import pyximport
@@ -9,15 +6,9 @@ pyximport.install(
     language_level=3,
     pyimport=False,
     )
-from . import Cfourvec as Cfv
 
-
-from . import pdg 
 from . import const
 from .const import *
-from . import fourvec
-from . import phase_space
-from . import decay_rates as dr
 
 from DarkNews import logger
 

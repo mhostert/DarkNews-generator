@@ -1,8 +1,7 @@
 import numpy as np
 import numpy.ma as ma
-from scipy import interpolate
 import os
-import itertools
+from itertools import islice
 from DarkNews import logger
 from DarkNews import local_dir
 
@@ -10,18 +9,18 @@ from .const_dics import fourier_bessel_dic
 from .const import *
 
 '''
-Here we define nuclear form factors following:
-http://discovery.phys.virginia.edu/research/groups/ncd/index.html
+    Here we define nuclear form factors following:
+    http://discovery.phys.virginia.edu/research/groups/ncd/index.html
 
-When available, we use data from Nuclear Data Tables (74, 87, and 95), stored in "aux_data/mass20.txt":
-    "The Ame2020 atomic mass evaluation (I)"   by W.J.Huang, M.Wang, F.G.Kondev, G.Audi and S.Naimi
-           Chinese Physics C45, 030002, March 2021.
-    "The Ame2020 atomic mass evaluation (II)"  by M.Wang, W.J.Huang, F.G.Kondev, G.Audi and S.Naimi
-           Chinese Physics C45, 030003, March 2021.
+    When available, we use data from Nuclear Data Tables (74, 87, and 95), stored in "aux_data/mass20.txt":
+        "The Ame2020 atomic mass evaluation (I)"   by W.J.Huang, M.Wang, F.G.Kondev, G.Audi and S.Naimi
+               Chinese Physics C45, 030002, March 2021.
+        "The Ame2020 atomic mass evaluation (II)"  by M.Wang, W.J.Huang, F.G.Kondev, G.Audi and S.Naimi
+               Chinese Physics C45, 030003, March 2021.
 
-Element properties are stored in elements_dic.To access individual elements we use the format:
-    
-    key = 'name+A', e.g. key = 'Pb208' or 'C12'.
+    Element properties are stored in elements_dic.To access individual elements we use the format:
+        
+        key = 'name+A', e.g. key = 'Pb208' or 'C12'.
 '''
 
 def assign_form_factors(target):
@@ -100,18 +99,18 @@ def nuclear_F1_fourier_bessel_EM(Q2, array_coeff):
 # All units in GeV
 
 # approximate formula in D. Lunney, J.M. Pearson and C. Thibault, Rev. Mod. Phys.75, 1021 (2003)
-def electron_binding_energy(Z):
+def  electron_binding_energy(Z):
     return (14.4381*Z**2.39 + 1.55468e-6*Z**5.35) # eV
 
 # Nested dic containing all elements
 elements_dic = {}
 hydrogen_Eb = 13.5981e-9 # GeV
-atomic_unit = 0.9314941024228 # mass of Carbon12 / 12
-mass_file = os.path.join(local_dir, 'aux_data/mass20.txt')
+atomic_unit = 0.9314941024228 # mass of Carbon12 in GeV / 12
+mass_file = os.path.join(local_dir, 'aux_data/mass20_1.txt')
 with open(mass_file, 'r') as ame:
-    # Read lines in file starting at line 40
-    for line in itertools.islice(ame, 36, None):
-        
+    # Read lines in file starting at line 36
+    for line in islice(ame, 36, None):
+
         Z = int(line[12:15])
         
         if Z < 93: ## no support for heavier elements due to the 
@@ -123,19 +122,19 @@ with open(mass_file, 'r') as ame:
             elements_dic[name]['N'] = int(line[6:10])
             elements_dic[name]['A'] = int(line[16:20])
 
-            elements_dic[name]['atomic_Eb'] = float(line[56:61] + '.' + line[62:67])*1e-6
-            
-            elements_dic[name]['electronic_Eb'] = electron_binding_energy(Z)*1e-9
+            # elements_dic[name]['atomic_Eb'] = float(line[56:61] + '.' + line[62:67])*1e-6*elements_dic[name]['A']
+            elements_dic[name]['atomic_Eb'] = electron_binding_energy(Z)*1e-9
 
-            elements_dic[name]['nuclear_Eb'] = elements_dic[name]['atomic_Eb'] + Z*hydrogen_Eb - elements_dic[name]['electronic_Eb']
+            elements_dic[name]['nuclear_Eb'] = float(line[56:61] + '.' + line[62:67])*1e-6*elements_dic[name]['A']
+            #elements_dic[name]['atomic_Eb'] + Z*hydrogen_Eb - elements_dic[name]['electronic_Eb']
 
             # micro-mu = 1e-6 mu in GeV*u
             elements_dic[name]['atomic_mass'] = (float(line[106:109]) + 1e-6*float(line[110:116] + '.' + line[117:124]))*atomic_unit
             elements_dic[name]['excess_mass'] = float(line[30:35] + '.' + line[36:42])*1e-6
 
-            # nuclear mass correct for electron mass but neglecting electron binding energy (Eb_e << MeV)
+            # nuclear mass corrected for electron mass and electron binding energy (note that Eb_e << MeV)
             elements_dic[name]['nuclear_mass'] =  (elements_dic[name]['atomic_mass'] 
-                                                               - Z*m_e + elements_dic[name]['electronic_Eb'])
+                                                               - Z*m_e + elements_dic[name]['atomic_Eb'])
 
             decay = line[82:88] + '.' + line[89:94]
             if '*' in decay:

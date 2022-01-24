@@ -1,7 +1,7 @@
 import numpy as np
-import scipy
 import vegas as vg
-import random 
+from collections import OrderedDict
+
 import logging
 mylogger = logging.getLogger(__name__)
 
@@ -14,10 +14,8 @@ pyximport.install(
     )
 from . import Cfourvec as Cfv
 
-from . import pdg 
 from . import const
 from .const import *
-from . import fourvec
 from . import phase_space
 from . import decay_rates as dr
 from . import amplitudes as amps
@@ -38,7 +36,7 @@ class UpscatteringXsec(vg.BatchIntegrand):
 		self.MC_case = MC_case
 		
 
-	def __call__(self, x):
+	def __call__(self, x, jac):
 
 		ups_case = self.MC_case.ups_case
 
@@ -62,13 +60,13 @@ class UpscatteringXsec(vg.BatchIntegrand):
 		# Upscattering amplitude squared (spin summed -- not averaged)
 		diff_xsec = amps.upscattering_dxsec_dQ2([s,t,u], self.MC_case.ups_case)
 
-		# Vegas jacobian -- from unit cube to physical vars
-		vegas_jacobian = (Q2lmax - Q2lmin)*np.exp(Q2l)
-		diff_xsec *= vegas_jacobian
+		# hypercube jacobian (vegas hypercube --> physical limits) transformation
+		hypercube_jacobian = (Q2lmax - Q2lmin)*np.exp(Q2l)
+		diff_xsec *= hypercube_jacobian
 
 		##############################################
 		# return all differential quantities of interest
-		self.int_dic = {}
+		self.int_dic = OrderedDict()		
 		self.int_dic['diff_xsec'] = diff_xsec
 		
 		##############################################
@@ -89,9 +87,9 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		self.Emin = Emin
 		self.MC_case = MC_case
 
-	def __call__(self, x):
+	def __call__(self, x, jac):
 
-		self.int_dic = {}
+		self.int_dic = OrderedDict()		
 		self.norm = {}
 
 		ups_case = self.MC_case.ups_case
@@ -108,34 +106,32 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		i_var += 1 
 
 		##############################################
-		# Upscattering Kinematics
+		# Upscattering differential cross section (spin averaged)
 
 		Q2lmin = np.log(phase_space.upscattering_Q2min(Enu, m_parent, M))
 		Q2lmax = np.log(phase_space.upscattering_Q2max(Enu, m_parent, M))
 
 		Q2l = (Q2lmax - Q2lmin) * x[:, i_var] + Q2lmin
 		i_var += 1 
-		
 
 		Q2 = np.exp(Q2l)
 		s_scatt = M**2 + 2*Enu*M # massless projectile
 		t_scatt = -Q2
 		u_scatt = 2*M**2 + m_parent**2 - s_scatt + Q2 # massless projectile
 
-
-		##############################################
-		# Upscattering differential cross section (spin averaged)
 		diff_xsec = amps.upscattering_dxsec_dQ2([s_scatt,t_scatt,u_scatt], self.MC_case.ups_case)
 
-		# Vegas jacobian -- from unit cube to physical vars
-		vegas_jacobian = (Q2lmax - Q2lmin)*np.exp(Q2l) * (self.Emax - self.Emin)
-		diff_xsec *= vegas_jacobian
+		# hypercube jacobian (vegas hypercube --> physical limits) transformation
+		hypercube_jacobian = (Q2lmax - Q2lmin)*np.exp(Q2l) * (self.Emax - self.Emin)
+		diff_xsec *= hypercube_jacobian
 
 		self.int_dic['diff_event_rate']    = diff_xsec * self.MC_case.flux(Enu)
 		self.int_dic['diff_flux_avg_xsec'] = diff_xsec * self.MC_case.flux(Enu)
 
-
+		
+		##############################################
 		if self.MC_case.decays_to_dilepton:
+			
 			if decay_case.on_shell:
 				##############################################
 				# decay nu_parent -> nu_daughter mediator
@@ -154,7 +150,7 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 													mV=mzprime, 
 													HNLtype = decay_case.HNLtype, 
 													h=decay_case.h_parent)
-				self.int_dic['diff_decay_rate_0'] *= 2 # Vegas jacobian
+				self.int_dic['diff_decay_rate_0'] *= 2 # hypercube jacobian
 				
 
 				##############################################
@@ -194,10 +190,10 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 
 				dgamma = dr.diff_gamma_Ni_to_Nj_ell_ell([t,u,v,c3,phi34], decay_case)
 
-				# integrating in phi34 and ct3 explicitly
+				# integrating in phi34 and c3 explicitly
 				dgamma /= 2*np.pi*2.0
 
-				## JACOBIAN FOR DECAY 
+				# hypercube jacobian (vegas hypercube --> physical limits) transformation
 				dgamma *= (tmax - tmin)
 				dgamma *= (umax - umin)
 				dgamma *= (2) # c3
@@ -218,7 +214,9 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 													mj=m_daughter,  
 													HNLtype = decay_case.HNLtype, 
 													h=decay_case.h_parent)
-				self.int_dic['diff_decay_rate_0'] *= 2 # Vegas jacobian	
+				
+				# hypercube jacobian (vegas hypercube --> physical limits) transformation
+				self.int_dic['diff_decay_rate_0'] *= 2 
 
 		else:
 			logger.error("ERROR: Could not determine decay process in vegas integral.")
@@ -226,11 +224,22 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 
 
 		##############################################
+		# flat direction jacobian (undoing the vegas adaptation in flat directions of factors of the full integrands)
+		
+		# loop over decay processes
+		for decay_step in (k for k in self.int_dic.keys() if 'decay_rate' in k):
+			self.int_dic[decay_step] /= jac[:,0]*jac[:,1]
+		
+		decay_directions = range(2,self.dim)
+		for d in decay_directions:
+			self.int_dic['diff_flux_avg_xsec'] /= jac[:,d]
+
+
+		##############################################
 		# storing normalization factor that guarantees that integrands are O(1) numbers
 		self.norm = {}
 		self.norm['diff_flux_avg_xsec'] = np.mean(self.int_dic['diff_flux_avg_xsec'])/len(x[0,:])
 		self.norm['diff_event_rate'] = self.norm['diff_flux_avg_xsec']
-
 
 		# loop over decay processes
 		for decay_step in (k for k in self.int_dic.keys() if 'decay_rate' in k):
@@ -247,15 +256,9 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 			self.int_dic[k] /= self.norm[k]
 
 		logger.debug(f"Normalization factors in integrand: {self.norm}.")
-		
+
+
 		# return all differential quantities of interest
-		results = []
-		logger.debug("Mean integrand values %g"%np.mean(self.int_dic['diff_event_rate']))
-		for key in self.int_dic.keys():
-			logger.debug(key)
-			results.append(self.int_dic[key])
-		results = np.array(results)
-		logger.debug(f"results: {results}")
 		return self.int_dic
 
 
