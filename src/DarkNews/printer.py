@@ -19,7 +19,14 @@ def unweigh_events(df_gen, nevents, prob_col = 'w_event_rate', **kwargs):
 		kwargs passed to numpy's random.choice.
 	'''
 	logger.info(f"Unweighing events down to {nevents} entries.")
-	AccEntries = np.random.choice(df_gen.index, size=nevents, p=(df_gen[prob_col])/np.sum(df_gen[prob_col]), *kwargs)
+	prob = df_gen[prob_col]/np.sum(df_gen[prob_col])
+	if (prob < 0).any():
+		logger.error(f"ERROR! Probabily for unweighing contains negative values! Bad weights? {prob_col} < 0.")
+	if (prob == 0).any():
+		logger.warning(f"WARNING! Discarding zero-valued weights for unweighing. Total of {sum(prob == 0)} of {len(prob)} zero entries for {prob_col}.")
+		AccEntries = np.random.choice(df_gen.index[prob>0], size=nevents, p=prob[prob>0], *kwargs)
+	else:
+		AccEntries = np.random.choice(df_gen.index, size=nevents, p=prob, *kwargs)
 
 	# extract selected entries
 	return df_gen.filter(AccEntries, axis=0).reset_index()
@@ -40,7 +47,10 @@ def print_events_to_pandas(PATH_data, df_gen):
 	prettyprinter.info(f"* Events saved to file successfully:\n\n{out_file_name}")
 	# aux_df.to_pickle(out_file_name)
 	# pickle.dump(aux_df, open(out_file_name, 'wb'	))
+	return df_gen
 
+def print_in_order(x):
+    return ' '.join(f'{t:.8g}' for t in list(x))
 
 def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 	'''
@@ -99,10 +109,7 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 	f = open(hepevt_file_name,"w+") 
 	
 	# print total number of events
-	f.write("%i\n"%tot_events_to_print)
-	
-	
-	
+	f.write(f"{tot_events_to_print}\n")
 
 	# print(df_gen['P_projectile'][['1','2','3']].to_numpy()[0])
 	# loop over events
@@ -110,94 +117,94 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 		
 		# no particles & event id
 		if unweigh:
-			f.write(f"{i} 7 {df_gen['w_event_rate'][i]}")
+			f.write(f"{i} 7 {df_gen['w_event_rate'][i]:.8g}\n")
 		else:
-			f.write(f"{i} 7")
+			f.write(f"{i} 7\n")
 
 		# scattering inital states
 		f.write((	# Projectile
 					f"0 "
-					f" {pdg.numu.pdgid}"
+					f" {int(lp.nu_mu.pdgid)}"
 					f" 0 0 0 0"
-					f" {*list(df_gen['P_projectile'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['P_projectile','0'][i]}"
-					f" {fv.mass(df_gen['P_projectile'].to_numpy()[i])}"
-					f" {*list(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['pos_scatt','0'][i]}"
+					f" {print_in_order(df_gen['P_projectile'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['P_projectile','0'][i]:.8g}"
+					f" {fv.mass(df_gen['P_projectile'].to_numpy()[i]):.8g}"
+					f" {print_in_order(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['pos_scatt','0'][i]:.8g}"
 					"\n"
 					))
 
 		f.write((	# Target
 					f"0 "
-					f" {df_gen['target_pdgid'][i]}"
+					f" {int(df_gen['target_pdgid'][i])}"
 					f" 0 0 0 0"
-					f" {*list(df_gen['P_target'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['P_recoil','0'][i]}"
-					f" {fv.mass(df_gen['P_target'].to_numpy()[i])}"
-					f" {*list(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['pos_scatt','0'][i]}"
+					f" {print_in_order(df_gen['P_target'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['P_recoil','0'][i]:.8g}"
+					f" {fv.mass(df_gen['P_target'].to_numpy()[i]):.8g}"
+					f" {print_in_order(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['pos_scatt','0'][i]:.8g}"
 					"\n"
 					))
 
 		# scatter final products
 		f.write((	# HNL produced
 					f"0 "
-					f" {pdg.neutrino5.pdgid}"
+					f" {int(pdg.neutrino5.pdgid)}"
 					f" 0 0 0 0"
-					f" {*list(df_gen['P_decay_N_parent'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['P_decay_N_parent','0'][i]}"
-					f" {fv.mass(df_gen['P_decay_N_parent'].to_numpy()[i])}"
-					f" {*list(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['pos_scatt','0'][i]}"
+					f" {print_in_order(df_gen['P_decay_N_parent'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['P_decay_N_parent','0'][i]:.8g}"
+					f" {fv.mass(df_gen['P_decay_N_parent'].to_numpy()[i]):.8g}"
+					f" {print_in_order(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['pos_scatt','0'][i]:.8g}"
 					"\n"
 					))
 
 		f.write((	# recoiled target
 					f"0 "
-					f" {df_gen['target_pdgid'][i]}"
+					f" {int(df_gen['target_pdgid'][i])}"
 					f" 0 0 0 0"
-					f" {*list(df_gen['P_recoil'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['P_recoil','0'][i]}"
-					f" {fv.mass(df_gen['P_recoil'].to_numpy()[i])}"
-					f" {*list(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['pos_scatt','0'][i]}"
+					f" {print_in_order(df_gen['P_recoil'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['P_recoil','0'][i]:.8g}"
+					f" {fv.mass(df_gen['P_recoil'].to_numpy()[i]):.8g}"
+					f" {print_in_order(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['pos_scatt','0'][i]:.8g}"
 					'\n'
 					))
 
 		# decay final products
 		f.write((	# daughter neutrino/HNL
 					f"0 "
-					f" {pdg.nulight.pdgid}"
+					f" {int(pdg.nulight.pdgid)}"
 					f" 0 0 0 0"
-					f" {*list(df_gen['P_decay_N_daughter'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['P_decay_N_daughter','0'][i]}"
-					f" {fv.mass(df_gen['P_decay_N_daughter'].to_numpy()[i])}"
-					f" {*list(df_gen['pos_decay'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['pos_decay','0'][i]}"
+					f" {print_in_order(df_gen['P_decay_N_daughter'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['P_decay_N_daughter','0'][i]:.8g}"
+					f" {fv.mass(df_gen['P_decay_N_daughter'].to_numpy()[i]):.8g}"
+					f" {print_in_order(df_gen['pos_decay'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['pos_decay','0'][i]:.8g}"
 					'\n'
 					))
 
 		f.write((	# electron
 					f"1 "
-					f" {lp.e_minus.pdgid}"
+					f" {int(lp.e_minus.pdgid)}"
 					f" 0 0 0 0"
-					f" {*list(df_gen['P_decay_ell_minus'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['P_decay_ell_minus','0'][i]}"
-					f" {const.m_e}"
-					f" {*list(df_gen['pos_decay'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['pos_decay','0'][i]}"
+					f" {print_in_order(df_gen['P_decay_ell_minus'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['P_decay_ell_minus','0'][i]:.8g}"
+					f" {const.m_e:.8g}"
+					f" {print_in_order(df_gen['pos_decay'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['pos_decay','0'][i]:.8g}"
 					"\n"
 					))
 
 		f.write((	# positron
 					f"1 "
-					f" {lp.e_plus.pdgid}"
+					f" {int(lp.e_plus.pdgid)}"
 					f" 0 0 0 0"
-					f" {*list(df_gen['P_decay_ell_plus'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['P_decay_ell_plus','0'][i]}"
-					f" {const.m_e}"
-					f" {*list(df_gen['pos_decay'][['1','2','3']].to_numpy()[i]), }"
-					f" {df_gen['pos_decay','0'][i]}"
+					f" {print_in_order(df_gen['P_decay_ell_plus'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['P_decay_ell_plus','0'][i]:.8g}"
+					f" {const.m_e:.8g}"
+					f" {print_in_order(df_gen['pos_decay'][['1','2','3']].to_numpy()[i])}"
+					f" {df_gen['pos_decay','0'][i]:.8g}"
 					"\n"
 					))
 

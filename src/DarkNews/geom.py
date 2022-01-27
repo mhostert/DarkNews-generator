@@ -54,29 +54,29 @@ class Chisel(object):
 		h = radius*(1 - np.cos(zenith_max))
 		return (r < radius) | (zenith < zenith_max) | (z < -radius + h)
 
-	def microboone_cryostat(self):
+	# def microboone_cryostat(self):
 
-		# Tube parameters
-		r_t = 191.61
-		z_t  = 1086.49
+	# 	# Tube parameters
+	# 	r_t = 191.61
+	# 	z_t  = 1086.49
 
-		# cap parameters
-		r_c = 305.250694958
-		theta_c = 38.8816337686*const.deg_to_rad
-		ctheta_c = np.cos(theta_c)
+	# 	# cap parameters
+	# 	r_c = 305.250694958
+	# 	theta_c = 38.8816337686*const.deg_to_rad
+	# 	ctheta_c = np.cos(theta_c)
 
-		h = r_c*(1.-ctheta_c)
-		cap_gap = 0.37361008
-		z_cap = - z_t/2 - cap_gap + r_c*ctheta_c
+	# 	h = r_c*(1.-ctheta_c)
+	# 	cap_gap = 0.37361008
+	# 	z_cap = - z_t/2 - cap_gap + r_c*ctheta_c
 
-		tube =	self.cylinder(radius=r_t, height=z_t)
-		cap1 =	self.spherical_cap(radius=r_c, zenith_max=theta_c, origin=np.array([[0],[0], [-z_cap]]))
-		cap2 =	self.spherical_cap(radius=r_c, zenith_max=theta_c, origin=np.array([[0],[0], [ z_cap]]))
+	# 	tube =	self.cylinder(radius=r_t, height=z_t)
+	# 	cap1 =	self.spherical_cap(radius=r_c, zenith_max=theta_c, origin=np.array([[0],[0], [-z_cap]]))
+	# 	cap2 =	self.spherical_cap(radius=r_c, zenith_max=theta_c, origin=np.array([[0],[0], [ z_cap]]))
 
-		return tube | cap1 | cap2
+	# 	return tube | cap1 | cap2
 
 	# all in centimeters
-	def filter_microboone(self):
+	def microboone_cryostat(self):
 		
 		# Tube parameters
 		r_t = 191.61

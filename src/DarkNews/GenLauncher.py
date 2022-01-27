@@ -189,9 +189,6 @@ class GenLauncher:
         ####################################################
         # Run MC and get events
         df_gen = dn.MC.run_MC(bsm_model, myexp, **kwargs)
-        
-        if self.sample_geometry:
-            dn.geom.place_events_in_geometry(df_gen, myexp, **kwargs)
 
         ####################################################
         # Paths
