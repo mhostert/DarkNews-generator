@@ -5,7 +5,6 @@ import os.path
 
 # Dark Neutrino and MC stuff
 import DarkNews as dn
-from DarkNews import const
 from DarkNews.const import ConfigureLogger
 from DarkNews import logger, prettyprinter
 
@@ -73,6 +72,7 @@ class GenLauncher:
         self.hepevt = False
         self.hepevt_unweigh = False
         self.hepevt_events = 100
+        self.sample_geometry = False
         self.summary_plots = True
         self.path = "."
 
@@ -175,7 +175,6 @@ class GenLauncher:
         # Choose experiment and scope of simulation
         myexp = dn.detector.Detector(self.exp)
 
-
         kwargs = {  'INCLUDE_COH': ~self.nocoh,
                     'INCLUDE_PELASTIC': ~self.nopelastic,
                     'INCLUDE_HC': ~self.noHC,
@@ -190,24 +189,24 @@ class GenLauncher:
         ####################################################
         # Run MC and get events
         df_gen = dn.MC.run_MC(bsm_model, myexp, **kwargs)
-
+        
+        if self.sample_geometry:
+            dn.geom.place_events_in_geometry(df_gen, myexp, **kwargs)
 
         ####################################################
         # Paths
         PATH_data = os.path.join(path, PATH_data)
         PATH = os.path.join(path, PATH)
         
-        df_gen['DATA_PATH'] = PATH_data
-        df_gen['PLOTS_PATH'] = PATH
-        df_gen['PLOTS_TITLE'] = title
+        df_gen.attrs['DATA_PATH'] = PATH_data
+        df_gen.attrs['PLOTS_PATH'] = PATH
+        df_gen.attrs['PLOTS_TITLE'] = title
 
         ############################################################################
         # Print events to file -- currently in data/exp/m4____mzprime____.dat 
         if self.numpy:
-            self.df = dn.printer.print_events_to_ndarray(PATH_data, df_gen, bsm_model)
+            self.df = dn.printer.print_events_to_ndarray(PATH_data, df_gen)
         if self.pandas:
-            self.df = dn.printer.print_events_to_pandas(PATH_data, df_gen, bsm_model)
+            self.df = dn.printer.print_events_to_pandas(PATH_data, df_gen)
         if self.hepevt:
-            dn.printer.print_unweighted_events_to_HEPEVT(df_gen, bsm_model, unweigh= self.hepevt_unweigh, TOT_EVENTS=self.hepevt_events)
-
-    
+            dn.printer.print_unweighted_events_to_HEPEVT(df_gen, unweigh= self.hepevt_unweigh, max_events=self.hepevt_events)

@@ -48,5 +48,4 @@ from DarkNews import xsecs
 
 # for output of MC 
 from DarkNews import printer
-from DarkNews import decayer
 from DarkNews import geom

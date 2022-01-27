@@ -2,26 +2,133 @@ import numpy as np
 import numpy.ma as ma
 import os
 from itertools import islice
+from particle import literals as lp
 from DarkNews import logger
 from DarkNews import local_dir
 
 from .const_dics import fourier_bessel_dic
 from .const import *
 
-'''
-    Here we define nuclear form factors following:
-    http://discovery.phys.virginia.edu/research/groups/ncd/index.html
 
-    When available, we use data from Nuclear Data Tables (74, 87, and 95), stored in "aux_data/mass20.txt":
-        "The Ame2020 atomic mass evaluation (I)"   by W.J.Huang, M.Wang, F.G.Kondev, G.Audi and S.Naimi
-               Chinese Physics C45, 030002, March 2021.
-        "The Ame2020 atomic mass evaluation (II)"  by M.Wang, W.J.Huang, F.G.Kondev, G.Audi and S.Naimi
-               Chinese Physics C45, 030003, March 2021.
+class NuclearTarget:
+    """ for scattering on a nuclear target 
+    Args:
+        params      ??
+        name: name of the target. Can be either "electron" or the name of the element (e.g. C12, Pb208).
+    """
 
-    Element properties are stored in elements_dic.To access individual elements we use the format:
+    def __init__(self, name):
+        self.name = name
         
-        key = 'name+A', e.g. key = 'Pb208' or 'C12'.
-'''
+        #####################################        
+        # free electron
+        if name == "electron":
+            self.is_hadron  = False
+            self.is_nucleus = False
+            self.is_proton  = False
+            self.is_neutron = False            
+            self.is_free_nucleon = False
+
+            self.mass=m_e
+            self.charge=1
+            self.Z=0
+            self.N=0
+            self.A=0
+            self.pdgid=11
+        #####################################
+        # hadronic *nuclear* target
+        else:
+
+            # Using the global dictionary of elements defined in nuclear_tools
+            # Set all items as attributes of the class
+            for k, v in elements_dic[name].items():
+                setattr(self, k, v)
+            self.mass = self.nuclear_mass
+            self.charge = self.Z 
+
+            self.is_hadron  = True
+            self.is_nucleus  = (self.A > 1)
+            self.is_proton  = (self.Z == 1 and self.A == 1)
+            self.is_neutron = (self.N == 1 and self.A == 1)
+
+            self.is_nucleon = (self.is_neutron or self.is_proton)
+            self.is_free_nucleon = (self.A == 1)
+            self.is_bound_nucleon = False
+
+            if self.is_nucleus:
+                # no hyperons and always ground state
+                self.pdgid = int(f'100{self.Z:03d}{self.A:03d}0')
+            elif self.is_neutron:
+                self.pdgid = lp.neutron.pdgid
+            elif self.is_proton:
+                self.pdgid = lp.proton.pdgid
+            else:
+                logger.error(f"Error. Could not find the PDG ID of {self.name}.")
+                raise ValueError
+
+            if self.is_neutron and self.is_free_nucleon:
+                logger.error(f"Error. Target {self.name} is a free neutron.")
+                raise ValueError
+        
+            self.tau3 = self.Z*2 - 1  # isospin +1 proton / -1 neutron 
+            
+
+            assign_form_factors(self)
+
+
+    # hadronic *constituent* target
+    def get_constituent_nucleon(self, name):
+        return self.BoundNucleon(self, name)
+
+ 
+    class BoundNucleon():    
+        """ for scattering on bound nucleon in the nuclear target 
+        
+        Inner Class
+
+        Args:
+            nucleus: nucleus of which this particle is bound into (always the outer class)
+            name: 'proton' or 'neutron'
+        """
+        def __init__(self, nucleus, name):
+           
+            # if not nucleus.is_nucleus:
+            #     print(f"Error! Sattering target {nucleus.name} is not a nucleus with bound {name}.")
+            #     raise ValueError 
+
+            self.nucleus = nucleus
+            self.A = int(name=='proton' or name == 'neutron')
+            self.Z = int(name=='proton')
+            self.N = int(name=='neutron')
+            self.charge = self.Z
+            self.mass = m_proton
+            self.name = f'{name}_in_{nucleus.name}'
+
+            self.is_hadron = True
+            self.is_nucleus = False
+            self.is_neutron = (self.N == 1 and self.A == 1)
+            self.is_proton = (self.Z == 1 and self.A == 1)
+
+            self.is_nucleon = (self.is_neutron or self.is_proton)
+            self.is_false_nucleon = False
+            self.is_bound_nucleon = True
+
+            if self.is_neutron:
+                self.pdgid = lp.neutron.pdgid
+            elif self.is_proton:
+                self.pdgid = lp.proton.pdgid
+            else:
+                logger.error(f"Error. Could not find the PDG ID of {self.name}.")
+                raise ValueError
+
+
+            self.tau3 = self.Z*2 - 1  # isospin +1 proton / -1 neutron 
+
+            assign_form_factors(self)
+
+
+
+
 
 def assign_form_factors(target):
 
@@ -94,15 +201,33 @@ def nuclear_F1_fourier_bessel_EM(Q2, array_coeff):
     Q_total = np.sum(fourier_bessel_integral_terms(R,nonzero_terms+1)*ai[nonzero_terms])
     return expansion/Q_total
 
-################################################
-# NUCLEAR DATA -- AME 2020
-# All units in GeV
 
+
+'''
+    Here we define nuclear form factors following:
+    http://discovery.phys.virginia.edu/research/groups/ncd/index.html
+
+    When available, we use data from Nuclear Data Tables (74, 87, and 95), stored in "aux_data/mass20.txt":
+        "The Ame2020 atomic mass evaluation (I)"   by W.J.Huang, M.Wang, F.G.Kondev, G.Audi and S.Naimi
+               Chinese Physics C45, 030002, March 2021.
+        "The Ame2020 atomic mass evaluation (II)"  by M.Wang, W.J.Huang, F.G.Kondev, G.Audi and S.Naimi
+               Chinese Physics C45, 030003, March 2021.
+
+    Element properties are stored in elements_dic.To access individual elements we use the format:
+        
+        key = 'name+A', e.g. key = 'Pb208' or 'C12'.
+    
+    All units in GeV, except otherwise specified
+'''
+
+
+
+#####################################
+# Nested dic containing all elements
 # approximate formula in D. Lunney, J.M. Pearson and C. Thibault, Rev. Mod. Phys.75, 1021 (2003)
 def  electron_binding_energy(Z):
-    return (14.4381*Z**2.39 + 1.55468e-6*Z**5.35) # eV
-
-# Nested dic containing all elements
+    return (14.4381*Z**2.39 + 1.55468e-6*Z**5.35)*1e-9 # GeV
+    
 elements_dic = {}
 hydrogen_Eb = 13.5981e-9 # GeV
 atomic_unit = 0.9314941024228 # mass of Carbon12 in GeV / 12
@@ -123,7 +248,7 @@ with open(mass_file, 'r') as ame:
             elements_dic[name]['A'] = int(line[16:20])
 
             # elements_dic[name]['atomic_Eb'] = float(line[56:61] + '.' + line[62:67])*1e-6*elements_dic[name]['A']
-            elements_dic[name]['atomic_Eb'] = electron_binding_energy(Z)*1e-9
+            elements_dic[name]['atomic_Eb'] = electron_binding_energy(Z)
 
             elements_dic[name]['nuclear_Eb'] = float(line[56:61] + '.' + line[62:67])*1e-6*elements_dic[name]['A']
             #elements_dic[name]['atomic_Eb'] + Z*hydrogen_Eb - elements_dic[name]['electronic_Eb']
@@ -140,8 +265,6 @@ with open(mass_file, 'r') as ame:
             if '*' in decay:
                 decay = np.nan
             elements_dic[name]['beta_decay_energy'] = float(decay)*1e-6
-
-
 
 
 ################################################

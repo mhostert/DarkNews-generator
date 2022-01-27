@@ -1,134 +1,16 @@
-import importlib
 import numpy as np
 from scipy import interpolate
+from particle import literals as lp
 from pathlib import Path
 import os.path
 import json
 local_dir = Path(__file__).parent
 
-from DarkNews import logger, prettyprinter
-
-from .const import *
+from . import logger, prettyprinter
 from . import pdg
-from . import nuclear_tools
-
-
-class NuclearTarget:
-    """ for scattering on a nuclear target 
-    Args:
-        params      ??
-        name: name of the target. Can be either "electron" or the name of the element (e.g. C12, Pb208).
-    """
-
-    def __init__(self, name):
-        self.name = name
-        
-        #####################################        
-        # free electron
-        if name == "electron":
-            self.is_hadron  = False
-            self.is_nucleus = False
-            self.is_proton  = False
-            self.is_neutron = False            
-            self.is_free_nucleon = False
-
-            self.mass=m_e
-            self.charge=1
-            self.Z=0
-            self.N=0
-            self.A=0
-            self.pdgid=11
-        #####################################
-        # hadronic *nuclear* target
-        else:
-
-            # Using the global dictionary of elements defined in nuclear_tools
-            # Set all items as attributes of the class
-            for k, v in nuclear_tools.elements_dic[name].items():
-                setattr(self, k, v)
-            self.mass = self.nuclear_mass
-            self.charge = self.Z 
-
-            self.is_hadron  = True
-            self.is_nucleus  = (self.A > 1)
-            self.is_proton  = (self.Z == 1 and self.A == 1)
-            self.is_neutron = (self.N == 1 and self.A == 1)
-
-            self.is_nucleon = (self.is_neutron or self.is_proton)
-            self.is_free_nucleon = (self.A == 1)
-            self.is_bound_nucleon = False
-
-            if self.is_nucleus:
-                # no hyperons and always ground state
-                self.pdgid = int(f'100{self.Z:03d}{self.A:03d}0')
-            elif self.is_neutron:
-                self.pdgid = pdg.neutron.pdgid
-            elif self.is_proton:
-                self.pdgid = pdg.proton.pdgid
-            else:
-                logger.error(f"Error. Could not find the PDG ID of {self.name}.")
-                raise ValueError
-
-            if self.is_neutron and self.is_free_nucleon:
-                logger.error(f"Error. Target {self.name} is a free neutron.")
-                raise ValueError
-        
-            self.tau3 = self.Z*2 - 1  # isospin +1 proton / -1 neutron 
-            
-
-            nuclear_tools.assign_form_factors(self)
-
-
-    # hadronic *constituent* target
-    def get_constituent_nucleon(self, name):
-        return self.BoundNucleon(self, name)
-
- 
-    class BoundNucleon():    
-        """ for scattering on bound nucleon in the nuclear target 
-        
-        Inner Class
-
-        Args:
-            nucleus: nucleus of which this particle is bound into (always the outer class)
-            name: 'proton' or 'neutron'
-        """
-        def __init__(self, nucleus, name):
-           
-            # if not nucleus.is_nucleus:
-            #     print(f"Error! Sattering target {nucleus.name} is not a nucleus with bound {name}.")
-            #     raise ValueError 
-
-            self.nucleus = nucleus
-            self.A = int(name=='proton' or name == 'neutron')
-            self.Z = int(name=='proton')
-            self.N = int(name=='neutron')
-            self.charge = self.Z
-            self.mass = m_proton
-            self.name = f'{name}_in_{nucleus.name}'
-
-            self.is_hadron = True
-            self.is_nucleus = False
-            self.is_neutron = (self.N == 1 and self.A == 1)
-            self.is_proton = (self.Z == 1 and self.A == 1)
-
-            self.is_nucleon = (self.is_neutron or self.is_proton)
-            self.is_false_nucleon = False
-            self.is_bound_nucleon = True
-
-            if self.is_neutron:
-                self.pdgid = pdg.neutron.pdgid
-            elif self.is_proton:
-                self.pdgid = pdg.proton.pdgid
-            else:
-                logger.error(f"Error. Could not find the PDG ID of {self.name}.")
-                raise ValueError
-
-
-            self.tau3 = self.Z*2 - 1  # isospin +1 proton / -1 neutron 
-
-            nuclear_tools.assign_form_factors(self)
-
+from . import geom
+from . import const
+from .nuclear_tools import NuclearTarget
 
 
 class Detector():
@@ -156,17 +38,25 @@ class Detector():
             self.FLUXFILE        = read_file['fluxfile']
             self.FLUX_NORM       = read_file['flux_norm']
             self.ERANGE          = read_file['erange']
-            #self.EMAX           = read_file['erange[1]']
+
             # Detector targets
             self.NUCLEAR_TARGETS = [NuclearTarget(target) for target in read_file['nuclear_targets']]
             self.FIDUCIAL_MASS   = read_file['fiducial_mass']
             self.POTS            = read_file['POTs']
+            
             # total number of targets
             self.NUMBER_OF_TARGETS = {}
             for fid_mass_fraction, target in zip(read_file['fiducial_mass_fraction_per_target'], self.NUCLEAR_TARGETS):
-                self.NUMBER_OF_TARGETS[f'{target.name}'] = self.FIDUCIAL_MASS*fid_mass_fraction*t_to_GeV/(target.mass)
+                self.NUMBER_OF_TARGETS[f'{target.name}'] = self.FIDUCIAL_MASS*fid_mass_fraction*const.t_to_GeV/(target.mass)
 
-            prettyprinter.info(f"Experiment: \n\t{self.NAME}\n\tfluxfile: {self.FLUXFILE}\n\tPOT: {self.POTS}\n\tnuclear targets: {[n.name for n in self.NUCLEAR_TARGETS]}\n\tfiducial mass: {[self.FIDUCIAL_MASS*frac for frac in read_file['fiducial_mass_fraction_per_target']]} tonnes")
+            # load neutrino fluxes
+            _enu, *_fluxes = np.genfromtxt(f'{local_dir}/{self.FLUXFILE}',unpack=True)
+            self.FLUX_FUNCTIONS = 6*[[]]
+            for i in range(len(_fluxes)):
+                self.FLUX_FUNCTIONS[i] = interpolate.interp1d(_enu, _fluxes[i]*self.FLUX_NORM, fill_value=0.0, bounds_error=False)
+
+
+            prettyprinter.info(f"Experiment: \n\t{self.NAME}\n\tfluxfile loaded: {self.FLUXFILE}\n\tPOT: {self.POTS}\n\tnuclear targets: {[n.name for n in self.NUCLEAR_TARGETS]}\n\tfiducial mass: {[self.FIDUCIAL_MASS*frac for frac in read_file['fiducial_mass_fraction_per_target']]} tonnes")
 
         except FileNotFoundError:
             raise FileNotFoundError("The experiment configuration file '{}.json' does not exist.".format(experiment_name.lower()))
@@ -176,25 +66,14 @@ class Detector():
                 raise KeyError("No field '{}' specified in the the experiment configuration file '{}.json'.".format(err.args[0], experiment_name.lower()))
             raise
 
-    def get_flux_func(self, flavor = pdg.numu):
-        """ Return flux interpolating function using scipy interp1d
+    def neutrino_flux(self, projectile):
+        _flux_index = pdg.get_doublet(projectile) + 3*pdg.is_antiparticle(projectile)
+        return self.FLUX_FUNCTIONS[_flux_index]
 
-        Args:
-            flavour (pdg.flavour) : neutrino flavour for required flux
-
-        """
-        data = np.genfromtxt(f'{local_dir}/{self.FLUXFILE}',unpack=True)
-        E = data[0]
-        if flavor==pdg.numu:
-            nf = data[2]
-        elif flavor==pdg.numubar:
-            nf = data[5]
-        elif flavor==pdg.nue:
-            nf = data[1]
-        elif flavor==pdg.nuebar:
-            nf = data[4]
+    def set_geometry(self):
+        if 'microboone' in self.NAME.lower():
+            self.place_scatters = geom.microboone_geometry
+        elif 'miniboone' in self.NAME.lower():
+            self.place_scatters = geom.miniboone_geometry
         else:
-            logger.error("ERROR! Neutrino flavor {flavor.name} not supported.")
-
-        flux = interpolate.interp1d(E, nf*self.FLUX_NORM, fill_value=0.0, bounds_error=False)
-        return flux
+            self.place_scatters = geom.point_geometry

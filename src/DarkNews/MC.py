@@ -4,23 +4,15 @@ import vegas as vg
 
 from DarkNews import logger, prettyprinter
 
-
 from collections import defaultdict
 from functools import partial
-
-#CYTHON
-import pyximport
-pyximport.install(
-    language_level=3,
-    pyimport=False,
-    )
 
 from . import model 
 from . import integrands
 
 from . import const
 from . import pdg
-from . import decayer
+from . import geom
 
 NINT = 10
 NEVAL = 1000
@@ -151,7 +143,7 @@ class MC_events:
 
 
         if (self.ups_case.m_ups != self.decay_case.m_parent):
-            logger.error(f"Error! Mass of HNL produced in neutrino scattering, m_ups = {ups_case.m_upscattered} GeV, different from that of parent HNL, m_parent = { decay_case.m_parent} GeV.")
+            logger.error(f"Error! Mass of HNL produced in neutrino scattering, m_ups = {self.ups_case.m_upscattered} GeV, different from that of parent HNL, m_parent = { self.decay_case.m_parent} GeV.")
             raise ValueError
 
 
@@ -186,10 +178,11 @@ class MC_events:
         elif self.scope['scattering_regime'] == 'n-el':
             target_multiplicity = self.nuclear_target.N
         else:
-            logger.error(f"Scattering regime {scope['scattering_regime']} not supported.")
+            logger.error(f"Scattering regime {self.scope['scattering_regime']} not supported.")
 
         logger.debug(f"Total cross section calculated.")
         return tot_xsec*target_multiplicity
+
 
     def get_MC_events(self):
         """ 
@@ -209,7 +202,7 @@ class MC_events:
         #########################################3
         # Some experimental definitions
         #self.exp = experiment  # NO NEED TO STORE THIS
-        self.flux = self.experiment.get_flux_func(flavor=self.nu_projectile)
+        self.flux = self.experiment.neutrino_flux(self.nu_projectile)
         self.EMIN = max(self.experiment.ERANGE[0], 1.05 * self.Ethreshold)
         self.EMAX = self.experiment.ERANGE[1]
 
@@ -239,7 +232,6 @@ class MC_events:
         result = run_vegas(batch_f, integ, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
         logger.debug(f"Main VEGAS run completed.")
 
-        integrals = dict(result)
         logger.debug(f"Vegas results for the integrals: {result.summary()}")
         ##########################################################################
 
@@ -247,25 +239,19 @@ class MC_events:
         #########################################################################
         # GET THE INTEGRATION SAMPLES and translate to physical variables in MC events
         samples, weights = get_samples(integ, batch_f)
+        tot_nevents = len(weights['diff_event_rate'])
+
         logger.debug(f"Normalization factors in MC: {batch_f.norm}.")
         logger.debug(f"Vegas results for diff_event_rate: {np.sum(weights['diff_event_rate'])}")
         logger.debug(f"Vegas results for diff_flux_avg_xsec: {np.sum(weights['diff_flux_avg_xsec'])}")
 
-        
         four_momenta = integrands.get_momenta_from_vegas_samples(samples, MC_case=self)
         ##########################################################################
 
         ##########################################################################
-        # PROPAGATE PARENT PARTICLE
-        
-        t_decay, x_decay, y_decay, z_decay = decayer.decay_position(four_momenta['P_decay_N_parent'], l_decay_proper_cm=0.0)
-        ##########################################################################
-
-
-        ##########################################################################
         # SAVE ALL EVENTS AS A PANDAS DATAFRAME
         particles = list(four_momenta.keys())
-        columns = particles + ['decay_displacement']
+        columns = particles + ['pos_scatt']
         indexing = [columns, ['0','1','2','3']]
         columns_index = pd.MultiIndex.from_product(indexing)
         
@@ -275,19 +261,18 @@ class MC_events:
         for p in particles:
             for component in range(4):
                 aux_data.append(four_momenta[p][:,component])
-        # decay displacement
-        aux_data.append(t_decay)
-        aux_data.append(x_decay)
-        aux_data.append(y_decay)
-        aux_data.append(z_decay)
+        # scattering position
+        aux_data.append(np.zeros((tot_nevents, )))
+        aux_data.append(np.zeros((tot_nevents, )))
+        aux_data.append(np.zeros((tot_nevents, )))
+        aux_data.append(np.zeros((tot_nevents, )))
         
         df_gen = pd.DataFrame(np.stack(aux_data, axis=-1), columns=columns_index)
-
+              
         # differential weights
         for column in df_gen:
             if ("w_" in column):
                 df_gen[column, ''] = df_gen[column]
-
 
         # Normalize weights and total integral with decay rates and set units to nus*cm^2/POT
         decay_rates = 1
@@ -308,7 +293,7 @@ class MC_events:
         elif self.scope['scattering_regime'] == 'n-el':
             target_multiplicity = self.nuclear_target.N
         else:
-            logger.error(f"Scattering regime {scope['scattering_regime']} not supported.")
+            logger.error(f"Scattering regime {self.scope['scattering_regime']} not supported.")
 
         # Normalize to total exposure
         exposure = self.experiment.NUMBER_OF_TARGETS[self.nuclear_target.name]*self.experiment.POTS
@@ -319,23 +304,33 @@ class MC_events:
         # flux averaged xsec weights (neglecting kinematics of decay)
         df_gen['w_flux_avg_xsec'] = weights['diff_flux_avg_xsec']*const.attobarn_to_cm2*target_multiplicity*exposure*batch_f.norm['diff_flux_avg_xsec']
 
-        df_gen['target'] = np.full(np.size(df_gen['w_event_rate']), self.target.name)
-        df_gen['target_pdgid'] = np.full(np.size(df_gen['w_event_rate']), self.target.pdgid)
+        df_gen['target']       = np.full(tot_nevents, self.target.name)
+        df_gen['target_pdgid'] = np.full(tot_nevents, self.target.pdgid)
 
-        regime = self.scope['scattering_regime']
-
-        df_gen['scattering_regime'] = np.full(np.size(df_gen['w_event_rate']), regime)
-        df_gen['helicity'] = np.full(np.size(df_gen['w_event_rate']), self.helicity)
-        df_gen['underlying_process'] = np.full(np.size(df_gen['w_event_rate']), self.underl_process_name)
-
+        df_gen['scattering_regime']  = np.full(tot_nevents, self.scope['scattering_regime'])
+        df_gen['helicity']           = np.full(tot_nevents, self.helicity)
+        df_gen['underlying_process'] = np.full(tot_nevents, self.underl_process_name)
 
         # saving the experiment class
         df_gen.attrs['experiment'] = self.experiment
 
         # saving the bsm_model class
         df_gen.attrs['bsm_model'] = self.bsm_model
+
+
+
+        ##########################################################################
+        # PROPAGATE PARENT PARTICLE
+        
+        self.experiment.set_geometry()
+        self.experiment.place_scatters(df_gen)
+
+        geom.place_decay(df_gen, 'P_decay_N_parent', l_decay_proper_cm=0.0, label='pos_decay')
+
+        ##########################################################################
+
+        # print final result
         logger.info(f"Predicted ({np.sum(df_gen['w_event_rate']):.3g} +/- {np.sqrt(np.sum(df_gen['w_event_rate']**2)):.3g}) events.\n")
-        # logger.debug(f"Inspecting dataframe\nkeys of events dictionary = {df_gen.columns}.")
 
         return df_gen
 
@@ -434,9 +429,8 @@ def merge_MC_output(df1,df2):
     
     logger.debug(f"Appending {df2.underlying_process[0]}")
     df = pd.concat([df1, df2], axis = 0).reset_index()    
-
+    
     return df
-
 
 
 def get_samples(integ, batch_integrand):
@@ -460,7 +454,6 @@ def get_samples(integ, batch_integrand):
             fx = batch_integrand(x, jac=None)
 
         # weights
-        print(fx.keys())
         for fx_i in fx.keys():
             if np.any(np.isnan(fx[fx_i])):
                 raise ValueError(f'integrand {fx_i} evaluates to nan')
