@@ -155,3 +155,5 @@ cython_debug/
 # Data directories: where generations go
 examples/data/
 
+# Jaime directory
+analysis_jaime/
