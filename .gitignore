@@ -155,5 +155,6 @@ cython_debug/
 # Data directories: where generations go
 examples/data/
 
-# Jaime directory
+# Jaime directory and notebook
 analysis_jaime/
+muboone_analysis.ipynb
