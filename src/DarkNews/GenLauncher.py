@@ -119,7 +119,6 @@ class GenLauncher:
         threeplusthree = (self.m4 and self.m5 and self.m6)
 
         if threeplusone:
-            MODEL = dn.const.THREEPLUSONE
             upscattered_nus = [dn.pdg.neutrino4]
             outgoing_nus =[dn.pdg.nulight]
 
@@ -134,7 +133,6 @@ class GenLauncher:
         
 
         elif threeplustwo:
-            MODEL = dn.const.THREEPLUSTWO
             ## FIXING 3+2 process chain to be numu --> N5 --> N4
             upscattered_nus = [dn.pdg.neutrino5]
             outgoing_nus =[dn.pdg.neutrino4]
@@ -144,14 +142,13 @@ class GenLauncher:
             PATH_data = f'data/{self.exp}/3plus2/m5_{self.m5:.4g}_m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}_{bsm_model.HNLtype}/'
             PATH = f'plots/{self.exp}/3plus2/m5_{self.m5:.4g}_m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}_{bsm_model.HNLtype}/'
             title = fr"$m_{4} = \,${round(self.m4,4)}GeV, $m_{5} = \,${round(self.m5,4)}GeV, \
-                            $M_{{Z^\prime}} = \,${round(self.mzprime,4)} GeV, \
-                            $|U_{{D4}}|^2={dn.const.sci_notation(self.ud4**2)}$, $|U_{{\mu 4}}|^2={dn.const.sci_notation(self.umu4**2)}$, \
-                            $|U_{{D5}}|^2={dn.const.sci_notation(self.ud5**2)}$, $|U_{{\mu 5}}|^2={dn.const.sci_notation(self.umu5**2)}$"   
-    
+                        $M_{{Z^\prime}} = \,${round(self.mzprime,4)} GeV, \
+                        $|U_{{D4}}|^2={dn.const.sci_notation(self.ud4**2)}$, $|U_{{\mu 4}}|^2={dn.const.sci_notation(self.umu4**2)}$, \
+                        $|U_{{D5}}|^2={dn.const.sci_notation(self.ud5**2)}$, $|U_{{\mu 5}}|^2={dn.const.sci_notation(self.umu5**2)}$"   
+
 
 
         elif threeplusthree:
-            MODEL = dn.const.THREEPLUSTHREE
             upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
             outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
             
@@ -160,10 +157,10 @@ class GenLauncher:
             
             # title for plots
             title = fr"$m_{4} = \,${round(self.m4,4)}GeV, $m_{5} = \,${round(self.m5,4)}GeV, $m_{6} = \,${round(self.m6,4)}GeV,\
-                                $M_{{Z^\prime}} = \,${round(self.mzprime,4)} GeV, \
-                                $|U_{{D4}}|^2={dn.const.sci_notation(self.ud4**2)}$, $|U_{{\mu 4}}|^2={dn.const.sci_notation(self.umu4**2)}$, \
-                                $|U_{{D5}}|^2={dn.const.sci_notation(self.ud5**2)}$, $|U_{{\mu 5}}|^2={dn.const.sci_notation(self.umu5**2)}$, \
-                                $|U_{{D6}}|^2={dn.const.sci_notation(self.ud6**2)}$, $|U_{{\mu 6}}|^2={dn.const.sci_notation(self.umu6**2)}$"
+                        $M_{{Z^\prime}} = \,${round(self.mzprime,4)} GeV, \
+                        $|U_{{D4}}|^2={dn.const.sci_notation(self.ud4**2)}$, $|U_{{\mu 4}}|^2={dn.const.sci_notation(self.umu4**2)}$, \
+                        $|U_{{D5}}|^2={dn.const.sci_notation(self.ud5**2)}$, $|U_{{\mu 5}}|^2={dn.const.sci_notation(self.umu5**2)}$, \
+                        $|U_{{D6}}|^2={dn.const.sci_notation(self.ud6**2)}$, $|U_{{\mu 6}}|^2={dn.const.sci_notation(self.umu6**2)}$"
 
 
         else:
@@ -175,15 +172,14 @@ class GenLauncher:
         # Choose experiment and scope of simulation
         myexp = dn.detector.Detector(self.exp)
 
-        kwargs = {  'INCLUDE_COH': ~self.nocoh,
-                    'INCLUDE_PELASTIC': ~self.nopelastic,
+        kwargs = {  'NO_COH': self.nocoh,
+                    'NO_PELASTIC': self.nopelastic,
                     'INCLUDE_HC': ~self.noHC,
                     'INCLUDE_HF': ~self.noHF,
                     'FLAVORS': [dn.pdg.numu],
                     'UPSCATTERED_NUS': upscattered_nus,
                     'OUTGOING_NUS': outgoing_nus,
                     'DECAY_PRODUCTS': [self.decay_products],
-
                 }
 
         ####################################################

@@ -14,6 +14,8 @@ prettyprinter.setLevel(logging.INFO)
 handler = logging.StreamHandler(stream=sys.stdout)
 handler.setLevel(logging.INFO)
 prettyprinter.addHandler(handler)
+logger.propagate = False
+prettyprinter.propagate = False
 
 
 #CYTHON -- MAC OS X FIX --  https://github.com/cython/cython/issues/1725

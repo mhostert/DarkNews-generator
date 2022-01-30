@@ -48,7 +48,7 @@ class MC_events:
             'nu_outgoing': pdg.nulight,
             'scattering_regime': 'coherent',
             'decay_product': ['e+e-'],
-            'helicity': 'conserving' # helicity
+            'helicity': 'conserving'
             }
 
         scope.update(kwargs)
@@ -346,10 +346,10 @@ def run_MC(bsm_model, experiment, **kwargs):
             UPSCATTERED_NUS (list): dark NU in upscattering process
             OUTFOING_NUS (list):    output flavors 
             SCATTERING_REGIMES (list):    regimes of scattering process (coherent, p-el, n-el)
-            INCLUDE_HC (bool):      flag to include helicity conserving terms
-            INCLUDE_HF (bool):      flag to include helicity flipping terms
-            INCLUDE_COH (bool):     flag to include coherent terms
-            INCLUDE_PELASTIC (bool):flag to include proton elastic terms
+            INCLUDE_HC (bool):      flag to include helicity conserving case
+            INCLUDE_HF (bool):      flag to include helicity flipping case
+            NO_COH (bool):          flag to skip coherent case
+            NO_PELASTIC (bool):     flag to skip proton elastic case
             DECAY_PRODUCTS (list): decay processes to include
     """
     
@@ -361,8 +361,8 @@ def run_MC(bsm_model, experiment, **kwargs):
     'SCATTERING_REGIMES': ['coherent','p-el'],
     'INCLUDE_HC': True,
     'INCLUDE_HF': True,
-    'INCLUDE_COH': True,
-    'INCLUDE_PELASTIC': True,
+    'NO_COH': False,
+    'NO_PELASTIC': False,
     'DECAY_PRODUCTS': ['e+e-']
     }
     scope.update(kwargs)
@@ -392,23 +392,28 @@ def run_MC(bsm_model, experiment, **kwargs):
                                     ( (scattering_regime in ['coherent']) and (not nuclear_target.is_nucleus)) # coherent = p-el for hydrogen
                                 ):
                                 continue 
+                            elif ( (scattering_regime in ['coherent'] and scope['NO_COH'])
+                                 | 
+                                    (scattering_regime in ['p-el'] and scope['NO_PELASTIC'])
+                                ):
+                                continue
+                            else:
+                                # bundle arguments of MC_events here
+                                args = {'nuclear_target' : nuclear_target,
+                                        'scattering_regime' : scattering_regime,
+                                        'nu_projectile' : flavor, 
+                                        'nu_upscattered' : nu_upscattered,
+                                        'nu_outgoing' : nu_outgoing, 
+                                        'decay_product' : decay_product,
+                                        }
 
-                            # bundle arguments of MC_events here
-                            args = {'nuclear_target' : nuclear_target,
-                                    'scattering_regime' : scattering_regime,
-                                    'nu_projectile' : flavor, 
-                                    'nu_upscattered' : nu_upscattered,
-                                    'nu_outgoing' : nu_outgoing, 
-                                    'decay_product' : decay_product,
-                                    }
+                                if scope['INCLUDE_HC']:  # helicity conserving scattering
+                                    gen_cases.append(MC_events(experiment, **args, helicity = 'conserving'))
 
-                            if scope['INCLUDE_HC']:  # helicity conserving scattering
-                                gen_cases.append(MC_events(experiment, **args, helicity = 'conserving'))
+                                if scope['INCLUDE_HF']:  # helicity flipping scattering
+                                    gen_cases.append(MC_events(experiment, **args, helicity = 'flipping'))
 
-                            if scope['INCLUDE_HF']:  # helicity flipping scattering
-                                gen_cases.append(MC_events(experiment, **args, helicity = 'flipping'))
-
-                            logger.debug(f"Created an MC instance of {gen_cases[-1].underl_process_name}.")
+                                logger.debug(f"Created an MC instance of {gen_cases[-1].underl_process_name}.")
 
     
     logger.debug(f"Now running the generator for each instance.")
