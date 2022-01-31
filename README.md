@@ -1,6 +1,6 @@
 <h1 align="center"> Dark News </h1> <br>
 
-![alt text](./logo.png?raw=True "DarkNews logo")
+![alt text](./logo.png?raw=True "DarkNews logo" | width=100)
 
 <!-- ```
     ###############################################################
