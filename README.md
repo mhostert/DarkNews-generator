@@ -2,7 +2,7 @@
 
 <img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="180" title="DarkNews-logo">
 
-<p align="left"> DarkNews is an event generator for new physics processes at accelerator neutrino experiments based on Vegas. It simulates neutrino upscattering to heavy neutrinos as well as heavy neutrino decays to dileptons via neutrino, vector, and transition magnetic moment portals. </p>
+DarkNews is an event generator for new physics processes at accelerator neutrino experiments based on Vegas. It simulates neutrino upscattering to heavy neutrinos as well as heavy neutrino decays to dileptons via neutrino, vector, and transition magnetic moment portals.
 
 <br><br>
 ## Table of Contents
@@ -16,6 +16,14 @@
     - [List of parameters](#list-of-parameters)
     - [The experiments](#the-experiments)
     - [Generated events dataframe](#generated-events-dataframe)
+
+## Introduction
+
+DarkNews uses Vegas to generate weighted Monte Carlo samples of scattering and decay processes. Differential observables are implemented using analytical expressions with arbitrary interaction vertices, which are then specified at run-time based on the available models and the user's parameter choices. Processes involving heavy neutrinos N are calculated including contributions from the Standard Model Z and W bosons, as well as from a kinetically-mixed dark photon (Z'), and neutrino-N transition magnetic moments. DarkNews also computes the partial decay widths of heavy neutrinos for models with up to 3 heavy neutrinos. 
+
+Experiments as well as models are implemented on a case-by-case basis. The necessary ingredients to simulate upscattering or decay-in-flight rates are the active-neutrino flux, detector material, and geometry.
+
+The full information of the event genration is saved to a pandas dataframes, but the user may also choose to print events to numpy ndarrays, as well as to HEPevt-formatted text files. 
 
 ## Dependencies
 
