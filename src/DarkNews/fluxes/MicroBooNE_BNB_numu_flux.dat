@@ -6,7 +6,6 @@
 # numubar flux zerod
 # nue flux     zerod
 # nuebar flux  zerod
-# To normalize to the above nu/c^2/POT/50 MeV a scale factor of 1/(4997.*5e8)/(256.35*233.) has been applied.
 # Elo   Ehi       numu      numub        nue       nueb
 0	0.05	3.09387e-12	0	0	0
 0.05	0.1	1.1876e-11	0	0	0
