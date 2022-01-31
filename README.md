@@ -1,3 +1,4 @@
+<img align="right" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
 <h1 align="center"> Dark News </h1> <br>
 
 <!-- ```
@@ -14,11 +15,7 @@
 ---
 -->
 
-*Here place the relevant badges*
-
 ## Table of Contents
-
-<img align="right" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
 
 - [Introduction](#introduction)
 - [Dependencies](#dependencies)
