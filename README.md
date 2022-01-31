@@ -44,7 +44,7 @@ The following dependencies (if missing) will be automatically installed during t
 * [pandas](https://pandas.pydata.org/) 1.0 or above
 * [Cython](https://cython.org/)
 * [Requests](https://docs.python-requests.org/en/master/index.html)
-* [vegas](https://pypi.org/project/vegas/)
+* [vegas](https://pypi.org/project/vegas/) 5.1.1 or above
 * [Scikit-HEP](https://scikit-hep.org/)
 * [Particle](https://pypi.org/project/particle/)
 * [dill](https://pypi.org/project/dill/)
