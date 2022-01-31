@@ -1,9 +1,5 @@
 <h1 align="center"> Dark News </h1> <br>
 
-<div style= "float:right;position: relative; top: -80px;">
-<img src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
-</div>
-
 <!-- ```
     ###############################################################
     #    ______           _        _   _                          #
@@ -21,7 +17,9 @@
 *Here place the relevant badges*
 
 ## Table of Contents
-
+<div style= "float:right;position: relative; top: -80px;">
+<img src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
+</div>
 - [Introduction](#introduction)
 - [Dependencies](#dependencies)
 - [Installation](#installation)
