@@ -17,9 +17,10 @@
 *Here place the relevant badges*
 
 ## Table of Contents
+
 <div style= "float:right;position: relative; top: -80px;">
 <img src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
-</div>
+
 - [Introduction](#introduction)
 - [Dependencies](#dependencies)
 - [Installation](#installation)
@@ -29,6 +30,7 @@
     - [List of parameters](#list-of-parameters)
     - [The experiments](#the-experiments)
     - [Generated events dataframe](#generated-events-dataframe)
+</div>
 
 ## Introduction
 DarkNews is an event generator for dark neutrino events (in progress).
