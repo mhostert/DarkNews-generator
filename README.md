@@ -1,6 +1,6 @@
 <h1 align="center"> Dark News </h1> <br>
 
-<img src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="350">
+<img src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
 
 <!-- ```
     ###############################################################
