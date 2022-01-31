@@ -1,5 +1,5 @@
 <img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
-<h1 align="center"> Dark News </h1> <br>
+<h1 align="left"> Dark News </h1> <br>
 
 <!-- ```
     ###############################################################
