@@ -4,8 +4,6 @@
 
 <p align="left"> DarkNews is an event generator for new physics processes at accelerator neutrino experiments based on Vegas. It simulates neutrino upscattering to heavy neutrinos as well as heavy neutrino decays to dileptons via neutrino, vector, and transition magnetic moment portals. </p>
 
-
-<br><br>
 <br><br>
 ## Table of Contents
 
