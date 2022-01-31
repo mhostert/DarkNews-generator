@@ -1,19 +1,6 @@
-<img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
+<img align="center" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
 <h1 align="left"> Dark News </h1> <br>
 
-<!-- ```
-    ###############################################################
-    #    ______           _        _   _                          #
-    #    |  _  \         | |      | \ | |                         #
-    #    | | | |__ _ _ __| | __   |  \| | _____      _____        #
-    #    | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|       #
-    #    | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \       #
-    #    |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/       #
-    #                                                             #
-    ###############################################################
-```
----
--->
 
 ## Table of Contents
 
