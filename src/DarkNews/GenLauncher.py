@@ -197,9 +197,12 @@ class GenLauncher:
 
         ############################################################################
         # Print events to file -- currently in data/exp/m4____mzprime____.dat 
+        self.df = df_gen
         if self.numpy:
-            self.df = dn.printer.print_events_to_ndarray(PATH_data, df_gen)
+            dn.printer.print_events_to_ndarray(PATH_data, self.df)
         if self.pandas:
-            self.df = dn.printer.print_events_to_pandas(PATH_data, df_gen)
+            dn.printer.print_events_to_pandas(PATH_data, self.df)
         if self.hepevt:
-            dn.printer.print_unweighted_events_to_HEPEVT(df_gen, unweigh= self.hepevt_unweigh, max_events=self.hepevt_events)
+            dn.printer.print_unweighted_events_to_HEPEVT(self.df, unweigh= self.hepevt_unweigh, max_events=self.hepevt_events)
+        
+        return self.df

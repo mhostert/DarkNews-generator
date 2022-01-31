@@ -44,7 +44,7 @@ def print_events_to_pandas(PATH_data, df_gen):
 	
 	# pickles DarkNews classes with support for lambda functions
 	dill.dump(df_gen, open(out_file_name, 'wb'))
-	prettyprinter.info(f"* Events saved to file successfully:\n\n{out_file_name}")
+	prettyprinter.info(f"* Events in pandas dataframe saved to file successfully:\n\n{out_file_name}")
 	# aux_df.to_pickle(out_file_name)
 	# pickle.dump(aux_df, open(out_file_name, 'wb'	))
 	return df_gen
@@ -70,7 +70,7 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 			(	
 				f'0 '				  	# ignored = 0 or tracked = 1
 				f' {i}'				  	# particle PDG number
-				f' 0 0 0 0' 		  	# ?????
+				f' 0 0 0 0' 		  	# ????? (parentage)
 				f' {*list([px,py,pz])}'	# particle px py pz momenta
 				f' {E}' 				# particle energy
 				f' {m}'				  	# particle mass
@@ -210,4 +210,4 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 
 	f.close()
 
-	prettyprinter.info(f"* Events saved to file successfully:\n\n{hepevt_file_name}")
+	prettyprinter.info(f"* HEPevt events saved to file successfully:\n\n{hepevt_file_name}")
