@@ -1,7 +1,12 @@
-<img align="center" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
-<h1 align="left"> Dark News </h1> <br>
+<h1 align="center"> Dark News </h1> <br>
+
+<img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="225" title="DarkNews-logo">
+
+<p align="left"> DarkNews is an event generator for new physics processes at accelerator neutrino experiments based on Vegas. It simulates neutrino upscattering to heavy neutrinos as well as heavy neutrino decays to dileptons via neutrino, vector, and transition magnetic moment portals. </p>
 
 
+<br><br>
+<br><br>
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -13,10 +18,6 @@
     - [List of parameters](#list-of-parameters)
     - [The experiments](#the-experiments)
     - [Generated events dataframe](#generated-events-dataframe)
-
-## Introduction
-DarkNews is an event generator for dark neutrino events (in progress).
-*write introduction on what's the project aim, its capabilities*
 
 ## Dependencies
 
