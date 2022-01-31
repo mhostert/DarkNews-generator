@@ -1,5 +1,12 @@
 <h1 align="center"> Dark News </h1> <br>
 
+## R Markdown
+<div style= "float:right;position: relative; top: -80px;">
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+</div>
+
 <img src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
 
 <!-- ```
