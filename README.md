@@ -1,4 +1,4 @@
-<img align="right" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
+<img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="250">
 <h1 align="center"> Dark News </h1> <br>
 
 <!-- ```
