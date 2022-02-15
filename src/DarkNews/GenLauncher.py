@@ -7,7 +7,7 @@ import os.path
 import DarkNews as dn
 from DarkNews.const import Q, ConfigureLogger
 from DarkNews import logger, prettyprinter
-from ExpressionParser import ExpressionParser, ParseException
+from DarkNews.ExpressionParser import ExpressionParser, ParseException
 
 class GenLauncher:
 
@@ -104,7 +104,7 @@ class GenLauncher:
         # create parser
         parser = ExpressionParser(parameters={})
         for i, line in enumerate(lines):
-            partition, = line.partition("#")
+            partition = line.partition("#")[0]
             if partition.strip() == "":
                 continue
             try:
