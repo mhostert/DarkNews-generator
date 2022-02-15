@@ -196,8 +196,7 @@ class ExpressionParser:
         if (var_name.lower() in ['e', 'pi']) or (var_name in self.fn.keys()):
             raise self.ParsingError(f"Variable name '{var_name}' not allowed.")
         # evaluate the rest of the stack and assign the result to the variable
-        # print(var_name, stack)
-        self.parameters[var_name] = self._evaluate_variable(stack)
+        self.parameters[var_name] = self._evaluate_variable(stack) # if evaluation contains the new variable which we are trying to assign, everything will fail by construction
         return var_name, self.parameters[var_name]
 
     def parse_string(self, *args, **kwargs):
@@ -232,6 +231,9 @@ if __name__ == "__main__":
         E = D
         alphaD = gD ** 2 / (4 * math.pi)
         sinx = math.sin(math.pi / 3) - 8
+        hbar = 6.582119569e-25
+        c = 299792458.0
+        a_variable = c**2 * 3.2e-4 / math.sin(math.pi/7) + 12 * math.exp( -2 * abs(hbar) )
 
     test("gD = 9.7543", "gD", TEST.gD)
     test("A = gD * 9.7543", "A", TEST.A)
@@ -246,58 +248,12 @@ if __name__ == "__main__":
     test("exp = exp(3*PI)", "exp", math.exp(3 * math.pi))
     test("exp_0 = exp(3*PI)", "exp_0", math.exp(3 * math.pi))
     test("24ff = -10+tan(PI/4)^2", "24ff", -10 + math.tan(math.pi / 4) ** 2)
-    test("ff26 = -10+tan(PI/4)^2", "ff24", -10 + math.tan(math.pi / 4) ** 2)
+    test("ff24 = -10+tan(PI/4)^2", "ff24", -10 + math.tan(math.pi / 4) ** 2)
     test(" ", "", 0)
+    test("hbar = 6.582119569e-25", "hbar", TEST.hbar)
+    test("c = 299792458.0", "c", TEST.c)
+    test("a_variable = c^2 * 3.2e-4 / sin(PI/7) + 12 * exp( -2 * abs(hbar) )", "a_variable", TEST.a_variable)
 
     # print stored variables
     for k, v in parser.parameters.items():
         print(k, "=", v)
-
-
-    # test("9", 9)
-    # test("-9", -9)
-    # test("--9", 9)
-    # test("-E", -math.e)
-    # test("9 + 3 + 6", 9 + 3 + 6)
-    # test("9 + 3 / 11", 9 + 3.0 / 11)
-    # test("(9 + 3)", (9 + 3))
-    # test("(9+3) / 11", (9 + 3.0) / 11)
-    # test("9 - 12 - 6", 9 - 12 - 6)
-    # test("9 - (12 - 6)", 9 - (12 - 6))
-    # test("2*3.14159", 2 * 3.14159)
-    # test("3.1415926535*3.1415926535 / 10", 3.1415926535 * 3.1415926535 / 10)
-    # test("PI * PI / 10", math.pi * math.pi / 10)
-    # test("PI*PI/10", math.pi * math.pi / 10)
-    # test("PI^2", math.pi ** 2)
-    # test("round(PI^2)", round(math.pi ** 2))
-    # test("6.02E23 * 8.048", 6.02e23 * 8.048)
-    # test("e / 3", math.e / 3)
-    # test("sin(PI/2)", math.sin(math.pi / 2))
-    # test("10+sin(PI/4)^2", 10 + math.sin(math.pi / 4) ** 2)
-    # test("trunc(E)", int(math.e))
-    # test("trunc(-E)", int(-math.e))
-    # test("round(E)", round(math.e))
-    # test("round(-E)", round(-math.e))
-    # test("E^PI", math.e ** math.pi)
-    # test("exp(0)", 1)
-    # test("exp(1)", math.e)
-    # test("2^3^2", 2 ** 3 ** 2)
-    # test("(2^3)^2", (2 ** 3) ** 2)
-    # test("2^3+2", 2 ** 3 + 2)
-    # test("2^3+5", 2 ** 3 + 5)
-    # test("2^9", 2 ** 9)
-    # test("sgn(-2)", -1)
-    # test("sgn(0)", 0)
-    # test("sgn(0.1)", 1)
-    # test("foo(0.1)", None)
-    # test("round(E, 3)", round(math.e, 3))
-    # test("round(PI^2, 3)", round(math.pi ** 2, 3))
-    # test("sgn(cos(PI/4))", 1)
-    # test("sgn(cos(PI/2))", 0)
-    # test("sgn(cos(PI*3/4))", -1)
-    # test("+(sgn(cos(PI/4)))", 1)
-    # test("-(sgn(cos(PI/4)))", -1)
-    # test("hypot(3, 4)", 5)
-    # test("multiply(3, 7)", 21)
-    # test("all(1,1,1)", True)
-    # test("all(1,1,1,1,1,0)", False)
