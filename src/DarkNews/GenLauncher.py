@@ -18,7 +18,7 @@ class GenLauncher:
 |   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \  |
 |   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  |"""
 
-    def __init__(self, file=None, **kwargs):
+    def __init__(self, param_file=None, **kwargs):
         '''
             Instantiate an object to make the runs, allowing the user to set the parameters' value.
             There are different ways to accomplish this:
@@ -86,11 +86,11 @@ class GenLauncher:
         self.path = "."
 
         # load file if not None
-        if file and isinstance(file, str):
+        if param_file and isinstance(param_file, str):
             try:
-                self._load_file(file)
+                self._load_file(param_file)
             except FileNotFoundError:
-                print(f"File '{file}' not found.")
+                print(f"File '{param_file}' not found.")
                 raise
 
         # look into kwargs
