@@ -1,13 +1,15 @@
 <h1 align="center"> Dark News </h1> <br>
 
-<img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="180" title="DarkNews-logo">
-
+<!-- <img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="180" title="DarkNews-logo"> -->
+<img align="left" src="logo.svg" width="180" title="DarkNews-logo">
 DarkNews is an event generator for new physics processes at accelerator neutrino experiments based on Vegas. It simulates neutrino upscattering to heavy neutrinos as well as heavy neutrino decays to dileptons via neutrino, vector, and transition magnetic moment portals.
 <br>[![License: MIT](https://img.shields.io/badge/License-MIT-deeppink.svg)](https://opensource.org/licenses/MIT)
 [![InspireHEP](https://img.shields.io/badge/InspireHEP-Abdullahi:xxx2022-dodgerblue.svg)](https://arxiv.org/abs/2202.xxxxx)
 <!-- [![arXiv](https://img.shields.io/badge/arXiv-2202.xxxxxx%20-violet.svg)](https://arxiv.org/abs/2202.xxxxx) -->
 
 <br>
+
+
 
 ## Table of Contents
 
