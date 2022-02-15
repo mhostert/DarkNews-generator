@@ -5,8 +5,9 @@ import os.path
 
 # Dark Neutrino and MC stuff
 import DarkNews as dn
-from DarkNews.const import ConfigureLogger
+from DarkNews.const import Q, ConfigureLogger
 from DarkNews import logger, prettyprinter
+from ExpressionParser import ExpressionParser, ParseException
 
 class GenLauncher:
 
@@ -17,7 +18,15 @@ class GenLauncher:
 |   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \  |
 |   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  |"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, file=None, **kwargs):
+        '''
+            Instantiate an object to make the runs, allowing the user to set the parameters' value.
+            There are different ways to accomplish this:
+                - file: read the file in input, parsing it looking for the different variables' values;
+                - kwargs: variables' values specified as a list of keyword arguments.
+            It first set the default value for each parameter, then it sets values according to the file,
+            at the end it looks inside the kwargs (so kwargs overwrite file definitions).
+        '''
         # set defaults
         self.mzprime = 1.25
         self.m4 = 0.140
@@ -76,8 +85,37 @@ class GenLauncher:
         self.summary_plots = True
         self.path = "."
 
-        # set parameters
+        # load file if not None
+        if file and isinstance(file, str):
+            try:
+                self._load_file(file)
+            except FileNotFoundError:
+                print(f"File '{file}' not found.")
+                raise
+
+        # look into kwargs
         for k, v in kwargs.items():
+            setattr(self, k, v)
+
+    def _load_file(self, file):
+        # read file
+        with open(file, "r") as f:
+            lines = f.readlines()
+        # create parser
+        parser = ExpressionParser(parameters={})
+        for line in lines:
+            partition, = line.partition("#")
+            if partition.strip() == "":
+                continue
+            try:
+                parser.parse_string(partition, parseAll=True)
+                parser.evaluate_stack()
+            except ParseException as pe:
+                print(partition, "failed parse:", str(pe))
+            except ExpressionParser.ParsingError as e:
+                print(partition, "failed eval:", str(e))
+        # store variables
+        for k, v in parser.parameters.items():
             setattr(self, k, v)
 
     def run(self, log="INFO", verbose=None, logfile=None, path="."):
