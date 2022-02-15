@@ -1,0 +1,121 @@
+# This is a template file to specify the parameters for the generator
+# It should be provided as the argument 'param_file' of GenLauncher
+# or via the option '--param-file' of the command line interface 'dn_gen'.
+
+# Every line should be in the form of an assignment statement
+#    <variable_name> = <variable_value>
+# Comments are inserted with '#' and they will neglect the rest of the line
+# Empty lines are neglected as well.
+
+# The different parameters can be specified with:
+#    string: by encapsulating each string with double quotes "<string>"
+#        (escape char is '\')
+#    booleans: by writing True or False (case insensitive)
+#    mathematical expression (which will results in floats or ints):
+#        see section below
+
+# When using mathematical expression, the following rules should be applied:
+#    numbers can be specified as usual: 5 is integer, 5.0 is float,
+#        5e10 is the float number 5*10^10
+#    +, -, *, / are the usual mathematical operator;
+#    ^ is used to make powers
+#    it is possible to use round brackets '(' and ')'
+#    e (case-insensitive, isolated: not inside float numbers) is intended
+#        as math.e = 2.718281828
+#    pi (case-insensitive) is intended as math.pi = 3.1415926535
+#    sin(<expr>), cos(<expr>), tan(<expr>) are the usual trigonometric functions
+#    exp(<expr>) is the usual exponentiation
+#    abs(<expr>) is the absolute value
+#    sgn(<expr>) = -1 if <expr> < -1e-100, +1 if <expr> > 1e-100, 0 otherwise
+#    trunc(<expr>) returns the truncated float <expr> to integer
+#    round(<expr>) is the integer part of the float number <expr>
+#    any other string is intended as a variable which must have been previously
+#        defined (the file is scanned top to bottom)
+#    in general it is possible to define any kind of variable, independently on
+#        those that will be actually used by the program, following the usual
+#        conventions for the variable_name (use only letters, digits and underscores).
+#        Moreover, it's not possible to name variables after program-defined
+#        names, as for example the name of the functions.
+
+# Example: the following lines
+#    hbar = 6.582119569e-25 # GeV s
+#    c = 299792458.0 # m s^-1
+# will define two variables, named 'hbar' and 'c' with their values.
+# It is possible to further write
+#    a_certain_constant = hbar * c
+# to define a variable named 'a_certain_constant' with the value of the product
+# between the pre-defined 'hbar' and 'c' variables
+# Moreover, there is the freedom to write any kind of possible expression, for example
+#    a_variable = c^2 * 3.2e-4 / sin(PI/7) + 12 * exp( -2 * abs(hbar) )
+# obtaining a new variable 'a_variable' with the value of 66285419633555.3
+# The line
+#    path = "my_directory/projects/this_project"
+# defines the 'path' variable, stored as the string "my_directory/projects/this_project".
+# The following lines are defining booleans, used to set the various switches
+#    pandas = True
+#    numpy = False
+
+# ---------------------------------------------------------------------------
+# MODEL PARAMETERS
+# ---------------------------------------------------------------------------
+hbar = 6.582119569e-25 # GeV s
+c = 299792458.0 # m s^-1
+
+# mzprime = 
+# m4 = 
+# m5 = 
+# m6 = 
+# D_or_M = 
+# ue4 = 
+# ue5 = 
+# ue6 = 
+# umu4 = 
+# umu5 = 
+# umu6 = 
+# utau4 = 
+# utau5 = 
+# utau6 = 
+# ud4 = 
+# ud5 = 
+# ud6 = 
+# gD = 
+# alphaD = 
+# epsilon = 
+# epsilon2 = 
+# alpha_epsilon2 = 
+# chi = 
+# mu_tr_e4 = 
+# mu_tr_e5 = 
+# mu_tr_e6 = 
+# mu_tr_mu4 = 
+# mu_tr_mu5 = 
+# mu_tr_mu6 = 
+# mu_tr_tau4 = 
+# mu_tr_tau5 = 
+# mu_tr_tau6 = 
+# mu_tr_44 = 
+# mu_tr_45 = 
+# mu_tr_46 = 
+# mu_tr_55 = 
+# mu_tr_56 = 
+# mu_tr_66 = 
+# decay_products = 
+# exp = 
+# nopelastic = 
+# nocoh = 
+# noHC = 
+# noHF = 
+# log = 
+# verbose = 
+# logfile = 
+# neval = 
+# nint = 
+# neval_warmup = 
+# nint_warmup = 
+# pandas = 
+# numpy = 
+# hepevt = 
+# hepevt_unweigh = 
+# hepevt_events = 
+# summary_plots = 
+# path = 
