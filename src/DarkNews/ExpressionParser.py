@@ -13,6 +13,7 @@
 #
 # Copyright 2003-2019 by Paul McGuire
 #
+from xmlrpc.client import Boolean
 from pyparsing import (
     Literal,
     Word,
@@ -25,6 +26,8 @@ from pyparsing import (
     CaselessKeyword,
     Suppress,
     delimitedList,
+    Or,
+    QuotedString
 )
 import math
 import operator
@@ -98,7 +101,7 @@ class ExpressionParser:
             # or use provided pyparsing_common.number, but convert back to str:
             # fnumber = ppc.number().addParseAction(lambda t: str(t[0]))
             fnumber = Regex(r"[+-]?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?")
-            ident = Word(alphas, alphanums + "_$") # this is the name of a function
+            ident = Word(alphas + "_", alphanums + "_")
 
             plus, minus, mult, div = map(Literal, "+-*/")
             lpar, rpar = map(Suppress, "()")
@@ -109,6 +112,14 @@ class ExpressionParser:
 
             expr = Forward()
             expr_list = delimitedList(Group(expr))
+
+            # True or False statements
+            true = CaselessKeyword("True")
+            false = CaselessKeyword("False")
+
+            # Quoted strings
+            quoted_str = QuotedString(quoteChar="\"", escChar="\\", multiline=False, unquoteResults=True)
+
             # add parse action that replaces the function identifier with a (name, number of args) tuple
             def insert_fn_argcount_tuple(t):
                 fn = t.pop(0)
@@ -133,20 +144,24 @@ class ExpressionParser:
             term = factor + (multop + factor).setParseAction(self._push_first)[...]
             expr <<= term + (addop + term).setParseAction(self._push_first)[...] # differentiate from assignment in order to describe functions argument list
             assignment_expr = Forward()
-            assignment_expr <<= (ident + equalop + expr).setParseAction(self._push_first) # _push_first should be given only to the full match otherwise if given when it matches singularly then it would repeat everything every time it backtraces
+            # _push_first should be given only to the full match otherwise if given when it matches singularly then it would repeat everything every time it backtracks
+            # assignment_expr <<= Or([ 
+            #     (ident + equalop + expr).setParseAction(self._push_first), 
+            #     true.setParseAction(lambda toks: self._current_stack.append(True)), 
+            #     false.setParseAction(lambda toks: self._current_stack.append(False)), 
+            #     quoted_str.setParseAction(lambda toks: self._current_stack.append((toks[0], "str")))
+            # ])
+            assignment_expr <<= (ident + equalop + Or([
+                quoted_str.setParseAction(lambda toks: self._current_stack.append((toks[0], "str"))),
+                true.setParseAction(lambda toks: self._current_stack.append(True)),
+                false.setParseAction(lambda toks: self._current_stack.append(False)),
+                expr # this is the most-specific patterns should be placed ahead
+            ])).setParseAction(self._push_first)
             self._bnf = assignment_expr
         return self._bnf
 
     def _push_first(self, toks):
         self._current_stack.append(toks[0])
-        # print(self._current_stack, toks)
-
-    def _push_value(self, toks):
-        try:
-            value = self.parameters[toks[0]]
-        except KeyError:
-            raise self.ParsingError(f"Variable '{toks[0]}' not defined.")
-        self._current_stack.append(value)
 
     def _push_unary_minus(self, toks):
         for t in toks:
@@ -159,6 +174,10 @@ class ExpressionParser:
         op, num_args = s.pop(), 0
         if isinstance(op, tuple):
             op, num_args = op
+            if num_args == "str":
+                return str(op)
+        if isinstance(op, bool):
+            return op
         if op == "unary -":
             return -self._evaluate_variable(s)
         if op in "+-*/^":
@@ -189,6 +208,7 @@ class ExpressionParser:
     def evaluate_stack(self, copy=False):
         # if copy == True, then don't consume the stack
         # get the first element of the stack, which must be the variable name
+        print(self._current_stack)
         if copy:
             stack = self._current_stack[:]
         var_name = stack.pop()
@@ -240,20 +260,31 @@ if __name__ == "__main__":
     test("B = 9.7543^2 + gD", "B", TEST.B)
     test("C = 9.7543 + 2 - 4*A", "C", TEST.C)
     test("D = 9.7543 + sin(0.3)", "D", TEST.D)
-    test("E = 9.7543 + sin(0.3)", "E", TEST.E)
+    test("E = 9.7543 + sin(0.3)", "E", TEST.E) # it should fail
     test("alphaD = gD^2 / (4 * PI)", "alphaD", TEST.alphaD)
     test("sinx = sin(PI/3) - 8.", "sinx", TEST.sinx)
     test("number = sinx * 5.35e6", "number", TEST.sinx * 5.35e6)
-    test("number2 = gD^2 * 5.35e6", "number", TEST.gD * 5.35e6)
-    test("exp = exp(3*PI)", "exp", math.exp(3 * math.pi))
+    test("number2 = gD^2 * 5.35e6", "number2", TEST.gD**2 * 5.35e6)
+    test("exp = exp(3*PI)", "exp", math.exp(3 * math.pi)) # it should fail
     test("exp_0 = exp(3*PI)", "exp_0", math.exp(3 * math.pi))
     test("24ff = -10+tan(PI/4)^2", "24ff", -10 + math.tan(math.pi / 4) ** 2)
     test("ff24 = -10+tan(PI/4)^2", "ff24", -10 + math.tan(math.pi / 4) ** 2)
-    test(" ", "", 0)
+    test(" ", "", 0) # it should fail
     test("hbar = 6.582119569e-25", "hbar", TEST.hbar)
     test("c = 299792458.0", "c", TEST.c)
     test("a_variable = c^2 * 3.2e-4 / sin(PI/7) + 12 * exp( -2 * abs(hbar) )", "a_variable", TEST.a_variable)
+    test("s_1 = \"hello world\"", "s_1", "hello world")
+    test("s_2 = \"hello world\" \"people\"", "s_2", None) # it should fail
+    test("test_1 = True", "test_1", True)
+    test("test_2 = False", "test_2", False)
+    test("test_3 = True False", "test_3", None) # it should fail
+    test("test_4 = True \"hello\"", "test_4", None) # it should fail
+    test("test_5 = exp(3*PI)*c True \"hello\"", "test_5", None) # it should fail
+    test("test_6 = exp(3*PI)*c + True - \"hello\"", "test_6", None) # it should fail
+    test("test_7 = exp(3*PI)*c + True", "test_7", None) # it should fail
+    test("test_8 = True + exp(3*PI)*c", "test_8", None) # it should fail
 
     # print stored variables
+    print("\nStored variables")
     for k, v in parser.parameters.items():
-        print(k, "=", v)
+        print(k, "=", v, type(v))
