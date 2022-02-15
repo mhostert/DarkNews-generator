@@ -208,9 +208,10 @@ class ExpressionParser:
     def evaluate_stack(self, copy=False):
         # if copy == True, then don't consume the stack
         # get the first element of the stack, which must be the variable name
-        print(self._current_stack)
         if copy:
             stack = self._current_stack[:]
+        else:
+            stack = self._current_stack
         var_name = stack.pop()
         # consistency check: should not be equal to E, e, PI, pi, Pi, or any other function name
         if (var_name.lower() in ['e', 'pi']) or (var_name in self.fn.keys()):
