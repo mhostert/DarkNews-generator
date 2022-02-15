@@ -103,7 +103,7 @@ class GenLauncher:
             lines = f.readlines()
         # create parser
         parser = ExpressionParser(parameters={})
-        for line in lines:
+        for i, line in enumerate(lines):
             partition, = line.partition("#")
             if partition.strip() == "":
                 continue
@@ -111,9 +111,9 @@ class GenLauncher:
                 parser.parse_string(partition, parseAll=True)
                 parser.evaluate_stack()
             except ParseException as pe:
-                print(partition, "failed parse:", str(pe))
+                print(partition, f"Failed parse (line {i+1}):", str(pe))
             except ExpressionParser.ParsingError as e:
-                print(partition, "failed eval:", str(e))
+                print(partition, f"Failed evaluation (line {i+1}):", str(e))
         # store variables
         for k, v in parser.parameters.items():
             setattr(self, k, v)
