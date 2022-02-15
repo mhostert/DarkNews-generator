@@ -30,6 +30,9 @@ def detectors_list(extension=".json"):
 # use default=argparse.SUPPRESS so no defaults attributes are instantiated in the final Namespace
 parser = argparse.ArgumentParser(description="Generate dark nu events", formatter_class=argparse.ArgumentDefaultsHelpFormatter, argument_default=argparse.SUPPRESS)
 
+##### file containing the parameters
+parser.add_argument("--param-file", type=str, help="file containing parameters definitions")
+
 ##### dark sector spectrum
 parser.add_argument("--mzprime", type=float, help="Z' mass", default=DEFAULTS.mzprime)
 parser.add_argument("--m4", type=float, help="mass of the fourth neutrino", default=DEFAULTS.m4)

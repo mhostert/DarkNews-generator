@@ -247,6 +247,7 @@ if __name__ == "__main__":
     test("exp_0 = exp(3*PI)", "exp_0", math.exp(3 * math.pi))
     test("24ff = -10+tan(PI/4)^2", "24ff", -10 + math.tan(math.pi / 4) ** 2)
     test("ff26 = -10+tan(PI/4)^2", "ff24", -10 + math.tan(math.pi / 4) ** 2)
+    test(" ", "", 0)
 
     # print stored variables
     for k, v in parser.parameters.items():
