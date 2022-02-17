@@ -27,7 +27,7 @@ from pyparsing import (
     Suppress,
     delimitedList,
     Or,
-    QuotedString
+    QuotedString,
 )
 import math
 import operator
@@ -121,7 +121,7 @@ class AssignmentParser:
             false = CaselessKeyword("False")
 
             # Quoted strings
-            quoted_str_class = QuotedString(quoteChar="\"", escChar="\\", multiline=False, unquoteResults=False) # use the quotes to separate strings from variables
+            quoted_str_class = QuotedString(quoteChar="\"", escChar="\\", multiline=True, unquoteResults=False) # use the quotes to separate strings from variables
             quoted_str = quoted_str_class.setParseAction(self._push_first)
 
             # Lists
@@ -285,6 +285,8 @@ if __name__ == "__main__":
     test("hbar = 6.582119569e-25", "hbar", TEST.hbar)
     test("c = 299792458.0", "c", TEST.c)
     test("a_variable = c^2 * 3.2e-4 / sin(PI/7) + 12 * exp( -2 * abs(hbar) )", "a_variable", TEST.a_variable)
+    test('''multi_line = c^2 * 3.2e-4 / sin(PI/7) + 
+    12 * exp( -2 * abs(hbar) )''', "multi_line", TEST.a_variable)
     test("s_1 = \"hello world\"", "s_1", "hello world")
     test("s_2 = \"hello world\" \"people\"", "s_2", None, should_fail=True)
     test("test_1 = True", "test_1", True)
@@ -301,6 +303,16 @@ if __name__ == "__main__":
     test("list_4 = [\"hello\", \"world\"]", "list_4", ["hello", "world"])
     test("list_5 = [\"hello world\" \"people\", 10]", "list_5", None, should_fail=True)
     test("list_6 = [\"hello\", a_variable, \"world\"]", "list_6", ["hello", TEST.a_variable, "world"])
+    test('''list_7 = [
+                \"hello\",
+                a_variable,
+                \"world\",
+                \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Nunc ullamcorper blandit nibh, vitae congue lacus convallis at.
+Donec interdum, ex et fermentum aliquam, ante magna convallis magna, et molestie quam quam et dolor.\",
+                c^2 * 3.2e-4 / sin(PI/7) + 
+    12 * exp( -2 * abs(hbar) )
+            ]''', "list_7", ["hello", TEST.a_variable, "world", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\nNunc ullamcorper blandit nibh, vitae congue lacus convallis at.\nDonec interdum, ex et fermentum aliquam, ante magna convallis magna, et molestie quam quam et dolor.", TEST.a_variable])
 
     # print stored variables
     print("\nStored variables")
