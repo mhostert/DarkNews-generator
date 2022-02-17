@@ -7,7 +7,7 @@ import os.path
 import DarkNews as dn
 from DarkNews.const import Q, ConfigureLogger
 from DarkNews import logger, prettyprinter
-from DarkNews.ExpressionParser import ExpressionParser, ParseException
+from DarkNews.AssignmentParser import AssignmentParser, ParseException
 
 class GenLauncher:
 
@@ -102,7 +102,7 @@ class GenLauncher:
         with open(file, "r") as f:
             lines = f.readlines()
         # create parser
-        parser = ExpressionParser(parameters={})
+        parser = AssignmentParser(parameters={})
         for i, line in enumerate(lines):
             partition = line.partition("#")[0]
             if partition.strip() == "":
@@ -112,7 +112,7 @@ class GenLauncher:
                 parser.evaluate_stack()
             except ParseException as pe:
                 print(partition, f"Failed parse (line {i+1}):", str(pe))
-            except ExpressionParser.ParsingError as e:
+            except AssignmentParser.ParsingError as e:
                 print(partition, f"Failed evaluation (line {i+1}):", str(e))
         # store variables
         for k, v in parser.parameters.items():
