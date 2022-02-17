@@ -32,7 +32,7 @@ from pyparsing import (
 import math
 import operator
 
-class ExpressionParser:
+class AssignmentParser:
     '''
         Parse an expression of the kind
         var_z = 5 + exp(4*sin(PI/3)) + var_a
@@ -61,7 +61,9 @@ class ExpressionParser:
         "abs": abs,
         "trunc": int,
         "round": round,
-        "sgn": lambda a: -1 if a < -ExpressionParser.epsilon else 1 if a > ExpressionParser.epsilon else 0,
+        "sgn": lambda a: -1 if a < -AssignmentParser.epsilon else 1 if a > AssignmentParser.epsilon else 0,
+        "list": lambda *args: list([*args]),
+        "str": str
     }
 
     class ParsingError(Exception):
@@ -105,6 +107,7 @@ class ExpressionParser:
 
             plus, minus, mult, div = map(Literal, "+-*/")
             lpar, rpar = map(Suppress, "()")
+            l_delim, r_delim = map(Suppress, "[]")
             addop = plus | minus
             multop = mult | div
             expop = Literal("^")
@@ -113,22 +116,20 @@ class ExpressionParser:
             expr = Forward()
             expr_list = delimitedList(Group(expr))
 
-            # True or False statements
+            # True or False
             true = CaselessKeyword("True")
             false = CaselessKeyword("False")
 
             # Quoted strings
-            quoted_str = QuotedString(quoteChar="\"", escChar="\\", multiline=False, unquoteResults=True)
+            quoted_str_class = QuotedString(quoteChar="\"", escChar="\\", multiline=False, unquoteResults=False) # use the quotes to separate strings from variables
+            quoted_str = quoted_str_class.setParseAction(self._push_first)
 
-            # add parse action that replaces the function identifier with a (name, number of args) tuple
-            def insert_fn_argcount_tuple(t):
-                fn = t.pop(0)
-                num_args = len(t[0])
-                t.insert(0, (fn, num_args))
+            # Lists
+            list_elements = delimitedList(Group(quoted_str | expr))
+            list_pattern = (l_delim - Group(list_elements) + r_delim)
 
-            fn_call = (ident + lpar - Group(expr_list) + rpar).setParseAction(
-                insert_fn_argcount_tuple
-            )
+            # Function call
+            fn_call = (ident + lpar - Group(expr_list) + rpar).setParseAction(self._insert_fn_argcount_tuple)
             atom = (
                 addop[...]
                 + (
@@ -142,23 +143,31 @@ class ExpressionParser:
             factor = Forward()
             factor <<= atom + (expop + factor).setParseAction(self._push_first)[...]
             term = factor + (multop + factor).setParseAction(self._push_first)[...]
-            expr <<= term + (addop + term).setParseAction(self._push_first)[...] # differentiate from assignment in order to describe functions argument list
+            expr <<= term + (addop + term).setParseAction(self._push_first)[...]
             assignment_expr = Forward()
             # _push_first should be given only to the full match otherwise if given when it matches singularly then it would repeat everything every time it backtracks
-            # assignment_expr <<= Or([ 
-            #     (ident + equalop + expr).setParseAction(self._push_first), 
-            #     true.setParseAction(lambda toks: self._current_stack.append(True)), 
-            #     false.setParseAction(lambda toks: self._current_stack.append(False)), 
-            #     quoted_str.setParseAction(lambda toks: self._current_stack.append((toks[0], "str")))
-            # ])
             assignment_expr <<= (ident + equalop + Or([
-                quoted_str.setParseAction(lambda toks: self._current_stack.append((toks[0], "str"))),
+                quoted_str,
                 true.setParseAction(lambda toks: self._current_stack.append(True)),
                 false.setParseAction(lambda toks: self._current_stack.append(False)),
+                list_pattern.setParseAction(self._insert_list_argcount_tuple, self._push_first),
                 expr # this is the most-specific patterns should be placed ahead
             ])).setParseAction(self._push_first)
+            
+            # assignment_expr <<= (ident + equalop + list_pattern.setParseAction(self._insert_list_argcount_tuple, self._push_first)).setParseAction(self._push_first)
             self._bnf = assignment_expr
         return self._bnf
+
+    def _insert_fn_argcount_tuple(self, t):
+        ''' Parse action that replaces the function identifier with a (name, number of args, "function") tuple. '''
+        fn = t.pop(0)
+        num_args = len(t[0])
+        t.insert(0, (fn, num_args))
+
+    def _insert_list_argcount_tuple(self, t):
+        ''' Parse action that replaces the list found with a ("list", number of elements) tuple. '''
+        num_args = len(t[0])
+        t.insert(0, ("list", num_args))
 
     def _push_first(self, toks):
         self._current_stack.append(toks[0])
@@ -170,28 +179,28 @@ class ExpressionParser:
             else:
                 break
     
-    def _evaluate_variable(self, s):
+    def _evaluate_expression(self, s):
         op, num_args = s.pop(), 0
         if isinstance(op, tuple):
             op, num_args = op
-            if num_args == "str":
-                return str(op)
         if isinstance(op, bool):
             return op
         if op == "unary -":
-            return -self._evaluate_variable(s)
+            return -self._evaluate_expression(s)
         if op in "+-*/^":
             # note: operands are pushed onto the stack in reverse order
-            op2 = self._evaluate_variable(s)
-            op1 = self._evaluate_variable(s)
+            op2 = self._evaluate_expression(s)
+            op1 = self._evaluate_expression(s)
             return self.opn[op](op1, op2)
         elif op == "PI":
             return math.pi  # 3.1415926535
         elif op == "E":
             return math.e  # 2.718281828
+        elif op == "str": # so far str will consume only one argument
+            return str(s.pop())
         elif op in self.fn.keys():
             # note: args are pushed onto the stack in reverse order
-            args = reversed([self._evaluate_variable(s) for _ in range(num_args)])
+            args = reversed([self._evaluate_expression(s) for _ in range(num_args)])
             return self.fn[op](*args)
         elif op[0].isalpha():
             try:
@@ -199,11 +208,11 @@ class ExpressionParser:
             except KeyError:
                 raise self.ParsingError(f"Invalid identifier '{op}'")
         else:
-            # try to evaluate as int first, then as float if int fails
+            # try to evaluate as float, then as string
             try:
-                return int(op)
-            except ValueError:
                 return float(op)
+            except ValueError:
+                return str(op.strip("\""))
 
     def evaluate_stack(self, copy=False):
         # if copy == True, then don't consume the stack
@@ -214,10 +223,10 @@ class ExpressionParser:
             stack = self._current_stack
         var_name = stack.pop()
         # consistency check: should not be equal to E, e, PI, pi, Pi, or any other function name
-        if (var_name.lower() in ['e', 'pi']) or (var_name in self.fn.keys()):
+        if (var_name.lower() in ["e", "pi"]) or (var_name in self.fn.keys()):
             raise self.ParsingError(f"Variable name '{var_name}' not allowed.")
         # evaluate the rest of the stack and assign the result to the variable
-        self.parameters[var_name] = self._evaluate_variable(stack) # if evaluation contains the new variable which we are trying to assign, everything will fail by construction
+        self.parameters[var_name] = self._evaluate_expression(stack) # if evaluation contains the new variable which we are trying to assign, everything will fail by construction
         return var_name, self.parameters[var_name]
 
     def parse_string(self, *args, **kwargs):
@@ -227,21 +236,23 @@ class ExpressionParser:
 
 
 if __name__ == "__main__":
-    parser = ExpressionParser({})
+    parser = AssignmentParser({})
 
-    def test(s, expected_name, expected_value):
+    def test(s, expected_name, expected_value, should_fail=False):
+        should_fail_string = "[OK]" if should_fail else "[NO]"
         try:
             results = parser.parse_string(s, parseAll=True)
             name, val = parser.evaluate_stack(copy=True)
         except ParseException as pe:
-            print(s, "failed parse:", str(pe))
-        except ExpressionParser.ParsingError as e:
-            print(s, "failed eval:", str(e), parser._current_stack)
+            print(should_fail_string, s, "failed parse:", str(pe))
+        except AssignmentParser.ParsingError as e:
+            print(should_fail_string, s, "failed eval:", str(e), parser._current_stack)
         else:
-            if (name == expected_name) and (val == expected_value):
-                print(s, "<=>", name, "=", val, results, "=>", parser._current_stack)
+            condition_value = (val == expected_value) if not isinstance(expected_value, list) else all([v == ev for v, ev in zip(val, expected_value)])
+            if (name == expected_name) and condition_value:
+                print("[OK]", s, "<=>", name, "=", val, results, "=>", parser._current_stack)
             else:
-                print(s, "<=>", name, "=", val, '!!!', expected_name, "=", expected_value, results, "=>", parser._current_stack)
+                print("[NO]", s, "<=>", name, "=", val, '!!!', expected_name, "=", expected_value, results, "=>", parser._current_stack)
     
     class TEST:
         gD = 9.7543
@@ -261,29 +272,35 @@ if __name__ == "__main__":
     test("B = 9.7543^2 + gD", "B", TEST.B)
     test("C = 9.7543 + 2 - 4*A", "C", TEST.C)
     test("D = 9.7543 + sin(0.3)", "D", TEST.D)
-    test("E = 9.7543 + sin(0.3)", "E", TEST.E) # it should fail
+    test("E = 9.7543 + sin(0.3)", "E", TEST.E, should_fail=True)
     test("alphaD = gD^2 / (4 * PI)", "alphaD", TEST.alphaD)
     test("sinx = sin(PI/3) - 8.", "sinx", TEST.sinx)
     test("number = sinx * 5.35e6", "number", TEST.sinx * 5.35e6)
     test("number2 = gD^2 * 5.35e6", "number2", TEST.gD**2 * 5.35e6)
-    test("exp = exp(3*PI)", "exp", math.exp(3 * math.pi)) # it should fail
+    test("exp = exp(3*PI)", "exp", math.exp(3 * math.pi), should_fail=True)
     test("exp_0 = exp(3*PI)", "exp_0", math.exp(3 * math.pi))
-    test("24ff = -10+tan(PI/4)^2", "24ff", -10 + math.tan(math.pi / 4) ** 2)
+    test("24ff = -10+tan(PI/4)^2", "24ff", -10 + math.tan(math.pi / 4) ** 2, should_fail = True)
     test("ff24 = -10+tan(PI/4)^2", "ff24", -10 + math.tan(math.pi / 4) ** 2)
-    test(" ", "", 0) # it should fail
+    test(" ", "", 0, should_fail=True)
     test("hbar = 6.582119569e-25", "hbar", TEST.hbar)
     test("c = 299792458.0", "c", TEST.c)
     test("a_variable = c^2 * 3.2e-4 / sin(PI/7) + 12 * exp( -2 * abs(hbar) )", "a_variable", TEST.a_variable)
     test("s_1 = \"hello world\"", "s_1", "hello world")
-    test("s_2 = \"hello world\" \"people\"", "s_2", None) # it should fail
+    test("s_2 = \"hello world\" \"people\"", "s_2", None, should_fail=True)
     test("test_1 = True", "test_1", True)
     test("test_2 = False", "test_2", False)
-    test("test_3 = True False", "test_3", None) # it should fail
-    test("test_4 = True \"hello\"", "test_4", None) # it should fail
-    test("test_5 = exp(3*PI)*c True \"hello\"", "test_5", None) # it should fail
-    test("test_6 = exp(3*PI)*c + True - \"hello\"", "test_6", None) # it should fail
-    test("test_7 = exp(3*PI)*c + True", "test_7", None) # it should fail
-    test("test_8 = True + exp(3*PI)*c", "test_8", None) # it should fail
+    test("test_3 = True False", "test_3", None, should_fail=True)
+    test("test_4 = True \"hello\"", "test_4", None, should_fail=True)
+    test("test_5 = exp(3*PI)*c True \"hello\"", "test_5", None, should_fail=True)
+    test("test_6 = exp(3*PI)*c + True - \"hello\"", "test_6", None, should_fail=True)
+    test("test_7 = exp(3*PI)*c + True", "test_7(*)", None, should_fail=True)
+    test("test_8 = True + exp(3*PI)*c", "test_8", None, should_fail=True)
+    test("list_1 = [-10, 2.3]", "list_1", [-10, 2.3])
+    test("list_2 = [-10+tan(PI/4)^2, exp(3*PI)*E]", "list_2", [-10+math.tan(math.pi/4)**2, math.exp(3*math.pi)*math.e])
+    test("list_3 = [\"hello\", exp(3*PI)*E]", "list_3", ["hello", math.exp(3*math.pi)*math.e])
+    test("list_4 = [\"hello\", \"world\"]", "list_4", ["hello", "world"])
+    test("list_5 = [\"hello world\" \"people\", 10]", "list_5", None, should_fail=True)
+    test("list_6 = [\"hello\", a_variable, \"world\"]", "list_6", ["hello", TEST.a_variable, "world"])
 
     # print stored variables
     print("\nStored variables")
