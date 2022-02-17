@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-
 import sys
 import argparse
 import os
 import os.path
 
 from DarkNews.GenLauncher import GenLauncher
+DEFAULTS = GenLauncher()
 
 def detectors_list(extension=".json"):
     root_path = os.path.split(os.path.dirname(os.path.realpath( __file__ )))[0]
@@ -37,7 +37,7 @@ parser.add_argument("--m4", type=float, help="mass of the fourth neutrino")
 parser.add_argument("--m5", type=float, help="mass of the fifth neutrino")
 parser.add_argument("--m6", type=float, help="mass of the sixth neutrino")
 
-parser.add_argument("--D_or_M", help="D_or_M: dirac or majorana", choices=["dirac", "majorana"])
+parser.add_argument("--D_or_M", help="D_or_M: dirac or majorana", choices=DEFAULTS._choices['D_or_M'])
 
 # neutral lepton mixing
 parser.add_argument("--ue4", type=float, help="Ue4")
@@ -89,7 +89,7 @@ parser.add_argument("--mu_tr_56", type=float, help="TMM mu_tr_tau6")
 parser.add_argument("--mu_tr_66", type=float, help="TMM mu_tr_tau6")
 
 # visible final states in HNL decay
-parser.add_argument("--decay_products", help="decay process of interest", choices=["e+e-","mu+mu-","photon"])
+parser.add_argument("--decay_products", help="decay process of interest", choices=DEFAULTS._choices['decay_products'])
 
 # experiments    
 parser.add_argument("--exp", type=str.lower, help="experiment", choices=detectors_list(extension=".json"))
