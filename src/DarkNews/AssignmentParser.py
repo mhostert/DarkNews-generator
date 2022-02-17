@@ -227,12 +227,15 @@ class AssignmentParser:
         self.parameters[var_name] = self._evaluate_expression(stack) # if evaluation contains the new variable which we are trying to assign, everything will fail by construction
         return var_name, self.parameters[var_name]
 
-    def parse_string(self, *args, **kwargs):
+    def clean_stack(self):
         self._current_stack[:] = []
+
+    def parse_string(self, *args, **kwargs):
+        self.clean_stack()
         return self._bnf.parseString(*args, **kwargs)
 
     def scan_string(self, *args, **kwargs):
-        self._current_stack[:] = []
+        self.clean_stack()
         return self._bnf.scanString(*args, **kwargs)
 
 
