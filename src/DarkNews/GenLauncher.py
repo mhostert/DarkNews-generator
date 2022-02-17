@@ -85,6 +85,12 @@ class GenLauncher:
         self.summary_plots = True
         self.path = "."
 
+        # handle parameters that can assume only certain values
+        self._choices = {
+            "D_or_M": ["dirac", "majorana"],
+            "decay_products": ["e+e-", "mu+mu-", "photon"]
+        }
+
         # load file if not None
         if param_file and isinstance(param_file, str):
             try:
@@ -95,7 +101,10 @@ class GenLauncher:
 
         # look into kwargs
         for k, v in kwargs.items():
+            if k in self._choices.keys() and v not in self._choices[k]:
+                raise ValueError(f"Parameter '{k}', invalid choice: {v}, (choose from " + ", ".join([f"{el}" for el in self._choices[k]]) + ")")
             setattr(self, k, v)
+
 
     def _load_file(self, file):
         # read file
@@ -116,6 +125,8 @@ class GenLauncher:
                 print(partition, f"Failed evaluation (line {i+1}):", str(e))
         # store variables
         for k, v in parser.parameters.items():
+            if k in self._choices.keys() and v not in self._choices[k]:
+                raise ValueError(f"Parameter '{k}', invalid choice: {v}, (choose from " + ", ".join([f"{el}" for el in self._choices[k]]) + ")")
             setattr(self, k, v)
 
     def run(self, log="INFO", verbose=None, logfile=None, path="."):
