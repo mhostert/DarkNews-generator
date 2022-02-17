@@ -103,7 +103,7 @@ class AssignmentParser:
             # or use provided pyparsing_common.number, but convert back to str:
             # fnumber = ppc.number().addParseAction(lambda t: str(t[0]))
             fnumber = Regex(r"[+-]?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?")
-            ident = Word(alphas + "_", alphanums + "_")
+            ident = Word(alphas, alphanums + "_") # variables can have names starting only with letters, no underscore nor numbers
 
             plus, minus, mult, div = map(Literal, "+-*/")
             lpar, rpar = map(Suppress, "()")
