@@ -63,6 +63,7 @@ class AssignmentParser:
         "round": round,
         "sgn": lambda a: -1 if a < -AssignmentParser.epsilon else 1 if a > AssignmentParser.epsilon else 0,
         "list": lambda *args: list([*args]),
+        "sum": sum,
         "str": str
     }
 
@@ -117,15 +118,18 @@ class AssignmentParser:
             expr_list = delimitedList(Group(expr))
 
             # Quoted strings
-            quoted_str_class = QuotedString(quoteChar="\"", escChar="\\", multiline=True, unquoteResults=False) # use the quotes to separate strings from variables
+            quoted_str_class = (
+                QuotedString(quoteChar="\"", escChar="\\", multiline=True, unquoteResults=False) | # double quote string
+                QuotedString(quoteChar="\'", escChar="\\", multiline=True, unquoteResults=False)   # single quote string
+            ) # keep the quotes and use them to separate strings from variables
             quoted_str = quoted_str_class.setParseAction(self._push_first)
 
             # Lists
             list_elements = delimitedList(Group(quoted_str | expr))
-            list_pattern = (l_delim - Group(list_elements) + r_delim)
+            list_pattern = l_delim - Group(list_elements) + r_delim
 
-            # Function call
-            fn_call = (ident + lpar - Group(expr_list) + rpar).setParseAction(self._insert_fn_argcount_tuple)
+            # Function call: need to encapsulate again list_pattern in a group otherwise sum([list]) would detect one more argument, but it is only one: that's because the list is converted to [('list', n), [...n elements...]], so 2 elements, but it is only one if it is a parameter of a function call
+            fn_call = (ident + lpar - Group(expr_list | Group(list_pattern)) + rpar).setParseAction(self._insert_fn_argcount_tuple)
             atom = (
                 addop[...]
                 + (
@@ -210,7 +214,7 @@ class AssignmentParser:
             try:
                 return float(op)
             except ValueError:
-                return str(op.strip("\""))
+                return str(op.strip("\"").strip("\'"))
 
     def evaluate_stack(self, copy=False):
         # if copy == True, then don't consume the stack
@@ -243,7 +247,7 @@ if __name__ == "__main__":
     parser = AssignmentParser({})
 
     def test(s, expected_name, expected_value, should_fail=False):
-        should_fail_string = "[OK]" if should_fail else "[NO]"
+        should_fail_string = "[\033[92mOK\033[0m]" if should_fail else "[\033[91mNO\033[0m]"
         try:
             results = parser.parse_string(s, parseAll=True)
             name, val = parser.evaluate_stack(copy=True)
@@ -254,9 +258,9 @@ if __name__ == "__main__":
         else:
             condition_value = (val == expected_value) if not isinstance(expected_value, list) else all([v == ev for v, ev in zip(val, expected_value)])
             if (name == expected_name) and condition_value:
-                print("[OK]", s, "<=>", name, "=", val, results, "=>", parser._current_stack)
+                print("[\033[92mOK\033[0m]", s, "<=>", name, "=", val, results, "=>", parser._current_stack)
             else:
-                print("[NO]", s, "<=>", name, "=", val, '!!!', expected_name, "=", expected_value, results, "=>", parser._current_stack)
+                print("[\033[91mNO\033[0m]", s, "<=>", name, "=", val, '!!!', expected_name, "=", expected_value, results, "=>", parser._current_stack)
     
     class TEST:
         gD = 9.7543
@@ -293,6 +297,7 @@ if __name__ == "__main__":
     12 * exp( -2 * abs(hbar) )''', "multi_line", TEST.a_variable)
     test("s_1 = \"hello world\"", "s_1", "hello world")
     test("s_2 = \"hello world\" \"people\"", "s_2", None, should_fail=True)
+    test("s_3 = 'hello world'", "s_3", "hello world")
     test("test_1 = true", "test_1", True)
     test("test_2 = False", "test_2", False)
     test("test_3 = True False", "test_3", None, should_fail=True)
@@ -302,6 +307,8 @@ if __name__ == "__main__":
     test("test_7 = exp(3*PI)*c + True", "test_7", math.exp(3*math.pi)*TEST.c + True) # it's ok, because float + bool is the bool converted to integer
     test("test_8 = False + exp(3*PI)*c", "test_8", False + math.exp(3*math.pi)*TEST.c)
     test("list_1 = [-10, 2.3]", "list_1", [-10, 2.3])
+    test("sum_1 = sum(list_1)", "sum_1", sum([-10, 2.3]))
+    test("sum_2 = sum([-10+tan(PI/4)^2, exp(3*PI)*E])", "sum_2", sum([-10+math.tan(math.pi/4)**2, math.exp(3*math.pi)*math.e]))
     test("list_2 = [-10+tan(PI/4)^2, exp(3*PI)*E]", "list_2", [-10+math.tan(math.pi/4)**2, math.exp(3*math.pi)*math.e])
     test("list_3 = [\"hello\", exp(3*PI)*E]", "list_3", ["hello", math.exp(3*math.pi)*math.e])
     test("list_4 = [\"hello\", \"world\"]", "list_4", ["hello", "world"])
@@ -317,6 +324,23 @@ Donec interdum, ex et fermentum aliquam, ante magna convallis magna, et molestie
                 c^2 * 3.2e-4 / sin(PI/7) + 
     12 * exp( -2 * abs(hbar) )
             ]''', "list_7", ["hello", TEST.a_variable, "world", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\nNunc ullamcorper blandit nibh, vitae congue lacus convallis at.\nDonec interdum, ex et fermentum aliquam, ante magna convallis magna, et molestie quam quam et dolor.", TEST.a_variable])
+    test('''nuclear_targets = [
+    'H1',
+    'C12',
+    'O16',
+    'Cu63',
+    "Zn64",
+    'Pb208'
+]''', "nuclear_targets", ['H1','C12','O16','Cu63','Zn64','Pb208'])
+    test('''fiducial_mass_per_target = [
+    0.42, 
+    5.4, 
+    3.32, 
+    0.4, 
+    0.8, 
+    12.0
+] ''', "fiducial_mass_per_target", [0.42,5.4,3.32,0.4,0.8,12.0])
+    test("fiducial_mass = sum(fiducial_mass_per_target)", "fiducial_mass", sum([0.42,5.4,3.32,0.4,0.8,12.0]))
 
     # print stored variables
     print("\nStored variables")
