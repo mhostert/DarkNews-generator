@@ -7,7 +7,7 @@ import os.path
 import DarkNews as dn
 from DarkNews.const import Q, ConfigureLogger
 from DarkNews import logger, prettyprinter
-from DarkNews.AssignmentParser import AssignmentParser, ParseException
+from DarkNews.AssignmentParser import AssignmentParser
 
 class GenLauncher:
 
@@ -17,6 +17,12 @@ class GenLauncher:
 |   | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|  |
 |   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \  |
 |   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  |"""
+
+    # handle parameters that can assume only certain values
+    _choices = {
+        "D_or_M": ["dirac", "majorana"],
+        "decay_products": ["e+e-", "mu+mu-", "photon"]
+    }
 
     def __init__(self, param_file=None, **kwargs):
         '''
@@ -85,55 +91,27 @@ class GenLauncher:
         self.summary_plots = True
         self.path = "."
 
-        # handle parameters that can assume only certain values
-        self._choices = {
-            "D_or_M": ["dirac", "majorana"],
-            "decay_products": ["e+e-", "mu+mu-", "photon"]
-        }
-
         # load file if not None
-        if param_file and isinstance(param_file, str):
-            try:
-                self._load_file(param_file)
-            except FileNotFoundError:
-                print(f"File '{param_file}' not found.")
-                raise
+        if param_file is not None:
+            self._load_file(param_file)
 
         # look into kwargs
+        self._load_parameters(**kwargs)
+
+    def _load_file(self, file):
+        parser = AssignmentParser({})
+        try:
+            parser.parse_file(file=file, comments="#")
+        except FileNotFoundError:
+            print(f"File '{file}' not found.")
+            raise
+        # store variables
+        self._load_parameters(**parser.parameters)
+
+    def _load_parameters(self, **kwargs):
         for k, v in kwargs.items():
             if k in self._choices.keys() and v not in self._choices[k]:
                 raise ValueError(f"Parameter '{k}', invalid choice: {v}, (choose from " + ", ".join([f"{el}" for el in self._choices[k]]) + ")")
-            setattr(self, k, v)
-
-    def _load_file(self, file):
-        # read file
-        with open(file, "r") as f:
-            lines = f.readlines()
-        # create parser
-        parser = AssignmentParser(parameters={})
-        # create a clean text without blanck lines and comments
-        clean_text = ""
-        for i, line in enumerate(lines):
-            partition = line.partition("#")[0]
-            if partition.strip() == "":
-                continue
-            clean_text += partition + '\n'
-        for tokens, i_beg, i_end in parser.scan_string(clean_text):
-            # the effective parsing is done when the generator is called
-            # so the stack fills at each iteration
-            try:
-                parser.evaluate_stack()
-            except ParseException as pe:
-                print(partition, f"Failed parse (start: {i_beg}, end: {i_end}):", str(pe))
-            except AssignmentParser.ParsingError as e:
-                print(partition, f"Failed evaluation (start: {i_beg}, end: {i_end}):", str(e))
-            finally:
-                parser.clean_stack() # clean the stack in any case, because if there are errors, then we need to have a clean list before the next iteration
-        # store variables
-        for k, v in parser.parameters.items():
-            if k in self._choices.keys() and v not in self._choices[k]:
-                raise ValueError(f"Parameter '{k}', invalid choice: {v}, (choose from " + ", ".join([f"{el}" for el in self._choices[k]]) + ")")
-            print(k, "=", v)
             setattr(self, k, v)
 
     def run(self, log="INFO", verbose=None, logfile=None, path="."):
