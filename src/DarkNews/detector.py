@@ -3,7 +3,6 @@ from scipy import interpolate
 from particle import literals as lp
 from pathlib import Path
 import os.path
-import json
 local_dir = Path(__file__).parent
 
 from . import logger, prettyprinter
@@ -11,6 +10,7 @@ from . import pdg
 from . import geom
 from . import const
 from .nuclear_tools import NuclearTarget
+from AssignmentParser import AssignmentParser
 
 
 class Detector():
@@ -28,43 +28,66 @@ class Detector():
                             that experiment if it is user defined.
     """
     PATH_CONFIG_FILES = os.path.join(local_dir, "detectors")
+    KEYWORDS = {
+        "dune_nd_fhc": os.path.join(PATH_CONFIG_FILES, "dune_nd_fhc.txt"),
+        "dune_nd_rhc": os.path.join(PATH_CONFIG_FILES, "dune_nd_rhc.txt"),
+        "microboone": os.path.join(PATH_CONFIG_FILES, "microboone.txt"),
+        "minerva_le_fhc": os.path.join(PATH_CONFIG_FILES, "minerva_le_fhc.txt"),
+        "minerva_me_fhc": os.path.join(PATH_CONFIG_FILES, "minerva_me_fhc.txt"),
+        "miniboone_fhc": os.path.join(PATH_CONFIG_FILES, "miniboone_fhc.txt"),
+        "minos_le_fhc": os.path.join(PATH_CONFIG_FILES, "minos_le_fhc.txt"),
+        "minos_me_fhc": os.path.join(PATH_CONFIG_FILES, "minos_me_fhc.txt"),
+        "nd280_fhc": os.path.join(PATH_CONFIG_FILES, "nd280_fhc.txt"),
+        "nova_le_fhc": os.path.join(PATH_CONFIG_FILES, "nova_le_fhc.txt")
+    }
 
-    def __init__(self, experiment_name):
-        file_path = os.path.join(self.PATH_CONFIG_FILES, experiment_name.lower() + ".json")
-        with open(file_path, 'r') as f:
-            read_file = json.load(f)
+    def __init__(self, experiment):
+        parser = AssignmentParser({})
         try:
-            self.NAME            = read_file['name']
-            self.FLUXFILE        = read_file['fluxfile']
-            self.FLUX_NORM       = read_file['flux_norm']
-            self.ERANGE          = read_file['erange']
+            # experiment is initially interpreted as a path to a local file
+            parser.parse_file(file=experiment, comments="#")
+        except FileNotFoundError as err:
+            # if no file is found, then it is interpreted as a keyword for a pre-defined experiment
+            if experiment in self.KEYWORDS:
+                parser.parse_file(file=self.KEYWORDS[experiment], comments="#")
+            else:
+                raise err
+        
+        params = parser.parameters
+        try:
+            self.NAME      = params['name']
+            self.FLUXFILE  = params['fluxfile']
+            self.FLUX_NORM = params['flux_norm']
+            self.ERANGE    = params['erange']
 
             # Detector targets
-            self.NUCLEAR_TARGETS = [NuclearTarget(target) for target in read_file['nuclear_targets']]
-            self.FIDUCIAL_MASS   = read_file['fiducial_mass']
-            self.POTS            = read_file['POTs']
-            
-            # total number of targets
-            self.NUMBER_OF_TARGETS = {}
-            for fid_mass_fraction, target in zip(read_file['fiducial_mass_fraction_per_target'], self.NUCLEAR_TARGETS):
-                self.NUMBER_OF_TARGETS[f'{target.name}'] = self.FIDUCIAL_MASS*fid_mass_fraction*const.t_to_GeV/(target.mass)
+            self.NUCLEAR_TARGETS          = [NuclearTarget(target) for target in params['nuclear_targets']]
+            self.POTS                     = params['POTs']
+            self.FIDUCIAL_MASS_PER_TARGET = params['fiducial_mass_per_target']
 
-            # load neutrino fluxes
-            _enu, *_fluxes = np.genfromtxt(f'{local_dir}/{self.FLUXFILE}',unpack=True)
-            self.FLUX_FUNCTIONS = 6*[[]]
-            for i in range(len(_fluxes)):
-                self.FLUX_FUNCTIONS[i] = interpolate.interp1d(_enu, _fluxes[i]*self.FLUX_NORM, fill_value=0.0, bounds_error=False)
-
-
-            prettyprinter.info(f"Experiment: \n\t{self.NAME}\n\tfluxfile loaded: {self.FLUXFILE}\n\tPOT: {self.POTS}\n\tnuclear targets: {[n.name for n in self.NUCLEAR_TARGETS]}\n\tfiducial mass: {[self.FIDUCIAL_MASS*frac for frac in read_file['fiducial_mass_fraction_per_target']]} tonnes")
-
-        except FileNotFoundError:
-            raise FileNotFoundError("The experiment configuration file '{}.json' does not exist.".format(experiment_name.lower()))
         except KeyError as err:
-            if err.args[0] in ["name", "fluxfile", "flux_norm", "erange", "nuclear_targets", "fiducial_mass", "fiducial_mass_fraction_per_target", "POTs"]:
+            if err.args[0] in ["name", "fluxfile", "flux_norm", "erange", "nuclear_targets", "fiducial_mass_per_target", "POTs"]:
                 # check that the error comes from reading the file and not elsewhere
-                raise KeyError("No field '{}' specified in the the experiment configuration file '{}.json'.".format(err.args[0], experiment_name.lower()))
-            raise
+                raise KeyError(f"No field '{err.args[0]}' specified in the the experiment configuration file '{experiment}'.".format(err.args[0], experiment))
+            raise err
+        
+        # total number of targets
+        self.NUMBER_OF_TARGETS = {}
+        for fid_mass, target in zip(self.FIDUCIAL_MASS_PER_TARGET, self.NUCLEAR_TARGETS):
+            self.NUMBER_OF_TARGETS[f'{target.name}'] = fid_mass*const.t_to_GeV/(target.mass)
+        
+        # load neutrino fluxes
+        _enu, *_fluxes = np.genfromtxt(f'{local_dir}/{self.FLUXFILE}',unpack=True)
+        self.FLUX_FUNCTIONS = 6*[[]]
+        for i in range(len(_fluxes)):
+            self.FLUX_FUNCTIONS[i] = interpolate.interp1d(_enu, _fluxes[i]*self.FLUX_NORM, fill_value=0.0, bounds_error=False)
+
+        prettyprinter.info(f'''Experiment:
+\t{self.NAME}
+\tfluxfile loaded: {self.FLUXFILE}
+\tPOT: {self.POTS}
+\tnuclear targets: {[n.name for n in self.NUCLEAR_TARGETS]}
+\tfiducial mass: {self.FIDUCIAL_MASS_PER_TARGET} tonnes''')
 
     def neutrino_flux(self, projectile):
         _flux_index = pdg.get_doublet(projectile) + 3*pdg.is_antiparticle(projectile)
