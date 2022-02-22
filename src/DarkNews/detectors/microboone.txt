@@ -1,0 +1,15 @@
+name = "MicroBooNE"
+fluxfile = "fluxes/MicroBooNE_BNB_flux.txt"
+flux_norm = 1.0
+erange = [
+    0.05, 
+    9
+]
+nuclear_targets = [
+    'Ar40'
+]
+fiducial_mass = 85.0 # tons
+fiducial_mass_per_target = [
+    fiducial_mass
+] 
+POTs = 12.25e20

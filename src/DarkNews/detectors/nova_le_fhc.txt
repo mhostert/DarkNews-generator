@@ -1,0 +1,28 @@
+name = "NOvA_FHC"
+fluxfile = "fluxes/NOvA_FHC.dat"
+flux_norm = 1
+erange = [
+    0.05, 
+    9
+]
+nuclear_targets = [
+    'H1',
+    'C12',
+    'O16',
+    'Cl35',
+    'Ti48'
+]
+fiducial_mass = 193.0 # tons
+massH 	= 10.80e-2 	* fiducial_mass
+massC 	= 66.70e-2 	* fiducial_mass
+massO 	= 3.00e-2 	* fiducial_mass
+massCl 	= 16.10e-2 	* fiducial_mass
+massTi 	= 3.20e-2 	* fiducial_mass
+fiducial_mass_per_target = [
+    massH, 
+    massC, 
+    massO, 
+    massCl, 
+    massTi
+] # tons
+POTs = 1.36e21 #in FHC + 1.25e21 in RHC

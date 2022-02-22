@@ -1,0 +1,17 @@
+name = "MINERVA_FHC_LE"
+fluxfile = "fluxes/NUMI_FHC_LE.dat"
+flux_norm = 1
+erange = [
+    0.1,
+    19
+]
+nuclear_targets = [
+    'C12',
+    'H1'
+]   
+fiducial_mass = 6.10 # tons
+fiducial_mass_per_target = [
+    fiducial_mass*6/7,
+    fiducial_mass*1/7
+]
+POTs = 0.73 * 3.43e20
