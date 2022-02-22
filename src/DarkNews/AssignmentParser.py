@@ -242,6 +242,29 @@ class AssignmentParser:
         self.clean_stack()
         return self._bnf.scanString(*args, **kwargs)
 
+    def parse_file(self, file, comments="#"):
+        # read file
+        with open(file, "r") as f:
+            lines = f.readlines()
+        # create a clean text without blank lines and comments
+        clean_text = ""
+        for i, line in enumerate(lines):
+            partition = line.partition(comments)[0]
+            if partition.strip() == "":
+                continue
+            clean_text += partition + '\n'
+        for tokens, i_beg, i_end in self.scan_string(clean_text):
+            # the effective parsing is done when the generator is called
+            # so the stack fills at each iteration
+            try:
+                self.evaluate_stack()
+            except ParseException as pe:
+                print(partition, f"Failed parse (start: {i_beg}, end: {i_end}):", str(pe))
+            except self.ParsingError as e:
+                print(partition, f"Failed evaluation (start: {i_beg}, end: {i_end}):", str(e))
+            finally:
+                self.clean_stack() # clean the stack in any case, because if there are errors, then we need to have a clean list before the next iteration
+        
 
 if __name__ == "__main__":
     parser = AssignmentParser({})
