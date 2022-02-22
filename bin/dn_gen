@@ -6,21 +6,7 @@ import os.path
 
 from DarkNews.GenLauncher import GenLauncher
 DEFAULTS = GenLauncher()
-
-def detectors_list(extension=".json"):
-    root_path = os.path.split(os.path.dirname(os.path.realpath( __file__ )))[0]
-    detectors_path = os.path.join(root_path, "src", "DarkNews", "detectors")
-    file_list = filter(lambda item: item.endswith(extension), os.listdir(detectors_path))
-    return list(map(lambda item: item.rstrip(".json"), file_list))
-    
-
-'''
-    Default options
-    
-        Default case implements the 3+2 model of 
-            Ballett et al, Phys. Rev. D 101, 115025 (2020) (https://arxiv.org/abs/1903.07589)
-    
-'''
+# Default case implements the 3+2 model of Ballett et al, Phys. Rev. D 101, 115025 (2020) (https://arxiv.org/abs/1903.07589)
 
 # --------------
 # User specified
@@ -92,7 +78,7 @@ parser.add_argument("--mu_tr_66", type=float, help="TMM mu_tr_tau6")
 parser.add_argument("--decay_products", help="decay process of interest", choices=DEFAULTS._choices['decay_products'])
 
 # experiments    
-parser.add_argument("--exp", type=str.lower, help="experiment", choices=detectors_list(extension=".json"))
+parser.add_argument("--exp", type=str.lower, help="experiment file path or keyword")
                                                                 
 # scattering types
 parser.add_argument("--nopelastic", help="do not generate proton elastic events", action="store_true")
