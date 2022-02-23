@@ -299,13 +299,13 @@ The experiment to use can be specified in two ways through the `exp` argument (o
     * ND280 FHC (`"nd280_fhc"`)
     * NOva FHC (`"nova_le_fhc"`)
 1. specifying the file path of an experiment file: every file should be specified using the same rules as for the parameters file, listed in [the previous section](#specify-parameters-via-a-file).
-A template file [`user.txt`](src/DarkNews/detectors/user.txt) can be found in [in the `detectors` directory](src/DarkNews/detectors/).
+A template file [`template_custom_experiment.txt`](examples/template_custom_experiment.txt) can be found in [in the `examples` directory](examples/).
 The following parameters must be present (in general it is possible to specify any number of parameters, but only the ones below would be relevant).
 
 |<!-- -->|<!-- -->|<!-- -->|
 |:-----------------------------|:-----------------:|:-----------------------------------------------------------------------------------------------------------|
 | **name**                     | `string`          | Name of the experiment (your are free to use capital letters, when needed)                                 |
-| **fluxfile**                 | `string`          | Path of the fluxes file with respect to the directory you are running the script                           |
+| **fluxfile**                 | `string`          | Path of the fluxes file with respect to the experiment file directory                                      |
 | **flux_norm**                | `float`           | Flux normalization factor: **all fluxes should be normalized so that the units are nus/cm&sup2;/GeV/POT**  |
 | **erange**                   | list of `float`   | Neutrino energy range `[<min>, <max>]` in GeV                                                              |
 | **nuclear_targets**          | list of `string`  | Detector materials in the form of `"<element_name><mass_number>"` (e.g. `"Ar40"`)                          |
