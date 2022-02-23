@@ -10,7 +10,7 @@ from . import pdg
 from . import geom
 from . import const
 from .nuclear_tools import NuclearTarget
-from AssignmentParser import AssignmentParser
+from .AssignmentParser import AssignmentParser
 
 
 class Detector():
@@ -45,11 +45,13 @@ class Detector():
         parser = AssignmentParser({})
         try:
             # experiment is initially interpreted as a path to a local file
-            parser.parse_file(file=experiment, comments="#")
+            experiment_file = experiment
+            parser.parse_file(file=experiment_file, comments="#")
         except FileNotFoundError as err:
             # if no file is found, then it is interpreted as a keyword for a pre-defined experiment
             if experiment in self.KEYWORDS:
-                parser.parse_file(file=self.KEYWORDS[experiment], comments="#")
+                experiment_file = self.KEYWORDS[experiment]
+                parser.parse_file(file=experiment_file, comments="#")
             else:
                 raise err
         
@@ -77,7 +79,8 @@ class Detector():
             self.NUMBER_OF_TARGETS[f'{target.name}'] = fid_mass*const.t_to_GeV/(target.mass)
         
         # load neutrino fluxes
-        _enu, *_fluxes = np.genfromtxt(f'{local_dir}/{self.FLUXFILE}',unpack=True)
+        exp_dir = os.path.dirname(experiment_file)
+        _enu, *_fluxes = np.genfromtxt(f'{exp_dir}/{self.FLUXFILE}',unpack=True)
         self.FLUX_FUNCTIONS = 6*[[]]
         for i in range(len(_fluxes)):
             self.FLUX_FUNCTIONS[i] = interpolate.interp1d(_enu, _fluxes[i]*self.FLUX_NORM, fill_value=0.0, bounds_error=False)
