@@ -1,5 +1,5 @@
 name = "MicroBooNE"
-fluxfile = "fluxes/MicroBooNE_BNB_flux.txt"
+fluxfile = "../fluxes/MicroBooNE_BNB_flux.txt"
 flux_norm = 1.0
 erange = [
     0.05, 
