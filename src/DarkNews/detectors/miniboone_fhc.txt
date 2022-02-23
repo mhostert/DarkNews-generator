@@ -1,0 +1,17 @@
+name = "MiniBooNE_FHC"
+fluxfile = "../fluxes/MiniBooNE_FHC.dat"
+flux_norm = 1
+erange = [
+    0.1,
+    9
+]
+nuclear_targets = [
+    'C12',
+    'H1'
+]
+fiducial_mass = 818.0 # tons
+fiducial_mass_per_target = [
+    fiducial_mass*12/14, 
+    fiducial_mass*2/14
+] # tons
+POTs = 18.75e20

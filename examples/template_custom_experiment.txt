@@ -1,0 +1,32 @@
+# Define your own detector here, this can be loaded by the generator.
+# Use the same prescriptions as for the input files (see README.md).
+# You can specify numbers, variables, mathematical operations, strings (with double quotes) and lists (enclosed in square brackets).
+# In the following you can read about the parameters you must specify:
+#    name (str): name of the experiment (your are free to use capital letters, when needed);
+#    fluxfile (str): path of the fluxes file with respect to this file directory
+#    flux_norm (float): flux normalization factor: ALL FLUXES ARE NORMALIZED SO THAT THE UNITS ARE nus/cm^2/GeV/POT
+#    erange (list of float): neutrino energy range [<min>, <max>] in GeV
+#    nuclear_targets (list of string): detector materials in the form of "<element_name><mass_number>" (e.g. "Ar40")
+#    fiducial_mass_per_target (list of float): Fiducial mass for each target in order
+#    POTs (float): protons on target
+# in general you can specify any number of parameters, but only the one above would be relevant
+
+name = "My Experiment"
+fluxfile = "./fluxfile_uniform_0.1_200_GeV.dat"
+flux_norm = 1.0
+erange = [
+    0.05, 
+    20
+]
+nuclear_targets = [
+    'H1',
+    'He3',
+    'Li3'
+]
+fiducial_mass = 1.0 # tons
+fiducial_mass_per_target = [
+    1/3 * fiducial_mass, 
+    1/3 * fiducial_mass, 
+    1/3 * fiducial_mass
+]
+POTs = 1e20

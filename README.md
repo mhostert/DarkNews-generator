@@ -1,7 +1,7 @@
 <h1 align="center"> Dark News </h1> <br>
 
 <!-- <img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="180" title="DarkNews-logo"> -->
-<img align="left" src="logo.svg" width="180" title="DarkNews-logo">
+<img align="left" src="assets/logo_2.svg" width="180" title="DarkNews-logo">
 DarkNews is an event generator for new physics processes at accelerator neutrino experiments based on Vegas. It simulates neutrino upscattering to heavy neutrinos as well as heavy neutrino decays to dileptons via neutrino, vector, and transition magnetic moment portals.
 
 <br>[![License: MIT](https://img.shields.io/badge/License-MIT-deeppink.svg)](https://opensource.org/licenses/MIT)
@@ -21,6 +21,7 @@ DarkNews is an event generator for new physics processes at accelerator neutrino
     - [Command line functionality](#command-line-functionality)
     - [Scripting functionality](#scripting-functionality)
     - [List of parameters](#list-of-parameters)
+    - [Specify parameters via a file](#specify-parameters-via-a-file)
     - [The experiments](#the-experiments)
     - [Generated events dataframe](#generated-events-dataframe)
 
@@ -213,36 +214,104 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **hepvt_events**  | `int`    | Number of events to accept in HEPEVT format                            | 100     | 
 | **path**          | `string` | Path where to save run's outputs                                       | `"./"`  | 
 
+### Specify parameters via a file
+
+It is possible to specify the parameters through a file, instead of writing each one as an option for the command line functionality or as an argument of `GenLauncher` instance.
+The parameter file should be provided as the argument `param_file` of `GenLauncher` or via the option `--param-file` of the command line interface.
+
+A template file [`template_parameters_file.txt`](examples/template_parameters_file.txt) can be found in [in the `examples` directory](examples/).
+In the following there are the main rules to specify the parameters:
+* every line should be in the form of an assignment statement
+```
+<variable_name> = <variable_value>
+```
+* comments can be specified with with `"#"`
+* the different parameters can be specified with:
+    * string: by encapsulating each string with double or single quotes `"<string>"` or `'<string>'` are equivalent, the escape character is `\` (backslash).
+    * booleans: by writing `True` or `False` (it is case insensitive)
+    * mathematical expression (which will results in `float` or `int` numbers): see section below
+    * lists: by encapsulating them into square brackets, separating each element with a comma; elements can be string, numbers, mathematical expressions or all of them together.
+* When using mathematical expression, the following rules should be applied:
+    * numbers can be specified as usual: `5` is integer, `5.0` is float (but `5.` will result in an error), `5e10` is the float number 5*10^10
+    * `+`, `-`, `*`, `/` are the usual mathematical operators;
+    * `^` is used to make powers
+    * it is possible to use round brackets `(` and `)`
+    * `e` (case-insensitive, isolated: not inside float numbers) is understood as python `math.e = 2.718281828`
+    * `pi` (case-insensitive) is understood as `math.pi = 3.1415926535`
+    * `sin(<expr>)`, `cos(<expr>)`, `tan(<expr>)` are the usual trigonometric functions
+    * `exp(<expr>)` is the usual exponentiation
+    * `abs(<expr>)` is the absolute value
+    * `sgn(<expr>) = -1` if `<expr> < -1e-100`, `+1` if `<expr> > 1e-100`, `0` otherwise
+    * `trunc(<expr>)` returns the truncated float `<expr>` to integer
+    * `round(<expr>)` is the integer part of the float number `<expr>`
+    * `sum(<list>)` will sum each element of the list, returning a float number
+    * any other string is intended as a variable which must have been previously defined (the file is scanned from top to bottom)
+    * in general it is possible to define any kind of variable, independently on those that will be actually used by the program, following the usual conventions for the variable name (use only letters, digits and underscores). Moreover, it's not possible to name variables after program-defined names, as for example the name of the functions.
+
+#### Example 1
+The following lines
+```python
+hbar = 6.582119569e-25 # GeV s
+c = 299792458.0 # m s^-1
+```
+will define two variables, named `hbar` and `c` with their values.
+
+#### Example 2
+It is possible to write
+```python
+a_certain_constant = hbar * c
+```
+to define a variable named `a_certain_constant` with the value of the product between the pre-defined `hbar` and `c` variables from the example above.
+
+#### Example 3
+It is possible to write any kind of possible expression, for example
+```python
+a_variable = c^2 * 3.2e-4 / sin(PI/7) + 12 * exp( -2 * abs(hbar) )
+```
+obtaining a new variable `a_variable` with the value of 66285419633555.3
+
+#### Example 4
+The line
+```python
+path = "my_directory/projects/this_project"
+```
+defines the `path` variable, stored as the string `"my_directory/projects/this_project"`.
+
+#### Example 5
+The following lines are defining booleans, used to set the various switches:
+```python
+pandas = True
+numpy = False
+```
+
 ### The experiments
 
-The experiments to which pass the generated events are saved as `.json` files, contained in the `src/DarkNews/detectors/` folder.
-Currently, the following experiments are defined:
-* DUNE FHC ND (`dune_nd_fhc.json`)
-* DUNE RHC ND (`dune_nd_rhc.json`)
-* MicroBooNE (`microboone.json`)
-* MINERVA FHC LE (`minerva_le_fhc.json`)
-* MINERVA FHC ME (`minerva_me_fhc.json`)
-* MiniBooNE FHC (`miniboone_fhc.json`)
-* NUMI FHC ME (`minos_le_fhc.json`)
-* NUMI FHC LE (`minos_me_fhc.json`)
-* ND280 FHC (`nd280_fhc.json`)
-* NOva FHC (`nova_le_fhc.json`)
-
-The experiment can be specified with the filename (without the extension) in the `exp` argument.
-
-It is possible to add user-defined experiments, by creating similar files in the same directory.
-A template `user.json` is already present in that folder, in order to explain the various parameters.
+The experiment to use can be specified in two ways through the `exp` argument (or `--exp` option accordingly):
+1. specifying a keyword for a pre-defined experiment among:
+    * DUNE FHC ND (`"dune_nd_fhc"`)
+    * DUNE RHC ND (`"dune_nd_rhc"`)
+    * MicroBooNE (`"microboone"`)
+    * MINERVA FHC LE (`"minerva_le_fhc"`)
+    * MINERVA FHC ME (`"minerva_me_fhc"`)
+    * MiniBooNE FHC (`"miniboone_fhc"`)
+    * NUMI FHC ME (`"minos_le_fhc"`)
+    * NUMI FHC LE (`"minos_me_fhc"`)
+    * ND280 FHC (`"nd280_fhc"`)
+    * NOva FHC (`"nova_le_fhc"`)
+1. specifying the file path of an experiment file: every file should be specified using the same rules as for the parameters file, listed in [the previous section](#specify-parameters-via-a-file).
+A template file [`template_custom_experiment.txt`](examples/template_custom_experiment.txt) can be found in [in the `examples` directory](examples/).
+The following parameters must be present (in general it is possible to specify any number of parameters, but only the ones below would be relevant).
 
 |<!-- -->|<!-- -->|<!-- -->|
-|:--------------------------------------|:-----------------:|:-----------------------------------------------------------------------------------------------------------|
-| **name**                              | `string`          | Name of the experiment                                |
-| **fluxfile**                          | `string`          | Path of the fluxes file with respect to the parent directory, it will have the form `fluxes/flux_file.dat` |
-| **flux_norm**                         | `float`           | Flux normalization factor: **all fluxes should be normalized so that the units are nus/cm&sup2;/GeV/POT**      |
-| **erange**                            | list of `float`   | Neutrino energy range in GeV                                                                               |
-| **nuclear_targets**                   | list of `strings` | Detector materials in the form of `"<element_name><mass_number>"` (e.g. `"Ar40"`)                          |
-| **fiducial_mass**                     | `float`           | Fiducial mass in tons                                                                                      |
-| **fiducial_mass_fraction_per_target** | list of `float`   | Fiducial mass fraction for each target in order, the total sum should be 1                                 |
-| **POTs**                              | `float`           | Protons on target                                                                                          |
+|:-----------------------------|:-----------------:|:-----------------------------------------------------------------------------------------------------------|
+| **name**                     | `string`          | Name of the experiment (your are free to use capital letters, when needed)                                 |
+| **fluxfile**                 | `string`          | Path of the fluxes file with respect to the experiment file directory                                      |
+| **flux_norm**                | `float`           | Flux normalization factor: **all fluxes should be normalized so that the units are nus/cm&sup2;/GeV/POT**  |
+| **erange**                   | list of `float`   | Neutrino energy range `[<min>, <max>]` in GeV                                                              |
+| **nuclear_targets**          | list of `string`  | Detector materials in the form of `"<element_name><mass_number>"` (e.g. `"Ar40"`)                          |
+| **fiducial_mass**            | `float`           | Fiducial mass in tons                                                                                      |
+| **fiducial_mass_per_target** | list of `float`   | Fiducial mass for each target in the same order as the `nuclear_targets` parameter                         |
+| **POTs**                     | `float`           | Protons on target                                                                                          |
 
 ### Generated events dataframe
 
