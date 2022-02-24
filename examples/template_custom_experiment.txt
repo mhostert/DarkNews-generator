@@ -1,6 +1,6 @@
 # Define your own detector here, this can be loaded by the generator.
 # Use the same prescriptions as for the input files (see README.md).
-# You can specify numbers, variables, mathematical operations, strings (with double quotes) and lists (enclosed in square brackets).
+# You can specify numbers, variables, mathematical operations, strings (with single/double quotes) and lists (enclosed in square brackets).
 # In the following you can read about the parameters you must specify:
 #    name (str): name of the experiment (your are free to use capital letters, when needed);
 #    fluxfile (str): path of the fluxes file with respect to this file directory

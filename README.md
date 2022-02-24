@@ -222,7 +222,7 @@ The parameter file should be provided as the argument `param_file` of `GenLaunch
 A template file [`template_parameters_file.txt`](examples/template_parameters_file.txt) can be found in [in the `examples` directory](examples/).
 In the following there are the main rules to specify the parameters:
 * every line should be in the form of an assignment statement
-```
+```rst
 <variable_name> = <variable_value>
 ```
 * comments can be specified with with `"#"`
@@ -250,7 +250,7 @@ In the following there are the main rules to specify the parameters:
 
 #### Example 1
 The following lines
-```python
+```rst
 hbar = 6.582119569e-25 # GeV s
 c = 299792458.0 # m s^-1
 ```
@@ -258,30 +258,30 @@ will define two variables, named `hbar` and `c` with their values.
 
 #### Example 2
 It is possible to write
-```python
+```rst
 a_certain_constant = hbar * c
 ```
 to define a variable named `a_certain_constant` with the value of the product between the pre-defined `hbar` and `c` variables from the example above.
 
 #### Example 3
 It is possible to write any kind of possible expression, for example
-```python
+```rst
 a_variable = c^2 * 3.2e-4 / sin(PI/7) + 12 * exp( -2 * abs(hbar) )
 ```
 obtaining a new variable `a_variable` with the value of 66285419633555.3
 
 #### Example 4
 The line
-```python
+```rst
 path = "my_directory/projects/this_project"
 ```
 defines the `path` variable, stored as the string `"my_directory/projects/this_project"`.
 
 #### Example 5
-The following lines are defining booleans, used to set the various switches:
-```python
+The following lines are defining booleans (they are case insensitive), used to set the various switches:
+```rst
 pandas = True
-numpy = False
+numpy = false
 ```
 
 ### The experiments
