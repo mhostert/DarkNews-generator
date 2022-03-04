@@ -13,6 +13,8 @@ from . import integrands
 from . import const
 from . import pdg
 from . import geom
+from . import amplitudes as amps
+from . import phase_space as ps
 
 NINT = 10
 NEVAL = 1000
@@ -56,7 +58,12 @@ class MC_events:
         self.experiment = experiment
 
         # set target properties for this scattering regime
-        self.nuclear_target = scope['nuclear_target']
+        if 'nuclear_target' in scope:
+            self.nuclear_target = scope['nuclear_target']
+        else:
+            self.nuclear_target = self.experiment.NUCLEAR_TARGETS[0]
+            logger.warning('No target passed to MC_events, using first entry in experiment class instead.')
+
         if scope['scattering_regime'] == 'coherent':
             self.target = self.nuclear_target
         elif scope['scattering_regime'] == 'p-el':
@@ -113,10 +120,10 @@ class MC_events:
         self.bsm_model = bsm_model
         # scope for upscattering process
         self.ups_case = model.UpscatteringProcess(nu_projectile=self.nu_projectile, 
-                                                nu_upscattered=self.nu_upscattered,
-                                                target=self.target,
-                                                helicity=self.helicity,
-                                                TheoryModel=bsm_model)
+                                                    nu_upscattered=self.nu_upscattered,
+                                                    target=self.target,
+                                                    helicity=self.helicity,
+                                                    TheoryModel=bsm_model)
         if self.decays_to_dilepton:
             # scope for decay process
             self.decay_case = model.FermionDileptonDecay(nu_parent=self.nu_upscattered,
@@ -135,7 +142,7 @@ class MC_events:
             logger.error("Error! Could not determine what type of decay class to use.")
             raise ValueError
 
-        self.Ethreshold = self.ups_case.m_ups**2 / 2.0 / self.MA + self.ups_case.m_ups
+        self.Ethreshold = self.ups_case.m_ups**2 / 2.0 / self.ups_case.MA + self.ups_case.m_ups
 
         if self.Ethreshold > self.experiment.ERANGE[-1]:
             logger.error(f"Particle {self.nu_upscattered.name} is too heavy to be produced in the energy range of experiment {self.experiment.NAME}")
@@ -335,98 +342,77 @@ class MC_events:
         return df_gen
 
 
-def run_MC(bsm_model, experiment, **kwargs):
-    """ Create MC_events objects and run the MC computations
 
-    Args:
-        bsm_model:              physics parameters
-        experiment:             instance of Detector object
-        **kwargs:
-            FLAVORS (list):         input flavors 
-            UPSCATTERED_NUS (list): dark NU in upscattering process
-            OUTFOING_NUS (list):    output flavors 
-            SCATTERING_REGIMES (list):    regimes of scattering process (coherent, p-el, n-el)
-            INCLUDE_HC (bool):      flag to include helicity conserving case
-            INCLUDE_HF (bool):      flag to include helicity flipping case
-            NO_COH (bool):          flag to skip coherent case
-            NO_PELASTIC (bool):     flag to skip proton elastic case
-            DECAY_PRODUCTS (list): decay processes to include
-    """
-    
-    # Default values
-    scope = {
-    'FLAVORS': [pdg.numu],
-    'UPSCATTERED_NUS': [pdg.neutrino4],
-    'OUTGOING_NUS': [pdg.nulight],
-    'SCATTERING_REGIMES': ['coherent','p-el'],
-    'INCLUDE_HC': True,
-    'INCLUDE_HF': True,
-    'NO_COH': False,
-    'NO_PELASTIC': False,
-    'DECAY_PRODUCTS': ['e+e-']
-    }
-    scope.update(kwargs)
+class XsecCalc:
 
-    # create instances of all MC cases of interest
-    logger.debug(f"Creating instances of MC cases:")
-    gen_cases = []
-    # neutrino flavor initiating scattering
-    for flavor in scope['FLAVORS']:
-        # neutrino produced in upscattering
-        for nu_upscattered in scope['UPSCATTERED_NUS']:
-            #neutrino produced in the subsequent decay
-            for nu_outgoing in scope['OUTGOING_NUS']:
-                # final state to consider in decay process
-                for decay_product in scope['DECAY_PRODUCTS']:
-                    # skip cases with obviously forbidden decay 
-                    if np.abs(nu_outgoing.pdgid) >= np.abs(nu_upscattered.pdgid):
-                        continue
-                    # material on which upscattering happened
-                    for nuclear_target in experiment.NUCLEAR_TARGETS:
-                        # scattering regime to use
-                        for scattering_regime in scope['SCATTERING_REGIMES']:
-                            # skip disallowed regimes
-                            if (
-                                    ( (scattering_regime in ['n-el']) and (nuclear_target.N < 1)) # no neutrons
-                                    |
-                                    ( (scattering_regime in ['coherent']) and (not nuclear_target.is_nucleus)) # coherent = p-el for hydrogen
-                                ):
-                                continue 
-                            elif ( (scattering_regime in ['coherent'] and scope['NO_COH'])
-                                 | 
-                                    (scattering_regime in ['p-el'] and scope['NO_PELASTIC'])
-                                ):
-                                continue
-                            else:
-                                # bundle arguments of MC_events here
-                                args = {'nuclear_target' : nuclear_target,
-                                        'scattering_regime' : scattering_regime,
-                                        'nu_projectile' : flavor, 
-                                        'nu_upscattered' : nu_upscattered,
-                                        'nu_outgoing' : nu_outgoing, 
-                                        'decay_product' : decay_product,
-                                        }
+    def __init__(self, nuclear_target, bsm_model, **kwargs):
+        
+        # default parameters
+        self.nu_projectile = pdg.numu
+        self.nu_upscattered = pdg.neutrino4
+        self.scattering_regime = 'coherent'
+        self.helicity = 'conserving'
+        self.__dict__.update(kwargs)
+        
+        self.nuclear_target = nuclear_target
+        if self.scattering_regime == 'coherent':
+            self.target = self.nuclear_target
+        elif self.scattering_regime == 'p-el':
+            self.target = self.nuclear_target.get_constituent_nucleon('proton')
+        elif self.scattering_regime == 'n-el':
+            self.target = self.nuclear_target.get_constituent_nucleon('neutron')
+        else:
+            logger.error(f"Scattering regime {self.scattering_regime} not supported.")
+        # How many constituent targets inside scattering regime? 
+        if self.scattering_regime == 'coherent':
+            self.target_multiplicity = 1
+        elif self.scattering_regime == 'p-el':
+            self.target_multiplicity = self.nuclear_target.Z
+        elif self.scattering_regime == 'n-el':
+            self.target_multiplicity = self.nuclear_target.N
+        else:
+            logger.error(f"Scattering regime {self.scattering_regime} not supported.")
 
-                                if scope['INCLUDE_HC']:  # helicity conserving scattering
-                                    gen_cases.append(MC_events(experiment, **args, helicity = 'conserving'))
+        self.bsm_model = bsm_model
+        # scope for upscattering process
+        self.ups_case = model.UpscatteringProcess(nu_projectile=self.nu_projectile, 
+                                                    nu_upscattered=self.nu_upscattered,
+                                                    target=self.target,
+                                                    helicity=self.helicity,
+                                                    TheoryModel=self.bsm_model)
 
-                                if scope['INCLUDE_HF']:  # helicity flipping scattering
-                                    gen_cases.append(MC_events(experiment, **args, helicity = 'flipping'))
+        self.Ethreshold = self.ups_case.m_ups**2 / 2.0 / self.ups_case.MA + self.ups_case.m_ups
 
-                                logger.debug(f"Created an MC instance of {gen_cases[-1].underl_process_name}.")
+    def total_xsec(self, Enu):
+        """ 
+            Returns the total upscattering xsec for a fixed neutrino energy
+        """
+        DIM = 1
+        self.Enu = Enu
 
-    
-    logger.debug(f"Now running the generator for each instance.")
-    # Set theory params and run generation of events
-    gen_cases[0].set_theory_params(bsm_model)
-    gen_cases_dfs = gen_cases[0].get_MC_events()
-    for mc in gen_cases[1:]:
-        mc.set_theory_params(bsm_model)
-        merge_MC_output(gen_cases_dfs, mc.get_MC_events())
-    
-    prettyprinter.info(f"* Generation successful\n\nTotal events predicted:\n({np.sum(gen_cases_dfs['w_event_rate']):.3g} +/- {np.sqrt(np.sum(gen_cases_dfs['w_event_rate']**2)):.3g}) events.")
+        # below threshold
+        if Enu < (self.Ethreshold):
+            return 0.0
 
-    return gen_cases_dfs
+        batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=self.Enu, MC_case=self)
+        integ   = vg.Integrator(DIM*[[0.0, 1.0]]) # unit hypercube
+        
+        integrals = run_vegas(batch_f, integ, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
+        logger.debug(f"Main VEGAS run completed.")
+
+        #############
+        # integrated xsec coverted to cm^2
+        tot_xsec = integrals['diff_xsec'].mean*const.attobarn_to_cm2*batch_f.norm['diff_xsec']
+        logger.debug(f"Total cross section calculated.")
+        return tot_xsec*self.target_multiplicity
+
+    def diff_xsec_Q2(self, Enu, Q2):
+
+        s = Enu*self.ups_case.MA*2+self.ups_case.MA**2
+        physical =  ((Q2 > ps.upscattering_Q2min(Enu, self.ups_case.m_ups, self.ups_case.MA)) & (Q2 < ps.upscattering_Q2max(Enu, self.ups_case.m_ups, self.ups_case.MA)))
+
+        return amps.upscattering_dxsec_dQ2([s,-Q2,0.0], process=self.ups_case)*physical
+
 
 
 # merge all generation cases into one dictionary
@@ -477,4 +463,4 @@ def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=
         logger.debug(f"VEGAS warm-up completed.")
 
         # sample again, now saving result and turning off further adaption
-        return integ(batch_f,  nitn = NINT, neval = NEVAL, uses_jac=True, adapt=False)
+        return integ(batch_f,  nitn = NINT, neval = NEVAL, uses_jac=True)#, adapt=False)

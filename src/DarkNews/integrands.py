@@ -223,6 +223,29 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 			raise ValueError
 
 
+
+		##############################################
+		# storing normalization factor that guarantees that integrands are O(1) numbers
+		self.norm = {}
+		# loop over decay processes
+		for decay_step in (k for k in self.int_dic.keys() if 'decay_rate' in k):
+			
+			# normalization for decay process
+			self.norm[decay_step]  = np.mean(self.int_dic[decay_step])/len(x[0,:])
+
+			# multiply differential event rate by dGamma_i/dPS
+			self.int_dic['diff_event_rate'] *= self.int_dic[decay_step]
+
+		self.norm['diff_event_rate'] 	= np.mean(self.int_dic['diff_event_rate'])/len(x[0,:])
+		self.norm['diff_flux_avg_xsec'] = np.mean(self.int_dic['diff_flux_avg_xsec'])/len(x[0,:])
+
+		# normalize integrands to be O(1)
+		for k in self.norm.keys():
+			self.int_dic[k] /= self.norm[k]
+
+		logger.debug(f"Normalization factors in integrand: {self.norm}.")
+		
+		
 		##############################################
 		# flat direction jacobian (undoing the vegas adaptation in flat directions of factors of the full integrands)
 		
@@ -233,30 +256,6 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		decay_directions = range(2,self.dim)
 		for d in decay_directions:
 			self.int_dic['diff_flux_avg_xsec'] /= jac[:,d]
-
-
-		##############################################
-		# storing normalization factor that guarantees that integrands are O(1) numbers
-		self.norm = {}
-		self.norm['diff_flux_avg_xsec'] = np.mean(self.int_dic['diff_flux_avg_xsec'])/len(x[0,:])
-		self.norm['diff_event_rate'] = self.norm['diff_flux_avg_xsec']
-
-		# loop over decay processes
-		for decay_step in (k for k in self.int_dic.keys() if 'decay_rate' in k):
-			
-			# normalization for decay process
-			self.norm[decay_step]  = np.mean(self.int_dic[decay_step])/len(x[0,:])
-
-			# multiply differential event rate by dGamma_i/dPS
-			self.norm['diff_event_rate']    *= self.norm[decay_step]
-			self.int_dic['diff_event_rate'] *= self.int_dic[decay_step]
-
-		# normalize integrands to be O(1)
-		for k in self.norm.keys():
-			self.int_dic[k] /= self.norm[k]
-
-		logger.debug(f"Normalization factors in integrand: {self.norm}.")
-
 
 		# return all differential quantities of interest
 		return self.int_dic

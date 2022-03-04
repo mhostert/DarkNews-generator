@@ -5,6 +5,7 @@ import os.path
 
 # Dark Neutrino and MC stuff
 import DarkNews as dn
+from DarkNews import pdg
 from DarkNews.const import Q, ConfigureLogger
 from DarkNews import logger, prettyprinter
 from DarkNews.AssignmentParser import AssignmentParser
@@ -34,40 +35,6 @@ class GenLauncher:
             at the end it looks inside the kwargs (so kwargs overwrite file definitions).
         '''
         # set defaults
-        self.mzprime = 1.25
-        self.m4 = 0.140
-        self.m5 = None
-        self.m6 = None
-        self.D_or_M = "majorana"
-        self.ue4 = 0.0
-        self.ue5 = 0.0
-        self.ue6 = 0.0
-        self.umu4 = np.sqrt(1.5e-6 * 7/4)
-        self.umu5 = np.sqrt(11.5e-6)
-        self.umu6 = np.sqrt(0.0)
-        self.utau4 = 0
-        self.utau5 = 0
-        self.utau6 = 0
-        self.ud4 = 1.0
-        self.ud5 = 1.0
-        self.ud6 = 1.0
-        self.gD = 1.0
-        self.epsilon = 1e-2
-        self.mu_tr_e4 = 0.0
-        self.mu_tr_e5 = 0.0
-        self.mu_tr_e6 = 0.0
-        self.mu_tr_mu4 = 0.0
-        self.mu_tr_mu5 = 0.0
-        self.mu_tr_mu6 = 0.0
-        self.mu_tr_tau4 = 0.0
-        self.mu_tr_tau5 = 0.0
-        self.mu_tr_tau6 = 0.0
-        self.mu_tr_44 = 0.0
-        self.mu_tr_45 = 0.0
-        self.mu_tr_46 = 0.0
-        self.mu_tr_55 = 0.0
-        self.mu_tr_56 = 0.0
-        self.mu_tr_66 = 0.0
         self.decay_products="e+e-"
         self.exp = "miniboone_fhc"
         self.nopelastic = False
@@ -98,6 +65,53 @@ class GenLauncher:
         # look into kwargs
         self._load_parameters(**kwargs)
 
+        #########################
+        # Set BSM parameters
+        self.bsm_model = dn.model.create_model(**kwargs)
+
+        ####################################################
+        # Choose experiment and scope of simulation
+        self.experiment = dn.detector.Detector(self.exp)
+    
+        ##########################
+        # MC evaluations and iterations
+        dn.MC.NEVAL_warmup = self.neval_warmup
+        dn.MC.NINT_warmup = self.nint_warmup
+        dn.MC.NEVAL = self.neval
+        dn.MC.NINT  = self.nint
+
+        ####################################################
+        # Set the model to use
+
+        # 3+1
+        if (self.bsm_model.m4 and not self.bsm_model.m5 and not self.bsm_model.m6) :
+            self.upscattered_nus = [dn.pdg.neutrino4]
+            self.outgoing_nus =[dn.pdg.nulight]
+            self.data_path = f'{self.path}/data/{self.exp}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/'
+
+        # 3+2
+        elif (self.bsm_model.m4 and self.bsm_model.m5 and not self.bsm_model.m6):
+            ## FIXING 3+2 process chain to be numu --> N5 --> N4
+            self.upscattered_nus = [dn.pdg.neutrino5]
+            self.outgoing_nus =[dn.pdg.neutrino4]
+            # upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5]
+            # outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4]
+            self.data_path = f'{self.path}/data/{self.exp}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/'
+
+        # 3+3
+        elif (self.bsm_model.m4 and self.bsm_model.m5 and self.bsm_model.m6):
+            self.upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
+            self.outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
+            self.data_path = f'{self.path}/data/{self.exp}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/'
+
+        else:
+            logger.error('ERROR! Mass spectrum not allowed.')
+            raise ValueError 
+
+        ####################################################
+        # Create all MC cases
+        self._create_all_MC_cases()
+
     def _load_file(self, file):
         parser = AssignmentParser({})
         try:
@@ -114,7 +128,96 @@ class GenLauncher:
                 raise ValueError(f"Parameter '{k}', invalid choice: {v}, (choose from " + ", ".join([f"{el}" for el in self._choices[k]]) + ")")
             setattr(self, k, v)
 
+
+    def _create_all_MC_cases(self, **kwargs):
+        """ Create MC_events objects and run the MC computations
+
+        Args:
+            **kwargs:
+                FLAVORS (list):             input flavors 
+                UPSCATTERED_NUS (list):     dark NU in upscattering process
+                OUTFOING_NUS (list):        output flavors 
+                SCATTERING_REGIMES (list):  regimes of scattering process (coherent, p-el, n-el)
+                INCLUDE_HC (bool):          flag to include helicity conserving case
+                INCLUDE_HF (bool):          flag to include helicity flipping case
+                NO_COH (bool):              flag to skip coherent case
+                NO_PELASTIC (bool):         flag to skip proton elastic case
+                DECAY_PRODUCTS (list):      decay processes to include
+        """
+        
+        # Default values
+        scope = {  'NO_COH': self.nocoh,
+                    'NO_PELASTIC': self.nopelastic,
+                    'INCLUDE_HC': ~self.noHC,
+                    'INCLUDE_HF': ~self.noHF,
+                    'FLAVORS': [dn.pdg.numu],
+                    'UPSCATTERED_NUS': self.upscattered_nus,
+                    'OUTGOING_NUS': self.outgoing_nus,
+                    'DECAY_PRODUCTS': [self.decay_products],
+                    'SCATTERING_REGIMES': ['coherent', 'p-el'],#, 'n-el'],
+                }
+        # override default with kwargs
+        scope.update(kwargs)
+
+        # create instances of all MC cases of interest
+        logger.debug(f"Creating instances of MC cases:")
+        self.gen_cases = []
+        # neutrino flavor initiating scattering
+        for flavor in scope['FLAVORS']:
+            # neutrino produced in upscattering
+            for nu_upscattered in scope['UPSCATTERED_NUS']:
+                #neutrino produced in the subsequent decay
+                for nu_outgoing in scope['OUTGOING_NUS']:
+                    # final state to consider in decay process
+                    for decay_product in scope['DECAY_PRODUCTS']:
+                        # skip cases with obviously forbidden decay 
+                        if np.abs(nu_outgoing.pdgid) >= np.abs(nu_upscattered.pdgid):
+                            continue
+                        # material on which upscattering happened
+                        for nuclear_target in self.experiment.NUCLEAR_TARGETS:
+                            # scattering regime to use
+                            for scattering_regime in scope['SCATTERING_REGIMES']:
+                                # skip disallowed regimes
+                                if (
+                                        ( (scattering_regime in ['n-el']) and (nuclear_target.N < 1)) # no neutrons
+                                        |
+                                        ( (scattering_regime in ['coherent']) and (not nuclear_target.is_nucleus)) # coherent = p-el for hydrogen
+                                    ):
+                                    continue 
+                                elif ( (scattering_regime in ['coherent'] and scope['NO_COH'])
+                                    | 
+                                        (scattering_regime in ['p-el'] and scope['NO_PELASTIC'])
+                                    ):
+                                    continue
+                                else:
+                                    # bundle arguments of MC_events here
+                                    args = {'nuclear_target' : nuclear_target,
+                                            'scattering_regime' : scattering_regime,
+                                            'nu_projectile' : flavor, 
+                                            'nu_upscattered' : nu_upscattered,
+                                            'nu_outgoing' : nu_outgoing, 
+                                            'decay_product' : decay_product,
+                                            }
+
+                                    if scope['INCLUDE_HC']:  # helicity conserving scattering
+                                        self.gen_cases.append(dn.MC.MC_events(self.experiment, **args, helicity = 'conserving'))
+
+                                    if scope['INCLUDE_HF']:  # helicity flipping scattering
+                                        self.gen_cases.append(dn.MC.MC_events(self.experiment, **args, helicity = 'flipping'))
+
+                                    logger.debug(f"Created an MC instance of {self.gen_cases[-1].underl_process_name}.")
+                                    
+        
+        # Assign new physics parameters
+        for g in self.gen_cases:
+            g.set_theory_params(self.bsm_model)
+            
+        return self.gen_cases
+
+
     def run(self, log="INFO", verbose=None, logfile=None, path="."):
+        
+        ####################################################
         args = {"log": log, "verbose": verbose, "logfile": logfile, "path": path}
         for attr in args.keys():
             if args[attr] is not None:
@@ -129,113 +232,25 @@ class GenLauncher:
         # run generator
         prettyprinter.info(self.banner)
 
-        ##########################
-        # path
-        path = self.path
-
-        ##########################
-        # MC evaluations and iterations
-        dn.MC.NEVAL_warmup = self.neval_warmup
-        dn.MC.NINT_warmup = self.nint_warmup
-        dn.MC.NEVAL = self.neval
-        dn.MC.NINT  = self.nint
-
-        #########################
-        # Set BSM parameters
-        bsm_model = dn.model.create_model(self)
-
-
-        ####################################################
-        # Set the model to use
-
-        threeplusone = (self.m4 and not self.m5 and not self.m6) 
-        threeplustwo = (self.m4 and self.m5 and not self.m6) 
-        threeplusthree = (self.m4 and self.m5 and self.m6)
-
-        if threeplusone:
-            upscattered_nus = [dn.pdg.neutrino4]
-            outgoing_nus =[dn.pdg.nulight]
-
-            ### NAMING 
-            ## HEPEVT Event file name
-            PATH_data = f'data/{self.exp}/3plus1/m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}_{self.D_or_M}/'
-            PATH = f'plots/{self.exp}/3plus1/m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}_{self.D_or_M}/'
-            
-            # title for plots
-            power = int(math.log10(self.umu4**2))-1
-            title = r"$m_{4} = \,$"+str(round(self.m4,4))+r" GeV, $M_{Z^\prime} = \,$"+str(round(self.mzprime,4))+r" GeV, $|U_{D4}|^2=%1.1g$, $|U_{\mu 4}|^2=%1.1f \times 10^{-%i}$"%(self.ud4**2,self.umu4**2/10**(power),-power)
+        logger.debug(f"Now running the generator for each instance.")
+        # Set theory params and run generation of events
         
+        self.df = self.gen_cases[0].get_MC_events()
+        for mc in self.gen_cases[1:]:
+            dn.MC.merge_MC_output(self.df, mc.get_MC_events())
 
-        elif threeplustwo:
-            ## FIXING 3+2 process chain to be numu --> N5 --> N4
-            upscattered_nus = [dn.pdg.neutrino5]
-            outgoing_nus =[dn.pdg.neutrino4]
-            # upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5]
-            # outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4]
-        
-            PATH_data = f'data/{self.exp}/3plus2/m5_{self.m5:.4g}_m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}_{bsm_model.HNLtype}/'
-            PATH = f'plots/{self.exp}/3plus2/m5_{self.m5:.4g}_m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}_{bsm_model.HNLtype}/'
-            title = fr"$m_{4} = \,${round(self.m4,4)}GeV, $m_{5} = \,${round(self.m5,4)}GeV, \
-                        $M_{{Z^\prime}} = \,${round(self.mzprime,4)} GeV, \
-                        $|U_{{D4}}|^2={dn.const.sci_notation(self.ud4**2)}$, $|U_{{\mu 4}}|^2={dn.const.sci_notation(self.umu4**2)}$, \
-                        $|U_{{D5}}|^2={dn.const.sci_notation(self.ud5**2)}$, $|U_{{\mu 5}}|^2={dn.const.sci_notation(self.umu5**2)}$"   
+        #################################################
+        # Save attrs
+        self.df.attrs['data_path'] = self.data_path
 
-
-
-        elif threeplusthree:
-            upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
-            outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
-            
-            PATH_data = f'data/{self.exp}/3plus3/m6_{self.m6:.4g}_m5_{self.m5:.4g}_m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}/'
-            PATH = f'plots/{self.exp}/3plus3/m6_{self.m6:.4g}_m5_{self.m5:.4g}_m4_{self.m4:.4g}_mzprime_{self.mzprime:.4g}/'
-            
-            # title for plots
-            title = fr"$m_{4} = \,${round(self.m4,4)}GeV, $m_{5} = \,${round(self.m5,4)}GeV, $m_{6} = \,${round(self.m6,4)}GeV,\
-                        $M_{{Z^\prime}} = \,${round(self.mzprime,4)} GeV, \
-                        $|U_{{D4}}|^2={dn.const.sci_notation(self.ud4**2)}$, $|U_{{\mu 4}}|^2={dn.const.sci_notation(self.umu4**2)}$, \
-                        $|U_{{D5}}|^2={dn.const.sci_notation(self.ud5**2)}$, $|U_{{\mu 5}}|^2={dn.const.sci_notation(self.umu5**2)}$, \
-                        $|U_{{D6}}|^2={dn.const.sci_notation(self.ud6**2)}$, $|U_{{\mu 6}}|^2={dn.const.sci_notation(self.umu6**2)}$"
-
-
-        else:
-            logger.error('ERROR! Mass spectrum not allowed.')
-            raise ValueError 
-
-
-        ####################################################
-        # Choose experiment and scope of simulation
-        myexp = dn.detector.Detector(self.exp)
-
-        kwargs = {  'NO_COH': self.nocoh,
-                    'NO_PELASTIC': self.nopelastic,
-                    'INCLUDE_HC': ~self.noHC,
-                    'INCLUDE_HF': ~self.noHF,
-                    'FLAVORS': [dn.pdg.numu],
-                    'UPSCATTERED_NUS': upscattered_nus,
-                    'OUTGOING_NUS': outgoing_nus,
-                    'DECAY_PRODUCTS': [self.decay_products],
-                }
-
-        ####################################################
-        # Run MC and get events
-        df_gen = dn.MC.run_MC(bsm_model, myexp, **kwargs)
-
-        ####################################################
-        # Paths
-        PATH_data = os.path.join(path, PATH_data)
-        PATH = os.path.join(path, PATH)
-        
-        df_gen.attrs['DATA_PATH'] = PATH_data
-        df_gen.attrs['PLOTS_PATH'] = PATH
-        df_gen.attrs['PLOTS_TITLE'] = title
+        prettyprinter.info(f"* Generation successful\n\nTotal events predicted:\n({np.sum(self.df['w_event_rate']):.3g} +/- {np.sqrt(np.sum(self.df['w_event_rate']**2)):.3g}) events.")
 
         ############################################################################
         # Print events to file -- currently in data/exp/m4____mzprime____.dat 
-        self.df = df_gen
         if self.numpy:
-            dn.printer.print_events_to_ndarray(PATH_data, self.df)
+            dn.printer.print_events_to_ndarray(self.data_path, self.df)
         if self.pandas:
-            dn.printer.print_events_to_pandas(PATH_data, self.df)
+            dn.printer.print_events_to_pandas(self.data_path, self.df)
         if self.hepevt:
             dn.printer.print_unweighted_events_to_HEPEVT(self.df, unweigh= self.hepevt_unweigh, max_events=self.hepevt_events)
         

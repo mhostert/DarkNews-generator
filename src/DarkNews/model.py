@@ -10,69 +10,76 @@ from DarkNews import decay_rates as dr
 from DarkNews import pdg
 
 
-def create_model(args):
+def create_model(**kwargs):
 
     bsm_model = Model()
-    if args.gD:
-        bsm_model.gD = args.gD
-    elif args.alphaD:
-        bsm_model.gD = np.sqrt(4*np.pi*args.alphaD)
+    if 'gD' in kwargs:
+        bsm_model.gD = 1.0
+    elif 'alphaD' in kwargs:
+        bsm_model.gD = np.sqrt(4*np.pi*kwargs['alphaD'])
     
     
-    if args.epsilon:
-        bsm_model.epsilon = args.epsilon
-    elif args.epsilon2:
-        bsm_model.epsilon2 = np.sqrt(args.epsilon2)
-    elif args.chi:
-        bsm_model.epsilon = args.chi*const.cw
-    elif args.alpha_epsilon2:
-        bsm_model.epsilon = np.sqrt(args.alpha_epsilon2/const.alphaQED)
+    if 'epsilon' in kwargs:
+        bsm_model.epsilon = kwargs['epsilon']
+    elif 'epsilon2' in kwargs:
+        bsm_model.epsilon = np.sqrt(kwargs['epsilon2'])
+    elif 'chi' in kwargs:
+        bsm_model.epsilon = kwargs['chi']*const.cw
+    elif 'alpha_epsilon2' in kwargs:
+        bsm_model.epsilon = np.sqrt(kwargs['alpha_epsilon2']/const.alphaQED)
+    else:
+        bsm_model.epsilon = 1e-2
     
     # neutrino mixing
-    bsm_model.Ue4   = args.ue4
-    bsm_model.Umu4  = args.umu4
-    bsm_model.Utau4 = args.utau4
+    bsm_model.Ue4   = 0.0
+    bsm_model.Umu4  = np.sqrt(1.5e-6*7/4)
+    bsm_model.Utau4 = 0.0
     
-    bsm_model.Ue5   = args.ue5
-    bsm_model.Umu5  = args.umu5
-    bsm_model.Utau5 = args.utau5
+    bsm_model.Ue5   = 0.0
+    bsm_model.Umu5  = np.sqrt(11.5e-6)
+    bsm_model.Utau5 = 0.0
     
-    bsm_model.Ue6   = args.ue6
-    bsm_model.Umu6  = args.umu6
-    bsm_model.Utau6 = args.utau6
+    bsm_model.Ue6   = 0.0
+    bsm_model.Umu6  = 0.0
+    bsm_model.Utau6 = 0.0
     
-    bsm_model.UD4 = args.ud4
-    bsm_model.UD5 = args.ud5
-    bsm_model.UD6 = args.ud6
+    bsm_model.UD4 = 1.0
+    bsm_model.UD5 = 1.0
+    bsm_model.UD6 = 1.0
+    
+    # masses
+    bsm_model.m4 =  0.140
+    bsm_model.m5 = None
+    bsm_model.m6 = None
 
-    bsm_model.m4 = args.m4
-    bsm_model.m5 = args.m5
-    bsm_model.m6 = args.m6
-    
-    bsm_model.mzprime = args.mzprime
-    bsm_model.HNLtype = args.D_or_M
+    bsm_model.mzprime = 1.25
+    bsm_model.HNLtype = "majorana"
 
     # transition magnetic moments
-    bsm_model.mu_tr_e4 = args.mu_tr_e4
-    bsm_model.mu_tr_e5 = args.mu_tr_e5
-    bsm_model.mu_tr_e6 = args.mu_tr_e6
+    bsm_model.mu_tr_e4 = 0.0
+    bsm_model.mu_tr_e5 = 0.0
+    bsm_model.mu_tr_e6 = 0.0
 
-    bsm_model.mu_tr_mu4 = args.mu_tr_mu4
-    bsm_model.mu_tr_mu5 = args.mu_tr_mu5
-    bsm_model.mu_tr_mu6 = args.mu_tr_mu6
+    bsm_model.mu_tr_mu4 = 0.0
+    bsm_model.mu_tr_mu5 = 0.0
+    bsm_model.mu_tr_mu6 = 0.0
 
-    bsm_model.mu_tr_tau4 = args.mu_tr_tau4
-    bsm_model.mu_tr_tau5 = args.mu_tr_tau5
-    bsm_model.mu_tr_tau6 = args.mu_tr_tau6
+    bsm_model.mu_tr_tau4 = 0.0
+    bsm_model.mu_tr_tau5 = 0.0
+    bsm_model.mu_tr_tau6 = 0.0
 
 
-    bsm_model.mu_tr_44 = args.mu_tr_44
-    bsm_model.mu_tr_45 = args.mu_tr_45
-    bsm_model.mu_tr_46 = args.mu_tr_46
-    bsm_model.mu_tr_55 = args.mu_tr_55
-    bsm_model.mu_tr_56 = args.mu_tr_56
-    bsm_model.mu_tr_66 = args.mu_tr_66
+    bsm_model.mu_tr_44 = 0.0
+    bsm_model.mu_tr_45 = 0.0
+    bsm_model.mu_tr_46 = 0.0
+    bsm_model.mu_tr_55 = 0.0
+    bsm_model.mu_tr_56 = 0.0
+    bsm_model.mu_tr_66 = 0.0
 
+    # update the attributes of the model with user-defined parameters
+    bsm_model.__dict__.update(kwargs)
+
+    # lock-in parameters and compute interaction vertices
     bsm_model.set_vertices()
 
     return bsm_model
@@ -310,9 +317,9 @@ class Model:
         for i in range(len(self.hnl_masses)):
             
             # PDGID  =  59(particle spin code: 0-scalar 1-fermion 2-vector)(generation number)
-            hnl = pdg.new_particle(name=f'N{3+i}', pdgid=5914+i, latex_name=f'N_{{3+i}}', mass=self.hnl_masses[i]*1e3)
-            setattr(self, f'neutrino{3+i}', hnl)
-            self.nu_spectrum.append(getattr(self,  f'neutrino{3+i}'))
+            hnl = pdg.new_particle(name=f'N{4+i}', pdgid=5914+i, latex_name=f'N_{{{4+i}}}', mass=self.hnl_masses[i]*1e3)
+            setattr(self, f'neutrino{4+i}', hnl)
+            self.nu_spectrum.append(getattr(self,  f'neutrino{4+i}'))
             
         self.HNL_spectrum = self.nu_spectrum[3:]
         self.n_nus = len(self.nu_spectrum)
