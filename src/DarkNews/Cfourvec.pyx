@@ -1,10 +1,7 @@
-#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
-
 #cython: boundscheck=False
 #cython: language_level=3
 #cython: wraparound=False
 #cython: nonecheck=False
-#cython: define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #cython: cdivision=True
 
 import numpy as np
