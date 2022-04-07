@@ -324,8 +324,6 @@ class MC_events:
         # saving the bsm_model class
         df_gen.attrs['bsm_model'] = self.bsm_model
 
-
-
         ##########################################################################
         # PROPAGATE PARENT PARTICLE
         
@@ -424,7 +422,7 @@ def merge_MC_output(df1,df2):
     return df
 
 
-def get_samples(integ, batch_integrand):
+def get_samples(integ, batch_integrand, return_jac=False):
     '''    
         Accesses integration samples for a single iteration as in vegas/_vegas.pyx
         
@@ -440,10 +438,11 @@ def get_samples(integ, batch_integrand):
 
         # compute integrand on samples including jacobian factors
         if integ.uses_jac:
-            fx = batch_integrand(x, jac=integ.map.jac1d(y))
+            jac = integ.map.jac1d(y)
         else:
-            fx = batch_integrand(x, jac=None)
+            jac = None
 
+        fx = batch_integrand(x, jac=jac)
         # weights
         for fx_i in fx.keys():
             if np.any(np.isnan(fx[fx_i])):
@@ -454,7 +453,10 @@ def get_samples(integ, batch_integrand):
         for i in range(batch_integrand.dim):
             unit_samples[i] = np.append(unit_samples[i], x[:,i])
 
-    return np.array(unit_samples), weights
+    if return_jac:
+        return np.array(unit_samples), weights, jac
+    else:
+        return np.array(unit_samples), weights
 
 def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=1000):
         

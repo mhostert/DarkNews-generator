@@ -35,6 +35,13 @@ class UpscatteringXsec(vg.BatchIntegrand):
 		self.Enu = Enu
 		self.MC_case = MC_case
 		
+		self.norm = {}
+		self.norm['diff_xsec'] = 1
+		# normalize integrand with an initial throw
+		_throw = self.__call__(np.random.rand(self.dim,1000), np.ones((self.dim,1000)))
+		for key,val in _throw.items():
+			self.norm[key] = np.mean(val)
+
 
 	def __call__(self, x, jac):
 
@@ -70,10 +77,6 @@ class UpscatteringXsec(vg.BatchIntegrand):
 		self.int_dic['diff_xsec'] = diff_xsec
 		
 		##############################################
-		# storing normalization for integrands to be of O(1) numbers		
-		self.norm = {}
-		self.norm['diff_xsec'] = np.mean(self.int_dic['diff_xsec'])/len(x[0,:])
-		
 		# normalization
 		self.int_dic['diff_xsec'] /= self.norm['diff_xsec']
 
@@ -86,11 +89,30 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		self.Emax = Emax
 		self.Emin = Emin
 		self.MC_case = MC_case
+		
+		self.norm = {}
+		self.norm['diff_event_rate']    = 1
+		self.norm['diff_flux_avg_xsec'] = 1
+		if self.MC_case.decays_to_dilepton:
+			if self.MC_case.decay_case.on_shell:
+				self.norm['diff_decay_rate_0'] = 1
+				self.norm['diff_decay_rate_1'] = 1
+			elif self.MC_case.decay_case.off_shell:
+				self.norm['diff_decay_rate_0'] = 1
+		elif self.MC_case.decays_to_singlephoton:
+				self.norm['diff_decay_rate_0'] = 1
+		else:
+			logger.error("ERROR: Could not determine decay process in vegas integral.")
+			raise ValueError
+
+		# normalize integrand with an initial throw
+		_throw = self.__call__(np.random.rand(self.dim,10000), np.ones((self.dim,10000)))
+		for key,val in _throw.items():
+			self.norm[key] = np.mean(val)
 
 	def __call__(self, x, jac):
 
 		self.int_dic = OrderedDict()		
-		self.norm = {}
 
 		ups_case = self.MC_case.ups_case
 		decay_case = self.MC_case.decay_case
@@ -222,41 +244,27 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 			logger.error("ERROR: Could not determine decay process in vegas integral.")
 			raise ValueError
 
-
-
 		##############################################
 		# storing normalization factor that guarantees that integrands are O(1) numbers
-		self.norm = {}
 		# loop over decay processes
 		for decay_step in (k for k in self.int_dic.keys() if 'decay_rate' in k):
-			
-			# normalization for decay process
-			self.norm[decay_step]  = np.mean(self.int_dic[decay_step])/len(x[0,:])
-
 			# multiply differential event rate by dGamma_i/dPS
 			self.int_dic['diff_event_rate'] *= self.int_dic[decay_step]
-
-		self.norm['diff_event_rate'] 	= np.mean(self.int_dic['diff_event_rate'])/len(x[0,:])
-		self.norm['diff_flux_avg_xsec'] = np.mean(self.int_dic['diff_flux_avg_xsec'])/len(x[0,:])
 
 		# normalize integrands to be O(1)
 		for k in self.norm.keys():
 			self.int_dic[k] /= self.norm[k]
+		logger.debug(f"Normalization factors in integrand: {self.norm}.")	
 
-		logger.debug(f"Normalization factors in integrand: {self.norm}.")
-		
-		
 		##############################################
 		# flat direction jacobian (undoing the vegas adaptation in flat directions of factors of the full integrands)
-		
 		# loop over decay processes
 		for decay_step in (k for k in self.int_dic.keys() if 'decay_rate' in k):
 			self.int_dic[decay_step] /= jac[:,0]*jac[:,1]
-		
 		decay_directions = range(2,self.dim)
 		for d in decay_directions:
 			self.int_dic['diff_flux_avg_xsec'] /= jac[:,d]
-
+	
 		# return all differential quantities of interest
 		return self.int_dic
 
