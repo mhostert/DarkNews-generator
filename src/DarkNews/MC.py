@@ -414,10 +414,10 @@ class XsecCalc:
 
 
 # merge all generation cases into one dictionary
-def merge_MC_output(df1,df2):
+def get_merged_MC_output(df1,df2):
     
     logger.debug(f"Appending {df2.underlying_process[0]}")
-    df = pd.concat([df1, df2], axis = 0).reset_index()    
+    df = pd.concat([df1, df2], axis = 0).reset_index(drop=True)    
     
     return df
 

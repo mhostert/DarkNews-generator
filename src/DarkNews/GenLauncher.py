@@ -237,7 +237,7 @@ class GenLauncher:
         
         self.df = self.gen_cases[0].get_MC_events()
         for mc in self.gen_cases[1:]:
-            dn.MC.merge_MC_output(self.df, mc.get_MC_events())
+            self.df = dn.MC.get_merged_MC_output(self.df, mc.get_MC_events())
 
         #################################################
         # Save attrs
