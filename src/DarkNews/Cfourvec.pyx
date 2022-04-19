@@ -114,13 +114,23 @@ def get_theta_3vec(ndarray[double, ndim=2] r):
 	return s
 
 #******************************
-def inv_mass(ndarray[double, ndim=2] x):
+def mass(ndarray[double, ndim=2] x):
 	cdef int i,m
 	m= x.shape[0]
 	cdef ndarray[double,ndim=1] s = np.empty((m))
 	with nogil:
 		for i in range(m):
 			s[i] = sqrt(x[i,0]*x[i,0] - x[i,1]*x[i,1] - x[i,2]*x[i,2] - x[i,3]*x[i,3])
+	return  s
+
+#******************************
+def inv_mass(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
+	cdef int i,m
+	m= x.shape[0]
+	cdef ndarray[double,ndim=1] s = np.empty((m))
+	with nogil:
+		for i in range(m):
+			s[i] = sqrt(x[i,0]*y[i,0] - x[i,1]*y[i,1] - x[i,2]*y[i,2] - x[i,3]*y[i,3])
 	return  s
 
 #******************************

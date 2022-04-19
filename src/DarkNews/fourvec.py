@@ -7,12 +7,12 @@ pyximport.install(
     pyimport=False,
     )
 from . import Cfourvec as Cfv
+from . import logger
 
 X = 0 
 Y = 1
 Z = 2
 
-THRESHOLD = 0.0
 
 ##############################
 # numpy functions
@@ -33,10 +33,11 @@ def cos_opening_angle(x,y):
 def cos_azimuthal(x):
 	return Cfv.get_cosTheta(x)
 
+THRESHOLD = 0.0
 def inv_mass(x,y):
 	mSQR = np.clip(dot4(x,y), THRESHOLD, np.inf)
 	if (mSQR < 0).any():
-		logger.warning("Warning! Trying to compute invariant mass with negative (p_a.p_b) product. Possible numerical instability?")
+		logger.warning("Warning! Trying to compute invariant mass with negative (p_a.p_b) product. Possibly a numerical instability?")
 	return np.sqrt(mSQR)
 
 def mass(x):

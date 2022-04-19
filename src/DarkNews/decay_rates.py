@@ -226,18 +226,19 @@ def gamma_Ni_to_Nj_V(vertex_ij, mi, mj, mV, HNLtype = const.MAJORANA):
 # d(gamma)/d(cos(theta))   Ni(k) -> Nj(k1) gamma(k2)
 def diff_gamma_Ni_to_Nj_gamma(cost, vertex_ij, mi, mj, HNLtype = const.MAJORANA, h = -1):
     
-    r1 = np.full_like(cost, mj/mi)
-
+    rj = np.full_like(cost, mj/mi)
+    k1CM = mi/2.0 * const.kallen_sqrt(1, rj**2, 0.0)
+    
     diff_gamma = mi**3 / 16 / np.pi
-    diff_gamma *= const.kallen_sqrt(1, r1**2, 0.0)
+    diff_gamma *= (1 - rj**2)**2
 
     if HNLtype == const.MAJORANA:
         # Majorana -- independent of cost 
-        diff_gamma *=  2 * np.abs(vertex_ij)**2 
+        diff_gamma *=  np.abs(vertex_ij)**2 * (1 - rj**2)
     
     elif HNLtype == const.DIRAC:
         # Dirac -- helicity dependent
-        diff_gamma *= 2 * np.abs(vertex_ij)**2 * (1 - h*cost)
+        diff_gamma *= np.abs(vertex_ij)**2 * (1 - rj**2 - h*cost*k1CM/(mi/2.0))
     else: 
         logger.error(f"HNL type {HNLtype} not recognized.")
         return 0.0 
@@ -248,10 +249,10 @@ def diff_gamma_Ni_to_Nj_gamma(cost, vertex_ij, mi, mj, HNLtype = const.MAJORANA,
 # gamma(Ni -> Nj V)  Ni(k) -> Nj(k1) gamma(k2)
 def gamma_Ni_to_Nj_gamma(vertex_ij, mi, mj, HNLtype = const.MAJORANA):
     
-    r1 = mj/mi
+    rj = mj/mi
 
-    gamma = mi**3 / 16 / np.pi
-    gamma *= const.kallen_sqrt(1, r1**2, 0.0)
+    gamma = mi**3 / 8 / np.pi
+    gamma *= (1-rj**2)**3
 
     if HNLtype == const.MAJORANA:
         # Majorana -- dependence real and imag part of vertex 

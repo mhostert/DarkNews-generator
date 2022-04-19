@@ -345,7 +345,7 @@ class Model:
                                 ])
         self.is_TMM = np.any(self.t_aj != 0)
         if self.is_TMM:
-            self._spectrum += f"\n\t{len(self.t_aj!=0)} non-zero transition magnetic moment(s)."
+            self._spectrum += f"\n\t{np.sum(self.t_aj!=0)} non-zero transition magnetic moment(s)."
 
         prettyprinter.info(f"Model:{self._spectrum}")
 

@@ -8,6 +8,7 @@ from . import logger, prettyprinter
 from . import const
 from . import pdg
 from . import fourvec as fv
+from . import Cfourvec as Cfv
 
 
 def unweigh_events(df_gen, nevents, prob_col = 'w_event_rate', **kwargs):
@@ -104,8 +105,30 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 		df_gen['pos_decay', '2'] = df_gen['pos_scatt', '2']
 		df_gen['pos_decay', '3'] = df_gen['pos_scatt', '3']
 
+
+	# pre-computing some variables
+
+	mass_projectile = Cfv.mass(df_gen['P_projectile'].to_numpy())
+	mass_target = Cfv.mass(df_gen['P_target'].to_numpy())
+	mass_decay_N_parent = Cfv.mass(df_gen['P_decay_N_parent'].to_numpy())
+	mass_recoil = Cfv.mass(df_gen['P_recoil'].to_numpy())
+	mass_decay_N_daughter = Cfv.mass(df_gen['P_decay_N_daughter'].to_numpy())
+
+	pvec_projectile = df_gen['P_projectile'][['1','2','3']].to_numpy()
+	pvec_target = df_gen['P_target'][['1','2','3']].to_numpy()
+	pvec_decay_N_parent = df_gen['P_decay_N_parent'][['1','2','3']].to_numpy()
+	pvec_recoil = df_gen['P_recoil'][['1','2','3']].to_numpy()
+	pvec_decay_N_daughter = df_gen['P_decay_N_daughter'][['1','2','3']].to_numpy()
+	pvec_decay_ell_minus = df_gen['P_decay_ell_minus'][['1','2','3']].to_numpy()
+	pvec_decay_ell_plus = df_gen['P_decay_ell_plus'][['1','2','3']].to_numpy()
+
+
+	pvec_pos_decay = df_gen['pos_decay'][['1','2','3']].to_numpy()
+	pvec_pos_scatt = df_gen['pos_scatt'][['1','2','3']].to_numpy()
+
+
 	# HEPevt file name
-	hepevt_file_name = f"{df_gen.attrs['DATA_PATH']}HEPevt.dat"
+	hepevt_file_name = f"{df_gen.attrs['data_path']}HEPevt.dat"
 	f = open(hepevt_file_name,"w+") 
 	
 	# print total number of events
@@ -126,10 +149,10 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 					f"0 "
 					f" {int(lp.nu_mu.pdgid)}"
 					f" 0 0 0 0"
-					f" {print_in_order(df_gen['P_projectile'][['1','2','3']].to_numpy()[i])}"
+					f" {print_in_order(pvec_projectile[i])}"
 					f" {df_gen['P_projectile','0'][i]:.8g}"
-					f" {fv.mass(df_gen['P_projectile'].to_numpy()[i]):.8g}"
-					f" {print_in_order(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i])}"
+					f" {mass_projectile[i]:.8g}"
+					f" {print_in_order(pvec_pos_scatt[i])}"
 					f" {df_gen['pos_scatt','0'][i]:.8g}"
 					"\n"
 					))
@@ -138,10 +161,10 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 					f"0 "
 					f" {int(df_gen['target_pdgid'][i])}"
 					f" 0 0 0 0"
-					f" {print_in_order(df_gen['P_target'][['1','2','3']].to_numpy()[i])}"
+					f" {print_in_order(pvec_target[i])}"
 					f" {df_gen['P_recoil','0'][i]:.8g}"
-					f" {fv.mass(df_gen['P_target'].to_numpy()[i]):.8g}"
-					f" {print_in_order(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i])}"
+					f" {mass_target[i]:.8g}"
+					f" {print_in_order(pvec_pos_scatt[i])}"
 					f" {df_gen['pos_scatt','0'][i]:.8g}"
 					"\n"
 					))
@@ -151,10 +174,10 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 					f"0 "
 					f" {int(pdg.neutrino5.pdgid)}"
 					f" 0 0 0 0"
-					f" {print_in_order(df_gen['P_decay_N_parent'][['1','2','3']].to_numpy()[i])}"
+					f" {print_in_order(pvec_decay_N_parent[i])}"
 					f" {df_gen['P_decay_N_parent','0'][i]:.8g}"
-					f" {fv.mass(df_gen['P_decay_N_parent'].to_numpy()[i]):.8g}"
-					f" {print_in_order(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i])}"
+					f" {mass_decay_N_parent[i]:.8g}"
+					f" {print_in_order(pvec_pos_scatt[i])}"
 					f" {df_gen['pos_scatt','0'][i]:.8g}"
 					"\n"
 					))
@@ -163,10 +186,10 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 					f"0 "
 					f" {int(df_gen['target_pdgid'][i])}"
 					f" 0 0 0 0"
-					f" {print_in_order(df_gen['P_recoil'][['1','2','3']].to_numpy()[i])}"
+					f" {print_in_order(pvec_recoil[i])}"
 					f" {df_gen['P_recoil','0'][i]:.8g}"
-					f" {fv.mass(df_gen['P_recoil'].to_numpy()[i]):.8g}"
-					f" {print_in_order(df_gen['pos_scatt'][['1','2','3']].to_numpy()[i])}"
+					f" {mass_recoil[i]:.8g}"
+					f" {print_in_order(pvec_pos_scatt[i])}"
 					f" {df_gen['pos_scatt','0'][i]:.8g}"
 					'\n'
 					))
@@ -176,10 +199,10 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 					f"0 "
 					f" {int(pdg.nulight.pdgid)}"
 					f" 0 0 0 0"
-					f" {print_in_order(df_gen['P_decay_N_daughter'][['1','2','3']].to_numpy()[i])}"
+					f" {print_in_order(pvec_decay_N_daughter[i])}"
 					f" {df_gen['P_decay_N_daughter','0'][i]:.8g}"
-					f" {fv.mass(df_gen['P_decay_N_daughter'].to_numpy()[i]):.8g}"
-					f" {print_in_order(df_gen['pos_decay'][['1','2','3']].to_numpy()[i])}"
+					f" {mass_decay_N_daughter[i]:.8g}"
+					f" {print_in_order(pvec_pos_decay[i])}"
 					f" {df_gen['pos_decay','0'][i]:.8g}"
 					'\n'
 					))
@@ -188,10 +211,10 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 					f"1 "
 					f" {int(lp.e_minus.pdgid)}"
 					f" 0 0 0 0"
-					f" {print_in_order(df_gen['P_decay_ell_minus'][['1','2','3']].to_numpy()[i])}"
+					f" {print_in_order(pvec_decay_ell_minus[i])}"
 					f" {df_gen['P_decay_ell_minus','0'][i]:.8g}"
 					f" {const.m_e:.8g}"
-					f" {print_in_order(df_gen['pos_decay'][['1','2','3']].to_numpy()[i])}"
+					f" {print_in_order(pvec_pos_decay[i])}"
 					f" {df_gen['pos_decay','0'][i]:.8g}"
 					"\n"
 					))
@@ -200,10 +223,10 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 					f"1 "
 					f" {int(lp.e_plus.pdgid)}"
 					f" 0 0 0 0"
-					f" {print_in_order(df_gen['P_decay_ell_plus'][['1','2','3']].to_numpy()[i])}"
+					f" {print_in_order(pvec_decay_ell_plus[i])}"
 					f" {df_gen['P_decay_ell_plus','0'][i]:.8g}"
 					f" {const.m_e:.8g}"
-					f" {print_in_order(df_gen['pos_decay'][['1','2','3']].to_numpy()[i])}"
+					f" {print_in_order(pvec_pos_decay[i])}"
 					f" {df_gen['pos_decay','0'][i]:.8g}"
 					"\n"
 					))
