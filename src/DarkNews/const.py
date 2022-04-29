@@ -13,8 +13,6 @@ import numpy as np
 from numpy import sqrt
 import math
 from scipy import interpolate
-import logging
-from logging.handlers import RotatingFileHandler
 
 from DarkNews import logger
 from DarkNews import local_dir
@@ -49,7 +47,7 @@ attobarn_to_cm2 = 1e-42
 
 invGeV2_to_attobarn = invGeV2_to_cm2*cm2_to_attobarn
 
-GeV2_to_cm3s = invGeV2_to_cm2*c_LIGHT*1e2
+GeV2_to_cm3s = invGeV2_to_cm2*c_LIGHT
 
 g_to_eV = 5.6095886031e32 # eV
 kg_to_eV = 5.6095886031e35 # eV
@@ -74,10 +72,21 @@ N6 = 'N6'
 
 ################################################
 # Masses 
+
+# quarks
+m_u =  2.16e-3 # GeV
+m_d =  4.67e-3 # GeV
+m_s =  93e-3 # GeV
+m_c =  1.27 # GeV
+m_b =  4.18 # GeV
+m_t =  172.76 # GeV
+
+# nucleons 
 m_proton = 0.93827208816 # GeV
 m_neutron = 0.93956542052 # GeV
 m_avg = (m_proton+m_neutron)/2. # GeV
 
+# leptons
 m_W = 80.37912 # GeV
 m_Z = 91.187621 # GeV
 
@@ -231,44 +240,6 @@ def sci_notation(num, decimal_digits=1, precision=None, exponent=None):
     else:
         return r"0"
 # ^^^
-
-
-
-def ConfigureLogger(logger, level=logging.INFO, prettyprinter = None, logfile = None, verbose=False):
-    ''' 
-    Configure the DarkNews logger 
-        
-        logger --> main logger of DarkNews. It handles all debug, info, warning, and error messages
-
-        prettyprint --> secondary logger for pretty-print messages. Cannot override the main logger level
-
-    '''
-    
-    logger.setLevel(level)
-
-    if logfile:
-        # log to files with max 1 MB with up to 4 files of backup
-        handler = RotatingFileHandler(f"{logfile}", maxBytes=1000000, backupCount=4)
-
-    else:
-        # stdout only
-        handler = logging.StreamHandler(stream=sys.stdout)
-        if prettyprinter:
-            pretty_handler = logging.StreamHandler(stream=sys.stdout)
-            pretty_handler.setLevel(level)
-            delimiter = '---------------------------------------------------------'
-            pretty_handler.setFormatter(logging.Formatter(delimiter+'\n%(message)s\n'+delimiter+"\n"))
-            # update pretty printer 
-            if (prettyprinter.hasHandlers()):
-                prettyprinter.handlers.clear()
-            prettyprinter.addHandler(pretty_handler)
-
-    handler.setLevel(level)
-    if verbose:
-        handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(name)s:\n\t%(message)s\n', datefmt='%H:%M:%S'))
-    else:
-        handler.setFormatter(logging.Formatter('%(message)s'))
-    logger.addHandler(handler)
 
 # run shell commands from notebook
 def subprocess_cmd(command, verbose=2):

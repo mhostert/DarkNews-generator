@@ -103,6 +103,7 @@ class UpscatteringProcess:
 
         self.MA = target.mass
         self.mzprime = TheoryModel.mzprime
+        self.mhprime = TheoryModel.mhprime
         self.m_ups = self.nu_upscattered.mass
 
         if self.helicity == 'conserving':
@@ -117,6 +118,8 @@ class UpscatteringProcess:
         self.Cji=self.Cij
         self.Vij=TheoryModel.d_aj[pdg.get_lepton_index(nu_projectile), pdg.get_HNL_index(nu_upscattered)]
         self.Vji=self.Vij
+        self.Sij=TheoryModel.s_aj[pdg.get_lepton_index(nu_projectile), pdg.get_HNL_index(nu_upscattered)]
+        self.Sji=self.Sij
         self.mu_tr=TheoryModel.t_aj[pdg.get_lepton_index(nu_projectile), pdg.get_HNL_index(nu_upscattered)]
 
         ###############
@@ -124,12 +127,15 @@ class UpscatteringProcess:
         if target.is_nucleus:
             self.Chad = const.gweak/2.0/const.cw*np.abs((1.0-4.0*const.s2w)*target.Z-target.N)
             self.Vhad = const.eQED*TheoryModel.epsilon*target.Z
+            self.Shad = TheoryModel.cSproton*target.Z + TheoryModel.cSneutron*target.N
         elif target.is_proton:
             self.Chad = TheoryModel.cVproton
             self.Vhad = TheoryModel.dVproton
+            self.Shad = TheoryModel.cSproton
         elif target.is_neutron:
             self.Chad = TheoryModel.cVneutron
             self.Vhad = TheoryModel.dVneutron
+            self.Shad = TheoryModel.cSneutron
         # mass mixed vertex
         self.Cprimehad = self.Chad*TheoryModel.epsilonZ
 
@@ -146,16 +152,19 @@ class FermionDileptonDecay:
         
         # particle masses
         self.mzprime = TheoryModel.mzprime
+        self.mhprime = TheoryModel.mhprime
         self.mm = final_lepton1.mass*const.MeV_to_GeV 
         self.mp = final_lepton2.mass*const.MeV_to_GeV 
 
         if nu_daughter == pdg.nulight:
             self.Cih = np.sqrt(np.sum(np.abs(TheoryModel.c_ij[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
             self.Dih = np.sqrt(np.sum(np.abs(TheoryModel.d_ij[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
+            self.Sih = np.sqrt(np.sum(np.abs(TheoryModel.s_aj[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
             self.Tih = np.sqrt(np.sum(np.abs(TheoryModel.t_aj[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
         else:
             self.Cih = TheoryModel.c_ij[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
             self.Dih = TheoryModel.d_ij[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
+            self.Sih = TheoryModel.s_aj[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
             self.Tih = TheoryModel.t_aj[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
 
 
@@ -192,8 +201,8 @@ class FermionDileptonDecay:
         self.CC_mixing2 *= -1
 
         ## Is the mediator on shell?
-        self.on_shell = (self.m_parent - self.m_daughter > TheoryModel.mzprime)
-        self.off_shell = ~self.on_shell
+        self.on_shell = (self.m_parent - self.m_daughter - self.mm - self.mp > TheoryModel.mzprime)
+        self.off_shell = not self.on_shell
         ## does it have transition magnetic moment?
         self.TMM = TheoryModel.is_TMM
 
@@ -267,6 +276,30 @@ class Model:
             self.epsilon    = 1.0 # kinetic mixing
             self.epsilonZ   = 0.0 # mass mixing
             self.mzprime    = 1e10
+            
+            # h'
+            # self.gD         = 1.0
+            # self.epsilon    = 1.0 # kinetic mixing
+            self.theta   = 0.0 # higgs mixing
+            self.mhprime    = 1e10
+            
+            # scalar couplings
+            self.s_e4 = 0.0
+            self.s_e5 = 0.0
+            self.s_e6 = 0.0
+            self.s_mu4 = 0.0
+            self.s_mu5 = 0.0
+            self.s_mu6 = 0.0
+            self.s_tau4 = 0.0
+            self.s_tau5 = 0.0
+            self.s_tau6 = 0.0
+            self.s_44 = 0.0
+            self.s_45 = 0.0
+            self.s_46 = 0.0
+            self.s_55 = 0.0
+            self.s_56 = 0.0
+            self.s_66 = 0.0
+
 
             # TMM in GeV^-1
             self.mu_tr_e4 = 0.0
@@ -334,6 +367,26 @@ class Model:
             self.zprime = pdg.new_particle(name='zprime', pdgid=5921, latex_name='Z^\prime')
             self._spectrum+="\n\tkinetically mixed Z'"
 
+        # create the scalar mediator scope
+        self.is_scalar_mixed = (self.theta != 0)
+        if self.is_scalar_mixed:
+            # dark scalar 
+            self.hprime = pdg.new_particle(name='hprime', pdgid=5901, latex_name='h^\prime')
+            self._spectrum+="\n\thiggs mixed h'"
+
+        # create the scalar couplings
+        self.s_aj = np.array([\
+                                [0,0,0, self.s_e4,   self.s_e5,    self.s_e6],
+                                [0,0,0, self.s_mu4,  self.s_mu5,   self.s_mu6],
+                                [0,0,0, self.s_tau4, self.s_tau5,  self.s_tau6],
+                                [0,0,0, self.s_44,   self.s_45,    self.s_46],
+                                [0,0,0, self.s_45,   self.s_55,    self.s_56],
+                                [0,0,0, self.s_46,   self.s_56,    self.s_66],
+                                ])
+        self.is_scalar_mixed = np.any(self.s_aj != 0)
+        if self.is_scalar_mixed:
+            self._spectrum += f"\n\t{np.sum(self.s_aj!=0)} non-zero scalar-neutrino coupling(s)."
+
         # create the transition mag moment scope
         self.t_aj = np.array([\
                                 [0,0,0, self.mu_tr_e4,   self.mu_tr_e5,    self.mu_tr_e6],
@@ -362,8 +415,6 @@ class Model:
         self.cosof2chi  = (1.0 - self.tanchi**2)/(1.0+self.tanchi**2)
         self.s2chi = (1.0 - self.cosof2chi)/2.0
         self.c2chi = 1 - self.s2chi
-
-
 
         entry_22 = self.c2chi - const.s2w*self.s2chi - (self.mzprime/const.m_Z)**2 
         self.tanof2beta = const.sw *  self.sinof2chi / (entry_22)
@@ -434,6 +485,7 @@ class Model:
         self.Utau = [0,0,1,self.Utau4, self.Utau5, self.Utau6]
         self.Udark = [0,0,0,self.UD4, self.UD5, self.UD6]
 
+        ##### FIX-ME -- expand to arbitrary number of dark flavors.
         self.n_dark_HNLs= 1#self.n_HNLs
         # list of dark flavors 
         self.inds_dark = range(const.ind_tau+1,3+self.n_dark_HNLs)
@@ -458,8 +510,6 @@ class Model:
             self.Ulep[self.inds_dark,   i] = self.Udark[i]/self.n_dark_HNLs
             self.Ulep[i,   self.inds_dark] = self.Udark[i]/self.n_dark_HNLs
             
-
-
         self.Ua = self.Ulep[const.inds_active,:]
         self.Uactive_heavy = self.Ulep[const.inds_active,3:]
 
@@ -522,6 +572,35 @@ class Model:
         self.d_aj = np.hstack((np.diag([1,1,1]),self.d_aj))
 
         self.dlight = 0.0
+
+
+        #########################
+        # Scalar couplings
+        self.tantheta = np.tan(self.theta)
+        self.sintheta = np.sin(self.theta)
+        self.costheta = np.cos(self.theta)
+        
+        # light quark couplings determine higgs coupling to nucleon 
+        # see e.g. arxiv.org/abs/1306.4710
+
+        self.sigma_l = 0.058 # GeV
+        self.sigma_0 = 0.055 # GeV
+        z = 1.49 # isospin breaking parameter
+        y = 1 - self.sigma_0/self.sigma_l
+        _prefactor = 1/(const.m_u + const.m_d)*self.sigma_l/const.m_avg
+        self.fu = _prefactor*const.m_u * (2*z + y*(1 - z))/(1 + z)
+        self.fd = _prefactor*const.m_d * (2 - y*(1 - z))/(1+z)
+        self.fs = _prefactor*const.m_s * y
+
+        self.fN_higgs = 2/9 + 7/9* ( self.fu + self.fd + self.fs )
+        self.c_nucleon_higgs = self.fN_higgs * const.m_avg/const.vev_EW
+        
+        self.cSnucleon = self.sintheta*self.c_nucleon_higgs
+        # isospin
+        self.cSproton  = self.cSnucleon
+        self.cSneutron = self.cSnucleon
+        self.ceS = self.costheta*const.m_e/const.vev_EW/np.sqrt(2)
+        self.deS = self.sintheta*const.m_e/const.vev_EW/np.sqrt(2)
 
 
     def create_unstable_particles(self):

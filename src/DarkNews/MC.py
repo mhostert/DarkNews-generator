@@ -31,7 +31,7 @@ class MC_events:
     Args:
         experiment:             instance of Detector class
         target:                 scattering target class 
-        scattering_regime:      regime for scattering process, e.g. coherent, p-el, (future: RES, DIS) 
+        scattering_regime:      regime for scattering process, choices: ['coherent', 'p-el', 'n-el', 'DIS'] (future: RES) 
         nu_projectile:          incoming neutrino flavor
         nu_upscattered:         intermediate dark NU in upscattering process
         nu_outgoing:            outgoing neutrino flavor
@@ -70,6 +70,8 @@ class MC_events:
             self.target = self.nuclear_target.get_constituent_nucleon('proton')
         elif scope['scattering_regime'] == 'n-el':
             self.target = self.nuclear_target.get_constituent_nucleon('neutron')
+        elif scope['scattering_regime'] == 'DIS':
+            self.target = self.nuclear_target.get_constituent_quarks()
         else:
             logger.error(f"Scattering regime {scope['scattering_regime']} not supported.")
 
@@ -84,14 +86,14 @@ class MC_events:
         if scope['decay_product'] == 'e+e-':
             self.decay_product = pdg.electron
             # process being considered
-            DECAY_PRODUCTS = f"{self.decay_product.invert().name} + {self.decay_product.name}"
+            DECAY_PRODUCTS = f"{self.decay_product.invert().name} {self.decay_product.name}"
             self.decays_to_dilepton = True
             self.decays_to_singlephoton = False
 
         elif scope['decay_product'] == 'mu+mu-':
             self.decay_product = pdg.muon
             # process being considered
-            DECAY_PRODUCTS = f"{self.decay_product.invert().name} + {self.decay_product.name}"
+            DECAY_PRODUCTS = f"{self.decay_product.invert().name} {self.decay_product.name}"
             self.decays_to_dilepton = True
             self.decays_to_singlephoton = False
 
@@ -106,7 +108,7 @@ class MC_events:
             raise ValueError
 
         # process being considered
-        self.underl_process_name = f'{self.nu_projectile.name} + {self.target.name} -> {self.nu_upscattered.name} +  {self.target.name} -> {self.nu_outgoing.name} + {DECAY_PRODUCTS} + {self.target.name}'
+        self.underl_process_name = f'{self.nu_projectile.name} {self.target.name} --> {self.nu_upscattered.name}  {self.target.name} --> {self.nu_outgoing.name} {DECAY_PRODUCTS} {self.target.name}'
     
 
 
@@ -184,6 +186,8 @@ class MC_events:
             target_multiplicity = self.nuclear_target.Z
         elif self.scope['scattering_regime'] == 'n-el':
             target_multiplicity = self.nuclear_target.N
+        elif self.scope['scattering_regime'] == 'DIS':
+            target_multiplicity = 1
         else:
             logger.error(f"Scattering regime {self.scope['scattering_regime']} not supported.")
 
@@ -299,6 +303,8 @@ class MC_events:
             target_multiplicity = self.nuclear_target.Z
         elif self.scope['scattering_regime'] == 'n-el':
             target_multiplicity = self.nuclear_target.N
+        elif self.scope['scattering_regime'] == 'DIS':
+            target_multiplicity = 1
         else:
             logger.error(f"Scattering regime {self.scope['scattering_regime']} not supported.")
 
@@ -381,7 +387,11 @@ class XsecCalc:
 
         self.Ethreshold = self.ups_case.m_ups**2 / 2.0 / self.ups_case.MA + self.ups_case.m_ups
 
-    def total_xsec(self, Enu):
+        #############
+        # vectorize total cross section calculator using vegas integration
+        self.total_xsec = np.vectorize(self.scalar_total_xsec, excluded=['self','diagrams'])
+
+    def scalar_total_xsec(self, Enu, diagrams=['total'], NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup):
         """ 
             Returns the total upscattering xsec for a fixed neutrino energy
         """
@@ -392,24 +402,32 @@ class XsecCalc:
         if Enu < (self.Ethreshold):
             return 0.0
 
-        batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=self.Enu, MC_case=self)
-        integ   = vg.Integrator(DIM*[[0.0, 1.0]]) # unit hypercube
-        
-        integrals = run_vegas(batch_f, integ, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
-        logger.debug(f"Main VEGAS run completed.")
+        all_xsecs=0.0
+        for diagram in diagrams:
+            batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=self.Enu, MC_case=self, diagram=diagram)
+            integ   = vg.Integrator(DIM*[[0.0, 1.0]]) # unit hypercube
+            
+            integrals = run_vegas(batch_f, integ, adapt_to_errors=True,
+                                        NINT=NINT, 
+                                        NEVAL=NEVAL, 
+                                        NINT_warmup=NINT_warmup, 
+                                        NEVAL_warmup=NEVAL_warmup)
+            logger.debug(f"Main VEGAS run completed.")
 
-        #############
-        # integrated xsec coverted to cm^2
-        tot_xsec = integrals['diff_xsec'].mean*const.attobarn_to_cm2*batch_f.norm['diff_xsec']
-        logger.debug(f"Total cross section calculated.")
-        return tot_xsec*self.target_multiplicity
+            #############
+            # integrated xsec coverted to cm^2
+            all_xsecs += integrals['diff_xsec'].mean*const.attobarn_to_cm2*batch_f.norm['diff_xsec']*self.target_multiplicity
+            logger.debug(f"Total cross section for {diagram} calculated.")
 
-    def diff_xsec_Q2(self, Enu, Q2):
+            
+        return all_xsecs
+
+    def diff_xsec_Q2(self, Enu, Q2, diagrams=['total']):
 
         s = Enu*self.ups_case.MA*2+self.ups_case.MA**2
         physical =  ((Q2 > ps.upscattering_Q2min(Enu, self.ups_case.m_ups, self.ups_case.MA)) & (Q2 < ps.upscattering_Q2max(Enu, self.ups_case.m_ups, self.ups_case.MA)))
-
-        return amps.upscattering_dxsec_dQ2([s,-Q2,0.0], process=self.ups_case)*physical
+        diff_xsecs=amps.upscattering_dxsec_dQ2([s,-Q2,0.0], process=self.ups_case, diagrams=diagrams)
+        return {key: diff_xsecs[key]*physical for key in diff_xsecs.keys()}
 
 
 
@@ -458,11 +476,11 @@ def get_samples(integ, batch_integrand, return_jac=False):
     else:
         return np.array(unit_samples), weights
 
-def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=1000):
+def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=1000, **kwargs):
         
         # warm up the MC, adapting to the integrand
-        integ(batch_f, nitn=NINT_warmup, neval=NEVAL_warmup, uses_jac=True)
+        integ(batch_f, nitn=NINT_warmup, neval=NEVAL_warmup, uses_jac=True, **kwargs)
         logger.debug(f"VEGAS warm-up completed.")
 
         # sample again, now saving result and turning off further adaption
-        return integ(batch_f,  nitn = NINT, neval = NEVAL, uses_jac=True)#, adapt=False)
+        return integ(batch_f,  nitn = NINT, neval = NEVAL, uses_jac=True, **kwargs)#, adapt=False)

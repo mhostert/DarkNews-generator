@@ -306,9 +306,10 @@ def diff_gamma_Ni_to_Nj_ell_ell(PS, process):
     Dih = process.Dih
     Cv = process.TheoryModel.ceV
     Ca = process.TheoryModel.ceA
+    Cs = process.TheoryModel.ceS
     Dv = process.TheoryModel.deV
     Da = process.TheoryModel.deA
-    
+    Ds = process.TheoryModel.deS
     # dij = params.dij
 
     h = process.h_parent

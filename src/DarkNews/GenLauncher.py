@@ -1,23 +1,20 @@
 import logging
+import sys
 import numpy as np
-import math
-import os.path
 
 # Dark Neutrino and MC stuff
 import DarkNews as dn
-from DarkNews import pdg
-from DarkNews.const import Q, ConfigureLogger
 from DarkNews import logger, prettyprinter
 from DarkNews.AssignmentParser import AssignmentParser
 
 class GenLauncher:
 
-    banner = r"""|   ______           _        _   _                     |
-|   |  _  \         | |      | \ | |                    |
-|   | | | |__ _ _ __| | __   |  \| | _____      _____   |
-|   | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|  |
-|   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \  |
-|   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  |"""
+    banner = r"""   ______           _        _   _                     
+   |  _  \         | |      | \ | |                    
+   | | | |__ _ _ __| | __   |  \| | _____      _____   
+   | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|  
+   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \  
+   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  """
 
     # handle parameters that can assume only certain values
     _choices = {
@@ -64,6 +61,13 @@ class GenLauncher:
 
         # look into kwargs
         self._load_parameters(**kwargs)
+
+        #########################
+        # Set up loggers
+        self.prettyprinter = prettyprinter
+        self.configure_logger(logger=logger, level=self.log, prettyprinter=self.prettyprinter, verbose=self.verbose, logfile=self.logfile)
+
+        prettyprinter.info(self.banner)
 
         #########################
         # Set BSM parameters
@@ -148,8 +152,8 @@ class GenLauncher:
         # Default values
         scope = {  'NO_COH': self.nocoh,
                     'NO_PELASTIC': self.nopelastic,
-                    'INCLUDE_HC': ~self.noHC,
-                    'INCLUDE_HF': ~self.noHF,
+                    'INCLUDE_HC': not self.noHC,
+                    'INCLUDE_HF': not self.noHF,
                     'FLAVORS': [dn.pdg.numu],
                     'UPSCATTERED_NUS': self.upscattered_nus,
                     'OUTGOING_NUS': self.outgoing_nus,
@@ -215,7 +219,7 @@ class GenLauncher:
         return self.gen_cases
 
 
-    def run(self, log="INFO", verbose=None, logfile=None, path="."):
+    def run(self, log=None, verbose=None, logfile=None, path="."):
         
         ####################################################
         args = {"log": log, "verbose": verbose, "logfile": logfile, "path": path}
@@ -223,18 +227,21 @@ class GenLauncher:
             if args[attr] is not None:
                 setattr(self, attr, args[attr])
 
-        numeric_level = getattr(logging, log, None)
-        if not isinstance(numeric_level, int):
-            raise ValueError('Invalid log level: %s' % log)  
-        ConfigureLogger(logger, level=numeric_level, prettyprinter=prettyprinter, verbose=verbose, logfile=logfile)
+        ############
+        # supersede original logger configuration 
+        self.configure_logger(  logger = logger,
+                                prettyprinter=self.prettyprinter,
+                                level=(log or self.log), 
+                                verbose=(verbose or self.verbose),
+                                logfile=(logfile or self.logfile)
+                            )
 
         ######################################
         # run generator
-        prettyprinter.info(self.banner)
-
         logger.debug(f"Now running the generator for each instance.")
         # Set theory params and run generation of events
         
+        logger.info(f"Generating Events using the neutrino-nucleus upscattering engine")
         self.df = self.gen_cases[0].get_MC_events()
         for mc in self.gen_cases[1:]:
             self.df = dn.MC.get_merged_MC_output(self.df, mc.get_MC_events())
@@ -255,3 +262,45 @@ class GenLauncher:
             dn.printer.print_unweighted_events_to_HEPEVT(self.df, unweigh= self.hepevt_unweigh, max_events=self.hepevt_events)
         
         return self.df
+
+    def configure_logger(self, logger, level=logging.INFO, prettyprinter = None, logfile = None, verbose=False):
+        ''' 
+        Configure the DarkNews logger 
+            
+            logger --> main logger of DarkNews. It handles all debug, info, warning, and error messages
+
+            prettyprint --> secondary logger for pretty-print messages. Cannot override the main logger level
+
+        '''
+        level = level.upper()
+        _numeric_level = getattr(logging, level, None)
+        if not isinstance(_numeric_level, int):
+            raise ValueError('Invalid log level: %s' % self.log)  
+        logger.setLevel(_numeric_level)
+
+        if logfile:
+            # log to files with max 1 MB with up to 4 files of backup
+            handler = logging.handlers.RotatingFileHandler(f"{logfile}", maxBytes=1000000, backupCount=4)
+
+        else:
+            # stdout only
+            handler = logging.StreamHandler(stream=sys.stdout)
+            if prettyprinter:
+                pretty_handler = logging.StreamHandler(stream=sys.stdout)
+                pretty_handler.setLevel(level)
+                delimiter = '---------------------------------------------------------'
+                pretty_handler.setFormatter(logging.Formatter(delimiter+'\n%(message)s\n'))
+                # update pretty printer 
+                if (prettyprinter.hasHandlers()):
+                    prettyprinter.handlers.clear()
+                prettyprinter.addHandler(pretty_handler)
+
+        handler.setLevel(level)
+        if verbose:
+            handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(name)s:\n\t%(message)s\n', datefmt='%H:%M:%S'))
+        else:
+            handler.setFormatter(logging.Formatter('%(message)s'))
+        
+        if (logger.hasHandlers()):
+            logger.handlers.clear()    
+        logger.addHandler(handler)

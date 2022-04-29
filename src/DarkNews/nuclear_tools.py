@@ -80,8 +80,12 @@ class NuclearTarget:
     def get_constituent_nucleon(self, name):
         return self.BoundNucleon(self, name)
 
+     # *constituent quarks* for DIS
+    def get_constituent_nucleon(self, name):
+        return self.BoundNucleon(self, name)
+
  
-    class BoundNucleon():    
+    class BoundNucleon():
         """ for scattering on bound nucleon in the nuclear target 
         
         Inner Class
@@ -121,7 +125,6 @@ class NuclearTarget:
                 logger.error(f"Error. Could not find the PDG ID of {self.name}.")
                 raise ValueError
 
-
             self.tau3 = self.Z*2 - 1  # isospin +1 proton / -1 neutron 
 
             assign_form_factors(self)
@@ -149,7 +152,49 @@ def assign_form_factors(target):
         target.F2_EM = lambda x: 0.0 # Pauli FF
         
         ### FIX ME -- need to find the correct NC form factor
-        target.F1_NC = lambda x: nuclear_F1_FHelmz_NC(x, target.A) # Dirac FF
+        # target.F1_NC = lambda x: nuclear_F1_FHelmz_NC(x, target.A) # Dirac FF
+        target.F1_NC = fcoh # Dirac FF
+        target.F2_NC = lambda x: 0.0 # Pauli FF
+        target.F3_NC = lambda x: 0.0 # Axial FF
+    
+    # Nucleons
+    elif target.is_nucleon:
+
+        target.F1_EM = lambda x: nucleon_F1_EM(x, target.tau3) # Dirac FF
+        target.F2_EM = lambda x: nucleon_F2_EM(x, target.tau3) # Pauli FF
+        
+        target.F1_NC = lambda x: nucleon_F1_NC(x, target.tau3) # Dirac FF
+        target.F2_NC = lambda x: nucleon_F2_NC(x, target.tau3) # Pauli FF
+        target.F3_NC = lambda x: nucleon_F3_NC(x, target.tau3) # Axial FF
+
+    else:
+        logger.error(f"Could not find hadronic target {target.name}.")
+        exit(0)
+
+
+#####################################
+# Partdon Distribution Functions
+def assign_PDFs(target):
+
+    # Nucleus
+    if target.is_nucleus:
+        try:
+            a=fourier_bessel_dic[target.name.lower()] ## stored with lower case formatting
+            fcoh = lambda x: nuclear_F1_fourier_bessel_EM(x,a)
+        except KeyError:
+            logger.warning(f'Warning: nuclear density for {target.name} not tabulated in Nuclear Data Table. Using symmetrized Fermi form factor instead.')
+            fcoh = lambda x: nuclear_F1_Fsym_EM(x, target.A)
+        except:
+            logger.warning(f'Warning: could not compute the nuclear form factor for {target.name}. Taking it to be vanishing.')
+            fcoh = lambda x: 0
+
+        ### FIX ME -- No nuclear magnetic moments so far
+        target.F1_EM = fcoh # Dirac FF
+        target.F2_EM = lambda x: 0.0 # Pauli FF
+        
+        ### FIX ME -- need to find the correct NC form factor
+        # target.F1_NC = lambda x: nuclear_F1_FHelmz_NC(x, target.A) # Dirac FF
+        target.F1_NC = fcoh # Dirac FF
         target.F2_NC = lambda x: 0.0 # Pauli FF
         target.F3_NC = lambda x: 0.0 # Axial FF
     
@@ -199,7 +244,7 @@ def nuclear_F1_fourier_bessel_EM(Q2, array_coeff):
         n=i+1
         expansion += fourier_bessel_form_factor_terms(q,R,n)*ai[i]
     Q_total = np.sum(fourier_bessel_integral_terms(R,nonzero_terms+1)*ai[nonzero_terms])
-    return expansion/Q_total
+    return np.abs(expansion/Q_total)
 
 
 

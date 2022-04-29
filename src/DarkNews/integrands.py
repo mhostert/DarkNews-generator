@@ -30,15 +30,35 @@ def Sqrt(x):
 
 class UpscatteringXsec(vg.BatchIntegrand):
 
-	def __init__(self, dim, Enu, MC_case):
+	def __init__(self, dim, Enu, MC_case, diagram='total'):
 		self.dim = dim
 		self.Enu = Enu
 		self.MC_case = MC_case
+		self.diagram = diagram
+		if not isinstance(self.diagram, str):
+			logger.error(f"ERROR. Cannot calculate total cross section for more than one diagram at a time. Passed diagram={self.diagram}.")
+			raise ValueError
 		
+		# Enforce Q2 range
+		if self.MC_case.scattering_regime == 'coherent':
+			self.QMIN = 0 # GeV
+			self.QMAX = 2 # GeV
+		elif self.MC_case.scattering_regime in ['p-el','n-el']:
+			self.QMIN = 0 # GeV
+			self.QMAX = 2 # GeV
+		elif self.MC_case.scattering_regime in ['DIS']:
+			self.QMIN = 2 # GeV
+			self.QMAX = np.inf # GeV
+		else:
+			self.QMIN = 0 # GeV
+			self.QMAX = np.inf
+			
+
+		# Find the normalization factor
 		self.norm = {}
 		self.norm['diff_xsec'] = 1
 		# normalize integrand with an initial throw
-		_throw = self.__call__(np.random.rand(self.dim,1000), np.ones((self.dim,1000)))
+		_throw = self.__call__(np.random.rand(self.dim,20000), np.ones((self.dim,20000)))
 		for key,val in _throw.items():
 			self.norm[key] = np.mean(val)
 
@@ -53,7 +73,7 @@ class UpscatteringXsec(vg.BatchIntegrand):
 		M = self.MC_case.target.mass
 
 		Q2lmin = np.log(phase_space.upscattering_Q2min(Enu, ups_case.m_ups, M))
-		Q2lmax = np.log(phase_space.upscattering_Q2max(Enu, ups_case.m_ups, M))
+		Q2lmax = np.log(np.minimum(phase_space.upscattering_Q2max(Enu, ups_case.m_ups, M), self.QMAX**2 ))
 
 		Q2l = (Q2lmax - Q2lmin) * x[:, 0] + Q2lmin
 		Q2 = np.exp(Q2l)
@@ -62,11 +82,10 @@ class UpscatteringXsec(vg.BatchIntegrand):
 		t = -Q2
 		u = 2*M**2 + ups_case.m_ups**2 - s - t # massless projectile
 
-
 		##############################################
 		# Upscattering amplitude squared (spin summed -- not averaged)
-		diff_xsec = amps.upscattering_dxsec_dQ2([s,t,u], self.MC_case.ups_case)
-
+		diff_xsec = amps.upscattering_dxsec_dQ2([s,t,u], self.MC_case.ups_case, diagrams = [self.diagram])
+		diff_xsec = np.sum([diff_xsec[diagram] for diagram in diff_xsec.keys()])
 		# hypercube jacobian (vegas hypercube --> physical limits) transformation
 		hypercube_jacobian = (Q2lmax - Q2lmin)*np.exp(Q2l)
 		diff_xsec *= hypercube_jacobian
