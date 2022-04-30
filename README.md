@@ -54,12 +54,11 @@ To install the package, download the release for the stable version (or clone th
 Save everything in a directory.
 Then enter in the main folder and run:
 ```sh
-python3 -m pip install -e . --ignore-installed certifi
+python3 -m pip install -e .
 ```
 
 The package will be installed locally in editable mode.  
-The command will take care of installing any missing dependencies.
-In any case, it is necessary to have Python 3.6.1 with at least NumPy installed prior to run it.
+The command will take care of installing any missing dependencies. It is necessary to have Python 3.6.1.
 
 ## Usage
 
