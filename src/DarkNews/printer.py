@@ -7,7 +7,6 @@ from particle import literals as lp
 from . import logger, prettyprinter
 from . import const
 from . import pdg
-from . import fourvec as fv
 from . import Cfourvec as Cfv
 
 
@@ -45,7 +44,7 @@ def print_events_to_pandas(PATH_data, df_gen):
 	
 	# pickles DarkNews classes with support for lambda functions
 	dill.dump(df_gen, open(out_file_name, 'wb'))
-	prettyprinter.info(f"* Events in pandas dataframe saved to file successfully:\n\n{out_file_name}")
+	prettyprinter.info(f"Events in pandas dataframe saved to file successfully:\n{out_file_name}")
 	# aux_df.to_pickle(out_file_name)
 	# pickle.dump(aux_df, open(out_file_name, 'wb'	))
 	return df_gen
@@ -233,4 +232,4 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 
 	f.close()
 
-	prettyprinter.info(f"* HEPevt events saved to file successfully:\n\n{hepevt_file_name}")
+	prettyprinter.info(f"HEPevt events saved to file successfully:\n{hepevt_file_name}")

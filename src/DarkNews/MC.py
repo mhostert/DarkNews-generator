@@ -208,7 +208,7 @@ class MC_events:
             The first integrand entry is the one VEGAS uses to optimize the importance sampling.
         """
 
-        prettyprinter.info(f"{self.underl_process_name}")
+        logger.info(f"{self.underl_process_name}")
         logger.info(f"Helicity {self.helicity} upscattering.")
         #########################################3
         # Some experimental definitions

@@ -28,7 +28,7 @@ pyximport.install(
     pyimport=False,
     setup_args={'include_dirs': numpy.get_include()}
     )
-from . import Cfourvec as Cfv
+# from . import Cfourvec as Cfv
 
 
 

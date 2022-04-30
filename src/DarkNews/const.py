@@ -7,7 +7,6 @@ We use PDG2020 values for constants and SM masses.
 Some low-level auxiliary functions are defined.
 
 """
-import sys
 import subprocess
 import numpy as np
 from numpy import sqrt
@@ -116,7 +115,7 @@ alphaQED = 1.0/137.03599908421 # Fine structure constant at q2 -> 0
 eQED = np.sqrt((4*np.pi)*alphaQED)
 
 # get running alphaQED
-Q, inv_alphaQED = np.genfromtxt(f'{local_dir}/aux_data/alphaQED/alpha_QED_running_posQ2.dat',unpack=True)
+Q, inv_alphaQED = np.genfromtxt(f'{local_dir}/include/aux_data/alpha_QED_running_posQ2.dat',unpack=True)
 runningAlphaQED = interpolate.interp1d(Q,1.0/inv_alphaQED)
 
 ################################################

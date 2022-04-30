@@ -16,18 +16,19 @@ from .AssignmentParser import AssignmentParser
 class Detector():
     """ 
 
-    Detector is a collection of necessary variables for cross-section and gamma
-    calculations, .e.g energy range, target type, weight, and POTs for exposure.
+    Detector is a collection of necessary variables for cross-section and event rate
+    calculations, e.g., energy range, target type, weight, and POTs for exposure.
+    
     It provides the `get_flux_func` which creates a spline interpolation of the
     input neutrino flux.
 
     Args:
-        exp_module (name):  name of experiment corresponding to a python module
-                            in the path `dark_news/detector/exp_module.py`.
-                            the module should contain parameters specific for
+        exp_module (name):  name of experiment corresponding to a .txt file
+                            in the path `DarkNews/include/detector/exp_module.txt`.
+                            the file should contain parameters specific for
                             that experiment if it is user defined.
     """
-    PATH_CONFIG_FILES = os.path.join(local_dir, "detectors")
+    PATH_CONFIG_FILES = os.path.join(local_dir, "include/detectors")
     KEYWORDS = {
         "dune_nd_fhc": os.path.join(PATH_CONFIG_FILES, "dune_nd_fhc.txt"),
         "dune_nd_rhc": os.path.join(PATH_CONFIG_FILES, "dune_nd_rhc.txt"),

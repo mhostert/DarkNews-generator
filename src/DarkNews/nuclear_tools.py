@@ -13,8 +13,9 @@ from .const import *
 class NuclearTarget:
     """ for scattering on a nuclear target 
     Args:
-        params      ??
+        
         name: name of the target. Can be either "electron" or the name of the element (e.g. C12, Pb208).
+    
     """
 
     def __init__(self, name):
@@ -132,8 +133,23 @@ class NuclearTarget:
 
 
 
-
 def assign_form_factors(target):
+    '''
+        Here we define nuclear form factors following:
+        http://discovery.phys.virginia.edu/research/groups/ncd/index.html
+
+        When available, we use data from Nuclear Data Tables (74, 87, and 95), stored in "include/aux_data/mass20.txt":
+            "The Ame2020 atomic mass evaluation (I)"   by W.J.Huang, M.Wang, F.G.Kondev, G.Audi and S.Naimi
+                Chinese Physics C45, 030002, March 2021.
+            "The Ame2020 atomic mass evaluation (II)"  by M.Wang, W.J.Huang, F.G.Kondev, G.Audi and S.Naimi
+                Chinese Physics C45, 030003, March 2021.
+
+        Element properties are stored in elements_dic.To access individual elements we use the format:
+            
+            key = 'name+A', e.g. key = 'Pb208' or 'C12'.
+        
+        All units in GeV, except otherwise specified
+    '''
 
     # Nucleus
     if target.is_nucleus:
@@ -247,26 +263,6 @@ def nuclear_F1_fourier_bessel_EM(Q2, array_coeff):
     return np.abs(expansion/Q_total)
 
 
-
-'''
-    Here we define nuclear form factors following:
-    http://discovery.phys.virginia.edu/research/groups/ncd/index.html
-
-    When available, we use data from Nuclear Data Tables (74, 87, and 95), stored in "aux_data/mass20.txt":
-        "The Ame2020 atomic mass evaluation (I)"   by W.J.Huang, M.Wang, F.G.Kondev, G.Audi and S.Naimi
-               Chinese Physics C45, 030002, March 2021.
-        "The Ame2020 atomic mass evaluation (II)"  by M.Wang, W.J.Huang, F.G.Kondev, G.Audi and S.Naimi
-               Chinese Physics C45, 030003, March 2021.
-
-    Element properties are stored in elements_dic.To access individual elements we use the format:
-        
-        key = 'name+A', e.g. key = 'Pb208' or 'C12'.
-    
-    All units in GeV, except otherwise specified
-'''
-
-
-
 #####################################
 # Nested dic containing all elements
 # approximate formula in D. Lunney, J.M. Pearson and C. Thibault, Rev. Mod. Phys.75, 1021 (2003)
@@ -276,7 +272,7 @@ def  electron_binding_energy(Z):
 elements_dic = {}
 hydrogen_Eb = 13.5981e-9 # GeV
 atomic_unit = 0.9314941024228 # mass of Carbon12 in GeV / 12
-mass_file = os.path.join(local_dir, 'aux_data/mass20_1.txt')
+mass_file = os.path.join(local_dir, 'include/aux_data/mass20_1.txt')
 with open(mass_file, 'r') as ame:
     # Read lines in file starting at line 36
     for line in islice(ame, 36, None):

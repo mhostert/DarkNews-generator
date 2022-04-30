@@ -1,12 +1,5 @@
 import numpy as np
 
-#CYTHON
-import pyximport
-pyximport.install(
-    language_level=3,
-    pyimport=False,
-    )
-
 from . import const
 from .const import *
 

@@ -163,6 +163,20 @@ class GenLauncher:
         # override default with kwargs
         scope.update(kwargs)
 
+        if not scope['SCATTERING_REGIMES']:
+            logger.error('No scattering regime found -- please specify at least one.')
+            raise ValueError 
+        if not scope['DECAY_PRODUCTS']:
+            logger.error('No visible decay products found -- please specify at least one final state (e+e-, mu+mu- or photon).')
+            raise ValueError 
+        if not scope['INCLUDE_HC'] and not scope['INCLUDE_HF']:
+            logger.error('No helicity structure was allowed -- please allow at least one type: HC or HF.')
+            raise ValueError 
+        if not scope['FLAVORS']:
+            logger.error('No projectile neutrino flavors specified -- please specify at least one.')
+            raise ValueError 
+
+
         # create instances of all MC cases of interest
         logger.debug(f"Creating instances of MC cases:")
         self.gen_cases = []
@@ -241,7 +255,7 @@ class GenLauncher:
         logger.debug(f"Now running the generator for each instance.")
         # Set theory params and run generation of events
         
-        logger.info(f"Generating Events using the neutrino-nucleus upscattering engine")
+        prettyprinter.info(f"Generating Events using the neutrino-nucleus upscattering engine")
         self.df = self.gen_cases[0].get_MC_events()
         for mc in self.gen_cases[1:]:
             self.df = dn.MC.get_merged_MC_output(self.df, mc.get_MC_events())
@@ -250,7 +264,7 @@ class GenLauncher:
         # Save attrs
         self.df.attrs['data_path'] = self.data_path
 
-        prettyprinter.info(f"* Generation successful\n\nTotal events predicted:\n({np.sum(self.df['w_event_rate']):.3g} +/- {np.sqrt(np.sum(self.df['w_event_rate']**2)):.3g}) events.")
+        prettyprinter.info(f"Generation successful\n\nTotal events predicted:\n({np.sum(self.df['w_event_rate']):.3g} +/- {np.sqrt(np.sum(self.df['w_event_rate']**2)):.3g}) events.")
 
         ############################################################################
         # Print events to file -- currently in data/exp/m4____mzprime____.dat 
