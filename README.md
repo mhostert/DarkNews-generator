@@ -60,6 +60,16 @@ python3 -m pip install -e .
 The package will be installed locally in editable mode.  
 The command will take care of installing any missing dependencies. It is necessary to have Python 3.6.1.
 
+Alternatively, if you experience any problems with pip, you can resort to a local manual installation. In the main folder of the repo, run
+```sh
+python3 setup.py install
+```
+or
+```sh
+python3 setup.py develop
+```
+to install it in developer mode (similar to editable mode above).
+
 ## Usage
 
 The main usage of DarkNews is covered in depth in the notebook `Example_0_start_here.ipynb` in the `examples` folder.
