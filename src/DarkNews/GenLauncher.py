@@ -18,21 +18,71 @@ class GenLauncher:
 
     # handle parameters that can assume only certain values
     _choices = {
-        "D_or_M": ["dirac", "majorana"],
+        "HNLtype": ["dirac", "majorana"],
         "decay_products": ["e+e-", "mu+mu-", "photon"]
     }
+    # parameters names list
+    _parameters = [
+        "gD", "alphaD", "epsilon", "epsilon2", "chi", "alpha_epsilon2", 
+        "Ue4", "Ue5", "Ue6", "Umu4", "Umu5", "Umu6", "Utau4", "Utau5", "Utau6", 
+        "UD4", "UD5", "UD6", "m4", "m5", "m6", "mzprime", "HNLtype", 
+        "mu_tr_e4", "mu_tr_e5", "mu_tr_e6", "mu_tr_mu4", "mu_tr_mu5", "mu_tr_mu6", 
+        "mu_tr_tau4", "mu_tr_tau5", "mu_tr_tau6", "mu_tr_44", "mu_tr_45", "mu_tr_46", "mu_tr_55", "mu_tr_56",  
+        "decay_products", "exp", "nopelastic", "nocoh", "noHC", "noHF", 
+        "log", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
+        "pandas", "numpy", "hepevt", "hepevt_unweigh", "hepevt_events", "sample_geometry", "summary_plots", "path"
+    ]
 
     def __init__(self, param_file=None, **kwargs):
         '''
             Instantiate an object to make the runs, allowing the user to set the parameters' value.
             There are different ways to accomplish this:
                 - file: read the file in input, parsing it looking for the different variables' values;
-                - kwargs: variables' values specified as a list of keyword arguments.
-            It first set the default value for each parameter, then it sets values according to the file,
+                - other arguments: variables' values.
+            If a variable is not provided, it sets the default.
             at the end it looks inside the kwargs (so kwargs overwrite file definitions).
         '''
+
         # set defaults
-        self.decay_products="e+e-"
+        self.gD = 1.0
+        self.alphaD = None
+        self.epsilon = 1e-2
+        self.epsilon2 = None
+        self.chi = None
+        self.alpha_epsilon2 = None
+        self.Ue4 = 0.
+        self.Ue5 = 0.
+        self.Ue6 = 0.
+        self.Umu4 = np.sqrt(1.5e-6*7/4)
+        self.Umu5 = np.sqrt(11.5e-6)
+        self.Umu6 = 0.
+        self.Utau4 = 0.
+        self.Utau5 = 0.
+        self.Utau6 = 0.
+        self.UD4 = 1.0
+        self.UD5 = 1.0
+        self.UD6 = 1.0
+        self.m4 = 0.140
+        self.m5 = None
+        self.m6 = None
+        self.mzprime = 1.25
+        self.HNLtype = "majorana"
+        self.mu_tr_e4 = 0.0
+        self.mu_tr_e5 = 0.0
+        self.mu_tr_e6 = 0.0
+        self.mu_tr_mu4 = 0.0
+        self.mu_tr_mu5 = 0.0
+        self.mu_tr_mu6 = 0.0
+        self.mu_tr_tau4 = 0.0
+        self.mu_tr_tau5 = 0.0
+        self.mu_tr_tau6 = 0.0
+        self.mu_tr_44 = 0.0
+        self.mu_tr_45 = 0.0
+        self.mu_tr_46 = 0.0
+        self.mu_tr_55 = 0.0
+        self.mu_tr_56 = 0.0
+        self.mu_tr_66 = 0.0
+        self.decay_products = "e+e-"
         self.exp = "miniboone_fhc"
         self.nopelastic = False
         self.nocoh = False
@@ -45,9 +95,8 @@ class GenLauncher:
         self.nint = 20
         self.neval_warmup = int(1e3)
         self.nint_warmup = 10
-        self.hepevt_events = 100
         self.pandas = True
-        self.numpy = False
+        self.numpy = True
         self.hepevt = False
         self.hepevt_unweigh = False
         self.hepevt_events = 100
@@ -59,19 +108,30 @@ class GenLauncher:
         if param_file is not None:
             self._load_file(param_file)
 
-        # look into kwargs
+        # load constructor parameters
         self._load_parameters(**kwargs)
+
+        # build args_dict to pass to various methods
+        args_dict = {}
+        for parameter in self._parameters:
+            args_dict[parameter] = getattr(self, parameter)
 
         #########################
         # Set up loggers
         self.prettyprinter = prettyprinter
-        self.configure_logger(logger=logger, level=self.log, prettyprinter=self.prettyprinter, verbose=self.verbose, logfile=self.logfile)
+        self.configure_logger(
+            logger=logger,
+            level=self.log,
+            prettyprinter=self.prettyprinter,
+            verbose=self.verbose,
+            logfile=self.logfile
+        )
 
         prettyprinter.info(self.banner)
 
         #########################
         # Set BSM parameters
-        self.bsm_model = dn.model.create_model(**kwargs)
+        self.bsm_model = dn.model.create_model(**args_dict)
 
         ####################################################
         # Choose experiment and scope of simulation
@@ -127,11 +187,21 @@ class GenLauncher:
         self._load_parameters(**parser.parameters)
 
     def _load_parameters(self, **kwargs):
-        for k, v in kwargs.items():
-            if k in self._choices.keys() and v not in self._choices[k]:
-                raise ValueError(f"Parameter '{k}', invalid choice: {v}, (choose from " + ", ".join([f"{el}" for el in self._choices[k]]) + ")")
-            setattr(self, k, v)
-
+        # start from the list of parameters available
+        for parameter in self._parameters:
+            # take the value from the kwargs, if not provided, go to next parameter
+            try:
+                value = kwargs.pop(parameter)
+            except KeyError:
+                continue
+            # check the value within the choices
+            if parameter in self._choices.keys() and value not in self._choices[parameter]:
+                raise ValueError(f"Parameter '{parameter}', invalid choice: {value}, (choose among " + ", ".join([f"{el}" for el in self._choices[parameter]]) + ")")
+            # set the parameter
+            setattr(self, parameter, value)
+        # at the end, if kwargs is not empty, that would mean some parameters were unused, i.e. they are spelled wrong or do not exist: raise AttributeError
+        if len(kwargs) != 0:
+            raise AttributeError(f"Parameters " + ", ".join(kwargs.keys()) + "were unused, are they maybe spelt wrong?")
 
     def _create_all_MC_cases(self, **kwargs):
         """ Create MC_events objects and run the MC computations
@@ -243,12 +313,13 @@ class GenLauncher:
 
         ############
         # supersede original logger configuration 
-        self.configure_logger(  logger = logger,
-                                prettyprinter=self.prettyprinter,
-                                level=(log or self.log), 
-                                verbose=(verbose or self.verbose),
-                                logfile=(logfile or self.logfile)
-                            )
+        self.configure_logger( 
+            logger = logger,
+            prettyprinter = self.prettyprinter,
+            level = self.log, 
+            verbose = self.verbose,
+            logfile = self.logfile
+        )
 
         ######################################
         # run generator
