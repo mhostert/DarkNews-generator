@@ -8,7 +8,7 @@ from Cython.Build import cythonize
 import numpy as np
 
 setup_args = dict(
-    ext_modules = cythonize(["src/Darknews/Cfourvec.pyx"]),
+    ext_modules = cythonize(["src/DarkNews/Cfourvec.pyx"]),
     include_dirs=np.get_include(),
     zip_safe=False,
 )
