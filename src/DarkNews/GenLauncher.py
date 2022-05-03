@@ -1,6 +1,7 @@
 import logging
 import sys
 import numpy as np
+import os
 
 # Dark Neutrino and MC stuff
 import DarkNews as dn
@@ -194,6 +195,12 @@ class GenLauncher:
         else:
             logger.error('ERROR! Mass spectrum not allowed.')
             raise ValueError 
+
+        # create directory tree
+        try:
+            os.makedirs(self.data_path)
+        except OSError:
+            logger.warning("Note that the directory tree for this run already exists.")
 
         ####################################################
         # Create all MC cases
