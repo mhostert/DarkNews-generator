@@ -89,7 +89,7 @@ def dn_gen():
 
     ###########
     # run related arguments
-    parser.add_argument("--log", help="Logging level")
+    parser.add_argument("--loglevel", help="Logging level")
     parser.add_argument("--verbose", help="Verbose for logging", action="store_true")
     parser.add_argument("--logfile", help="Path to logfile. If not set, use std output.")
 
@@ -113,7 +113,7 @@ def dn_gen():
 
     gen_object = GenLauncher(**kwargs)
     gen_object.run(
-        log=kwargs.get("log", DEFAULTS.log),
+        log=kwargs.get("loglevel", DEFAULTS.loglevel),
         verbose=kwargs.get("verbose", DEFAULTS.verbose),
         logfile=kwargs.get("logfile", DEFAULTS.logfile),
         path=kwargs.get("path", DEFAULTS.path)
