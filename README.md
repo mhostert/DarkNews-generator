@@ -91,7 +91,7 @@ where:
 
 It is possible to run the generator through the script `bin/dn_gen`, passing the parameters as options.
 ```sh
-dn_gen --mzprime=1.25 --m4=0.140 --neval=1000 --HNLtype=dirac --log=INFO
+dn_gen --mzprime=1.25 --m4=0.140 --neval=1000 --HNLtype=dirac --loglevel=INFO
 ```
 Run `dn_gen --help` to inspect the meaning of each parameter.
 
@@ -101,10 +101,10 @@ It is possible to run the generator by creating an instance of the `DarkNews.Gen
 ```python
 from DarkNews.GenLauncher import GenLauncher
 gen_object = GenLauncher(mzprime=1.25, m4=0.140, neval=1000, HNLtype="dirac")
-gen_object.run(log="INFO")
+gen_object.run(loglevel="INFO")
 ```
 The parameters are passed directly while instantiating the `GenLauncher` object.
-Some parameters (`log`, `verbose`, `logfile`, `path`) related to the run itself can be passed also within the call of the `run()` method.
+Some parameters (`loglevel`, `verbose`, `logfile`, `path`) related to the run itself can be passed also within the call of the `run()` method.
 
 ### List of parameters
 
@@ -198,7 +198,7 @@ Parameters marked as *internal* can not be specified as they are automatically c
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:------------|:---------------------------------------:|:---------------------------------------------|---------:|
-| **log**     | `["INFO", "WARNING", "ERROR", "DEBUG"]` | Logging level                                | `"INFO"` | 
+| **loglevel**     | `["INFO", "WARNING", "ERROR", "DEBUG"]` | Logging level                                | `"INFO"` | 
 | **verbose** | `bool`                                  | Verbose for logging                          | `False`  | 
 | **logfile** | `string`                                | Path to log file; if not set, use std output | `None`   | 
 
@@ -216,11 +216,14 @@ Parameters marked as *internal* can not be specified as they are automatically c
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:------------------|:--------:|:-----------------------------------------------------------------------|--------:|
 | **pandas**        | `bool`   | Save `pandas.DataFrame` as `.pckl` file                                | `True`  | 
+| **parquet**        | `bool`   | Save `pandas.DataFrame` as `.parquet` file (engine=pyarrow)                                | `False`  | 
 | **numpy**         | `bool`   | Save events in `.npy` files                                            | `False` | 
 | **hepevt**        | `bool`   | Save events in HEPEVT-formatted text files                             | `False` | 
 | **hepvt_unweigh** | `bool`   | Unweigh events when printing in HEPEVT format (needs large statistics) | `False` | 
 | **hepvt_events**  | `int`    | Number of events to accept in HEPEVT format                            | 100     | 
 | **path**          | `string` | Path where to save run's outputs                                       | `"./"`  | 
+
+| **sparse**          | `bool` | if True, save only the neutrino energy, charged lepton or photon momenta, and weights. Not supported for HEPevt.                                       | `False`  | 
 
 ### Specify parameters via a file
 

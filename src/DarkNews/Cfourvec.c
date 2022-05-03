@@ -4,12 +4,12 @@
 {
     "distutils": {
         "depends": [],
-        "name": "Darknews.Cfourvec",
+        "name": "DarkNews.Cfourvec",
         "sources": [
-            "src/Darknews/Cfourvec.pyx"
+            "src/DarkNews/Cfourvec.pyx"
         ]
     },
-    "module_name": "Darknews.Cfourvec"
+    "module_name": "DarkNews.Cfourvec"
 }
 END: Cython Metadata */
 
@@ -692,8 +692,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__Darknews__Cfourvec
-#define __PYX_HAVE_API__Darknews__Cfourvec
+#define __PYX_HAVE__DarkNews__Cfourvec
+#define __PYX_HAVE_API__DarkNews__Cfourvec
 /* Early includes */
 #include <string.h>
 #include <stdio.h>
@@ -938,7 +938,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "src/Darknews/Cfourvec.pyx",
+  "src/DarkNews/Cfourvec.pyx",
   "__init__.pxd",
   "type.pxd",
 };
@@ -991,7 +991,7 @@ typedef struct {
 #endif
 
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":690
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":690
  * # in Cython to enable them only on the right systems.
  * 
  * ctypedef npy_int8       int8_t             # <<<<<<<<<<<<<<
@@ -1000,7 +1000,7 @@ typedef struct {
  */
 typedef npy_int8 __pyx_t_5numpy_int8_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":691
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":691
  * 
  * ctypedef npy_int8       int8_t
  * ctypedef npy_int16      int16_t             # <<<<<<<<<<<<<<
@@ -1009,7 +1009,7 @@ typedef npy_int8 __pyx_t_5numpy_int8_t;
  */
 typedef npy_int16 __pyx_t_5numpy_int16_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":692
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":692
  * ctypedef npy_int8       int8_t
  * ctypedef npy_int16      int16_t
  * ctypedef npy_int32      int32_t             # <<<<<<<<<<<<<<
@@ -1018,7 +1018,7 @@ typedef npy_int16 __pyx_t_5numpy_int16_t;
  */
 typedef npy_int32 __pyx_t_5numpy_int32_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":693
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":693
  * ctypedef npy_int16      int16_t
  * ctypedef npy_int32      int32_t
  * ctypedef npy_int64      int64_t             # <<<<<<<<<<<<<<
@@ -1027,7 +1027,7 @@ typedef npy_int32 __pyx_t_5numpy_int32_t;
  */
 typedef npy_int64 __pyx_t_5numpy_int64_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":697
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":697
  * #ctypedef npy_int128     int128_t
  * 
  * ctypedef npy_uint8      uint8_t             # <<<<<<<<<<<<<<
@@ -1036,7 +1036,7 @@ typedef npy_int64 __pyx_t_5numpy_int64_t;
  */
 typedef npy_uint8 __pyx_t_5numpy_uint8_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":698
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":698
  * 
  * ctypedef npy_uint8      uint8_t
  * ctypedef npy_uint16     uint16_t             # <<<<<<<<<<<<<<
@@ -1045,7 +1045,7 @@ typedef npy_uint8 __pyx_t_5numpy_uint8_t;
  */
 typedef npy_uint16 __pyx_t_5numpy_uint16_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":699
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":699
  * ctypedef npy_uint8      uint8_t
  * ctypedef npy_uint16     uint16_t
  * ctypedef npy_uint32     uint32_t             # <<<<<<<<<<<<<<
@@ -1054,7 +1054,7 @@ typedef npy_uint16 __pyx_t_5numpy_uint16_t;
  */
 typedef npy_uint32 __pyx_t_5numpy_uint32_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":700
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":700
  * ctypedef npy_uint16     uint16_t
  * ctypedef npy_uint32     uint32_t
  * ctypedef npy_uint64     uint64_t             # <<<<<<<<<<<<<<
@@ -1063,7 +1063,7 @@ typedef npy_uint32 __pyx_t_5numpy_uint32_t;
  */
 typedef npy_uint64 __pyx_t_5numpy_uint64_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":704
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":704
  * #ctypedef npy_uint128    uint128_t
  * 
  * ctypedef npy_float32    float32_t             # <<<<<<<<<<<<<<
@@ -1072,7 +1072,7 @@ typedef npy_uint64 __pyx_t_5numpy_uint64_t;
  */
 typedef npy_float32 __pyx_t_5numpy_float32_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":705
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":705
  * 
  * ctypedef npy_float32    float32_t
  * ctypedef npy_float64    float64_t             # <<<<<<<<<<<<<<
@@ -1081,7 +1081,7 @@ typedef npy_float32 __pyx_t_5numpy_float32_t;
  */
 typedef npy_float64 __pyx_t_5numpy_float64_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":714
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":714
  * # The int types are mapped a bit surprising --
  * # numpy.int corresponds to 'l' and numpy.long to 'q'
  * ctypedef npy_long       int_t             # <<<<<<<<<<<<<<
@@ -1090,7 +1090,7 @@ typedef npy_float64 __pyx_t_5numpy_float64_t;
  */
 typedef npy_long __pyx_t_5numpy_int_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":715
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":715
  * # numpy.int corresponds to 'l' and numpy.long to 'q'
  * ctypedef npy_long       int_t
  * ctypedef npy_longlong   long_t             # <<<<<<<<<<<<<<
@@ -1099,7 +1099,7 @@ typedef npy_long __pyx_t_5numpy_int_t;
  */
 typedef npy_longlong __pyx_t_5numpy_long_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":716
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":716
  * ctypedef npy_long       int_t
  * ctypedef npy_longlong   long_t
  * ctypedef npy_longlong   longlong_t             # <<<<<<<<<<<<<<
@@ -1108,7 +1108,7 @@ typedef npy_longlong __pyx_t_5numpy_long_t;
  */
 typedef npy_longlong __pyx_t_5numpy_longlong_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":718
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":718
  * ctypedef npy_longlong   longlong_t
  * 
  * ctypedef npy_ulong      uint_t             # <<<<<<<<<<<<<<
@@ -1117,7 +1117,7 @@ typedef npy_longlong __pyx_t_5numpy_longlong_t;
  */
 typedef npy_ulong __pyx_t_5numpy_uint_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":719
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":719
  * 
  * ctypedef npy_ulong      uint_t
  * ctypedef npy_ulonglong  ulong_t             # <<<<<<<<<<<<<<
@@ -1126,7 +1126,7 @@ typedef npy_ulong __pyx_t_5numpy_uint_t;
  */
 typedef npy_ulonglong __pyx_t_5numpy_ulong_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":720
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":720
  * ctypedef npy_ulong      uint_t
  * ctypedef npy_ulonglong  ulong_t
  * ctypedef npy_ulonglong  ulonglong_t             # <<<<<<<<<<<<<<
@@ -1135,7 +1135,7 @@ typedef npy_ulonglong __pyx_t_5numpy_ulong_t;
  */
 typedef npy_ulonglong __pyx_t_5numpy_ulonglong_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":722
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":722
  * ctypedef npy_ulonglong  ulonglong_t
  * 
  * ctypedef npy_intp       intp_t             # <<<<<<<<<<<<<<
@@ -1144,7 +1144,7 @@ typedef npy_ulonglong __pyx_t_5numpy_ulonglong_t;
  */
 typedef npy_intp __pyx_t_5numpy_intp_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":723
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":723
  * 
  * ctypedef npy_intp       intp_t
  * ctypedef npy_uintp      uintp_t             # <<<<<<<<<<<<<<
@@ -1153,7 +1153,7 @@ typedef npy_intp __pyx_t_5numpy_intp_t;
  */
 typedef npy_uintp __pyx_t_5numpy_uintp_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":725
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":725
  * ctypedef npy_uintp      uintp_t
  * 
  * ctypedef npy_double     float_t             # <<<<<<<<<<<<<<
@@ -1162,7 +1162,7 @@ typedef npy_uintp __pyx_t_5numpy_uintp_t;
  */
 typedef npy_double __pyx_t_5numpy_float_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":726
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":726
  * 
  * ctypedef npy_double     float_t
  * ctypedef npy_double     double_t             # <<<<<<<<<<<<<<
@@ -1171,7 +1171,7 @@ typedef npy_double __pyx_t_5numpy_float_t;
  */
 typedef npy_double __pyx_t_5numpy_double_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":727
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":727
  * ctypedef npy_double     float_t
  * ctypedef npy_double     double_t
  * ctypedef npy_longdouble longdouble_t             # <<<<<<<<<<<<<<
@@ -1206,7 +1206,7 @@ static CYTHON_INLINE __pyx_t_double_complex __pyx_t_double_complex_from_parts(do
 
 /*--- Type declarations ---*/
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":729
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":729
  * ctypedef npy_longdouble longdouble_t
  * 
  * ctypedef npy_cfloat      cfloat_t             # <<<<<<<<<<<<<<
@@ -1215,7 +1215,7 @@ static CYTHON_INLINE __pyx_t_double_complex __pyx_t_double_complex_from_parts(do
  */
 typedef npy_cfloat __pyx_t_5numpy_cfloat_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":730
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":730
  * 
  * ctypedef npy_cfloat      cfloat_t
  * ctypedef npy_cdouble     cdouble_t             # <<<<<<<<<<<<<<
@@ -1224,7 +1224,7 @@ typedef npy_cfloat __pyx_t_5numpy_cfloat_t;
  */
 typedef npy_cdouble __pyx_t_5numpy_cdouble_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":731
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":731
  * ctypedef npy_cfloat      cfloat_t
  * ctypedef npy_cdouble     cdouble_t
  * ctypedef npy_clongdouble clongdouble_t             # <<<<<<<<<<<<<<
@@ -1233,7 +1233,7 @@ typedef npy_cdouble __pyx_t_5numpy_cdouble_t;
  */
 typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":733
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":733
  * ctypedef npy_clongdouble clongdouble_t
  * 
  * ctypedef npy_cdouble     complex_t             # <<<<<<<<<<<<<<
@@ -1769,15 +1769,15 @@ static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 
 /* Module declarations from 'libc.stdlib' */
 
-/* Module declarations from 'Darknews.Cfourvec' */
-static double __pyx_f_8Darknews_8Cfourvec_UniformRand(void); /*proto*/
-static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double, double); /*proto*/
+/* Module declarations from 'DarkNews.Cfourvec' */
+static double __pyx_f_8DarkNews_8Cfourvec_UniformRand(void); /*proto*/
+static double __pyx_f_8DarkNews_8Cfourvec_NormalRand(double, double); /*proto*/
 static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
-#define __Pyx_MODULE_NAME "Darknews.Cfourvec"
-extern int __pyx_module_is_main_Darknews__Cfourvec;
-int __pyx_module_is_main_Darknews__Cfourvec = 0;
+#define __Pyx_MODULE_NAME "DarkNews.Cfourvec"
+extern int __pyx_module_is_main_DarkNews__Cfourvec;
+int __pyx_module_is_main_DarkNews__Cfourvec = 0;
 
-/* Implementation of 'Darknews.Cfourvec' */
+/* Implementation of 'DarkNews.Cfourvec' */
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_ImportError;
 static const char __pyx_k_E[] = "E";
@@ -1840,14 +1840,14 @@ static const char __pyx_k_get_3direction[] = "get_3direction";
 static const char __pyx_k_get_theta_3vec[] = "get_theta_3vec";
 static const char __pyx_k_momentum_scalar[] = "momentum_scalar";
 static const char __pyx_k_random_generator[] = "random_generator";
-static const char __pyx_k_Darknews_Cfourvec[] = "Darknews.Cfourvec";
+static const char __pyx_k_DarkNews_Cfourvec[] = "DarkNews.Cfourvec";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_get_3direction_3vec[] = "get_3direction_3vec";
 static const char __pyx_k_get_cos_opening_angle[] = "get_cos_opening_angle";
-static const char __pyx_k_src_Darknews_Cfourvec_pyx[] = "src/Darknews/Cfourvec.pyx";
+static const char __pyx_k_src_DarkNews_Cfourvec_pyx[] = "src/DarkNews/Cfourvec.pyx";
 static const char __pyx_k_numpy_core_multiarray_failed_to[] = "numpy.core.multiarray failed to import";
 static const char __pyx_k_numpy_core_umath_failed_to_impor[] = "numpy.core.umath failed to import";
-static PyObject *__pyx_n_s_Darknews_Cfourvec;
+static PyObject *__pyx_n_s_DarkNews_Cfourvec;
 static PyObject *__pyx_n_s_E;
 static PyObject *__pyx_n_s_ImportError;
 static PyObject *__pyx_n_s_L;
@@ -1907,44 +1907,44 @@ static PyObject *__pyx_n_s_s;
 static PyObject *__pyx_n_s_sigma;
 static PyObject *__pyx_n_s_sign;
 static PyObject *__pyx_n_s_size;
-static PyObject *__pyx_kp_s_src_Darknews_Cfourvec_pyx;
+static PyObject *__pyx_kp_s_src_DarkNews_Cfourvec_pyx;
 static PyObject *__pyx_n_s_stheta;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_theta;
 static PyObject *__pyx_n_s_v4;
 static PyObject *__pyx_n_s_x;
 static PyObject *__pyx_n_s_y;
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_random_generator(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_size, double __pyx_v_min, double __pyx_v_max); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_sigma); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_E, PyArrayObject *__pyx_v_p, PyArrayObject *__pyx_v_cost, PyArrayObject *__pyx_v_phi); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_E, double __pyx_v_mass); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_stheta); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_ctheta, int __pyx_v_sign); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_stheta); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_ctheta, int __pyx_v_sign); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_58T(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta, PyArrayObject *__pyx_v_theta, PyArrayObject *__pyx_v_phi); /* proto */
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_60Tinv(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta, PyArrayObject *__pyx_v_ctheta, PyArrayObject *__pyx_v_phi); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_random_generator(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_size, double __pyx_v_min, double __pyx_v_max); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_sigma); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_E, PyArrayObject *__pyx_v_p, PyArrayObject *__pyx_v_cost, PyArrayObject *__pyx_v_phi); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_E, double __pyx_v_mass); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_stheta); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_ctheta, int __pyx_v_sign); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_stheta); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_ctheta, int __pyx_v_sign); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_58T(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta, PyArrayObject *__pyx_v_theta, PyArrayObject *__pyx_v_phi); /* proto */
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_60Tinv(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta, PyArrayObject *__pyx_v_ctheta, PyArrayObject *__pyx_v_phi); /* proto */
 static PyObject *__pyx_int_3;
 static PyObject *__pyx_int_4;
 static PyObject *__pyx_int_neg_1;
@@ -2014,7 +2014,7 @@ static PyObject *__pyx_codeobj__62;
 static PyObject *__pyx_codeobj__64;
 /* Late includes */
 
-/* "Darknews/Cfourvec.pyx":19
+/* "DarkNews/Cfourvec.pyx":19
  * from libc.stdlib cimport rand, RAND_MAX
  * 
  * cdef double UniformRand():             # <<<<<<<<<<<<<<
@@ -2022,12 +2022,12 @@ static PyObject *__pyx_codeobj__64;
  * 
  */
 
-static double __pyx_f_8Darknews_8Cfourvec_UniformRand(void) {
+static double __pyx_f_8DarkNews_8Cfourvec_UniformRand(void) {
   double __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("UniformRand", 0);
 
-  /* "Darknews/Cfourvec.pyx":20
+  /* "DarkNews/Cfourvec.pyx":20
  * 
  * cdef double UniformRand():
  * 	return ( rand() + 1. )/(RAND_MAX + 1. )             # <<<<<<<<<<<<<<
@@ -2037,7 +2037,7 @@ static double __pyx_f_8Darknews_8Cfourvec_UniformRand(void) {
   __pyx_r = ((rand() + 1.) / (RAND_MAX + 1.));
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":19
+  /* "DarkNews/Cfourvec.pyx":19
  * from libc.stdlib cimport rand, RAND_MAX
  * 
  * cdef double UniformRand():             # <<<<<<<<<<<<<<
@@ -2051,7 +2051,7 @@ static double __pyx_f_8Darknews_8Cfourvec_UniformRand(void) {
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":25
+/* "DarkNews/Cfourvec.pyx":25
  * #######################################
  * # Box muller method for NORMAL distributed random variables
  * cdef double NormalRand(double mean, double stddev):             # <<<<<<<<<<<<<<
@@ -2059,7 +2059,7 @@ static double __pyx_f_8Darknews_8Cfourvec_UniformRand(void) {
  * 	cdef int n2_cached = 0
  */
 
-static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double __pyx_v_stddev) {
+static double __pyx_f_8DarkNews_8Cfourvec_NormalRand(double __pyx_v_mean, double __pyx_v_stddev) {
   double __pyx_v_n2;
   int __pyx_v_n2_cached;
   double __pyx_v_x;
@@ -2074,7 +2074,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("NormalRand", 0);
 
-  /* "Darknews/Cfourvec.pyx":26
+  /* "DarkNews/Cfourvec.pyx":26
  * # Box muller method for NORMAL distributed random variables
  * cdef double NormalRand(double mean, double stddev):
  * 	cdef double n2 = 0.0             # <<<<<<<<<<<<<<
@@ -2083,7 +2083,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
   __pyx_v_n2 = 0.0;
 
-  /* "Darknews/Cfourvec.pyx":27
+  /* "DarkNews/Cfourvec.pyx":27
  * cdef double NormalRand(double mean, double stddev):
  * 	cdef double n2 = 0.0
  * 	cdef int n2_cached = 0             # <<<<<<<<<<<<<<
@@ -2092,7 +2092,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
   __pyx_v_n2_cached = 0;
 
-  /* "Darknews/Cfourvec.pyx":31
+  /* "DarkNews/Cfourvec.pyx":31
  * 	cdef double result,d,n1
  * 
  * 	if (not n2_cached):             # <<<<<<<<<<<<<<
@@ -2102,7 +2102,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
   __pyx_t_1 = ((!(__pyx_v_n2_cached != 0)) != 0);
   if (__pyx_t_1) {
 
-    /* "Darknews/Cfourvec.pyx":32
+    /* "DarkNews/Cfourvec.pyx":32
  * 
  * 	if (not n2_cached):
  * 		while (True):             # <<<<<<<<<<<<<<
@@ -2111,25 +2111,25 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
     while (1) {
 
-      /* "Darknews/Cfourvec.pyx":33
+      /* "DarkNews/Cfourvec.pyx":33
  * 	if (not n2_cached):
  * 		while (True):
  * 			x = 2.0*UniformRand() - 1             # <<<<<<<<<<<<<<
  * 			y = 2.0*UniformRand() - 1
  * 
  */
-      __pyx_v_x = ((2.0 * __pyx_f_8Darknews_8Cfourvec_UniformRand()) - 1.0);
+      __pyx_v_x = ((2.0 * __pyx_f_8DarkNews_8Cfourvec_UniformRand()) - 1.0);
 
-      /* "Darknews/Cfourvec.pyx":34
+      /* "DarkNews/Cfourvec.pyx":34
  * 		while (True):
  * 			x = 2.0*UniformRand() - 1
  * 			y = 2.0*UniformRand() - 1             # <<<<<<<<<<<<<<
  * 
  * 			r = x*x + y*y
  */
-      __pyx_v_y = ((2.0 * __pyx_f_8Darknews_8Cfourvec_UniformRand()) - 1.0);
+      __pyx_v_y = ((2.0 * __pyx_f_8DarkNews_8Cfourvec_UniformRand()) - 1.0);
 
-      /* "Darknews/Cfourvec.pyx":36
+      /* "DarkNews/Cfourvec.pyx":36
  * 			y = 2.0*UniformRand() - 1
  * 
  * 			r = x*x + y*y             # <<<<<<<<<<<<<<
@@ -2138,7 +2138,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
       __pyx_v_r = ((__pyx_v_x * __pyx_v_x) + (__pyx_v_y * __pyx_v_y));
 
-      /* "Darknews/Cfourvec.pyx":38
+      /* "DarkNews/Cfourvec.pyx":38
  * 			r = x*x + y*y
  * 
  * 			if (r != 0.0 and r <= 1.0):             # <<<<<<<<<<<<<<
@@ -2156,7 +2156,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
       __pyx_L7_bool_binop_done:;
       if (__pyx_t_1) {
 
-        /* "Darknews/Cfourvec.pyx":39
+        /* "DarkNews/Cfourvec.pyx":39
  * 
  * 			if (r != 0.0 and r <= 1.0):
  * 				break             # <<<<<<<<<<<<<<
@@ -2165,7 +2165,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
         goto __pyx_L5_break;
 
-        /* "Darknews/Cfourvec.pyx":38
+        /* "DarkNews/Cfourvec.pyx":38
  * 			r = x*x + y*y
  * 
  * 			if (r != 0.0 and r <= 1.0):             # <<<<<<<<<<<<<<
@@ -2176,7 +2176,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
     }
     __pyx_L5_break:;
 
-    /* "Darknews/Cfourvec.pyx":42
+    /* "DarkNews/Cfourvec.pyx":42
  * 
  * 
  * 		d = sqrt(-2.0*log(r)/r)             # <<<<<<<<<<<<<<
@@ -2185,7 +2185,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
     __pyx_v_d = sqrt(((-2.0 * log(__pyx_v_r)) / __pyx_v_r));
 
-    /* "Darknews/Cfourvec.pyx":43
+    /* "DarkNews/Cfourvec.pyx":43
  * 
  * 		d = sqrt(-2.0*log(r)/r)
  * 		n1 = x*d             # <<<<<<<<<<<<<<
@@ -2194,7 +2194,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
     __pyx_v_n1 = (__pyx_v_x * __pyx_v_d);
 
-    /* "Darknews/Cfourvec.pyx":44
+    /* "DarkNews/Cfourvec.pyx":44
  * 		d = sqrt(-2.0*log(r)/r)
  * 		n1 = x*d
  * 		n2 = y*d             # <<<<<<<<<<<<<<
@@ -2203,7 +2203,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
     __pyx_v_n2 = (__pyx_v_y * __pyx_v_d);
 
-    /* "Darknews/Cfourvec.pyx":45
+    /* "DarkNews/Cfourvec.pyx":45
  * 		n1 = x*d
  * 		n2 = y*d
  * 		result = n1*stddev + mean             # <<<<<<<<<<<<<<
@@ -2212,7 +2212,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
     __pyx_v_result = ((__pyx_v_n1 * __pyx_v_stddev) + __pyx_v_mean);
 
-    /* "Darknews/Cfourvec.pyx":46
+    /* "DarkNews/Cfourvec.pyx":46
  * 		n2 = y*d
  * 		result = n1*stddev + mean
  * 		n2_cached = 1             # <<<<<<<<<<<<<<
@@ -2221,7 +2221,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
     __pyx_v_n2_cached = 1;
 
-    /* "Darknews/Cfourvec.pyx":47
+    /* "DarkNews/Cfourvec.pyx":47
  * 		result = n1*stddev + mean
  * 		n2_cached = 1
  * 		return result             # <<<<<<<<<<<<<<
@@ -2231,7 +2231,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
     __pyx_r = __pyx_v_result;
     goto __pyx_L0;
 
-    /* "Darknews/Cfourvec.pyx":31
+    /* "DarkNews/Cfourvec.pyx":31
  * 	cdef double result,d,n1
  * 
  * 	if (not n2_cached):             # <<<<<<<<<<<<<<
@@ -2240,7 +2240,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
   }
 
-  /* "Darknews/Cfourvec.pyx":49
+  /* "DarkNews/Cfourvec.pyx":49
  * 		return result
  * 	else:
  * 		n2_cached = 0;             # <<<<<<<<<<<<<<
@@ -2250,7 +2250,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
   /*else*/ {
     __pyx_v_n2_cached = 0;
 
-    /* "Darknews/Cfourvec.pyx":50
+    /* "DarkNews/Cfourvec.pyx":50
  * 	else:
  * 		n2_cached = 0;
  * 		return n2*stddev + mean             # <<<<<<<<<<<<<<
@@ -2261,7 +2261,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
     goto __pyx_L0;
   }
 
-  /* "Darknews/Cfourvec.pyx":25
+  /* "DarkNews/Cfourvec.pyx":25
  * #######################################
  * # Box muller method for NORMAL distributed random variables
  * cdef double NormalRand(double mean, double stddev):             # <<<<<<<<<<<<<<
@@ -2275,7 +2275,7 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":57
+/* "DarkNews/Cfourvec.pyx":57
  * 
  * #******************************
  * def random_generator(int size, double min, double max):             # <<<<<<<<<<<<<<
@@ -2284,9 +2284,9 @@ static double __pyx_f_8Darknews_8Cfourvec_NormalRand(double __pyx_v_mean, double
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_1random_generator(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_1random_generator = {"random_generator", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_1random_generator, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_1random_generator(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_1random_generator(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_1random_generator = {"random_generator", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_1random_generator, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_1random_generator(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   int __pyx_v_size;
   double __pyx_v_min;
   double __pyx_v_max;
@@ -2348,18 +2348,18 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_1random_generator(PyObject *__pyx_
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("random_generator", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 57, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.random_generator", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.random_generator", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_random_generator(__pyx_self, __pyx_v_size, __pyx_v_min, __pyx_v_max);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_random_generator(__pyx_self, __pyx_v_size, __pyx_v_min, __pyx_v_max);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_random_generator(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_size, double __pyx_v_min, double __pyx_v_max) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_random_generator(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_size, double __pyx_v_min, double __pyx_v_max) {
   PyArrayObject *__pyx_v_s = 0;
   int __pyx_v_i;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_s;
@@ -2384,7 +2384,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_random_generator(CYTHON_UNUSED PyO
   __pyx_pybuffernd_s.data = NULL;
   __pyx_pybuffernd_s.rcbuffer = &__pyx_pybuffer_s;
 
-  /* "Darknews/Cfourvec.pyx":58
+  /* "DarkNews/Cfourvec.pyx":58
  * #******************************
  * def random_generator(int size, double min, double max):
  * 	cdef ndarray[double,ndim=1] s = np.empty((size))             # <<<<<<<<<<<<<<
@@ -2428,7 +2428,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_random_generator(CYTHON_UNUSED PyO
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":59
+  /* "DarkNews/Cfourvec.pyx":59
  * def random_generator(int size, double min, double max):
  * 	cdef ndarray[double,ndim=1] s = np.empty((size))
  * 	for i in range(size):             # <<<<<<<<<<<<<<
@@ -2440,7 +2440,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_random_generator(CYTHON_UNUSED PyO
   for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "Darknews/Cfourvec.pyx":60
+    /* "DarkNews/Cfourvec.pyx":60
  * 	cdef ndarray[double,ndim=1] s = np.empty((size))
  * 	for i in range(size):
  * 		s[i] = (max-min)*UniformRand()+min             # <<<<<<<<<<<<<<
@@ -2448,10 +2448,10 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_random_generator(CYTHON_UNUSED PyO
  * 
  */
     __pyx_t_9 = __pyx_v_i;
-    *__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_s.diminfo[0].strides) = (((__pyx_v_max - __pyx_v_min) * __pyx_f_8Darknews_8Cfourvec_UniformRand()) + __pyx_v_min);
+    *__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_s.diminfo[0].strides) = (((__pyx_v_max - __pyx_v_min) * __pyx_f_8DarkNews_8Cfourvec_UniformRand()) + __pyx_v_min);
   }
 
-  /* "Darknews/Cfourvec.pyx":61
+  /* "DarkNews/Cfourvec.pyx":61
  * 	for i in range(size):
  * 		s[i] = (max-min)*UniformRand()+min
  * 	return s             # <<<<<<<<<<<<<<
@@ -2463,7 +2463,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_random_generator(CYTHON_UNUSED PyO
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":57
+  /* "DarkNews/Cfourvec.pyx":57
  * 
  * #******************************
  * def random_generator(int size, double min, double max):             # <<<<<<<<<<<<<<
@@ -2483,7 +2483,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_random_generator(CYTHON_UNUSED PyO
     __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.random_generator", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.random_generator", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2495,7 +2495,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_random_generator(CYTHON_UNUSED PyO
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":64
+/* "DarkNews/Cfourvec.pyx":64
  * 
  * #******************************
  * def random_normal(ndarray[double, ndim=1] x, ndarray[double, ndim=1] sigma):             # <<<<<<<<<<<<<<
@@ -2504,9 +2504,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_random_generator(CYTHON_UNUSED PyO
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_3random_normal(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_3random_normal = {"random_normal", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_3random_normal, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_3random_normal(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_3random_normal(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_3random_normal = {"random_normal", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_3random_normal, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_3random_normal(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   PyArrayObject *__pyx_v_sigma = 0;
   int __pyx_lineno = 0;
@@ -2557,13 +2557,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_3random_normal(PyObject *__pyx_sel
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("random_normal", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 64, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.random_normal", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.random_normal", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 64, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_sigma), __pyx_ptype_5numpy_ndarray, 1, "sigma", 0))) __PYX_ERR(0, 64, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_2random_normal(__pyx_self, __pyx_v_x, __pyx_v_sigma);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_2random_normal(__pyx_self, __pyx_v_x, __pyx_v_sigma);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2574,7 +2574,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_3random_normal(PyObject *__pyx_sel
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_sigma) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_sigma) {
   int __pyx_v_size;
   PyArrayObject *__pyx_v_s = 0;
   int __pyx_v_i;
@@ -2624,7 +2624,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObj
   }
   __pyx_pybuffernd_sigma.diminfo[0].strides = __pyx_pybuffernd_sigma.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_sigma.diminfo[0].shape = __pyx_pybuffernd_sigma.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":65
+  /* "DarkNews/Cfourvec.pyx":65
  * #******************************
  * def random_normal(ndarray[double, ndim=1] x, ndarray[double, ndim=1] sigma):
  * 	cdef int size = x.shape[0]             # <<<<<<<<<<<<<<
@@ -2633,7 +2633,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObj
  */
   __pyx_v_size = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":66
+  /* "DarkNews/Cfourvec.pyx":66
  * def random_normal(ndarray[double, ndim=1] x, ndarray[double, ndim=1] sigma):
  * 	cdef int size = x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((size))             # <<<<<<<<<<<<<<
@@ -2677,7 +2677,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObj
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":67
+  /* "DarkNews/Cfourvec.pyx":67
  * 	cdef int size = x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((size))
  * 	for i in range(size):             # <<<<<<<<<<<<<<
@@ -2689,7 +2689,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObj
   for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "Darknews/Cfourvec.pyx":68
+    /* "DarkNews/Cfourvec.pyx":68
  * 	cdef ndarray[double,ndim=1] s = np.empty((size))
  * 	for i in range(size):
  * 		s[i] = NormalRand(x[i], sigma[i])             # <<<<<<<<<<<<<<
@@ -2699,10 +2699,10 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObj
     __pyx_t_9 = __pyx_v_i;
     __pyx_t_10 = __pyx_v_i;
     __pyx_t_11 = __pyx_v_i;
-    *__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_s.diminfo[0].strides) = __pyx_f_8Darknews_8Cfourvec_NormalRand((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_x.diminfo[0].strides)), (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_sigma.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_sigma.diminfo[0].strides)));
+    *__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_s.diminfo[0].strides) = __pyx_f_8DarkNews_8Cfourvec_NormalRand((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_x.diminfo[0].strides)), (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_sigma.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_sigma.diminfo[0].strides)));
   }
 
-  /* "Darknews/Cfourvec.pyx":69
+  /* "DarkNews/Cfourvec.pyx":69
  * 	for i in range(size):
  * 		s[i] = NormalRand(x[i], sigma[i])
  * 	return s             # <<<<<<<<<<<<<<
@@ -2714,7 +2714,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObj
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":64
+  /* "DarkNews/Cfourvec.pyx":64
  * 
  * #******************************
  * def random_normal(ndarray[double, ndim=1] x, ndarray[double, ndim=1] sigma):             # <<<<<<<<<<<<<<
@@ -2736,7 +2736,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObj
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_sigma.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.random_normal", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.random_normal", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2750,7 +2750,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObj
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":77
+/* "DarkNews/Cfourvec.pyx":77
  * 
  * #******************************
  * def build_fourvec(ndarray[double, ndim=1] E, ndarray[double, ndim=1] p, ndarray[double, ndim=1] cost, ndarray[double, ndim=1] phi):             # <<<<<<<<<<<<<<
@@ -2759,9 +2759,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_2random_normal(CYTHON_UNUSED PyObj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_5build_fourvec(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_5build_fourvec = {"build_fourvec", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_5build_fourvec, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_5build_fourvec(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_5build_fourvec(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_5build_fourvec = {"build_fourvec", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_5build_fourvec, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_5build_fourvec(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_E = 0;
   PyArrayObject *__pyx_v_p = 0;
   PyArrayObject *__pyx_v_cost = 0;
@@ -2834,7 +2834,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_5build_fourvec(PyObject *__pyx_sel
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("build_fourvec", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 77, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.build_fourvec", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.build_fourvec", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -2842,7 +2842,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_5build_fourvec(PyObject *__pyx_sel
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p), __pyx_ptype_5numpy_ndarray, 1, "p", 0))) __PYX_ERR(0, 77, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_cost), __pyx_ptype_5numpy_ndarray, 1, "cost", 0))) __PYX_ERR(0, 77, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 77, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_4build_fourvec(__pyx_self, __pyx_v_E, __pyx_v_p, __pyx_v_cost, __pyx_v_phi);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_4build_fourvec(__pyx_self, __pyx_v_E, __pyx_v_p, __pyx_v_cost, __pyx_v_phi);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2853,7 +2853,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_5build_fourvec(PyObject *__pyx_sel
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_E, PyArrayObject *__pyx_v_p, PyArrayObject *__pyx_v_cost, PyArrayObject *__pyx_v_phi) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_E, PyArrayObject *__pyx_v_p, PyArrayObject *__pyx_v_cost, PyArrayObject *__pyx_v_phi) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -2928,7 +2928,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
   }
   __pyx_pybuffernd_phi.diminfo[0].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_phi.diminfo[0].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":80
+  /* "DarkNews/Cfourvec.pyx":80
  * 
  * 	cdef int i,m
  * 	m = phi.shape[0]             # <<<<<<<<<<<<<<
@@ -2937,7 +2937,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
  */
   __pyx_v_m = (__pyx_v_phi->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":81
+  /* "DarkNews/Cfourvec.pyx":81
  * 	cdef int i,m
  * 	m = phi.shape[0]
  * 	cdef ndarray[double,ndim=2] s = np.empty((m,4))             # <<<<<<<<<<<<<<
@@ -2989,7 +2989,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":83
+  /* "DarkNews/Cfourvec.pyx":83
  * 	cdef ndarray[double,ndim=2] s = np.empty((m,4))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -3004,7 +3004,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":84
+        /* "DarkNews/Cfourvec.pyx":84
  * 
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -3016,7 +3016,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":85
+          /* "DarkNews/Cfourvec.pyx":85
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i,0] = E[i]             # <<<<<<<<<<<<<<
@@ -3028,7 +3028,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
           __pyx_t_11 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_s.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_s.diminfo[1].strides) = (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_E.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_E.diminfo[0].strides));
 
-          /* "Darknews/Cfourvec.pyx":86
+          /* "DarkNews/Cfourvec.pyx":86
  * 		for i in range(m):
  * 			s[i,0] = E[i]
  * 			s[i,1] = p[i]*cos(phi[i])*sqrt(1.0-cost[i]*cost[i])             # <<<<<<<<<<<<<<
@@ -3043,7 +3043,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
           __pyx_t_14 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_s.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_s.diminfo[1].strides) = (((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_p.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_p.diminfo[0].strides)) * cos((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_phi.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_phi.diminfo[0].strides)))) * sqrt((1.0 - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_cost.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_cost.diminfo[0].strides)) * (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_cost.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_cost.diminfo[0].strides))))));
 
-          /* "Darknews/Cfourvec.pyx":87
+          /* "DarkNews/Cfourvec.pyx":87
  * 			s[i,0] = E[i]
  * 			s[i,1] = p[i]*cos(phi[i])*sqrt(1.0-cost[i]*cost[i])
  * 			s[i,2] = p[i]*sin(phi[i])*sqrt(1.0-cost[i]*cost[i])             # <<<<<<<<<<<<<<
@@ -3058,7 +3058,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
           __pyx_t_13 = 2;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_s.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_s.diminfo[1].strides) = (((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_p.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_p.diminfo[0].strides)) * sin((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_phi.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_phi.diminfo[0].strides)))) * sqrt((1.0 - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_cost.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_cost.diminfo[0].strides)) * (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_cost.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_cost.diminfo[0].strides))))));
 
-          /* "Darknews/Cfourvec.pyx":88
+          /* "DarkNews/Cfourvec.pyx":88
  * 			s[i,1] = p[i]*cos(phi[i])*sqrt(1.0-cost[i]*cost[i])
  * 			s[i,2] = p[i]*sin(phi[i])*sqrt(1.0-cost[i]*cost[i])
  * 			s[i,3] = p[i]*cost[i]             # <<<<<<<<<<<<<<
@@ -3073,7 +3073,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":83
+      /* "DarkNews/Cfourvec.pyx":83
  * 	cdef ndarray[double,ndim=2] s = np.empty((m,4))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -3092,7 +3092,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":90
+  /* "DarkNews/Cfourvec.pyx":90
  * 			s[i,3] = p[i]*cost[i]
  * 
  * 	return s             # <<<<<<<<<<<<<<
@@ -3104,7 +3104,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":77
+  /* "DarkNews/Cfourvec.pyx":77
  * 
  * #******************************
  * def build_fourvec(ndarray[double, ndim=1] E, ndarray[double, ndim=1] p, ndarray[double, ndim=1] cost, ndarray[double, ndim=1] phi):             # <<<<<<<<<<<<<<
@@ -3128,7 +3128,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_phi.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.build_fourvec", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.build_fourvec", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -3144,7 +3144,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":93
+/* "DarkNews/Cfourvec.pyx":93
  * 
  * #******************************
  * def momentum_scalar(ndarray[double] E, double mass):             # <<<<<<<<<<<<<<
@@ -3153,9 +3153,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_4build_fourvec(CYTHON_UNUSED PyObj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_7momentum_scalar(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_7momentum_scalar = {"momentum_scalar", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_7momentum_scalar, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_7momentum_scalar(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_7momentum_scalar(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_7momentum_scalar = {"momentum_scalar", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_7momentum_scalar, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_7momentum_scalar(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_E = 0;
   double __pyx_v_mass;
   int __pyx_lineno = 0;
@@ -3206,12 +3206,12 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_7momentum_scalar(PyObject *__pyx_s
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("momentum_scalar", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 93, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.momentum_scalar", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.momentum_scalar", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_E), __pyx_ptype_5numpy_ndarray, 1, "E", 0))) __PYX_ERR(0, 93, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(__pyx_self, __pyx_v_E, __pyx_v_mass);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_6momentum_scalar(__pyx_self, __pyx_v_E, __pyx_v_mass);
 
   /* function exit code */
   goto __pyx_L0;
@@ -3222,7 +3222,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_7momentum_scalar(PyObject *__pyx_s
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_E, double __pyx_v_mass) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_E, double __pyx_v_mass) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -3261,7 +3261,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyO
   }
   __pyx_pybuffernd_E.diminfo[0].strides = __pyx_pybuffernd_E.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_E.diminfo[0].shape = __pyx_pybuffernd_E.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":96
+  /* "DarkNews/Cfourvec.pyx":96
  * 
  * 	cdef int i,m
  * 	m = E.shape[0]             # <<<<<<<<<<<<<<
@@ -3270,7 +3270,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyO
  */
   __pyx_v_m = (__pyx_v_E->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":97
+  /* "DarkNews/Cfourvec.pyx":97
  * 	cdef int i,m
  * 	m = E.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -3314,7 +3314,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyO
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":99
+  /* "DarkNews/Cfourvec.pyx":99
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -3329,7 +3329,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyO
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":100
+        /* "DarkNews/Cfourvec.pyx":100
  * 
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -3341,7 +3341,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyO
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":101
+          /* "DarkNews/Cfourvec.pyx":101
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] = sqrt(E[i]*E[i] - mass*mass)             # <<<<<<<<<<<<<<
@@ -3355,7 +3355,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyO
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":99
+      /* "DarkNews/Cfourvec.pyx":99
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -3374,7 +3374,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyO
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":102
+  /* "DarkNews/Cfourvec.pyx":102
  * 		for i in range(m):
  * 			s[i] = sqrt(E[i]*E[i] - mass*mass)
  * 	return s             # <<<<<<<<<<<<<<
@@ -3386,7 +3386,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyO
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":93
+  /* "DarkNews/Cfourvec.pyx":93
  * 
  * #******************************
  * def momentum_scalar(ndarray[double] E, double mass):             # <<<<<<<<<<<<<<
@@ -3407,7 +3407,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyO
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_E.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.momentum_scalar", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.momentum_scalar", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -3420,7 +3420,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyO
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":105
+/* "DarkNews/Cfourvec.pyx":105
  * 
  * #******************************
  * def get_theta_3vec(ndarray[double, ndim=2] r):             # <<<<<<<<<<<<<<
@@ -3429,9 +3429,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_6momentum_scalar(CYTHON_UNUSED PyO
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_9get_theta_3vec(PyObject *__pyx_self, PyObject *__pyx_v_r); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_9get_theta_3vec = {"get_theta_3vec", (PyCFunction)__pyx_pw_8Darknews_8Cfourvec_9get_theta_3vec, METH_O, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_9get_theta_3vec(PyObject *__pyx_self, PyObject *__pyx_v_r) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_9get_theta_3vec(PyObject *__pyx_self, PyObject *__pyx_v_r); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_9get_theta_3vec = {"get_theta_3vec", (PyCFunction)__pyx_pw_8DarkNews_8Cfourvec_9get_theta_3vec, METH_O, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_9get_theta_3vec(PyObject *__pyx_self, PyObject *__pyx_v_r) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3439,7 +3439,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_9get_theta_3vec(PyObject *__pyx_se
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_theta_3vec (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_r), __pyx_ptype_5numpy_ndarray, 1, "r", 0))) __PYX_ERR(0, 105, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(__pyx_self, ((PyArrayObject *)__pyx_v_r));
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_8get_theta_3vec(__pyx_self, ((PyArrayObject *)__pyx_v_r));
 
   /* function exit code */
   goto __pyx_L0;
@@ -3450,7 +3450,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_9get_theta_3vec(PyObject *__pyx_se
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -3501,7 +3501,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyOb
   }
   __pyx_pybuffernd_r.diminfo[0].strides = __pyx_pybuffernd_r.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_r.diminfo[0].shape = __pyx_pybuffernd_r.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_r.diminfo[1].strides = __pyx_pybuffernd_r.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_r.diminfo[1].shape = __pyx_pybuffernd_r.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":108
+  /* "DarkNews/Cfourvec.pyx":108
  * 
  * 	cdef int i,m
  * 	m = r.shape[0]             # <<<<<<<<<<<<<<
@@ -3510,7 +3510,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyOb
  */
   __pyx_v_m = (__pyx_v_r->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":109
+  /* "DarkNews/Cfourvec.pyx":109
  * 	cdef int i,m
  * 	m = r.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -3554,7 +3554,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyOb
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":111
+  /* "DarkNews/Cfourvec.pyx":111
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -3569,7 +3569,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyOb
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":112
+        /* "DarkNews/Cfourvec.pyx":112
  * 
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -3581,7 +3581,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyOb
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":113
+          /* "DarkNews/Cfourvec.pyx":113
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] = acos(r[i,3]/sqrt(r[i,1]*r[i,1]+r[i,2]*r[i,2]+r[i,3]*r[i,3]))             # <<<<<<<<<<<<<<
@@ -3607,7 +3607,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyOb
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":111
+      /* "DarkNews/Cfourvec.pyx":111
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -3626,7 +3626,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyOb
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":114
+  /* "DarkNews/Cfourvec.pyx":114
  * 		for i in range(m):
  * 			s[i] = acos(r[i,3]/sqrt(r[i,1]*r[i,1]+r[i,2]*r[i,2]+r[i,3]*r[i,3]))
  * 	return s             # <<<<<<<<<<<<<<
@@ -3638,7 +3638,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyOb
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":105
+  /* "DarkNews/Cfourvec.pyx":105
  * 
  * #******************************
  * def get_theta_3vec(ndarray[double, ndim=2] r):             # <<<<<<<<<<<<<<
@@ -3659,7 +3659,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyOb
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_r.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.get_theta_3vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.get_theta_3vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -3672,7 +3672,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyOb
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":117
+/* "DarkNews/Cfourvec.pyx":117
  * 
  * #******************************
  * def mass(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -3681,9 +3681,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_8get_theta_3vec(CYTHON_UNUSED PyOb
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_11mass(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_11mass = {"mass", (PyCFunction)__pyx_pw_8Darknews_8Cfourvec_11mass, METH_O, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_11mass(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_11mass(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_11mass = {"mass", (PyCFunction)__pyx_pw_8DarkNews_8Cfourvec_11mass, METH_O, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_11mass(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3691,7 +3691,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_11mass(PyObject *__pyx_self, PyObj
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("mass (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 117, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_10mass(__pyx_self, ((PyArrayObject *)__pyx_v_x));
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_10mass(__pyx_self, ((PyArrayObject *)__pyx_v_x));
 
   /* function exit code */
   goto __pyx_L0;
@@ -3702,7 +3702,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_11mass(PyObject *__pyx_self, PyObj
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -3755,7 +3755,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__p
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_x.diminfo[1].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_x.diminfo[1].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":119
+  /* "DarkNews/Cfourvec.pyx":119
  * def mass(ndarray[double, ndim=2] x):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -3764,7 +3764,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__p
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":120
+  /* "DarkNews/Cfourvec.pyx":120
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -3808,7 +3808,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__p
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":121
+  /* "DarkNews/Cfourvec.pyx":121
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -3823,7 +3823,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__p
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":122
+        /* "DarkNews/Cfourvec.pyx":122
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -3835,7 +3835,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__p
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":123
+          /* "DarkNews/Cfourvec.pyx":123
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] = sqrt(x[i,0]*x[i,0] - x[i,1]*x[i,1] - x[i,2]*x[i,2] - x[i,3]*x[i,3])             # <<<<<<<<<<<<<<
@@ -3863,7 +3863,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__p
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":121
+      /* "DarkNews/Cfourvec.pyx":121
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -3882,7 +3882,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__p
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":124
+  /* "DarkNews/Cfourvec.pyx":124
  * 		for i in range(m):
  * 			s[i] = sqrt(x[i,0]*x[i,0] - x[i,1]*x[i,1] - x[i,2]*x[i,2] - x[i,3]*x[i,3])
  * 	return  s             # <<<<<<<<<<<<<<
@@ -3894,7 +3894,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__p
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":117
+  /* "DarkNews/Cfourvec.pyx":117
  * 
  * #******************************
  * def mass(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -3915,7 +3915,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__p
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.mass", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.mass", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -3928,7 +3928,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__p
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":127
+/* "DarkNews/Cfourvec.pyx":127
  * 
  * #******************************
  * def inv_mass(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -3937,9 +3937,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_10mass(CYTHON_UNUSED PyObject *__p
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_13inv_mass(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_13inv_mass = {"inv_mass", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_13inv_mass, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_13inv_mass(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_13inv_mass(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_13inv_mass = {"inv_mass", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_13inv_mass, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_13inv_mass(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   PyArrayObject *__pyx_v_y = 0;
   int __pyx_lineno = 0;
@@ -3990,13 +3990,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_13inv_mass(PyObject *__pyx_self, P
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("inv_mass", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 127, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.inv_mass", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.inv_mass", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 127, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_y), __pyx_ptype_5numpy_ndarray, 1, "y", 0))) __PYX_ERR(0, 127, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_12inv_mass(__pyx_self, __pyx_v_x, __pyx_v_y);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_12inv_mass(__pyx_self, __pyx_v_x, __pyx_v_y);
 
   /* function exit code */
   goto __pyx_L0;
@@ -4007,7 +4007,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_13inv_mass(PyObject *__pyx_self, P
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -4071,7 +4071,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject 
   }
   __pyx_pybuffernd_y.diminfo[0].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_y.diminfo[0].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_y.diminfo[1].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_y.diminfo[1].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":129
+  /* "DarkNews/Cfourvec.pyx":129
  * def inv_mass(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -4080,7 +4080,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject 
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":130
+  /* "DarkNews/Cfourvec.pyx":130
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -4124,7 +4124,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject 
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":131
+  /* "DarkNews/Cfourvec.pyx":131
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -4139,7 +4139,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject 
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":132
+        /* "DarkNews/Cfourvec.pyx":132
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -4151,7 +4151,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject 
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":133
+          /* "DarkNews/Cfourvec.pyx":133
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] = sqrt(x[i,0]*y[i,0] - x[i,1]*y[i,1] - x[i,2]*y[i,2] - x[i,3]*y[i,3])             # <<<<<<<<<<<<<<
@@ -4179,7 +4179,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject 
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":131
+      /* "DarkNews/Cfourvec.pyx":131
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -4198,7 +4198,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject 
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":134
+  /* "DarkNews/Cfourvec.pyx":134
  * 		for i in range(m):
  * 			s[i] = sqrt(x[i,0]*y[i,0] - x[i,1]*y[i,1] - x[i,2]*y[i,2] - x[i,3]*y[i,3])
  * 	return  s             # <<<<<<<<<<<<<<
@@ -4210,7 +4210,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject 
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":127
+  /* "DarkNews/Cfourvec.pyx":127
  * 
  * #******************************
  * def inv_mass(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -4232,7 +4232,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject 
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_y.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.inv_mass", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.inv_mass", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -4246,7 +4246,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject 
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":137
+/* "DarkNews/Cfourvec.pyx":137
  * 
  * #******************************
  * def dot4(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -4255,9 +4255,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_12inv_mass(CYTHON_UNUSED PyObject 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_15dot4(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_15dot4 = {"dot4", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_15dot4, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_15dot4(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_15dot4(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_15dot4 = {"dot4", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_15dot4, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_15dot4(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   PyArrayObject *__pyx_v_y = 0;
   int __pyx_lineno = 0;
@@ -4308,13 +4308,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_15dot4(PyObject *__pyx_self, PyObj
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("dot4", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 137, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.dot4", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.dot4", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 137, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_y), __pyx_ptype_5numpy_ndarray, 1, "y", 0))) __PYX_ERR(0, 137, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_14dot4(__pyx_self, __pyx_v_x, __pyx_v_y);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_14dot4(__pyx_self, __pyx_v_x, __pyx_v_y);
 
   /* function exit code */
   goto __pyx_L0;
@@ -4325,7 +4325,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_15dot4(PyObject *__pyx_self, PyObj
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -4389,7 +4389,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__p
   }
   __pyx_pybuffernd_y.diminfo[0].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_y.diminfo[0].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_y.diminfo[1].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_y.diminfo[1].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":139
+  /* "DarkNews/Cfourvec.pyx":139
  * def dot4(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -4398,7 +4398,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__p
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":140
+  /* "DarkNews/Cfourvec.pyx":140
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -4442,7 +4442,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__p
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":141
+  /* "DarkNews/Cfourvec.pyx":141
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -4457,7 +4457,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__p
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":142
+        /* "DarkNews/Cfourvec.pyx":142
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -4469,7 +4469,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__p
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":143
+          /* "DarkNews/Cfourvec.pyx":143
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] = x[i,0]*y[i,0] - x[i,1]*y[i,1] - x[i,2]*y[i,2] - x[i,3]*y[i,3]             # <<<<<<<<<<<<<<
@@ -4497,7 +4497,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__p
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":141
+      /* "DarkNews/Cfourvec.pyx":141
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -4516,7 +4516,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__p
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":144
+  /* "DarkNews/Cfourvec.pyx":144
  * 		for i in range(m):
  * 			s[i] = x[i,0]*y[i,0] - x[i,1]*y[i,1] - x[i,2]*y[i,2] - x[i,3]*y[i,3]
  * 	return  s             # <<<<<<<<<<<<<<
@@ -4528,7 +4528,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__p
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":137
+  /* "DarkNews/Cfourvec.pyx":137
  * 
  * #******************************
  * def dot4(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -4550,7 +4550,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__p
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_y.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.dot4", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.dot4", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -4564,7 +4564,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__p
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":147
+/* "DarkNews/Cfourvec.pyx":147
  * 
  * #******************************
  * def dot3(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -4573,9 +4573,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_14dot4(CYTHON_UNUSED PyObject *__p
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_17dot3(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_17dot3 = {"dot3", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_17dot3, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_17dot3(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_17dot3(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_17dot3 = {"dot3", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_17dot3, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_17dot3(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   PyArrayObject *__pyx_v_y = 0;
   int __pyx_lineno = 0;
@@ -4626,13 +4626,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_17dot3(PyObject *__pyx_self, PyObj
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("dot3", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 147, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.dot3", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.dot3", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 147, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_y), __pyx_ptype_5numpy_ndarray, 1, "y", 0))) __PYX_ERR(0, 147, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_16dot3(__pyx_self, __pyx_v_x, __pyx_v_y);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_16dot3(__pyx_self, __pyx_v_x, __pyx_v_y);
 
   /* function exit code */
   goto __pyx_L0;
@@ -4643,7 +4643,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_17dot3(PyObject *__pyx_self, PyObj
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -4703,7 +4703,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__p
   }
   __pyx_pybuffernd_y.diminfo[0].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_y.diminfo[0].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_y.diminfo[1].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_y.diminfo[1].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":149
+  /* "DarkNews/Cfourvec.pyx":149
  * def dot3(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -4712,7 +4712,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__p
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":150
+  /* "DarkNews/Cfourvec.pyx":150
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -4756,7 +4756,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__p
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":151
+  /* "DarkNews/Cfourvec.pyx":151
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -4771,7 +4771,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__p
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":152
+        /* "DarkNews/Cfourvec.pyx":152
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -4783,7 +4783,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__p
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":153
+          /* "DarkNews/Cfourvec.pyx":153
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] = x[i,1]*y[i,1] + x[i,2]*y[i,2] + x[i,3]*y[i,3]             # <<<<<<<<<<<<<<
@@ -4807,7 +4807,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__p
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":151
+      /* "DarkNews/Cfourvec.pyx":151
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -4826,7 +4826,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__p
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":154
+  /* "DarkNews/Cfourvec.pyx":154
  * 		for i in range(m):
  * 			s[i] = x[i,1]*y[i,1] + x[i,2]*y[i,2] + x[i,3]*y[i,3]
  * 	return  s             # <<<<<<<<<<<<<<
@@ -4838,7 +4838,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__p
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":147
+  /* "DarkNews/Cfourvec.pyx":147
  * 
  * #******************************
  * def dot3(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -4860,7 +4860,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__p
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_y.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.dot3", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.dot3", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -4874,7 +4874,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__p
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":157
+/* "DarkNews/Cfourvec.pyx":157
  * 
  * #******************************
  * def dotXY(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -4883,9 +4883,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_16dot3(CYTHON_UNUSED PyObject *__p
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_19dotXY(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_19dotXY = {"dotXY", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_19dotXY, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_19dotXY(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_19dotXY(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_19dotXY = {"dotXY", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_19dotXY, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_19dotXY(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   PyArrayObject *__pyx_v_y = 0;
   int __pyx_lineno = 0;
@@ -4936,13 +4936,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_19dotXY(PyObject *__pyx_self, PyOb
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("dotXY", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 157, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.dotXY", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.dotXY", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 157, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_y), __pyx_ptype_5numpy_ndarray, 1, "y", 0))) __PYX_ERR(0, 157, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_18dotXY(__pyx_self, __pyx_v_x, __pyx_v_y);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_18dotXY(__pyx_self, __pyx_v_x, __pyx_v_y);
 
   /* function exit code */
   goto __pyx_L0;
@@ -4953,7 +4953,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_19dotXY(PyObject *__pyx_self, PyOb
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -5009,7 +5009,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__
   }
   __pyx_pybuffernd_y.diminfo[0].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_y.diminfo[0].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_y.diminfo[1].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_y.diminfo[1].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":159
+  /* "DarkNews/Cfourvec.pyx":159
  * def dotXY(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -5018,7 +5018,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":160
+  /* "DarkNews/Cfourvec.pyx":160
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -5062,7 +5062,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":161
+  /* "DarkNews/Cfourvec.pyx":161
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -5077,7 +5077,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":162
+        /* "DarkNews/Cfourvec.pyx":162
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -5089,7 +5089,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":163
+          /* "DarkNews/Cfourvec.pyx":163
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] =  x[i,1]*y[i,1] + x[i,2]*y[i,2]             # <<<<<<<<<<<<<<
@@ -5109,7 +5109,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":161
+      /* "DarkNews/Cfourvec.pyx":161
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -5128,7 +5128,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":164
+  /* "DarkNews/Cfourvec.pyx":164
  * 		for i in range(m):
  * 			s[i] =  x[i,1]*y[i,1] + x[i,2]*y[i,2]
  * 	return  s             # <<<<<<<<<<<<<<
@@ -5140,7 +5140,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":157
+  /* "DarkNews/Cfourvec.pyx":157
  * 
  * #******************************
  * def dotXY(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -5162,7 +5162,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_y.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.dotXY", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.dotXY", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -5176,7 +5176,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":167
+/* "DarkNews/Cfourvec.pyx":167
  * 
  * #******************************
  * def dotXY_vec(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -5185,9 +5185,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_18dotXY(CYTHON_UNUSED PyObject *__
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_21dotXY_vec(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_21dotXY_vec = {"dotXY_vec", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_21dotXY_vec, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_21dotXY_vec(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_21dotXY_vec(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_21dotXY_vec = {"dotXY_vec", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_21dotXY_vec, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_21dotXY_vec(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   PyArrayObject *__pyx_v_y = 0;
   int __pyx_lineno = 0;
@@ -5238,13 +5238,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_21dotXY_vec(PyObject *__pyx_self, 
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("dotXY_vec", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 167, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.dotXY_vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.dotXY_vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 167, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_y), __pyx_ptype_5numpy_ndarray, 1, "y", 0))) __PYX_ERR(0, 167, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(__pyx_self, __pyx_v_x, __pyx_v_y);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_20dotXY_vec(__pyx_self, __pyx_v_x, __pyx_v_y);
 
   /* function exit code */
   goto __pyx_L0;
@@ -5255,7 +5255,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_21dotXY_vec(PyObject *__pyx_self, 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -5311,7 +5311,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject
   }
   __pyx_pybuffernd_y.diminfo[0].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_y.diminfo[0].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_y.diminfo[1].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_y.diminfo[1].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":169
+  /* "DarkNews/Cfourvec.pyx":169
  * def dotXY_vec(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -5320,7 +5320,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":170
+  /* "DarkNews/Cfourvec.pyx":170
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -5364,7 +5364,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":171
+  /* "DarkNews/Cfourvec.pyx":171
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -5379,7 +5379,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":172
+        /* "DarkNews/Cfourvec.pyx":172
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -5391,7 +5391,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":173
+          /* "DarkNews/Cfourvec.pyx":173
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] =  x[i,0]*y[i,0] + x[i,1]*y[i,1]             # <<<<<<<<<<<<<<
@@ -5411,7 +5411,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":171
+      /* "DarkNews/Cfourvec.pyx":171
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -5430,7 +5430,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":174
+  /* "DarkNews/Cfourvec.pyx":174
  * 		for i in range(m):
  * 			s[i] =  x[i,0]*y[i,0] + x[i,1]*y[i,1]
  * 	return  s             # <<<<<<<<<<<<<<
@@ -5442,7 +5442,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":167
+  /* "DarkNews/Cfourvec.pyx":167
  * 
  * #******************************
  * def dotXY_vec(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -5464,7 +5464,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_y.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.dotXY_vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.dotXY_vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -5478,7 +5478,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":177
+/* "DarkNews/Cfourvec.pyx":177
  * 
  * #******************************
  * def getXYnorm(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -5487,9 +5487,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_20dotXY_vec(CYTHON_UNUSED PyObject
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_23getXYnorm(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_23getXYnorm = {"getXYnorm", (PyCFunction)__pyx_pw_8Darknews_8Cfourvec_23getXYnorm, METH_O, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_23getXYnorm(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_23getXYnorm(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_23getXYnorm = {"getXYnorm", (PyCFunction)__pyx_pw_8DarkNews_8Cfourvec_23getXYnorm, METH_O, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_23getXYnorm(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -5497,7 +5497,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_23getXYnorm(PyObject *__pyx_self, 
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("getXYnorm (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 177, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_22getXYnorm(__pyx_self, ((PyArrayObject *)__pyx_v_x));
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_22getXYnorm(__pyx_self, ((PyArrayObject *)__pyx_v_x));
 
   /* function exit code */
   goto __pyx_L0;
@@ -5508,7 +5508,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_23getXYnorm(PyObject *__pyx_self, 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -5553,7 +5553,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_x.diminfo[1].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_x.diminfo[1].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":179
+  /* "DarkNews/Cfourvec.pyx":179
  * def getXYnorm(ndarray[double, ndim=2] x):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -5562,7 +5562,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":180
+  /* "DarkNews/Cfourvec.pyx":180
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -5606,7 +5606,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":181
+  /* "DarkNews/Cfourvec.pyx":181
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -5621,7 +5621,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":182
+        /* "DarkNews/Cfourvec.pyx":182
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -5633,7 +5633,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":183
+          /* "DarkNews/Cfourvec.pyx":183
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] =  sqrt(x[i,1]*x[i,1] + x[i,2]*x[i,2])             # <<<<<<<<<<<<<<
@@ -5653,7 +5653,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":181
+      /* "DarkNews/Cfourvec.pyx":181
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -5672,7 +5672,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":184
+  /* "DarkNews/Cfourvec.pyx":184
  * 		for i in range(m):
  * 			s[i] =  sqrt(x[i,1]*x[i,1] + x[i,2]*x[i,2])
  * 	return  s             # <<<<<<<<<<<<<<
@@ -5684,7 +5684,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":177
+  /* "DarkNews/Cfourvec.pyx":177
  * 
  * #******************************
  * def getXYnorm(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -5705,7 +5705,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.getXYnorm", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.getXYnorm", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -5718,7 +5718,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":186
+/* "DarkNews/Cfourvec.pyx":186
  * 	return  s
  * #******************************
  * def getXYnorm_3vec(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -5727,9 +5727,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_22getXYnorm(CYTHON_UNUSED PyObject
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_25getXYnorm_3vec(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_25getXYnorm_3vec = {"getXYnorm_3vec", (PyCFunction)__pyx_pw_8Darknews_8Cfourvec_25getXYnorm_3vec, METH_O, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_25getXYnorm_3vec(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_25getXYnorm_3vec(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_25getXYnorm_3vec = {"getXYnorm_3vec", (PyCFunction)__pyx_pw_8DarkNews_8Cfourvec_25getXYnorm_3vec, METH_O, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_25getXYnorm_3vec(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -5737,7 +5737,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_25getXYnorm_3vec(PyObject *__pyx_s
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("getXYnorm_3vec (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 186, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(__pyx_self, ((PyArrayObject *)__pyx_v_x));
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_24getXYnorm_3vec(__pyx_self, ((PyArrayObject *)__pyx_v_x));
 
   /* function exit code */
   goto __pyx_L0;
@@ -5748,7 +5748,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_25getXYnorm_3vec(PyObject *__pyx_s
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -5793,7 +5793,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyO
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_x.diminfo[1].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_x.diminfo[1].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":188
+  /* "DarkNews/Cfourvec.pyx":188
  * def getXYnorm_3vec(ndarray[double, ndim=2] x):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -5802,7 +5802,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyO
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":189
+  /* "DarkNews/Cfourvec.pyx":189
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -5846,7 +5846,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyO
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":190
+  /* "DarkNews/Cfourvec.pyx":190
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -5861,7 +5861,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyO
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":191
+        /* "DarkNews/Cfourvec.pyx":191
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -5873,7 +5873,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyO
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":192
+          /* "DarkNews/Cfourvec.pyx":192
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] =  sqrt(x[i,0]*x[i,0] + x[i,1]*x[i,1])             # <<<<<<<<<<<<<<
@@ -5893,7 +5893,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyO
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":190
+      /* "DarkNews/Cfourvec.pyx":190
  * 	m= x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -5912,7 +5912,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyO
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":193
+  /* "DarkNews/Cfourvec.pyx":193
  * 		for i in range(m):
  * 			s[i] =  sqrt(x[i,0]*x[i,0] + x[i,1]*x[i,1])
  * 	return  s             # <<<<<<<<<<<<<<
@@ -5924,7 +5924,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyO
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":186
+  /* "DarkNews/Cfourvec.pyx":186
  * 	return  s
  * #******************************
  * def getXYnorm_3vec(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -5945,7 +5945,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyO
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.getXYnorm_3vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.getXYnorm_3vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -5958,7 +5958,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyO
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":196
+/* "DarkNews/Cfourvec.pyx":196
  * 
  * #******************************
  * def get_vec_norm(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -5967,9 +5967,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_24getXYnorm_3vec(CYTHON_UNUSED PyO
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_27get_vec_norm(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_27get_vec_norm = {"get_vec_norm", (PyCFunction)__pyx_pw_8Darknews_8Cfourvec_27get_vec_norm, METH_O, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_27get_vec_norm(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_27get_vec_norm(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_27get_vec_norm = {"get_vec_norm", (PyCFunction)__pyx_pw_8DarkNews_8Cfourvec_27get_vec_norm, METH_O, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_27get_vec_norm(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -5977,7 +5977,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_27get_vec_norm(PyObject *__pyx_sel
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_vec_norm (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 196, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(__pyx_self, ((PyArrayObject *)__pyx_v_x));
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_26get_vec_norm(__pyx_self, ((PyArrayObject *)__pyx_v_x));
 
   /* function exit code */
   goto __pyx_L0;
@@ -5988,7 +5988,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_27get_vec_norm(PyObject *__pyx_sel
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -6037,7 +6037,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObj
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_x.diminfo[1].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_x.diminfo[1].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":198
+  /* "DarkNews/Cfourvec.pyx":198
  * def get_vec_norm(ndarray[double, ndim=2] x):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -6046,7 +6046,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObj
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":199
+  /* "DarkNews/Cfourvec.pyx":199
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -6090,7 +6090,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObj
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":200
+  /* "DarkNews/Cfourvec.pyx":200
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -6105,7 +6105,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObj
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":201
+        /* "DarkNews/Cfourvec.pyx":201
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -6117,7 +6117,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObj
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":202
+          /* "DarkNews/Cfourvec.pyx":202
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] = sqrt(x[i,0]*x[i,0] + x[i,1]*x[i,1] + x[i,2]*x[i,2])             # <<<<<<<<<<<<<<
@@ -6141,7 +6141,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObj
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":200
+      /* "DarkNews/Cfourvec.pyx":200
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -6160,7 +6160,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObj
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":203
+  /* "DarkNews/Cfourvec.pyx":203
  * 		for i in range(m):
  * 			s[i] = sqrt(x[i,0]*x[i,0] + x[i,1]*x[i,1] + x[i,2]*x[i,2])
  * 	return s             # <<<<<<<<<<<<<<
@@ -6172,7 +6172,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObj
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":196
+  /* "DarkNews/Cfourvec.pyx":196
  * 
  * #******************************
  * def get_vec_norm(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -6193,7 +6193,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObj
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.get_vec_norm", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.get_vec_norm", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -6206,7 +6206,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObj
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":206
+/* "DarkNews/Cfourvec.pyx":206
  * 
  * #******************************
  * def get_3vec_norm(ndarray[double,ndim=2] x):             # <<<<<<<<<<<<<<
@@ -6215,9 +6215,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_26get_vec_norm(CYTHON_UNUSED PyObj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_29get_3vec_norm(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_29get_3vec_norm = {"get_3vec_norm", (PyCFunction)__pyx_pw_8Darknews_8Cfourvec_29get_3vec_norm, METH_O, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_29get_3vec_norm(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_29get_3vec_norm(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_29get_3vec_norm = {"get_3vec_norm", (PyCFunction)__pyx_pw_8DarkNews_8Cfourvec_29get_3vec_norm, METH_O, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_29get_3vec_norm(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -6225,7 +6225,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_29get_3vec_norm(PyObject *__pyx_se
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_3vec_norm (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 206, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(__pyx_self, ((PyArrayObject *)__pyx_v_x));
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_28get_3vec_norm(__pyx_self, ((PyArrayObject *)__pyx_v_x));
 
   /* function exit code */
   goto __pyx_L0;
@@ -6236,7 +6236,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_29get_3vec_norm(PyObject *__pyx_se
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -6285,7 +6285,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyOb
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_x.diminfo[1].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_x.diminfo[1].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":208
+  /* "DarkNews/Cfourvec.pyx":208
  * def get_3vec_norm(ndarray[double,ndim=2] x):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -6294,7 +6294,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyOb
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":209
+  /* "DarkNews/Cfourvec.pyx":209
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -6338,7 +6338,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyOb
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":210
+  /* "DarkNews/Cfourvec.pyx":210
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -6353,7 +6353,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyOb
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":211
+        /* "DarkNews/Cfourvec.pyx":211
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -6365,7 +6365,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyOb
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":212
+          /* "DarkNews/Cfourvec.pyx":212
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] = sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])             # <<<<<<<<<<<<<<
@@ -6389,7 +6389,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyOb
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":210
+      /* "DarkNews/Cfourvec.pyx":210
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -6408,7 +6408,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyOb
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":213
+  /* "DarkNews/Cfourvec.pyx":213
  * 		for i in range(m):
  * 			s[i] = sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])
  * 	return s             # <<<<<<<<<<<<<<
@@ -6420,7 +6420,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyOb
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":206
+  /* "DarkNews/Cfourvec.pyx":206
  * 
  * #******************************
  * def get_3vec_norm(ndarray[double,ndim=2] x):             # <<<<<<<<<<<<<<
@@ -6441,7 +6441,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyOb
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.get_3vec_norm", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.get_3vec_norm", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -6454,7 +6454,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyOb
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":216
+/* "DarkNews/Cfourvec.pyx":216
  * 
  * #******************************
  * def get_3norm_vec(ndarray[double,ndim=2] x):             # <<<<<<<<<<<<<<
@@ -6463,9 +6463,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_28get_3vec_norm(CYTHON_UNUSED PyOb
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_31get_3norm_vec(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_31get_3norm_vec = {"get_3norm_vec", (PyCFunction)__pyx_pw_8Darknews_8Cfourvec_31get_3norm_vec, METH_O, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_31get_3norm_vec(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_31get_3norm_vec(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_31get_3norm_vec = {"get_3norm_vec", (PyCFunction)__pyx_pw_8DarkNews_8Cfourvec_31get_3norm_vec, METH_O, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_31get_3norm_vec(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -6473,7 +6473,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_31get_3norm_vec(PyObject *__pyx_se
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_3norm_vec (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 216, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(__pyx_self, ((PyArrayObject *)__pyx_v_x));
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_30get_3norm_vec(__pyx_self, ((PyArrayObject *)__pyx_v_x));
 
   /* function exit code */
   goto __pyx_L0;
@@ -6484,7 +6484,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_31get_3norm_vec(PyObject *__pyx_se
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -6533,7 +6533,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyOb
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_x.diminfo[1].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_x.diminfo[1].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":218
+  /* "DarkNews/Cfourvec.pyx":218
  * def get_3norm_vec(ndarray[double,ndim=2] x):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -6542,7 +6542,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyOb
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":219
+  /* "DarkNews/Cfourvec.pyx":219
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -6586,7 +6586,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyOb
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":220
+  /* "DarkNews/Cfourvec.pyx":220
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -6601,7 +6601,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyOb
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":221
+        /* "DarkNews/Cfourvec.pyx":221
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -6613,7 +6613,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyOb
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":222
+          /* "DarkNews/Cfourvec.pyx":222
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] = sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])             # <<<<<<<<<<<<<<
@@ -6637,7 +6637,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyOb
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":220
+      /* "DarkNews/Cfourvec.pyx":220
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -6656,7 +6656,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyOb
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":223
+  /* "DarkNews/Cfourvec.pyx":223
  * 		for i in range(m):
  * 			s[i] = sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])
  * 	return s             # <<<<<<<<<<<<<<
@@ -6668,7 +6668,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyOb
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":216
+  /* "DarkNews/Cfourvec.pyx":216
  * 
  * #******************************
  * def get_3norm_vec(ndarray[double,ndim=2] x):             # <<<<<<<<<<<<<<
@@ -6689,7 +6689,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyOb
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.get_3norm_vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.get_3norm_vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -6702,7 +6702,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyOb
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":226
+/* "DarkNews/Cfourvec.pyx":226
  * 
  * #******************************
  * def get_3direction_3vec(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -6711,9 +6711,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_30get_3norm_vec(CYTHON_UNUSED PyOb
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_33get_3direction_3vec(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_33get_3direction_3vec = {"get_3direction_3vec", (PyCFunction)__pyx_pw_8Darknews_8Cfourvec_33get_3direction_3vec, METH_O, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_33get_3direction_3vec(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_33get_3direction_3vec(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_33get_3direction_3vec = {"get_3direction_3vec", (PyCFunction)__pyx_pw_8DarkNews_8Cfourvec_33get_3direction_3vec, METH_O, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_33get_3direction_3vec(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -6721,7 +6721,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_33get_3direction_3vec(PyObject *__
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_3direction_3vec (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 226, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(__pyx_self, ((PyArrayObject *)__pyx_v_x));
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_32get_3direction_3vec(__pyx_self, ((PyArrayObject *)__pyx_v_x));
 
   /* function exit code */
   goto __pyx_L0;
@@ -6732,7 +6732,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_33get_3direction_3vec(PyObject *__
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -6784,7 +6784,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_x.diminfo[1].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_x.diminfo[1].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":228
+  /* "DarkNews/Cfourvec.pyx":228
  * def get_3direction_3vec(ndarray[double, ndim=2] x):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -6793,7 +6793,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":229
+  /* "DarkNews/Cfourvec.pyx":229
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))             # <<<<<<<<<<<<<<
@@ -6845,7 +6845,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":230
+  /* "DarkNews/Cfourvec.pyx":230
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -6860,7 +6860,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":231
+        /* "DarkNews/Cfourvec.pyx":231
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -6872,7 +6872,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":232
+          /* "DarkNews/Cfourvec.pyx":232
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i,0] = x[i,0]/sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])             # <<<<<<<<<<<<<<
@@ -6897,7 +6897,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
           __pyx_t_24 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_s.diminfo[0].strides, __pyx_t_24, __pyx_pybuffernd_s.diminfo[1].strides) = ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_x.diminfo[1].strides)) / sqrt(((((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_x.diminfo[1].strides))) + ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_x.diminfo[1].strides)))) + ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_19, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_20, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_x.diminfo[1].strides))))));
 
-          /* "Darknews/Cfourvec.pyx":233
+          /* "DarkNews/Cfourvec.pyx":233
  * 		for i in range(m):
  * 			s[i,0] = x[i,0]/sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])
  * 			s[i,1] = x[i,1]/sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])             # <<<<<<<<<<<<<<
@@ -6922,7 +6922,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
           __pyx_t_23 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_24, __pyx_pybuffernd_s.diminfo[0].strides, __pyx_t_23, __pyx_pybuffernd_s.diminfo[1].strides) = ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_22, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_x.diminfo[1].strides)) / sqrt(((((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_19, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_18, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_17, __pyx_pybuffernd_x.diminfo[1].strides))) + ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_x.diminfo[1].strides)))) + ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_9, __pyx_pybuffernd_x.diminfo[1].strides))))));
 
-          /* "Darknews/Cfourvec.pyx":234
+          /* "DarkNews/Cfourvec.pyx":234
  * 			s[i,0] = x[i,0]/sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])
  * 			s[i,1] = x[i,1]/sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])
  * 			s[i,2] = x[i,2]/sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])             # <<<<<<<<<<<<<<
@@ -6949,7 +6949,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":230
+      /* "DarkNews/Cfourvec.pyx":230
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -6968,7 +6968,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":235
+  /* "DarkNews/Cfourvec.pyx":235
  * 			s[i,1] = x[i,1]/sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])
  * 			s[i,2] = x[i,2]/sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])
  * 	return s             # <<<<<<<<<<<<<<
@@ -6980,7 +6980,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":226
+  /* "DarkNews/Cfourvec.pyx":226
  * 
  * #******************************
  * def get_3direction_3vec(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -7001,7 +7001,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.get_3direction_3vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.get_3direction_3vec", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -7014,7 +7014,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":238
+/* "DarkNews/Cfourvec.pyx":238
  * 
  * #******************************
  * def get_cosTheta(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -7023,9 +7023,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_32get_3direction_3vec(CYTHON_UNUSE
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_35get_cosTheta(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_35get_cosTheta = {"get_cosTheta", (PyCFunction)__pyx_pw_8Darknews_8Cfourvec_35get_cosTheta, METH_O, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_35get_cosTheta(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_35get_cosTheta(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_35get_cosTheta = {"get_cosTheta", (PyCFunction)__pyx_pw_8DarkNews_8Cfourvec_35get_cosTheta, METH_O, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_35get_cosTheta(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -7033,7 +7033,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_35get_cosTheta(PyObject *__pyx_sel
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_cosTheta (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 238, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(__pyx_self, ((PyArrayObject *)__pyx_v_x));
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_34get_cosTheta(__pyx_self, ((PyArrayObject *)__pyx_v_x));
 
   /* function exit code */
   goto __pyx_L0;
@@ -7044,7 +7044,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_35get_cosTheta(PyObject *__pyx_sel
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -7095,7 +7095,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObj
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_x.diminfo[1].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_x.diminfo[1].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":240
+  /* "DarkNews/Cfourvec.pyx":240
  * def get_cosTheta(ndarray[double, ndim=2] x):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -7104,7 +7104,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObj
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":241
+  /* "DarkNews/Cfourvec.pyx":241
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -7148,7 +7148,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObj
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":242
+  /* "DarkNews/Cfourvec.pyx":242
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -7163,7 +7163,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObj
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":243
+        /* "DarkNews/Cfourvec.pyx":243
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -7175,7 +7175,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObj
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":244
+          /* "DarkNews/Cfourvec.pyx":244
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] = x[i,3]/sqrt(x[i,1]*x[i,1] + x[i,2]*x[i,2] + x[i,3]*x[i,3])             # <<<<<<<<<<<<<<
@@ -7201,7 +7201,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObj
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":242
+      /* "DarkNews/Cfourvec.pyx":242
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -7220,7 +7220,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObj
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":245
+  /* "DarkNews/Cfourvec.pyx":245
  * 		for i in range(m):
  * 			s[i] = x[i,3]/sqrt(x[i,1]*x[i,1] + x[i,2]*x[i,2] + x[i,3]*x[i,3])
  * 	return s             # <<<<<<<<<<<<<<
@@ -7232,7 +7232,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObj
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":238
+  /* "DarkNews/Cfourvec.pyx":238
  * 
  * #******************************
  * def get_cosTheta(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -7253,7 +7253,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObj
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.get_cosTheta", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.get_cosTheta", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -7266,7 +7266,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObj
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":248
+/* "DarkNews/Cfourvec.pyx":248
  * 
  * #******************************
  * def get_cos_opening_angle(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -7275,9 +7275,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_34get_cosTheta(CYTHON_UNUSED PyObj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_37get_cos_opening_angle(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_37get_cos_opening_angle = {"get_cos_opening_angle", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_37get_cos_opening_angle, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_37get_cos_opening_angle(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_37get_cos_opening_angle(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_37get_cos_opening_angle = {"get_cos_opening_angle", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_37get_cos_opening_angle, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_37get_cos_opening_angle(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   PyArrayObject *__pyx_v_y = 0;
   int __pyx_lineno = 0;
@@ -7328,13 +7328,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_37get_cos_opening_angle(PyObject *
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("get_cos_opening_angle", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 248, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.get_cos_opening_angle", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.get_cos_opening_angle", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 248, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_y), __pyx_ptype_5numpy_ndarray, 1, "y", 0))) __PYX_ERR(0, 248, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(__pyx_self, __pyx_v_x, __pyx_v_y);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_36get_cos_opening_angle(__pyx_self, __pyx_v_x, __pyx_v_y);
 
   /* function exit code */
   goto __pyx_L0;
@@ -7345,7 +7345,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_37get_cos_opening_angle(PyObject *
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_y) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -7429,7 +7429,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNU
   }
   __pyx_pybuffernd_y.diminfo[0].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_y.diminfo[0].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_y.diminfo[1].strides = __pyx_pybuffernd_y.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_y.diminfo[1].shape = __pyx_pybuffernd_y.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":250
+  /* "DarkNews/Cfourvec.pyx":250
  * def get_cos_opening_angle(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -7438,7 +7438,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNU
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":251
+  /* "DarkNews/Cfourvec.pyx":251
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))             # <<<<<<<<<<<<<<
@@ -7482,7 +7482,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNU
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":252
+  /* "DarkNews/Cfourvec.pyx":252
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -7497,7 +7497,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNU
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":253
+        /* "DarkNews/Cfourvec.pyx":253
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -7509,7 +7509,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNU
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":254
+          /* "DarkNews/Cfourvec.pyx":254
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i] = (x[i,1]*y[i,1] + x[i,2]*y[i,2] + x[i,3]*y[i,3])/sqrt(x[i,1]*x[i,1] + x[i,2]*x[i,2] + x[i,3]*x[i,3])/sqrt(y[i,1]*y[i,1] + y[i,2]*y[i,2] + y[i,3]*y[i,3])             # <<<<<<<<<<<<<<
@@ -7557,7 +7557,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNU
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":252
+      /* "DarkNews/Cfourvec.pyx":252
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=1] s = np.empty((m))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -7576,7 +7576,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNU
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":255
+  /* "DarkNews/Cfourvec.pyx":255
  * 		for i in range(m):
  * 			s[i] = (x[i,1]*y[i,1] + x[i,2]*y[i,2] + x[i,3]*y[i,3])/sqrt(x[i,1]*x[i,1] + x[i,2]*x[i,2] + x[i,3]*x[i,3])/sqrt(y[i,1]*y[i,1] + y[i,2]*y[i,2] + y[i,3]*y[i,3])
  * 	return s             # <<<<<<<<<<<<<<
@@ -7588,7 +7588,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNU
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":248
+  /* "DarkNews/Cfourvec.pyx":248
  * 
  * #******************************
  * def get_cos_opening_angle(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -7610,7 +7610,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNU
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_y.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.get_cos_opening_angle", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.get_cos_opening_angle", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -7624,7 +7624,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNU
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":258
+/* "DarkNews/Cfourvec.pyx":258
  * 
  * #******************************
  * def get_3direction(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -7633,9 +7633,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_36get_cos_opening_angle(CYTHON_UNU
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_39get_3direction(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_39get_3direction = {"get_3direction", (PyCFunction)__pyx_pw_8Darknews_8Cfourvec_39get_3direction, METH_O, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_39get_3direction(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_39get_3direction(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_39get_3direction = {"get_3direction", (PyCFunction)__pyx_pw_8DarkNews_8Cfourvec_39get_3direction, METH_O, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_39get_3direction(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -7643,7 +7643,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_39get_3direction(PyObject *__pyx_s
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_3direction (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 258, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_38get_3direction(__pyx_self, ((PyArrayObject *)__pyx_v_x));
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_38get_3direction(__pyx_self, ((PyArrayObject *)__pyx_v_x));
 
   /* function exit code */
   goto __pyx_L0;
@@ -7654,7 +7654,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_39get_3direction(PyObject *__pyx_s
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -7706,7 +7706,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_x.diminfo[1].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_x.diminfo[1].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[1];
 
-  /* "Darknews/Cfourvec.pyx":260
+  /* "DarkNews/Cfourvec.pyx":260
  * def get_3direction(ndarray[double, ndim=2] x):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -7715,7 +7715,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":261
+  /* "DarkNews/Cfourvec.pyx":261
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))             # <<<<<<<<<<<<<<
@@ -7767,7 +7767,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":262
+  /* "DarkNews/Cfourvec.pyx":262
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -7782,7 +7782,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":263
+        /* "DarkNews/Cfourvec.pyx":263
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -7794,7 +7794,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":264
+          /* "DarkNews/Cfourvec.pyx":264
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i,0] = x[i,1]/sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])             # <<<<<<<<<<<<<<
@@ -7819,7 +7819,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
           __pyx_t_24 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_s.diminfo[0].strides, __pyx_t_24, __pyx_pybuffernd_s.diminfo[1].strides) = ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_x.diminfo[1].strides)) / sqrt(((((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_x.diminfo[1].strides))) + ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_x.diminfo[1].strides)))) + ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_19, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_20, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_x.diminfo[1].strides))))));
 
-          /* "Darknews/Cfourvec.pyx":265
+          /* "DarkNews/Cfourvec.pyx":265
  * 		for i in range(m):
  * 			s[i,0] = x[i,1]/sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])
  * 			s[i,1] = x[i,2]/sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])             # <<<<<<<<<<<<<<
@@ -7844,7 +7844,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
           __pyx_t_23 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_24, __pyx_pybuffernd_s.diminfo[0].strides, __pyx_t_23, __pyx_pybuffernd_s.diminfo[1].strides) = ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_22, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_x.diminfo[1].strides)) / sqrt(((((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_19, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_18, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_17, __pyx_pybuffernd_x.diminfo[1].strides))) + ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_x.diminfo[1].strides)))) + ((*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_x.diminfo[1].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_x.diminfo[0].strides, __pyx_t_9, __pyx_pybuffernd_x.diminfo[1].strides))))));
 
-          /* "Darknews/Cfourvec.pyx":266
+          /* "DarkNews/Cfourvec.pyx":266
  * 			s[i,0] = x[i,1]/sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])
  * 			s[i,1] = x[i,2]/sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])
  * 			s[i,2] = x[i,3]/sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])             # <<<<<<<<<<<<<<
@@ -7871,7 +7871,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":262
+      /* "DarkNews/Cfourvec.pyx":262
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -7890,7 +7890,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":267
+  /* "DarkNews/Cfourvec.pyx":267
  * 			s[i,1] = x[i,2]/sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])
  * 			s[i,2] = x[i,3]/sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])
  * 	return s             # <<<<<<<<<<<<<<
@@ -7902,7 +7902,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":258
+  /* "DarkNews/Cfourvec.pyx":258
  * 
  * #******************************
  * def get_3direction(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -7923,7 +7923,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.get_3direction", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.get_3direction", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -7936,7 +7936,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":270
+/* "DarkNews/Cfourvec.pyx":270
  * 
  * #******************************
  * def put_in_z_axis(ndarray[double, ndim=1] x):             # <<<<<<<<<<<<<<
@@ -7945,9 +7945,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_38get_3direction(CYTHON_UNUSED PyO
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_41put_in_z_axis(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_41put_in_z_axis = {"put_in_z_axis", (PyCFunction)__pyx_pw_8Darknews_8Cfourvec_41put_in_z_axis, METH_O, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_41put_in_z_axis(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_41put_in_z_axis(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_41put_in_z_axis = {"put_in_z_axis", (PyCFunction)__pyx_pw_8DarkNews_8Cfourvec_41put_in_z_axis, METH_O, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_41put_in_z_axis(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -7955,7 +7955,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_41put_in_z_axis(PyObject *__pyx_se
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("put_in_z_axis (wrapper)", 0);
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) __PYX_ERR(0, 270, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(__pyx_self, ((PyArrayObject *)__pyx_v_x));
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_40put_in_z_axis(__pyx_self, ((PyArrayObject *)__pyx_v_x));
 
   /* function exit code */
   goto __pyx_L0;
@@ -7966,7 +7966,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_41put_in_z_axis(PyObject *__pyx_se
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_s = 0;
@@ -8005,7 +8005,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":272
+  /* "DarkNews/Cfourvec.pyx":272
  * def put_in_z_axis(ndarray[double, ndim=1] x):
  * 	cdef int i,m
  * 	m= x.shape[0]             # <<<<<<<<<<<<<<
@@ -8014,7 +8014,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
  */
   __pyx_v_m = (__pyx_v_x->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":273
+  /* "DarkNews/Cfourvec.pyx":273
  * 	cdef int i,m
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))             # <<<<<<<<<<<<<<
@@ -8066,7 +8066,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
   __pyx_v_s = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":274
+  /* "DarkNews/Cfourvec.pyx":274
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -8081,7 +8081,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":275
+        /* "DarkNews/Cfourvec.pyx":275
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -8093,7 +8093,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":276
+          /* "DarkNews/Cfourvec.pyx":276
  * 	with nogil:
  * 		for i in range(m):
  * 			s[i,0] = 0.0             # <<<<<<<<<<<<<<
@@ -8104,7 +8104,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
           __pyx_t_10 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_s.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_s.diminfo[1].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":277
+          /* "DarkNews/Cfourvec.pyx":277
  * 		for i in range(m):
  * 			s[i,0] = 0.0
  * 			s[i,1] = 0.0             # <<<<<<<<<<<<<<
@@ -8115,7 +8115,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
           __pyx_t_9 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_s.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_s.diminfo[0].strides, __pyx_t_9, __pyx_pybuffernd_s.diminfo[1].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":278
+          /* "DarkNews/Cfourvec.pyx":278
  * 			s[i,0] = 0.0
  * 			s[i,1] = 0.0
  * 			s[i,2] = x[i]             # <<<<<<<<<<<<<<
@@ -8129,7 +8129,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":274
+      /* "DarkNews/Cfourvec.pyx":274
  * 	m= x.shape[0]
  * 	cdef ndarray[double, ndim=2] s = np.empty((m,3))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -8148,7 +8148,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":279
+  /* "DarkNews/Cfourvec.pyx":279
  * 			s[i,1] = 0.0
  * 			s[i,2] = x[i]
  * 	return s             # <<<<<<<<<<<<<<
@@ -8160,7 +8160,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
   __pyx_r = ((PyObject *)__pyx_v_s);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":270
+  /* "DarkNews/Cfourvec.pyx":270
  * 
  * #******************************
  * def put_in_z_axis(ndarray[double, ndim=1] x):             # <<<<<<<<<<<<<<
@@ -8181,7 +8181,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_s.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.put_in_z_axis", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.put_in_z_axis", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -8194,7 +8194,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":282
+/* "DarkNews/Cfourvec.pyx":282
  * 
  * #******************************
  * def rotationx(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
@@ -8203,9 +8203,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_40put_in_z_axis(CYTHON_UNUSED PyOb
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_43rotationx(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_43rotationx = {"rotationx", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_43rotationx, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_43rotationx(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_43rotationx(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_43rotationx = {"rotationx", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_43rotationx, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_43rotationx(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_v4 = 0;
   PyArrayObject *__pyx_v_theta = 0;
   int __pyx_lineno = 0;
@@ -8256,13 +8256,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_43rotationx(PyObject *__pyx_self, 
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("rotationx", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 282, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationx", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationx", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_v4), __pyx_ptype_5numpy_ndarray, 1, "v4", 0))) __PYX_ERR(0, 282, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_theta), __pyx_ptype_5numpy_ndarray, 1, "theta", 0))) __PYX_ERR(0, 282, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_42rotationx(__pyx_self, __pyx_v_v4, __pyx_v_theta);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_42rotationx(__pyx_self, __pyx_v_v4, __pyx_v_theta);
 
   /* function exit code */
   goto __pyx_L0;
@@ -8273,7 +8273,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_43rotationx(PyObject *__pyx_self, 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_res = 0;
@@ -8350,7 +8350,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
   }
   __pyx_pybuffernd_theta.diminfo[0].strides = __pyx_pybuffernd_theta.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_theta.diminfo[0].shape = __pyx_pybuffernd_theta.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":286
+  /* "DarkNews/Cfourvec.pyx":286
  * 	cdef int i, m;
  * 
  * 	m = v4.shape[0]             # <<<<<<<<<<<<<<
@@ -8359,7 +8359,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
  */
   __pyx_v_m = (__pyx_v_v4->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":288
+  /* "DarkNews/Cfourvec.pyx":288
  * 	m = v4.shape[0]
  * 
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))             # <<<<<<<<<<<<<<
@@ -8411,7 +8411,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
   __pyx_v_res = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":289
+  /* "DarkNews/Cfourvec.pyx":289
  * 
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	cdef ndarray[double, ndim=3] R = np.empty((m,4,4))             # <<<<<<<<<<<<<<
@@ -8466,7 +8466,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
   __pyx_v_R = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":291
+  /* "DarkNews/Cfourvec.pyx":291
  * 	cdef ndarray[double, ndim=3] R = np.empty((m,4,4))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -8481,7 +8481,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":292
+        /* "DarkNews/Cfourvec.pyx":292
  * 
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -8493,7 +8493,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
         for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
           __pyx_v_i = __pyx_t_9;
 
-          /* "Darknews/Cfourvec.pyx":293
+          /* "DarkNews/Cfourvec.pyx":293
  * 	with nogil:
  * 		for i in range(m):
  * 			R[i,0,0] = 1.0             # <<<<<<<<<<<<<<
@@ -8505,7 +8505,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_12 = 0;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[2].strides) = 1.0;
 
-          /* "Darknews/Cfourvec.pyx":294
+          /* "DarkNews/Cfourvec.pyx":294
  * 		for i in range(m):
  * 			R[i,0,0] = 1.0
  * 			R[i,0,1] = 0.0             # <<<<<<<<<<<<<<
@@ -8517,7 +8517,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_10 = 1;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_10, __pyx_pybuffernd_R.diminfo[2].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":295
+          /* "DarkNews/Cfourvec.pyx":295
  * 			R[i,0,0] = 1.0
  * 			R[i,0,1] = 0.0
  * 			R[i,0,2] = 0.0             # <<<<<<<<<<<<<<
@@ -8529,7 +8529,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_12 = 2;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[2].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":296
+          /* "DarkNews/Cfourvec.pyx":296
  * 			R[i,0,1] = 0.0
  * 			R[i,0,2] = 0.0
  * 			R[i,0,3] = 0.0             # <<<<<<<<<<<<<<
@@ -8541,7 +8541,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_10 = 3;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_10, __pyx_pybuffernd_R.diminfo[2].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":298
+          /* "DarkNews/Cfourvec.pyx":298
  * 			R[i,0,3] = 0.0
  * 
  * 			R[i,1,0] = 0.0             # <<<<<<<<<<<<<<
@@ -8553,7 +8553,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_12 = 0;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[2].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":299
+          /* "DarkNews/Cfourvec.pyx":299
  * 
  * 			R[i,1,0] = 0.0
  * 			R[i,1,1] = 1.0             # <<<<<<<<<<<<<<
@@ -8565,7 +8565,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_10 = 1;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_10, __pyx_pybuffernd_R.diminfo[2].strides) = 1.0;
 
-          /* "Darknews/Cfourvec.pyx":300
+          /* "DarkNews/Cfourvec.pyx":300
  * 			R[i,1,0] = 0.0
  * 			R[i,1,1] = 1.0
  * 			R[i,1,2] = 0.0             # <<<<<<<<<<<<<<
@@ -8577,7 +8577,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_12 = 2;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[2].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":301
+          /* "DarkNews/Cfourvec.pyx":301
  * 			R[i,1,1] = 1.0
  * 			R[i,1,2] = 0.0
  * 			R[i,1,3] = 0.0             # <<<<<<<<<<<<<<
@@ -8589,7 +8589,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_10 = 3;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_10, __pyx_pybuffernd_R.diminfo[2].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":303
+          /* "DarkNews/Cfourvec.pyx":303
  * 			R[i,1,3] = 0.0
  * 
  * 			R[i,2,0] = 0.0             # <<<<<<<<<<<<<<
@@ -8601,7 +8601,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_12 = 0;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[2].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":304
+          /* "DarkNews/Cfourvec.pyx":304
  * 
  * 			R[i,2,0] = 0.0
  * 			R[i,2,1] = 0.0             # <<<<<<<<<<<<<<
@@ -8613,7 +8613,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_10 = 1;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_10, __pyx_pybuffernd_R.diminfo[2].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":305
+          /* "DarkNews/Cfourvec.pyx":305
  * 			R[i,2,0] = 0.0
  * 			R[i,2,1] = 0.0
  * 			R[i,2,2] = cos(theta[i])             # <<<<<<<<<<<<<<
@@ -8626,7 +8626,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_13 = 2;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_13, __pyx_pybuffernd_R.diminfo[2].strides) = cos((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_theta.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_theta.diminfo[0].strides)));
 
-          /* "Darknews/Cfourvec.pyx":306
+          /* "DarkNews/Cfourvec.pyx":306
  * 			R[i,2,1] = 0.0
  * 			R[i,2,2] = cos(theta[i])
  * 			R[i,2,3] = -sin(theta[i])             # <<<<<<<<<<<<<<
@@ -8639,7 +8639,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_11 = 3;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[2].strides) = (-sin((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_theta.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_theta.diminfo[0].strides))));
 
-          /* "Darknews/Cfourvec.pyx":308
+          /* "DarkNews/Cfourvec.pyx":308
  * 			R[i,2,3] = -sin(theta[i])
  * 
  * 			R[i,3,0] = 0.0             # <<<<<<<<<<<<<<
@@ -8651,7 +8651,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_12 = 0;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[2].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":309
+          /* "DarkNews/Cfourvec.pyx":309
  * 
  * 			R[i,3,0] = 0.0
  * 			R[i,3,1] = 0.0             # <<<<<<<<<<<<<<
@@ -8663,7 +8663,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_10 = 1;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_10, __pyx_pybuffernd_R.diminfo[2].strides) = 0.0;
 
-          /* "Darknews/Cfourvec.pyx":310
+          /* "DarkNews/Cfourvec.pyx":310
  * 			R[i,3,0] = 0.0
  * 			R[i,3,1] = 0.0
  * 			R[i,3,2] = sin(theta[i])             # <<<<<<<<<<<<<<
@@ -8676,7 +8676,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_13 = 2;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_13, __pyx_pybuffernd_R.diminfo[2].strides) = sin((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_theta.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_theta.diminfo[0].strides)));
 
-          /* "Darknews/Cfourvec.pyx":311
+          /* "DarkNews/Cfourvec.pyx":311
  * 			R[i,3,1] = 0.0
  * 			R[i,3,2] = sin(theta[i])
  * 			R[i,3,3] = cos(theta[i])             # <<<<<<<<<<<<<<
@@ -8689,7 +8689,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_11 = 3;
           *__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[2].strides) = cos((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_theta.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_theta.diminfo[0].strides)));
 
-          /* "Darknews/Cfourvec.pyx":313
+          /* "DarkNews/Cfourvec.pyx":313
  * 			R[i,3,3] = cos(theta[i])
  * 
  * 			res[i,0] = R[i,0,0]*v4[i,0] + R[i,0,1]*v4[i,1] + R[i,0,2]*v4[i,2] + R[i,0,3]*v4[i,3]             # <<<<<<<<<<<<<<
@@ -8720,7 +8720,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_31 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_30, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_31, __pyx_pybuffernd_res.diminfo[1].strides) = (((((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[1].strides))) + ((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_17, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_18, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_19, __pyx_pybuffernd_v4.diminfo[1].strides)))) + ((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_24, __pyx_pybuffernd_v4.diminfo[1].strides)))) + ((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_25, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_26, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_27, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_28, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_29, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":314
+          /* "DarkNews/Cfourvec.pyx":314
  * 
  * 			res[i,0] = R[i,0,0]*v4[i,0] + R[i,0,1]*v4[i,1] + R[i,0,2]*v4[i,2] + R[i,0,3]*v4[i,3]
  * 			res[i,1] = R[i,1,0]*v4[i,0] + R[i,1,1]*v4[i,1] + R[i,1,2]*v4[i,2] + R[i,1,3]*v4[i,3]             # <<<<<<<<<<<<<<
@@ -8751,7 +8751,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_30 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_31, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_30, __pyx_pybuffernd_res.diminfo[1].strides) = (((((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_29, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_28, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_27, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_26, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_25, __pyx_pybuffernd_v4.diminfo[1].strides))) + ((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_24, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_23, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_20, __pyx_pybuffernd_v4.diminfo[1].strides)))) + ((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_19, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_17, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_v4.diminfo[1].strides)))) + ((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":315
+          /* "DarkNews/Cfourvec.pyx":315
  * 			res[i,0] = R[i,0,0]*v4[i,0] + R[i,0,1]*v4[i,1] + R[i,0,2]*v4[i,2] + R[i,0,3]*v4[i,3]
  * 			res[i,1] = R[i,1,0]*v4[i,0] + R[i,1,1]*v4[i,1] + R[i,1,2]*v4[i,2] + R[i,1,3]*v4[i,3]
  * 			res[i,2] = R[i,2,0]*v4[i,0] + R[i,2,1]*v4[i,1] + R[i,2,2]*v4[i,2] + R[i,2,3]*v4[i,3]             # <<<<<<<<<<<<<<
@@ -8782,7 +8782,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
           __pyx_t_31 = 2;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_30, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_31, __pyx_pybuffernd_res.diminfo[1].strides) = (((((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_12, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[1].strides))) + ((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_17, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_18, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_19, __pyx_pybuffernd_v4.diminfo[1].strides)))) + ((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_24, __pyx_pybuffernd_v4.diminfo[1].strides)))) + ((*__Pyx_BufPtrStrided3d(double *, __pyx_pybuffernd_R.rcbuffer->pybuffer.buf, __pyx_t_25, __pyx_pybuffernd_R.diminfo[0].strides, __pyx_t_26, __pyx_pybuffernd_R.diminfo[1].strides, __pyx_t_27, __pyx_pybuffernd_R.diminfo[2].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_28, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_29, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":316
+          /* "DarkNews/Cfourvec.pyx":316
  * 			res[i,1] = R[i,1,0]*v4[i,0] + R[i,1,1]*v4[i,1] + R[i,1,2]*v4[i,2] + R[i,1,3]*v4[i,3]
  * 			res[i,2] = R[i,2,0]*v4[i,0] + R[i,2,1]*v4[i,1] + R[i,2,2]*v4[i,2] + R[i,2,3]*v4[i,3]
  * 			res[i,3] = R[i,3,0]*v4[i,0] + R[i,3,1]*v4[i,1] + R[i,3,2]*v4[i,2] + R[i,3,3]*v4[i,3]             # <<<<<<<<<<<<<<
@@ -8815,7 +8815,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":291
+      /* "DarkNews/Cfourvec.pyx":291
  * 	cdef ndarray[double, ndim=3] R = np.empty((m,4,4))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -8834,7 +8834,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":318
+  /* "DarkNews/Cfourvec.pyx":318
  * 			res[i,3] = R[i,3,0]*v4[i,0] + R[i,3,1]*v4[i,1] + R[i,3,2]*v4[i,2] + R[i,3,3]*v4[i,3]
  * 
  * 	return res             # <<<<<<<<<<<<<<
@@ -8846,7 +8846,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
   __pyx_r = ((PyObject *)__pyx_v_res);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":282
+  /* "DarkNews/Cfourvec.pyx":282
  * 
  * #******************************
  * def rotationx(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
@@ -8869,7 +8869,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_theta.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_v4.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationx", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationx", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -8885,7 +8885,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":321
+/* "DarkNews/Cfourvec.pyx":321
  * 
  * #******************************
  * def rotationy(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
@@ -8894,9 +8894,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_42rotationx(CYTHON_UNUSED PyObject
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_45rotationy(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_45rotationy = {"rotationy", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_45rotationy, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_45rotationy(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_45rotationy(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_45rotationy = {"rotationy", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_45rotationy, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_45rotationy(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_v4 = 0;
   PyArrayObject *__pyx_v_theta = 0;
   int __pyx_lineno = 0;
@@ -8947,13 +8947,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_45rotationy(PyObject *__pyx_self, 
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("rotationy", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 321, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationy", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationy", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_v4), __pyx_ptype_5numpy_ndarray, 1, "v4", 0))) __PYX_ERR(0, 321, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_theta), __pyx_ptype_5numpy_ndarray, 1, "theta", 0))) __PYX_ERR(0, 321, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_44rotationy(__pyx_self, __pyx_v_v4, __pyx_v_theta);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_44rotationy(__pyx_self, __pyx_v_v4, __pyx_v_theta);
 
   /* function exit code */
   goto __pyx_L0;
@@ -8964,7 +8964,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_45rotationy(PyObject *__pyx_self, 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_res = 0;
@@ -9019,7 +9019,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
   }
   __pyx_pybuffernd_theta.diminfo[0].strides = __pyx_pybuffernd_theta.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_theta.diminfo[0].shape = __pyx_pybuffernd_theta.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":324
+  /* "DarkNews/Cfourvec.pyx":324
  * 
  * 	cdef int i, m;
  * 	m = v4.shape[0]             # <<<<<<<<<<<<<<
@@ -9028,7 +9028,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
  */
   __pyx_v_m = (__pyx_v_v4->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":325
+  /* "DarkNews/Cfourvec.pyx":325
  * 	cdef int i, m;
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))             # <<<<<<<<<<<<<<
@@ -9080,7 +9080,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
   __pyx_v_res = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":327
+  /* "DarkNews/Cfourvec.pyx":327
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -9095,7 +9095,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":328
+        /* "DarkNews/Cfourvec.pyx":328
  * 
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -9107,7 +9107,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":329
+          /* "DarkNews/Cfourvec.pyx":329
  * 	with nogil:
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]             # <<<<<<<<<<<<<<
@@ -9120,7 +9120,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
           __pyx_t_12 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_res.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_v4.diminfo[1].strides));
 
-          /* "Darknews/Cfourvec.pyx":330
+          /* "DarkNews/Cfourvec.pyx":330
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = cos(theta[i])*v4[i,1] - sin(theta[i])*v4[i,3]             # <<<<<<<<<<<<<<
@@ -9137,7 +9137,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
           __pyx_t_16 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_res.diminfo[1].strides) = ((cos((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_theta.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_theta.diminfo[0].strides))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_v4.diminfo[1].strides))) - (sin((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_theta.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_theta.diminfo[0].strides))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":331
+          /* "DarkNews/Cfourvec.pyx":331
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = cos(theta[i])*v4[i,1] - sin(theta[i])*v4[i,3]
  * 			res[i,2] = v4[i,2]             # <<<<<<<<<<<<<<
@@ -9150,7 +9150,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
           __pyx_t_12 = 2;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_res.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_v4.diminfo[1].strides));
 
-          /* "Darknews/Cfourvec.pyx":332
+          /* "DarkNews/Cfourvec.pyx":332
  * 			res[i,1] = cos(theta[i])*v4[i,1] - sin(theta[i])*v4[i,3]
  * 			res[i,2] = v4[i,2]
  * 			res[i,3] = sin(theta[i])*v4[i,1] + cos(theta[i])*v4[i,3]             # <<<<<<<<<<<<<<
@@ -9169,7 +9169,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":327
+      /* "DarkNews/Cfourvec.pyx":327
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -9188,7 +9188,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":334
+  /* "DarkNews/Cfourvec.pyx":334
  * 			res[i,3] = sin(theta[i])*v4[i,1] + cos(theta[i])*v4[i,3]
  * 
  * 	return res             # <<<<<<<<<<<<<<
@@ -9200,7 +9200,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
   __pyx_r = ((PyObject *)__pyx_v_res);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":321
+  /* "DarkNews/Cfourvec.pyx":321
  * 
  * #******************************
  * def rotationy(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
@@ -9222,7 +9222,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_theta.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_v4.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationy", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationy", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -9236,7 +9236,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":336
+/* "DarkNews/Cfourvec.pyx":336
  * 	return res
  * #******************************
  * def rotationy_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):             # <<<<<<<<<<<<<<
@@ -9245,9 +9245,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_44rotationy(CYTHON_UNUSED PyObject
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_47rotationy_sin(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_47rotationy_sin = {"rotationy_sin", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_47rotationy_sin, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_47rotationy_sin(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_47rotationy_sin(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_47rotationy_sin = {"rotationy_sin", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_47rotationy_sin, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_47rotationy_sin(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_v4 = 0;
   PyArrayObject *__pyx_v_stheta = 0;
   int __pyx_lineno = 0;
@@ -9298,13 +9298,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_47rotationy_sin(PyObject *__pyx_se
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("rotationy_sin", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 336, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationy_sin", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationy_sin", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_v4), __pyx_ptype_5numpy_ndarray, 1, "v4", 0))) __PYX_ERR(0, 336, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_stheta), __pyx_ptype_5numpy_ndarray, 1, "stheta", 0))) __PYX_ERR(0, 336, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(__pyx_self, __pyx_v_v4, __pyx_v_stheta);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_46rotationy_sin(__pyx_self, __pyx_v_v4, __pyx_v_stheta);
 
   /* function exit code */
   goto __pyx_L0;
@@ -9315,7 +9315,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_47rotationy_sin(PyObject *__pyx_se
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_stheta) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_stheta) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_res = 0;
@@ -9371,7 +9371,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
   }
   __pyx_pybuffernd_stheta.diminfo[0].strides = __pyx_pybuffernd_stheta.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_stheta.diminfo[0].shape = __pyx_pybuffernd_stheta.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":339
+  /* "DarkNews/Cfourvec.pyx":339
  * 
  * 	cdef int i, m;
  * 	m = v4.shape[0]             # <<<<<<<<<<<<<<
@@ -9380,7 +9380,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
  */
   __pyx_v_m = (__pyx_v_v4->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":340
+  /* "DarkNews/Cfourvec.pyx":340
  * 	cdef int i, m;
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))             # <<<<<<<<<<<<<<
@@ -9432,7 +9432,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
   __pyx_v_res = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":342
+  /* "DarkNews/Cfourvec.pyx":342
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -9447,7 +9447,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":343
+        /* "DarkNews/Cfourvec.pyx":343
  * 
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -9459,7 +9459,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":344
+          /* "DarkNews/Cfourvec.pyx":344
  * 	with nogil:
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]             # <<<<<<<<<<<<<<
@@ -9472,7 +9472,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
           __pyx_t_12 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_res.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_v4.diminfo[1].strides));
 
-          /* "Darknews/Cfourvec.pyx":345
+          /* "DarkNews/Cfourvec.pyx":345
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = sqrt(1.0-stheta[i]*stheta[i])*v4[i,1] - stheta[i]*v4[i,3]             # <<<<<<<<<<<<<<
@@ -9490,7 +9490,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
           __pyx_t_17 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_17, __pyx_pybuffernd_res.diminfo[1].strides) = ((sqrt((1.0 - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_stheta.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_stheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_stheta.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_stheta.diminfo[0].strides))))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_v4.diminfo[1].strides))) - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_stheta.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_stheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":346
+          /* "DarkNews/Cfourvec.pyx":346
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = sqrt(1.0-stheta[i]*stheta[i])*v4[i,1] - stheta[i]*v4[i,3]
  * 			res[i,2] = v4[i,2]             # <<<<<<<<<<<<<<
@@ -9503,7 +9503,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
           __pyx_t_11 = 2;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_res.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[1].strides));
 
-          /* "Darknews/Cfourvec.pyx":347
+          /* "DarkNews/Cfourvec.pyx":347
  * 			res[i,1] = sqrt(1.0-stheta[i]*stheta[i])*v4[i,1] - stheta[i]*v4[i,3]
  * 			res[i,2] = v4[i,2]
  * 			res[i,3] = stheta[i]*v4[i,1] + sqrt(1.0-stheta[i]*stheta[i])*v4[i,3]             # <<<<<<<<<<<<<<
@@ -9523,7 +9523,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":342
+      /* "DarkNews/Cfourvec.pyx":342
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -9542,7 +9542,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":349
+  /* "DarkNews/Cfourvec.pyx":349
  * 			res[i,3] = stheta[i]*v4[i,1] + sqrt(1.0-stheta[i]*stheta[i])*v4[i,3]
  * 
  * 	return res             # <<<<<<<<<<<<<<
@@ -9554,7 +9554,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
   __pyx_r = ((PyObject *)__pyx_v_res);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":336
+  /* "DarkNews/Cfourvec.pyx":336
  * 	return res
  * #******************************
  * def rotationy_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):             # <<<<<<<<<<<<<<
@@ -9576,7 +9576,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_stheta.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_v4.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationy_sin", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationy_sin", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -9590,7 +9590,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":351
+/* "DarkNews/Cfourvec.pyx":351
  * 	return res
  * #******************************
  * def rotationy_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign=1):             # <<<<<<<<<<<<<<
@@ -9599,9 +9599,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_46rotationy_sin(CYTHON_UNUSED PyOb
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_49rotationy_cos(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_49rotationy_cos = {"rotationy_cos", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_49rotationy_cos, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_49rotationy_cos(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_49rotationy_cos(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_49rotationy_cos = {"rotationy_cos", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_49rotationy_cos, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_49rotationy_cos(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_v4 = 0;
   PyArrayObject *__pyx_v_ctheta = 0;
   int __pyx_v_sign;
@@ -9670,13 +9670,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_49rotationy_cos(PyObject *__pyx_se
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("rotationy_cos", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 351, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationy_cos", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationy_cos", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_v4), __pyx_ptype_5numpy_ndarray, 1, "v4", 0))) __PYX_ERR(0, 351, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ctheta), __pyx_ptype_5numpy_ndarray, 1, "ctheta", 0))) __PYX_ERR(0, 351, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(__pyx_self, __pyx_v_v4, __pyx_v_ctheta, __pyx_v_sign);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_48rotationy_cos(__pyx_self, __pyx_v_v4, __pyx_v_ctheta, __pyx_v_sign);
 
   /* function exit code */
   goto __pyx_L0;
@@ -9687,7 +9687,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_49rotationy_cos(PyObject *__pyx_se
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_ctheta, int __pyx_v_sign) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_ctheta, int __pyx_v_sign) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_res = 0;
@@ -9743,7 +9743,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
   }
   __pyx_pybuffernd_ctheta.diminfo[0].strides = __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ctheta.diminfo[0].shape = __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":354
+  /* "DarkNews/Cfourvec.pyx":354
  * 
  * 	cdef int i, m;
  * 	m = v4.shape[0]             # <<<<<<<<<<<<<<
@@ -9752,7 +9752,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
  */
   __pyx_v_m = (__pyx_v_v4->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":355
+  /* "DarkNews/Cfourvec.pyx":355
  * 	cdef int i, m;
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))             # <<<<<<<<<<<<<<
@@ -9804,7 +9804,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
   __pyx_v_res = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":357
+  /* "DarkNews/Cfourvec.pyx":357
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -9819,7 +9819,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":358
+        /* "DarkNews/Cfourvec.pyx":358
  * 
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -9831,7 +9831,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":359
+          /* "DarkNews/Cfourvec.pyx":359
  * 	with nogil:
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]             # <<<<<<<<<<<<<<
@@ -9844,7 +9844,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
           __pyx_t_12 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_res.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_v4.diminfo[1].strides));
 
-          /* "Darknews/Cfourvec.pyx":360
+          /* "DarkNews/Cfourvec.pyx":360
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = ctheta[i]*v4[i,1] - sign*sqrt(1.0-ctheta[i]*ctheta[i])*v4[i,3]             # <<<<<<<<<<<<<<
@@ -9862,7 +9862,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
           __pyx_t_17 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_17, __pyx_pybuffernd_res.diminfo[1].strides) = (((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_ctheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_v4.diminfo[1].strides))) - ((__pyx_v_sign * sqrt((1.0 - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_ctheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_ctheta.diminfo[0].strides)))))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":361
+          /* "DarkNews/Cfourvec.pyx":361
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = ctheta[i]*v4[i,1] - sign*sqrt(1.0-ctheta[i]*ctheta[i])*v4[i,3]
  * 			res[i,2] = v4[i,2]             # <<<<<<<<<<<<<<
@@ -9875,7 +9875,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
           __pyx_t_11 = 2;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_res.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[1].strides));
 
-          /* "Darknews/Cfourvec.pyx":362
+          /* "DarkNews/Cfourvec.pyx":362
  * 			res[i,1] = ctheta[i]*v4[i,1] - sign*sqrt(1.0-ctheta[i]*ctheta[i])*v4[i,3]
  * 			res[i,2] = v4[i,2]
  * 			res[i,3] = sign*sqrt(1.0-ctheta[i]*ctheta[i])*v4[i,1] + ctheta[i]*v4[i,3]             # <<<<<<<<<<<<<<
@@ -9895,7 +9895,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":357
+      /* "DarkNews/Cfourvec.pyx":357
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -9914,7 +9914,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":364
+  /* "DarkNews/Cfourvec.pyx":364
  * 			res[i,3] = sign*sqrt(1.0-ctheta[i]*ctheta[i])*v4[i,1] + ctheta[i]*v4[i,3]
  * 
  * 	return res             # <<<<<<<<<<<<<<
@@ -9926,7 +9926,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
   __pyx_r = ((PyObject *)__pyx_v_res);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":351
+  /* "DarkNews/Cfourvec.pyx":351
  * 	return res
  * #******************************
  * def rotationy_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign=1):             # <<<<<<<<<<<<<<
@@ -9948,7 +9948,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_res.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_v4.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationy_cos", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationy_cos", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -9962,7 +9962,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":367
+/* "DarkNews/Cfourvec.pyx":367
  * 
  * #******************************
  * def rotationz(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
@@ -9971,9 +9971,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_48rotationy_cos(CYTHON_UNUSED PyOb
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_51rotationz(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_51rotationz = {"rotationz", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_51rotationz, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_51rotationz(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_51rotationz(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_51rotationz = {"rotationz", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_51rotationz, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_51rotationz(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_v4 = 0;
   PyArrayObject *__pyx_v_theta = 0;
   int __pyx_lineno = 0;
@@ -10024,13 +10024,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_51rotationz(PyObject *__pyx_self, 
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("rotationz", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 367, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationz", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationz", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_v4), __pyx_ptype_5numpy_ndarray, 1, "v4", 0))) __PYX_ERR(0, 367, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_theta), __pyx_ptype_5numpy_ndarray, 1, "theta", 0))) __PYX_ERR(0, 367, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_50rotationz(__pyx_self, __pyx_v_v4, __pyx_v_theta);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_50rotationz(__pyx_self, __pyx_v_v4, __pyx_v_theta);
 
   /* function exit code */
   goto __pyx_L0;
@@ -10041,7 +10041,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_51rotationz(PyObject *__pyx_self, 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_theta) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_res = 0;
@@ -10096,7 +10096,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
   }
   __pyx_pybuffernd_theta.diminfo[0].strides = __pyx_pybuffernd_theta.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_theta.diminfo[0].shape = __pyx_pybuffernd_theta.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":370
+  /* "DarkNews/Cfourvec.pyx":370
  * 
  * 	cdef int i, m;
  * 	m = v4.shape[0]             # <<<<<<<<<<<<<<
@@ -10105,7 +10105,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
  */
   __pyx_v_m = (__pyx_v_v4->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":371
+  /* "DarkNews/Cfourvec.pyx":371
  * 	cdef int i, m;
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))             # <<<<<<<<<<<<<<
@@ -10157,7 +10157,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
   __pyx_v_res = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":372
+  /* "DarkNews/Cfourvec.pyx":372
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -10172,7 +10172,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":373
+        /* "DarkNews/Cfourvec.pyx":373
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -10184,7 +10184,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":374
+          /* "DarkNews/Cfourvec.pyx":374
  * 	with nogil:
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]             # <<<<<<<<<<<<<<
@@ -10197,7 +10197,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
           __pyx_t_12 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_res.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_v4.diminfo[1].strides));
 
-          /* "Darknews/Cfourvec.pyx":375
+          /* "DarkNews/Cfourvec.pyx":375
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = cos(theta[i])*v4[i,1] - sin(theta[i])*v4[i,2]             # <<<<<<<<<<<<<<
@@ -10214,7 +10214,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
           __pyx_t_16 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_res.diminfo[1].strides) = ((cos((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_theta.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_theta.diminfo[0].strides))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_v4.diminfo[1].strides))) - (sin((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_theta.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_theta.diminfo[0].strides))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":376
+          /* "DarkNews/Cfourvec.pyx":376
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = cos(theta[i])*v4[i,1] - sin(theta[i])*v4[i,2]
  * 			res[i,2] = sin(theta[i])*v4[i,1] + cos(theta[i])*v4[i,2]             # <<<<<<<<<<<<<<
@@ -10231,7 +10231,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
           __pyx_t_15 = 2;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_res.diminfo[1].strides) = ((sin((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_theta.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_theta.diminfo[0].strides))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_v4.diminfo[1].strides))) + (cos((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_theta.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_theta.diminfo[0].strides))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":377
+          /* "DarkNews/Cfourvec.pyx":377
  * 			res[i,1] = cos(theta[i])*v4[i,1] - sin(theta[i])*v4[i,2]
  * 			res[i,2] = sin(theta[i])*v4[i,1] + cos(theta[i])*v4[i,2]
  * 			res[i,3] = v4[i,3]             # <<<<<<<<<<<<<<
@@ -10246,7 +10246,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":372
+      /* "DarkNews/Cfourvec.pyx":372
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -10265,7 +10265,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":379
+  /* "DarkNews/Cfourvec.pyx":379
  * 			res[i,3] = v4[i,3]
  * 
  * 	return res             # <<<<<<<<<<<<<<
@@ -10277,7 +10277,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
   __pyx_r = ((PyObject *)__pyx_v_res);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":367
+  /* "DarkNews/Cfourvec.pyx":367
  * 
  * #******************************
  * def rotationz(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
@@ -10299,7 +10299,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_theta.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_v4.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationz", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationz", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -10313,7 +10313,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":381
+/* "DarkNews/Cfourvec.pyx":381
  * 	return res
  * #******************************
  * def rotationz_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):             # <<<<<<<<<<<<<<
@@ -10322,9 +10322,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_50rotationz(CYTHON_UNUSED PyObject
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_53rotationz_sin(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_53rotationz_sin = {"rotationz_sin", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_53rotationz_sin, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_53rotationz_sin(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_53rotationz_sin(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_53rotationz_sin = {"rotationz_sin", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_53rotationz_sin, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_53rotationz_sin(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_v4 = 0;
   PyArrayObject *__pyx_v_stheta = 0;
   int __pyx_lineno = 0;
@@ -10375,13 +10375,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_53rotationz_sin(PyObject *__pyx_se
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("rotationz_sin", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 381, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationz_sin", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationz_sin", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_v4), __pyx_ptype_5numpy_ndarray, 1, "v4", 0))) __PYX_ERR(0, 381, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_stheta), __pyx_ptype_5numpy_ndarray, 1, "stheta", 0))) __PYX_ERR(0, 381, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(__pyx_self, __pyx_v_v4, __pyx_v_stheta);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_52rotationz_sin(__pyx_self, __pyx_v_v4, __pyx_v_stheta);
 
   /* function exit code */
   goto __pyx_L0;
@@ -10392,7 +10392,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_53rotationz_sin(PyObject *__pyx_se
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_stheta) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_stheta) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_res = 0;
@@ -10448,7 +10448,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
   }
   __pyx_pybuffernd_stheta.diminfo[0].strides = __pyx_pybuffernd_stheta.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_stheta.diminfo[0].shape = __pyx_pybuffernd_stheta.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":384
+  /* "DarkNews/Cfourvec.pyx":384
  * 
  * 	cdef int i, m;
  * 	m = v4.shape[0]             # <<<<<<<<<<<<<<
@@ -10457,7 +10457,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
  */
   __pyx_v_m = (__pyx_v_v4->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":385
+  /* "DarkNews/Cfourvec.pyx":385
  * 	cdef int i, m;
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))             # <<<<<<<<<<<<<<
@@ -10509,7 +10509,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
   __pyx_v_res = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":386
+  /* "DarkNews/Cfourvec.pyx":386
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -10524,7 +10524,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":387
+        /* "DarkNews/Cfourvec.pyx":387
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -10536,7 +10536,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":388
+          /* "DarkNews/Cfourvec.pyx":388
  * 	with nogil:
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]             # <<<<<<<<<<<<<<
@@ -10549,7 +10549,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
           __pyx_t_12 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_res.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_v4.diminfo[1].strides));
 
-          /* "Darknews/Cfourvec.pyx":389
+          /* "DarkNews/Cfourvec.pyx":389
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = sqrt(1.0-stheta[i]*stheta[i])*v4[i,1] - stheta[i]*v4[i,2]             # <<<<<<<<<<<<<<
@@ -10567,7 +10567,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
           __pyx_t_17 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_17, __pyx_pybuffernd_res.diminfo[1].strides) = ((sqrt((1.0 - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_stheta.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_stheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_stheta.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_stheta.diminfo[0].strides))))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_v4.diminfo[1].strides))) - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_stheta.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_stheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":390
+          /* "DarkNews/Cfourvec.pyx":390
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = sqrt(1.0-stheta[i]*stheta[i])*v4[i,1] - stheta[i]*v4[i,2]
  * 			res[i,2] = stheta[i]*v4[i,1] + sqrt(1.0-stheta[i]*stheta[i])*v4[i,2]             # <<<<<<<<<<<<<<
@@ -10585,7 +10585,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
           __pyx_t_16 = 2;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_res.diminfo[1].strides) = (((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_stheta.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_stheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_13, __pyx_pybuffernd_v4.diminfo[1].strides))) + (sqrt((1.0 - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_stheta.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_stheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_stheta.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_stheta.diminfo[0].strides))))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":391
+          /* "DarkNews/Cfourvec.pyx":391
  * 			res[i,1] = sqrt(1.0-stheta[i]*stheta[i])*v4[i,1] - stheta[i]*v4[i,2]
  * 			res[i,2] = stheta[i]*v4[i,1] + sqrt(1.0-stheta[i]*stheta[i])*v4[i,2]
  * 			res[i,3] = v4[i,3]             # <<<<<<<<<<<<<<
@@ -10600,7 +10600,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":386
+      /* "DarkNews/Cfourvec.pyx":386
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -10619,7 +10619,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":393
+  /* "DarkNews/Cfourvec.pyx":393
  * 			res[i,3] = v4[i,3]
  * 
  * 	return res             # <<<<<<<<<<<<<<
@@ -10631,7 +10631,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
   __pyx_r = ((PyObject *)__pyx_v_res);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":381
+  /* "DarkNews/Cfourvec.pyx":381
  * 	return res
  * #******************************
  * def rotationz_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):             # <<<<<<<<<<<<<<
@@ -10653,7 +10653,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_stheta.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_v4.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationz_sin", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationz_sin", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -10667,7 +10667,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":395
+/* "DarkNews/Cfourvec.pyx":395
  * 	return res
  * #******************************
  * def rotationz_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign = 1):             # <<<<<<<<<<<<<<
@@ -10676,9 +10676,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_52rotationz_sin(CYTHON_UNUSED PyOb
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_55rotationz_cos(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_55rotationz_cos = {"rotationz_cos", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_55rotationz_cos, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_55rotationz_cos(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_55rotationz_cos(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_55rotationz_cos = {"rotationz_cos", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_55rotationz_cos, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_55rotationz_cos(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_v4 = 0;
   PyArrayObject *__pyx_v_ctheta = 0;
   int __pyx_v_sign;
@@ -10747,13 +10747,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_55rotationz_cos(PyObject *__pyx_se
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("rotationz_cos", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 395, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationz_cos", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationz_cos", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_v4), __pyx_ptype_5numpy_ndarray, 1, "v4", 0))) __PYX_ERR(0, 395, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ctheta), __pyx_ptype_5numpy_ndarray, 1, "ctheta", 0))) __PYX_ERR(0, 395, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(__pyx_self, __pyx_v_v4, __pyx_v_ctheta, __pyx_v_sign);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_54rotationz_cos(__pyx_self, __pyx_v_v4, __pyx_v_ctheta, __pyx_v_sign);
 
   /* function exit code */
   goto __pyx_L0;
@@ -10764,7 +10764,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_55rotationz_cos(PyObject *__pyx_se
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_ctheta, int __pyx_v_sign) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_ctheta, int __pyx_v_sign) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_res = 0;
@@ -10820,7 +10820,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
   }
   __pyx_pybuffernd_ctheta.diminfo[0].strides = __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ctheta.diminfo[0].shape = __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":398
+  /* "DarkNews/Cfourvec.pyx":398
  * 
  * 	cdef int i, m;
  * 	m = v4.shape[0]             # <<<<<<<<<<<<<<
@@ -10829,7 +10829,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
  */
   __pyx_v_m = (__pyx_v_v4->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":399
+  /* "DarkNews/Cfourvec.pyx":399
  * 	cdef int i, m;
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))             # <<<<<<<<<<<<<<
@@ -10881,7 +10881,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
   __pyx_v_res = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":400
+  /* "DarkNews/Cfourvec.pyx":400
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -10896,7 +10896,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":401
+        /* "DarkNews/Cfourvec.pyx":401
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -10908,7 +10908,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":402
+          /* "DarkNews/Cfourvec.pyx":402
  * 	with nogil:
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]             # <<<<<<<<<<<<<<
@@ -10921,7 +10921,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
           __pyx_t_12 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_res.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_v4.diminfo[1].strides));
 
-          /* "Darknews/Cfourvec.pyx":403
+          /* "DarkNews/Cfourvec.pyx":403
  * 		for i in range(m):
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = ctheta[i]*v4[i,1] - sign*sqrt(1.0-ctheta[i]*ctheta[i])*v4[i,2]             # <<<<<<<<<<<<<<
@@ -10939,7 +10939,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
           __pyx_t_17 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_17, __pyx_pybuffernd_res.diminfo[1].strides) = (((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_ctheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_v4.diminfo[1].strides))) - ((__pyx_v_sign * sqrt((1.0 - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_ctheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_ctheta.diminfo[0].strides)))))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":404
+          /* "DarkNews/Cfourvec.pyx":404
  * 			res[i,0] = v4[i,0]
  * 			res[i,1] = ctheta[i]*v4[i,1] - sign*sqrt(1.0-ctheta[i]*ctheta[i])*v4[i,2]
  * 			res[i,2] = sign*sqrt(1.0-ctheta[i]*ctheta[i])*v4[i,1] + ctheta[i]*v4[i,2]             # <<<<<<<<<<<<<<
@@ -10957,7 +10957,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
           __pyx_t_16 = 2;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_res.diminfo[1].strides) = (((__pyx_v_sign * sqrt((1.0 - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_ctheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_ctheta.diminfo[0].strides)))))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_11, __pyx_pybuffernd_v4.diminfo[1].strides))) + ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_ctheta.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_ctheta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_10, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":405
+          /* "DarkNews/Cfourvec.pyx":405
  * 			res[i,1] = ctheta[i]*v4[i,1] - sign*sqrt(1.0-ctheta[i]*ctheta[i])*v4[i,2]
  * 			res[i,2] = sign*sqrt(1.0-ctheta[i]*ctheta[i])*v4[i,1] + ctheta[i]*v4[i,2]
  * 			res[i,3] = v4[i,3]             # <<<<<<<<<<<<<<
@@ -10972,7 +10972,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":400
+      /* "DarkNews/Cfourvec.pyx":400
  * 	m = v4.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -10991,7 +10991,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":407
+  /* "DarkNews/Cfourvec.pyx":407
  * 			res[i,3] = v4[i,3]
  * 
  * 	return res             # <<<<<<<<<<<<<<
@@ -11003,7 +11003,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
   __pyx_r = ((PyObject *)__pyx_v_res);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":395
+  /* "DarkNews/Cfourvec.pyx":395
  * 	return res
  * #******************************
  * def rotationz_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign = 1):             # <<<<<<<<<<<<<<
@@ -11025,7 +11025,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_res.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_v4.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.rotationz_cos", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.rotationz_cos", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -11039,7 +11039,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":410
+/* "DarkNews/Cfourvec.pyx":410
  * 
  * #******************************
  * def L(ndarray[double, ndim=2] v4, ndarray[double] beta):             # <<<<<<<<<<<<<<
@@ -11048,9 +11048,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_54rotationz_cos(CYTHON_UNUSED PyOb
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_57L(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_57L = {"L", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_57L, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_57L(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_57L(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_57L = {"L", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_57L, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_57L(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_v4 = 0;
   PyArrayObject *__pyx_v_beta = 0;
   int __pyx_lineno = 0;
@@ -11101,13 +11101,13 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_57L(PyObject *__pyx_self, PyObject
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("L", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 410, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.L", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.L", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_v4), __pyx_ptype_5numpy_ndarray, 1, "v4", 0))) __PYX_ERR(0, 410, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_beta), __pyx_ptype_5numpy_ndarray, 1, "beta", 0))) __PYX_ERR(0, 410, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_56L(__pyx_self, __pyx_v_v4, __pyx_v_beta);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_56L(__pyx_self, __pyx_v_v4, __pyx_v_beta);
 
   /* function exit code */
   goto __pyx_L0;
@@ -11118,7 +11118,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_57L(PyObject *__pyx_self, PyObject
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta) {
   int __pyx_v_i;
   int __pyx_v_m;
   PyArrayObject *__pyx_v_res = 0;
@@ -11176,7 +11176,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
   }
   __pyx_pybuffernd_beta.diminfo[0].strides = __pyx_pybuffernd_beta.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_beta.diminfo[0].shape = __pyx_pybuffernd_beta.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":412
+  /* "DarkNews/Cfourvec.pyx":412
  * def L(ndarray[double, ndim=2] v4, ndarray[double] beta):
  * 	cdef int i, m;
  * 	m = beta.shape[0]             # <<<<<<<<<<<<<<
@@ -11185,7 +11185,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
  */
   __pyx_v_m = (__pyx_v_beta->dimensions[0]);
 
-  /* "Darknews/Cfourvec.pyx":413
+  /* "DarkNews/Cfourvec.pyx":413
  * 	cdef int i, m;
  * 	m = beta.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))             # <<<<<<<<<<<<<<
@@ -11237,7 +11237,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
   __pyx_v_res = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":414
+  /* "DarkNews/Cfourvec.pyx":414
  * 	m = beta.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -11252,7 +11252,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
       #endif
       /*try:*/ {
 
-        /* "Darknews/Cfourvec.pyx":415
+        /* "DarkNews/Cfourvec.pyx":415
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:
  * 		for i in range(m):             # <<<<<<<<<<<<<<
@@ -11264,7 +11264,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
         for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
           __pyx_v_i = __pyx_t_8;
 
-          /* "Darknews/Cfourvec.pyx":416
+          /* "DarkNews/Cfourvec.pyx":416
  * 	with nogil:
  * 		for i in range(m):
  * 			res[i,0] = 1.0/sqrt(1.0 - beta[i]*beta[i])*v4[i,0] - beta[i]/sqrt(1.0 - beta[i]*beta[i])*v4[i,3]             # <<<<<<<<<<<<<<
@@ -11284,7 +11284,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
           __pyx_t_19 = 0;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_18, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_19, __pyx_pybuffernd_res.diminfo[1].strides) = (((1.0 / sqrt((1.0 - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_beta.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_beta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_beta.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_beta.diminfo[0].strides)))))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_v4.diminfo[1].strides))) - (((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_beta.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_beta.diminfo[0].strides)) / sqrt((1.0 - ((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_beta.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_beta.diminfo[0].strides)) * (*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_beta.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_beta.diminfo[0].strides)))))) * (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_17, __pyx_pybuffernd_v4.diminfo[1].strides))));
 
-          /* "Darknews/Cfourvec.pyx":417
+          /* "DarkNews/Cfourvec.pyx":417
  * 		for i in range(m):
  * 			res[i,0] = 1.0/sqrt(1.0 - beta[i]*beta[i])*v4[i,0] - beta[i]/sqrt(1.0 - beta[i]*beta[i])*v4[i,3]
  * 			res[i,1] = v4[i,1]             # <<<<<<<<<<<<<<
@@ -11297,7 +11297,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
           __pyx_t_14 = 1;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_res.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_v4.diminfo[1].strides));
 
-          /* "Darknews/Cfourvec.pyx":418
+          /* "DarkNews/Cfourvec.pyx":418
  * 			res[i,0] = 1.0/sqrt(1.0 - beta[i]*beta[i])*v4[i,0] - beta[i]/sqrt(1.0 - beta[i]*beta[i])*v4[i,3]
  * 			res[i,1] = v4[i,1]
  * 			res[i,2] = v4[i,2]             # <<<<<<<<<<<<<<
@@ -11310,7 +11310,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
           __pyx_t_15 = 2;
           *__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_res.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_res.diminfo[0].strides, __pyx_t_15, __pyx_pybuffernd_res.diminfo[1].strides) = (*__Pyx_BufPtrStrided2d(double *, __pyx_pybuffernd_v4.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_v4.diminfo[0].strides, __pyx_t_17, __pyx_pybuffernd_v4.diminfo[1].strides));
 
-          /* "Darknews/Cfourvec.pyx":419
+          /* "DarkNews/Cfourvec.pyx":419
  * 			res[i,1] = v4[i,1]
  * 			res[i,2] = v4[i,2]
  * 			res[i,3] = -beta[i]/sqrt(1.0 - beta[i]*beta[i])*v4[i,0] + 1.0/sqrt(1.0 - beta[i]*beta[i])*v4[i,3]             # <<<<<<<<<<<<<<
@@ -11332,7 +11332,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
         }
       }
 
-      /* "Darknews/Cfourvec.pyx":414
+      /* "DarkNews/Cfourvec.pyx":414
  * 	m = beta.shape[0]
  * 	cdef ndarray[double, ndim=2] res = np.empty((m,4))
  * 	with nogil:             # <<<<<<<<<<<<<<
@@ -11351,7 +11351,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
       }
   }
 
-  /* "Darknews/Cfourvec.pyx":421
+  /* "DarkNews/Cfourvec.pyx":421
  * 			res[i,3] = -beta[i]/sqrt(1.0 - beta[i]*beta[i])*v4[i,0] + 1.0/sqrt(1.0 - beta[i]*beta[i])*v4[i,3]
  * 
  * 	return res             # <<<<<<<<<<<<<<
@@ -11363,7 +11363,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
   __pyx_r = ((PyObject *)__pyx_v_res);
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":410
+  /* "DarkNews/Cfourvec.pyx":410
  * 
  * #******************************
  * def L(ndarray[double, ndim=2] v4, ndarray[double] beta):             # <<<<<<<<<<<<<<
@@ -11385,7 +11385,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_res.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_v4.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.L", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.L", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -11399,7 +11399,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":424
+/* "DarkNews/Cfourvec.pyx":424
  * 
  * #******************************
  * def T(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] theta, ndarray[double] phi):             # <<<<<<<<<<<<<<
@@ -11408,9 +11408,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_56L(CYTHON_UNUSED PyObject *__pyx_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_59T(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_59T = {"T", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_59T, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_59T(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_59T(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_59T = {"T", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_59T, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_59T(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_v4 = 0;
   PyArrayObject *__pyx_v_beta = 0;
   PyArrayObject *__pyx_v_theta = 0;
@@ -11483,7 +11483,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_59T(PyObject *__pyx_self, PyObject
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("T", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 424, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.T", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.T", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -11491,7 +11491,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_59T(PyObject *__pyx_self, PyObject
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_beta), __pyx_ptype_5numpy_ndarray, 1, "beta", 0))) __PYX_ERR(0, 424, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_theta), __pyx_ptype_5numpy_ndarray, 1, "theta", 0))) __PYX_ERR(0, 424, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 424, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_58T(__pyx_self, __pyx_v_v4, __pyx_v_beta, __pyx_v_theta, __pyx_v_phi);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_58T(__pyx_self, __pyx_v_v4, __pyx_v_beta, __pyx_v_theta, __pyx_v_phi);
 
   /* function exit code */
   goto __pyx_L0;
@@ -11502,7 +11502,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_59T(PyObject *__pyx_self, PyObject
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_58T(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta, PyArrayObject *__pyx_v_theta, PyArrayObject *__pyx_v_phi) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_58T(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta, PyArrayObject *__pyx_v_theta, PyArrayObject *__pyx_v_phi) {
   __Pyx_LocalBuf_ND __pyx_pybuffernd_beta;
   __Pyx_Buffer __pyx_pybuffer_beta;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_phi;
@@ -11564,7 +11564,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_58T(CYTHON_UNUSED PyObject *__pyx_
   }
   __pyx_pybuffernd_phi.diminfo[0].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_phi.diminfo[0].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":425
+  /* "DarkNews/Cfourvec.pyx":425
  * #******************************
  * def T(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] theta, ndarray[double] phi):
  * 	return L( rotationy( rotationz(v4,-phi), theta), -beta)             # <<<<<<<<<<<<<<
@@ -11729,7 +11729,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_58T(CYTHON_UNUSED PyObject *__pyx_
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":424
+  /* "DarkNews/Cfourvec.pyx":424
  * 
  * #******************************
  * def T(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] theta, ndarray[double] phi):             # <<<<<<<<<<<<<<
@@ -11757,7 +11757,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_58T(CYTHON_UNUSED PyObject *__pyx_
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_theta.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_v4.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.T", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.T", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -11771,7 +11771,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_58T(CYTHON_UNUSED PyObject *__pyx_
   return __pyx_r;
 }
 
-/* "Darknews/Cfourvec.pyx":428
+/* "DarkNews/Cfourvec.pyx":428
  * 
  * #******************************
  * def Tinv(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] ctheta, ndarray[double] phi):             # <<<<<<<<<<<<<<
@@ -11779,9 +11779,9 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_58T(CYTHON_UNUSED PyObject *__pyx_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_61Tinv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8Darknews_8Cfourvec_61Tinv = {"Tinv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8Darknews_8Cfourvec_61Tinv, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8Darknews_8Cfourvec_61Tinv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_61Tinv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8DarkNews_8Cfourvec_61Tinv = {"Tinv", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8DarkNews_8Cfourvec_61Tinv, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8DarkNews_8Cfourvec_61Tinv(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_v4 = 0;
   PyArrayObject *__pyx_v_beta = 0;
   PyArrayObject *__pyx_v_ctheta = 0;
@@ -11854,7 +11854,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_61Tinv(PyObject *__pyx_self, PyObj
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("Tinv", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 428, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("Darknews.Cfourvec.Tinv", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.Tinv", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -11862,7 +11862,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_61Tinv(PyObject *__pyx_self, PyObj
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_beta), __pyx_ptype_5numpy_ndarray, 1, "beta", 0))) __PYX_ERR(0, 428, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ctheta), __pyx_ptype_5numpy_ndarray, 1, "ctheta", 0))) __PYX_ERR(0, 428, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_phi), __pyx_ptype_5numpy_ndarray, 1, "phi", 0))) __PYX_ERR(0, 428, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8Darknews_8Cfourvec_60Tinv(__pyx_self, __pyx_v_v4, __pyx_v_beta, __pyx_v_ctheta, __pyx_v_phi);
+  __pyx_r = __pyx_pf_8DarkNews_8Cfourvec_60Tinv(__pyx_self, __pyx_v_v4, __pyx_v_beta, __pyx_v_ctheta, __pyx_v_phi);
 
   /* function exit code */
   goto __pyx_L0;
@@ -11873,7 +11873,7 @@ static PyObject *__pyx_pw_8Darknews_8Cfourvec_61Tinv(PyObject *__pyx_self, PyObj
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8Darknews_8Cfourvec_60Tinv(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta, PyArrayObject *__pyx_v_ctheta, PyArrayObject *__pyx_v_phi) {
+static PyObject *__pyx_pf_8DarkNews_8Cfourvec_60Tinv(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_v4, PyArrayObject *__pyx_v_beta, PyArrayObject *__pyx_v_ctheta, PyArrayObject *__pyx_v_phi) {
   __Pyx_LocalBuf_ND __pyx_pybuffernd_beta;
   __Pyx_Buffer __pyx_pybuffer_beta;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_ctheta;
@@ -11933,7 +11933,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_60Tinv(CYTHON_UNUSED PyObject *__p
   }
   __pyx_pybuffernd_phi.diminfo[0].strides = __pyx_pybuffernd_phi.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_phi.diminfo[0].shape = __pyx_pybuffernd_phi.rcbuffer->pybuffer.shape[0];
 
-  /* "Darknews/Cfourvec.pyx":429
+  /* "DarkNews/Cfourvec.pyx":429
  * #******************************
  * def Tinv(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] ctheta, ndarray[double] phi):
  * 	return rotationz( rotationy_cos( L(v4, beta), ctheta, sign=-1), phi)             # <<<<<<<<<<<<<<
@@ -12057,7 +12057,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_60Tinv(CYTHON_UNUSED PyObject *__p
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "Darknews/Cfourvec.pyx":428
+  /* "DarkNews/Cfourvec.pyx":428
  * 
  * #******************************
  * def Tinv(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] ctheta, ndarray[double] phi):             # <<<<<<<<<<<<<<
@@ -12082,7 +12082,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_60Tinv(CYTHON_UNUSED PyObject *__p
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_phi.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_v4.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("Darknews.Cfourvec.Tinv", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("DarkNews.Cfourvec.Tinv", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -12096,7 +12096,7 @@ static PyObject *__pyx_pf_8Darknews_8Cfourvec_60Tinv(CYTHON_UNUSED PyObject *__p
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":735
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":735
  * ctypedef npy_cdouble     complex_t
  * 
  * cdef inline object PyArray_MultiIterNew1(a):             # <<<<<<<<<<<<<<
@@ -12113,7 +12113,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew1(PyObject *__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("PyArray_MultiIterNew1", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":736
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":736
  * 
  * cdef inline object PyArray_MultiIterNew1(a):
  *     return PyArray_MultiIterNew(1, <void*>a)             # <<<<<<<<<<<<<<
@@ -12127,7 +12127,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew1(PyObject *__
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":735
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":735
  * ctypedef npy_cdouble     complex_t
  * 
  * cdef inline object PyArray_MultiIterNew1(a):             # <<<<<<<<<<<<<<
@@ -12146,7 +12146,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew1(PyObject *__
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":738
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":738
  *     return PyArray_MultiIterNew(1, <void*>a)
  * 
  * cdef inline object PyArray_MultiIterNew2(a, b):             # <<<<<<<<<<<<<<
@@ -12163,7 +12163,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew2(PyObject *__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("PyArray_MultiIterNew2", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":739
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":739
  * 
  * cdef inline object PyArray_MultiIterNew2(a, b):
  *     return PyArray_MultiIterNew(2, <void*>a, <void*>b)             # <<<<<<<<<<<<<<
@@ -12177,7 +12177,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew2(PyObject *__
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":738
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":738
  *     return PyArray_MultiIterNew(1, <void*>a)
  * 
  * cdef inline object PyArray_MultiIterNew2(a, b):             # <<<<<<<<<<<<<<
@@ -12196,7 +12196,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew2(PyObject *__
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":741
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":741
  *     return PyArray_MultiIterNew(2, <void*>a, <void*>b)
  * 
  * cdef inline object PyArray_MultiIterNew3(a, b, c):             # <<<<<<<<<<<<<<
@@ -12213,7 +12213,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew3(PyObject *__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("PyArray_MultiIterNew3", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":742
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":742
  * 
  * cdef inline object PyArray_MultiIterNew3(a, b, c):
  *     return PyArray_MultiIterNew(3, <void*>a, <void*>b, <void*> c)             # <<<<<<<<<<<<<<
@@ -12227,7 +12227,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew3(PyObject *__
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":741
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":741
  *     return PyArray_MultiIterNew(2, <void*>a, <void*>b)
  * 
  * cdef inline object PyArray_MultiIterNew3(a, b, c):             # <<<<<<<<<<<<<<
@@ -12246,7 +12246,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew3(PyObject *__
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":744
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":744
  *     return PyArray_MultiIterNew(3, <void*>a, <void*>b, <void*> c)
  * 
  * cdef inline object PyArray_MultiIterNew4(a, b, c, d):             # <<<<<<<<<<<<<<
@@ -12263,7 +12263,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew4(PyObject *__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("PyArray_MultiIterNew4", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":745
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":745
  * 
  * cdef inline object PyArray_MultiIterNew4(a, b, c, d):
  *     return PyArray_MultiIterNew(4, <void*>a, <void*>b, <void*>c, <void*> d)             # <<<<<<<<<<<<<<
@@ -12277,7 +12277,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew4(PyObject *__
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":744
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":744
  *     return PyArray_MultiIterNew(3, <void*>a, <void*>b, <void*> c)
  * 
  * cdef inline object PyArray_MultiIterNew4(a, b, c, d):             # <<<<<<<<<<<<<<
@@ -12296,7 +12296,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew4(PyObject *__
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":747
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":747
  *     return PyArray_MultiIterNew(4, <void*>a, <void*>b, <void*>c, <void*> d)
  * 
  * cdef inline object PyArray_MultiIterNew5(a, b, c, d, e):             # <<<<<<<<<<<<<<
@@ -12313,7 +12313,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew5(PyObject *__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("PyArray_MultiIterNew5", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":748
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":748
  * 
  * cdef inline object PyArray_MultiIterNew5(a, b, c, d, e):
  *     return PyArray_MultiIterNew(5, <void*>a, <void*>b, <void*>c, <void*> d, <void*> e)             # <<<<<<<<<<<<<<
@@ -12327,7 +12327,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew5(PyObject *__
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":747
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":747
  *     return PyArray_MultiIterNew(4, <void*>a, <void*>b, <void*>c, <void*> d)
  * 
  * cdef inline object PyArray_MultiIterNew5(a, b, c, d, e):             # <<<<<<<<<<<<<<
@@ -12346,7 +12346,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew5(PyObject *__
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":750
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":750
  *     return PyArray_MultiIterNew(5, <void*>a, <void*>b, <void*>c, <void*> d, <void*> e)
  * 
  * cdef inline tuple PyDataType_SHAPE(dtype d):             # <<<<<<<<<<<<<<
@@ -12360,7 +12360,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("PyDataType_SHAPE", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":751
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":751
  * 
  * cdef inline tuple PyDataType_SHAPE(dtype d):
  *     if PyDataType_HASSUBARRAY(d):             # <<<<<<<<<<<<<<
@@ -12370,7 +12370,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
   __pyx_t_1 = (PyDataType_HASSUBARRAY(__pyx_v_d) != 0);
   if (__pyx_t_1) {
 
-    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":752
+    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":752
  * cdef inline tuple PyDataType_SHAPE(dtype d):
  *     if PyDataType_HASSUBARRAY(d):
  *         return <tuple>d.subarray.shape             # <<<<<<<<<<<<<<
@@ -12382,7 +12382,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
     __pyx_r = ((PyObject*)__pyx_v_d->subarray->shape);
     goto __pyx_L0;
 
-    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":751
+    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":751
  * 
  * cdef inline tuple PyDataType_SHAPE(dtype d):
  *     if PyDataType_HASSUBARRAY(d):             # <<<<<<<<<<<<<<
@@ -12391,7 +12391,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
  */
   }
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":754
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":754
  *         return <tuple>d.subarray.shape
  *     else:
  *         return ()             # <<<<<<<<<<<<<<
@@ -12405,7 +12405,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
     goto __pyx_L0;
   }
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":750
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":750
  *     return PyArray_MultiIterNew(5, <void*>a, <void*>b, <void*>c, <void*> d, <void*> e)
  * 
  * cdef inline tuple PyDataType_SHAPE(dtype d):             # <<<<<<<<<<<<<<
@@ -12420,7 +12420,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":929
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":929
  *     int _import_umath() except -1
  * 
  * cdef inline void set_array_base(ndarray arr, object base):             # <<<<<<<<<<<<<<
@@ -12432,7 +12432,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("set_array_base", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":930
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":930
  * 
  * cdef inline void set_array_base(ndarray arr, object base):
  *     Py_INCREF(base) # important to do this before stealing the reference below!             # <<<<<<<<<<<<<<
@@ -12441,7 +12441,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
  */
   Py_INCREF(__pyx_v_base);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":931
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":931
  * cdef inline void set_array_base(ndarray arr, object base):
  *     Py_INCREF(base) # important to do this before stealing the reference below!
  *     PyArray_SetBaseObject(arr, base)             # <<<<<<<<<<<<<<
@@ -12450,7 +12450,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
  */
   (void)(PyArray_SetBaseObject(__pyx_v_arr, __pyx_v_base));
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":929
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":929
  *     int _import_umath() except -1
  * 
  * cdef inline void set_array_base(ndarray arr, object base):             # <<<<<<<<<<<<<<
@@ -12462,7 +12462,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
   __Pyx_RefNannyFinishContext();
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":933
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":933
  *     PyArray_SetBaseObject(arr, base)
  * 
  * cdef inline object get_array_base(ndarray arr):             # <<<<<<<<<<<<<<
@@ -12477,7 +12477,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("get_array_base", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":934
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":934
  * 
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)             # <<<<<<<<<<<<<<
@@ -12486,7 +12486,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
  */
   __pyx_v_base = PyArray_BASE(__pyx_v_arr);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":935
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":935
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)
  *     if base is NULL:             # <<<<<<<<<<<<<<
@@ -12496,7 +12496,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   __pyx_t_1 = ((__pyx_v_base == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":936
+    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":936
  *     base = PyArray_BASE(arr)
  *     if base is NULL:
  *         return None             # <<<<<<<<<<<<<<
@@ -12507,7 +12507,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":935
+    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":935
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)
  *     if base is NULL:             # <<<<<<<<<<<<<<
@@ -12516,7 +12516,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
  */
   }
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":937
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":937
  *     if base is NULL:
  *         return None
  *     return <object>base             # <<<<<<<<<<<<<<
@@ -12528,7 +12528,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   __pyx_r = ((PyObject *)__pyx_v_base);
   goto __pyx_L0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":933
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":933
  *     PyArray_SetBaseObject(arr, base)
  * 
  * cdef inline object get_array_base(ndarray arr):             # <<<<<<<<<<<<<<
@@ -12543,7 +12543,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":941
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":941
  * # Versions of the import_* functions which are more suitable for
  * # Cython code.
  * cdef inline int import_array() except -1:             # <<<<<<<<<<<<<<
@@ -12567,7 +12567,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_array", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":942
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -12583,7 +12583,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":943
+      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":943
  * cdef inline int import_array() except -1:
  *     try:
  *         __pyx_import_array()             # <<<<<<<<<<<<<<
@@ -12592,7 +12592,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
  */
       __pyx_t_4 = _import_array(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 943, __pyx_L3_error)
 
-      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":942
+      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -12606,7 +12606,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":944
+    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":944
  *     try:
  *         __pyx_import_array()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -12621,7 +12621,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":945
+      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":945
  *         __pyx_import_array()
  *     except Exception:
  *         raise ImportError("numpy.core.multiarray failed to import")             # <<<<<<<<<<<<<<
@@ -12637,7 +12637,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":942
+    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -12652,7 +12652,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":941
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":941
  * # Versions of the import_* functions which are more suitable for
  * # Cython code.
  * cdef inline int import_array() except -1:             # <<<<<<<<<<<<<<
@@ -12675,7 +12675,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":947
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":947
  *         raise ImportError("numpy.core.multiarray failed to import")
  * 
  * cdef inline int import_umath() except -1:             # <<<<<<<<<<<<<<
@@ -12699,7 +12699,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_umath", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":948
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -12715,7 +12715,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":949
+      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":949
  * cdef inline int import_umath() except -1:
  *     try:
  *         _import_umath()             # <<<<<<<<<<<<<<
@@ -12724,7 +12724,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
  */
       __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 949, __pyx_L3_error)
 
-      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":948
+      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -12738,7 +12738,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":950
+    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":950
  *     try:
  *         _import_umath()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -12753,7 +12753,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":951
+      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":951
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
@@ -12769,7 +12769,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":948
+    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -12784,7 +12784,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":947
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":947
  *         raise ImportError("numpy.core.multiarray failed to import")
  * 
  * cdef inline int import_umath() except -1:             # <<<<<<<<<<<<<<
@@ -12807,7 +12807,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":953
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":953
  *         raise ImportError("numpy.core.umath failed to import")
  * 
  * cdef inline int import_ufunc() except -1:             # <<<<<<<<<<<<<<
@@ -12831,7 +12831,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_ufunc", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":954
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -12847,7 +12847,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":955
+      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":955
  * cdef inline int import_ufunc() except -1:
  *     try:
  *         _import_umath()             # <<<<<<<<<<<<<<
@@ -12856,7 +12856,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
  */
       __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 955, __pyx_L3_error)
 
-      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":954
+      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -12870,7 +12870,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":956
+    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":956
  *     try:
  *         _import_umath()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -12885,7 +12885,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":957
+      /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":957
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
@@ -12901,7 +12901,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":954
+    /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -12916,7 +12916,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":953
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":953
  *         raise ImportError("numpy.core.umath failed to import")
  * 
  * cdef inline int import_ufunc() except -1:             # <<<<<<<<<<<<<<
@@ -12939,7 +12939,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":967
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":967
  * 
  * 
  * cdef inline bint is_timedelta64_object(object obj):             # <<<<<<<<<<<<<<
@@ -12952,7 +12952,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("is_timedelta64_object", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":979
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":979
  *     bool
  *     """
  *     return PyObject_TypeCheck(obj, &PyTimedeltaArrType_Type)             # <<<<<<<<<<<<<<
@@ -12962,7 +12962,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   __pyx_r = PyObject_TypeCheck(__pyx_v_obj, (&PyTimedeltaArrType_Type));
   goto __pyx_L0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":967
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":967
  * 
  * 
  * cdef inline bint is_timedelta64_object(object obj):             # <<<<<<<<<<<<<<
@@ -12976,7 +12976,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":982
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":982
  * 
  * 
  * cdef inline bint is_datetime64_object(object obj):             # <<<<<<<<<<<<<<
@@ -12989,7 +12989,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("is_datetime64_object", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":994
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":994
  *     bool
  *     """
  *     return PyObject_TypeCheck(obj, &PyDatetimeArrType_Type)             # <<<<<<<<<<<<<<
@@ -12999,7 +12999,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   __pyx_r = PyObject_TypeCheck(__pyx_v_obj, (&PyDatetimeArrType_Type));
   goto __pyx_L0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":982
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":982
  * 
  * 
  * cdef inline bint is_datetime64_object(object obj):             # <<<<<<<<<<<<<<
@@ -13013,7 +13013,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":997
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":997
  * 
  * 
  * cdef inline npy_datetime get_datetime64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -13024,7 +13024,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
 static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *__pyx_v_obj) {
   npy_datetime __pyx_r;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1004
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1004
  *     also needed.  That can be found using `get_datetime64_unit`.
  *     """
  *     return (<PyDatetimeScalarObject*>obj).obval             # <<<<<<<<<<<<<<
@@ -13034,7 +13034,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
   __pyx_r = ((PyDatetimeScalarObject *)__pyx_v_obj)->obval;
   goto __pyx_L0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":997
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":997
  * 
  * 
  * cdef inline npy_datetime get_datetime64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -13047,7 +13047,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1007
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1007
  * 
  * 
  * cdef inline npy_timedelta get_timedelta64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -13058,7 +13058,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
 static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject *__pyx_v_obj) {
   npy_timedelta __pyx_r;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1011
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1011
  *     returns the int64 value underlying scalar numpy timedelta64 object
  *     """
  *     return (<PyTimedeltaScalarObject*>obj).obval             # <<<<<<<<<<<<<<
@@ -13068,7 +13068,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
   __pyx_r = ((PyTimedeltaScalarObject *)__pyx_v_obj)->obval;
   goto __pyx_L0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1007
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1007
  * 
  * 
  * cdef inline npy_timedelta get_timedelta64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -13081,7 +13081,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
   return __pyx_r;
 }
 
-/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1014
+/* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1014
  * 
  * 
  * cdef inline NPY_DATETIMEUNIT get_datetime64_unit(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -13092,7 +13092,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
 static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObject *__pyx_v_obj) {
   NPY_DATETIMEUNIT __pyx_r;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1018
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1018
  *     returns the unit part of the dtype for a numpy datetime64 object.
  *     """
  *     return <NPY_DATETIMEUNIT>(<PyDatetimeScalarObject*>obj).obmeta.base             # <<<<<<<<<<<<<<
@@ -13100,7 +13100,7 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   __pyx_r = ((NPY_DATETIMEUNIT)((PyDatetimeScalarObject *)__pyx_v_obj)->obmeta.base);
   goto __pyx_L0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1014
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1014
  * 
  * 
  * cdef inline NPY_DATETIMEUNIT get_datetime64_unit(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -13159,7 +13159,7 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_s_Darknews_Cfourvec, __pyx_k_Darknews_Cfourvec, sizeof(__pyx_k_Darknews_Cfourvec), 0, 0, 1, 1},
+  {&__pyx_n_s_DarkNews_Cfourvec, __pyx_k_DarkNews_Cfourvec, sizeof(__pyx_k_DarkNews_Cfourvec), 0, 0, 1, 1},
   {&__pyx_n_s_E, __pyx_k_E, sizeof(__pyx_k_E), 0, 0, 1, 1},
   {&__pyx_n_s_ImportError, __pyx_k_ImportError, sizeof(__pyx_k_ImportError), 0, 0, 1, 1},
   {&__pyx_n_s_L, __pyx_k_L, sizeof(__pyx_k_L), 0, 0, 1, 1},
@@ -13219,7 +13219,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_sigma, __pyx_k_sigma, sizeof(__pyx_k_sigma), 0, 0, 1, 1},
   {&__pyx_n_s_sign, __pyx_k_sign, sizeof(__pyx_k_sign), 0, 0, 1, 1},
   {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
-  {&__pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_k_src_Darknews_Cfourvec_pyx, sizeof(__pyx_k_src_Darknews_Cfourvec_pyx), 0, 0, 1, 0},
+  {&__pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_k_src_DarkNews_Cfourvec_pyx, sizeof(__pyx_k_src_DarkNews_Cfourvec_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_stheta, __pyx_k_stheta, sizeof(__pyx_k_stheta), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_n_s_theta, __pyx_k_theta, sizeof(__pyx_k_theta), 0, 0, 1, 1},
@@ -13240,7 +13240,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":945
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":945
  *         __pyx_import_array()
  *     except Exception:
  *         raise ImportError("numpy.core.multiarray failed to import")             # <<<<<<<<<<<<<<
@@ -13251,7 +13251,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":951
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":951
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
@@ -13262,7 +13262,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "Darknews/Cfourvec.pyx":57
+  /* "DarkNews/Cfourvec.pyx":57
  * 
  * #******************************
  * def random_generator(int size, double min, double max):             # <<<<<<<<<<<<<<
@@ -13272,9 +13272,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__3 = PyTuple_Pack(5, __pyx_n_s_size, __pyx_n_s_min, __pyx_n_s_max, __pyx_n_s_s, __pyx_n_s_i); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_random_generator, 57, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_random_generator, 57, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 57, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":64
+  /* "DarkNews/Cfourvec.pyx":64
  * 
  * #******************************
  * def random_normal(ndarray[double, ndim=1] x, ndarray[double, ndim=1] sigma):             # <<<<<<<<<<<<<<
@@ -13284,9 +13284,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__5 = PyTuple_Pack(5, __pyx_n_s_x, __pyx_n_s_sigma, __pyx_n_s_size, __pyx_n_s_s, __pyx_n_s_i); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_random_normal, 64, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_random_normal, 64, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 64, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":77
+  /* "DarkNews/Cfourvec.pyx":77
  * 
  * #******************************
  * def build_fourvec(ndarray[double, ndim=1] E, ndarray[double, ndim=1] p, ndarray[double, ndim=1] cost, ndarray[double, ndim=1] phi):             # <<<<<<<<<<<<<<
@@ -13296,9 +13296,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__7 = PyTuple_Pack(7, __pyx_n_s_E, __pyx_n_s_p, __pyx_n_s_cost, __pyx_n_s_phi, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(4, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_build_fourvec, 77, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(4, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_build_fourvec, 77, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 77, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":93
+  /* "DarkNews/Cfourvec.pyx":93
  * 
  * #******************************
  * def momentum_scalar(ndarray[double] E, double mass):             # <<<<<<<<<<<<<<
@@ -13308,9 +13308,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__9 = PyTuple_Pack(5, __pyx_n_s_E, __pyx_n_s_mass, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_momentum_scalar, 93, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_momentum_scalar, 93, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 93, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":105
+  /* "DarkNews/Cfourvec.pyx":105
  * 
  * #******************************
  * def get_theta_3vec(ndarray[double, ndim=2] r):             # <<<<<<<<<<<<<<
@@ -13320,9 +13320,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__11 = PyTuple_Pack(4, __pyx_n_s_r, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 105, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_get_theta_3vec, 105, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_get_theta_3vec, 105, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 105, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":117
+  /* "DarkNews/Cfourvec.pyx":117
  * 
  * #******************************
  * def mass(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -13332,9 +13332,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__13 = PyTuple_Pack(4, __pyx_n_s_x, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 117, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__13);
   __Pyx_GIVEREF(__pyx_tuple__13);
-  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_mass, 117, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_mass, 117, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 117, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":127
+  /* "DarkNews/Cfourvec.pyx":127
  * 
  * #******************************
  * def inv_mass(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -13344,9 +13344,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__15 = PyTuple_Pack(5, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__15);
   __Pyx_GIVEREF(__pyx_tuple__15);
-  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_inv_mass, 127, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(0, 127, __pyx_L1_error)
+  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_inv_mass, 127, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(0, 127, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":137
+  /* "DarkNews/Cfourvec.pyx":137
  * 
  * #******************************
  * def dot4(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -13356,9 +13356,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__17 = PyTuple_Pack(5, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__17);
   __Pyx_GIVEREF(__pyx_tuple__17);
-  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_dot4, 137, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_dot4, 137, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 137, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":147
+  /* "DarkNews/Cfourvec.pyx":147
  * 
  * #******************************
  * def dot3(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -13368,9 +13368,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__19 = PyTuple_Pack(5, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 147, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
-  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_dot3, 147, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 147, __pyx_L1_error)
+  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_dot3, 147, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 147, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":157
+  /* "DarkNews/Cfourvec.pyx":157
  * 
  * #******************************
  * def dotXY(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -13380,9 +13380,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__21 = PyTuple_Pack(5, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 157, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__21);
   __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_dotXY, 157, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 157, __pyx_L1_error)
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_dotXY, 157, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 157, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":167
+  /* "DarkNews/Cfourvec.pyx":167
  * 
  * #******************************
  * def dotXY_vec(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -13392,9 +13392,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__23 = PyTuple_Pack(5, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 167, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__23);
   __Pyx_GIVEREF(__pyx_tuple__23);
-  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_dotXY_vec, 167, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 167, __pyx_L1_error)
+  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_dotXY_vec, 167, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 167, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":177
+  /* "DarkNews/Cfourvec.pyx":177
  * 
  * #******************************
  * def getXYnorm(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -13404,9 +13404,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__25 = PyTuple_Pack(4, __pyx_n_s_x, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 177, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
-  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_getXYnorm, 177, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 177, __pyx_L1_error)
+  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_getXYnorm, 177, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 177, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":186
+  /* "DarkNews/Cfourvec.pyx":186
  * 	return  s
  * #******************************
  * def getXYnorm_3vec(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -13416,9 +13416,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__27 = PyTuple_Pack(4, __pyx_n_s_x, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 186, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__27);
   __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_getXYnorm_3vec, 186, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_getXYnorm_3vec, 186, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 186, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":196
+  /* "DarkNews/Cfourvec.pyx":196
  * 
  * #******************************
  * def get_vec_norm(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -13428,9 +13428,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__29 = PyTuple_Pack(4, __pyx_n_s_x, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 196, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__29);
   __Pyx_GIVEREF(__pyx_tuple__29);
-  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_get_vec_norm, 196, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 196, __pyx_L1_error)
+  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_get_vec_norm, 196, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 196, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":206
+  /* "DarkNews/Cfourvec.pyx":206
  * 
  * #******************************
  * def get_3vec_norm(ndarray[double,ndim=2] x):             # <<<<<<<<<<<<<<
@@ -13440,9 +13440,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__31 = PyTuple_Pack(4, __pyx_n_s_x, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(0, 206, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__31);
   __Pyx_GIVEREF(__pyx_tuple__31);
-  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_get_3vec_norm, 206, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_get_3vec_norm, 206, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 206, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":216
+  /* "DarkNews/Cfourvec.pyx":216
  * 
  * #******************************
  * def get_3norm_vec(ndarray[double,ndim=2] x):             # <<<<<<<<<<<<<<
@@ -13452,9 +13452,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__33 = PyTuple_Pack(4, __pyx_n_s_x, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(0, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__33);
   __Pyx_GIVEREF(__pyx_tuple__33);
-  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_get_3norm_vec, 216, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(0, 216, __pyx_L1_error)
+  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_get_3norm_vec, 216, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(0, 216, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":226
+  /* "DarkNews/Cfourvec.pyx":226
  * 
  * #******************************
  * def get_3direction_3vec(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -13464,9 +13464,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__35 = PyTuple_Pack(4, __pyx_n_s_x, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(0, 226, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__35);
   __Pyx_GIVEREF(__pyx_tuple__35);
-  __pyx_codeobj__36 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_get_3direction_3vec, 226, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__36)) __PYX_ERR(0, 226, __pyx_L1_error)
+  __pyx_codeobj__36 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_get_3direction_3vec, 226, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__36)) __PYX_ERR(0, 226, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":238
+  /* "DarkNews/Cfourvec.pyx":238
  * 
  * #******************************
  * def get_cosTheta(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -13476,9 +13476,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__37 = PyTuple_Pack(4, __pyx_n_s_x, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__37)) __PYX_ERR(0, 238, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__37);
   __Pyx_GIVEREF(__pyx_tuple__37);
-  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_get_cosTheta, 238, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 238, __pyx_L1_error)
+  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_get_cosTheta, 238, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 238, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":248
+  /* "DarkNews/Cfourvec.pyx":248
  * 
  * #******************************
  * def get_cos_opening_angle(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
@@ -13488,9 +13488,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__39 = PyTuple_Pack(5, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__39)) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__39);
   __Pyx_GIVEREF(__pyx_tuple__39);
-  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_get_cos_opening_angle, 248, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_get_cos_opening_angle, 248, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 248, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":258
+  /* "DarkNews/Cfourvec.pyx":258
  * 
  * #******************************
  * def get_3direction(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
@@ -13500,9 +13500,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__41 = PyTuple_Pack(4, __pyx_n_s_x, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__41)) __PYX_ERR(0, 258, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__41);
   __Pyx_GIVEREF(__pyx_tuple__41);
-  __pyx_codeobj__42 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__41, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_get_3direction, 258, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__42)) __PYX_ERR(0, 258, __pyx_L1_error)
+  __pyx_codeobj__42 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__41, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_get_3direction, 258, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__42)) __PYX_ERR(0, 258, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":270
+  /* "DarkNews/Cfourvec.pyx":270
  * 
  * #******************************
  * def put_in_z_axis(ndarray[double, ndim=1] x):             # <<<<<<<<<<<<<<
@@ -13512,9 +13512,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__43 = PyTuple_Pack(4, __pyx_n_s_x, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_s); if (unlikely(!__pyx_tuple__43)) __PYX_ERR(0, 270, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__43);
   __Pyx_GIVEREF(__pyx_tuple__43);
-  __pyx_codeobj__44 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__43, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_put_in_z_axis, 270, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__44)) __PYX_ERR(0, 270, __pyx_L1_error)
+  __pyx_codeobj__44 = (PyObject*)__Pyx_PyCode_New(1, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__43, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_put_in_z_axis, 270, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__44)) __PYX_ERR(0, 270, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":282
+  /* "DarkNews/Cfourvec.pyx":282
  * 
  * #******************************
  * def rotationx(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
@@ -13524,9 +13524,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__45 = PyTuple_Pack(6, __pyx_n_s_v4, __pyx_n_s_theta, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_res, __pyx_n_s_R); if (unlikely(!__pyx_tuple__45)) __PYX_ERR(0, 282, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__45);
   __Pyx_GIVEREF(__pyx_tuple__45);
-  __pyx_codeobj__46 = (PyObject*)__Pyx_PyCode_New(2, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__45, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_rotationx, 282, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__46)) __PYX_ERR(0, 282, __pyx_L1_error)
+  __pyx_codeobj__46 = (PyObject*)__Pyx_PyCode_New(2, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__45, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_rotationx, 282, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__46)) __PYX_ERR(0, 282, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":321
+  /* "DarkNews/Cfourvec.pyx":321
  * 
  * #******************************
  * def rotationy(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
@@ -13536,9 +13536,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__47 = PyTuple_Pack(5, __pyx_n_s_v4, __pyx_n_s_theta, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_res); if (unlikely(!__pyx_tuple__47)) __PYX_ERR(0, 321, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__47);
   __Pyx_GIVEREF(__pyx_tuple__47);
-  __pyx_codeobj__48 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__47, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_rotationy, 321, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__48)) __PYX_ERR(0, 321, __pyx_L1_error)
+  __pyx_codeobj__48 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__47, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_rotationy, 321, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__48)) __PYX_ERR(0, 321, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":336
+  /* "DarkNews/Cfourvec.pyx":336
  * 	return res
  * #******************************
  * def rotationy_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):             # <<<<<<<<<<<<<<
@@ -13548,9 +13548,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__49 = PyTuple_Pack(5, __pyx_n_s_v4, __pyx_n_s_stheta, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_res); if (unlikely(!__pyx_tuple__49)) __PYX_ERR(0, 336, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__49);
   __Pyx_GIVEREF(__pyx_tuple__49);
-  __pyx_codeobj__50 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__49, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_rotationy_sin, 336, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__50)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __pyx_codeobj__50 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__49, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_rotationy_sin, 336, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__50)) __PYX_ERR(0, 336, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":351
+  /* "DarkNews/Cfourvec.pyx":351
  * 	return res
  * #******************************
  * def rotationy_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign=1):             # <<<<<<<<<<<<<<
@@ -13560,9 +13560,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__51 = PyTuple_Pack(6, __pyx_n_s_v4, __pyx_n_s_ctheta, __pyx_n_s_sign, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_res); if (unlikely(!__pyx_tuple__51)) __PYX_ERR(0, 351, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__51);
   __Pyx_GIVEREF(__pyx_tuple__51);
-  __pyx_codeobj__52 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__51, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_rotationy_cos, 351, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__52)) __PYX_ERR(0, 351, __pyx_L1_error)
+  __pyx_codeobj__52 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__51, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_rotationy_cos, 351, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__52)) __PYX_ERR(0, 351, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":367
+  /* "DarkNews/Cfourvec.pyx":367
  * 
  * #******************************
  * def rotationz(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
@@ -13572,9 +13572,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__53 = PyTuple_Pack(5, __pyx_n_s_v4, __pyx_n_s_theta, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_res); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(0, 367, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__53);
   __Pyx_GIVEREF(__pyx_tuple__53);
-  __pyx_codeobj__54 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__53, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_rotationz, 367, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__54)) __PYX_ERR(0, 367, __pyx_L1_error)
+  __pyx_codeobj__54 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__53, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_rotationz, 367, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__54)) __PYX_ERR(0, 367, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":381
+  /* "DarkNews/Cfourvec.pyx":381
  * 	return res
  * #******************************
  * def rotationz_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):             # <<<<<<<<<<<<<<
@@ -13584,9 +13584,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__55 = PyTuple_Pack(5, __pyx_n_s_v4, __pyx_n_s_stheta, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_res); if (unlikely(!__pyx_tuple__55)) __PYX_ERR(0, 381, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__55);
   __Pyx_GIVEREF(__pyx_tuple__55);
-  __pyx_codeobj__56 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__55, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_rotationz_sin, 381, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__56)) __PYX_ERR(0, 381, __pyx_L1_error)
+  __pyx_codeobj__56 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__55, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_rotationz_sin, 381, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__56)) __PYX_ERR(0, 381, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":395
+  /* "DarkNews/Cfourvec.pyx":395
  * 	return res
  * #******************************
  * def rotationz_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign = 1):             # <<<<<<<<<<<<<<
@@ -13596,9 +13596,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__57 = PyTuple_Pack(6, __pyx_n_s_v4, __pyx_n_s_ctheta, __pyx_n_s_sign, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_res); if (unlikely(!__pyx_tuple__57)) __PYX_ERR(0, 395, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__57);
   __Pyx_GIVEREF(__pyx_tuple__57);
-  __pyx_codeobj__58 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__57, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_rotationz_cos, 395, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__58)) __PYX_ERR(0, 395, __pyx_L1_error)
+  __pyx_codeobj__58 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__57, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_rotationz_cos, 395, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__58)) __PYX_ERR(0, 395, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":410
+  /* "DarkNews/Cfourvec.pyx":410
  * 
  * #******************************
  * def L(ndarray[double, ndim=2] v4, ndarray[double] beta):             # <<<<<<<<<<<<<<
@@ -13608,9 +13608,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__59 = PyTuple_Pack(5, __pyx_n_s_v4, __pyx_n_s_beta, __pyx_n_s_i, __pyx_n_s_m, __pyx_n_s_res); if (unlikely(!__pyx_tuple__59)) __PYX_ERR(0, 410, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__59);
   __Pyx_GIVEREF(__pyx_tuple__59);
-  __pyx_codeobj__60 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__59, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_L, 410, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__60)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __pyx_codeobj__60 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__59, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_L, 410, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__60)) __PYX_ERR(0, 410, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":424
+  /* "DarkNews/Cfourvec.pyx":424
  * 
  * #******************************
  * def T(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] theta, ndarray[double] phi):             # <<<<<<<<<<<<<<
@@ -13620,9 +13620,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__61 = PyTuple_Pack(4, __pyx_n_s_v4, __pyx_n_s_beta, __pyx_n_s_theta, __pyx_n_s_phi); if (unlikely(!__pyx_tuple__61)) __PYX_ERR(0, 424, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__61);
   __Pyx_GIVEREF(__pyx_tuple__61);
-  __pyx_codeobj__62 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__61, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_T, 424, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__62)) __PYX_ERR(0, 424, __pyx_L1_error)
+  __pyx_codeobj__62 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__61, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_T, 424, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__62)) __PYX_ERR(0, 424, __pyx_L1_error)
 
-  /* "Darknews/Cfourvec.pyx":428
+  /* "DarkNews/Cfourvec.pyx":428
  * 
  * #******************************
  * def Tinv(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] ctheta, ndarray[double] phi):             # <<<<<<<<<<<<<<
@@ -13631,7 +13631,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__63 = PyTuple_Pack(4, __pyx_n_s_v4, __pyx_n_s_beta, __pyx_n_s_ctheta, __pyx_n_s_phi); if (unlikely(!__pyx_tuple__63)) __PYX_ERR(0, 428, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__63);
   __Pyx_GIVEREF(__pyx_tuple__63);
-  __pyx_codeobj__64 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__63, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_Darknews_Cfourvec_pyx, __pyx_n_s_Tinv, 428, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__64)) __PYX_ERR(0, 428, __pyx_L1_error)
+  __pyx_codeobj__64 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__63, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_DarkNews_Cfourvec_pyx, __pyx_n_s_Tinv, 428, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__64)) __PYX_ERR(0, 428, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -13937,14 +13937,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_Darknews__Cfourvec) {
+  if (__pyx_module_is_main_DarkNews__Cfourvec) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "Darknews.Cfourvec")) {
-      if (unlikely(PyDict_SetItemString(modules, "Darknews.Cfourvec", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "DarkNews.Cfourvec")) {
+      if (unlikely(PyDict_SetItemString(modules, "DarkNews.Cfourvec", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -13965,7 +13965,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "Darknews/Cfourvec.pyx":7
+  /* "DarkNews/Cfourvec.pyx":7
  * #cython: cdivision=True
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -13977,378 +13977,378 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":57
+  /* "DarkNews/Cfourvec.pyx":57
  * 
  * #******************************
  * def random_generator(int size, double min, double max):             # <<<<<<<<<<<<<<
  * 	cdef ndarray[double,ndim=1] s = np.empty((size))
  * 	for i in range(size):
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_1random_generator, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_1random_generator, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_random_generator, __pyx_t_1) < 0) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":64
+  /* "DarkNews/Cfourvec.pyx":64
  * 
  * #******************************
  * def random_normal(ndarray[double, ndim=1] x, ndarray[double, ndim=1] sigma):             # <<<<<<<<<<<<<<
  * 	cdef int size = x.shape[0]
  * 	cdef ndarray[double,ndim=1] s = np.empty((size))
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_3random_normal, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_3random_normal, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_random_normal, __pyx_t_1) < 0) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":77
+  /* "DarkNews/Cfourvec.pyx":77
  * 
  * #******************************
  * def build_fourvec(ndarray[double, ndim=1] E, ndarray[double, ndim=1] p, ndarray[double, ndim=1] cost, ndarray[double, ndim=1] phi):             # <<<<<<<<<<<<<<
  * 
  * 	cdef int i,m
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_5build_fourvec, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_5build_fourvec, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_build_fourvec, __pyx_t_1) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":93
+  /* "DarkNews/Cfourvec.pyx":93
  * 
  * #******************************
  * def momentum_scalar(ndarray[double] E, double mass):             # <<<<<<<<<<<<<<
  * 
  * 	cdef int i,m
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_7momentum_scalar, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_7momentum_scalar, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_momentum_scalar, __pyx_t_1) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":105
+  /* "DarkNews/Cfourvec.pyx":105
  * 
  * #******************************
  * def get_theta_3vec(ndarray[double, ndim=2] r):             # <<<<<<<<<<<<<<
  * 
  * 	cdef int i,m
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_9get_theta_3vec, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_9get_theta_3vec, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_theta_3vec, __pyx_t_1) < 0) __PYX_ERR(0, 105, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":117
+  /* "DarkNews/Cfourvec.pyx":117
  * 
  * #******************************
  * def mass(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_11mass, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_11mass, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_mass, __pyx_t_1) < 0) __PYX_ERR(0, 117, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":127
+  /* "DarkNews/Cfourvec.pyx":127
  * 
  * #******************************
  * def inv_mass(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_13inv_mass, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 127, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_13inv_mass, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_inv_mass, __pyx_t_1) < 0) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":137
+  /* "DarkNews/Cfourvec.pyx":137
  * 
  * #******************************
  * def dot4(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_15dot4, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_15dot4, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_dot4, __pyx_t_1) < 0) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":147
+  /* "DarkNews/Cfourvec.pyx":147
  * 
  * #******************************
  * def dot3(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_17dot3, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 147, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_17dot3, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 147, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_dot3, __pyx_t_1) < 0) __PYX_ERR(0, 147, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":157
+  /* "DarkNews/Cfourvec.pyx":157
  * 
  * #******************************
  * def dotXY(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_19dotXY, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_19dotXY, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_dotXY, __pyx_t_1) < 0) __PYX_ERR(0, 157, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":167
+  /* "DarkNews/Cfourvec.pyx":167
  * 
  * #******************************
  * def dotXY_vec(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_21dotXY_vec, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 167, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_21dotXY_vec, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 167, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_dotXY_vec, __pyx_t_1) < 0) __PYX_ERR(0, 167, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":177
+  /* "DarkNews/Cfourvec.pyx":177
  * 
  * #******************************
  * def getXYnorm(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_23getXYnorm, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 177, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_23getXYnorm, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 177, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_getXYnorm, __pyx_t_1) < 0) __PYX_ERR(0, 177, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":186
+  /* "DarkNews/Cfourvec.pyx":186
  * 	return  s
  * #******************************
  * def getXYnorm_3vec(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_25getXYnorm_3vec, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_25getXYnorm_3vec, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_getXYnorm_3vec, __pyx_t_1) < 0) __PYX_ERR(0, 186, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":196
+  /* "DarkNews/Cfourvec.pyx":196
  * 
  * #******************************
  * def get_vec_norm(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_27get_vec_norm, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 196, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_27get_vec_norm, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 196, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_vec_norm, __pyx_t_1) < 0) __PYX_ERR(0, 196, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":206
+  /* "DarkNews/Cfourvec.pyx":206
  * 
  * #******************************
  * def get_3vec_norm(ndarray[double,ndim=2] x):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_29get_3vec_norm, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_29get_3vec_norm, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 206, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_3vec_norm, __pyx_t_1) < 0) __PYX_ERR(0, 206, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":216
+  /* "DarkNews/Cfourvec.pyx":216
  * 
  * #******************************
  * def get_3norm_vec(ndarray[double,ndim=2] x):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_31get_3norm_vec, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 216, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_31get_3norm_vec, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_3norm_vec, __pyx_t_1) < 0) __PYX_ERR(0, 216, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":226
+  /* "DarkNews/Cfourvec.pyx":226
  * 
  * #******************************
  * def get_3direction_3vec(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_33get_3direction_3vec, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 226, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_33get_3direction_3vec, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 226, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_3direction_3vec, __pyx_t_1) < 0) __PYX_ERR(0, 226, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":238
+  /* "DarkNews/Cfourvec.pyx":238
  * 
  * #******************************
  * def get_cosTheta(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_35get_cosTheta, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 238, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_35get_cosTheta, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 238, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_cosTheta, __pyx_t_1) < 0) __PYX_ERR(0, 238, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":248
+  /* "DarkNews/Cfourvec.pyx":248
  * 
  * #******************************
  * def get_cos_opening_angle(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_37get_cos_opening_angle, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_37get_cos_opening_angle, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_cos_opening_angle, __pyx_t_1) < 0) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":258
+  /* "DarkNews/Cfourvec.pyx":258
  * 
  * #******************************
  * def get_3direction(ndarray[double, ndim=2] x):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_39get_3direction, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_39get_3direction, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_3direction, __pyx_t_1) < 0) __PYX_ERR(0, 258, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":270
+  /* "DarkNews/Cfourvec.pyx":270
  * 
  * #******************************
  * def put_in_z_axis(ndarray[double, ndim=1] x):             # <<<<<<<<<<<<<<
  * 	cdef int i,m
  * 	m= x.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_41put_in_z_axis, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_41put_in_z_axis, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 270, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_put_in_z_axis, __pyx_t_1) < 0) __PYX_ERR(0, 270, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":282
+  /* "DarkNews/Cfourvec.pyx":282
  * 
  * #******************************
  * def rotationx(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
  * 
  * 	cdef int i, m;
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_43rotationx, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 282, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_43rotationx, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 282, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_rotationx, __pyx_t_1) < 0) __PYX_ERR(0, 282, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":321
+  /* "DarkNews/Cfourvec.pyx":321
  * 
  * #******************************
  * def rotationy(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
  * 
  * 	cdef int i, m;
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_45rotationy, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_45rotationy, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_rotationy, __pyx_t_1) < 0) __PYX_ERR(0, 321, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":336
+  /* "DarkNews/Cfourvec.pyx":336
  * 	return res
  * #******************************
  * def rotationy_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):             # <<<<<<<<<<<<<<
  * 
  * 	cdef int i, m;
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_47rotationy_sin, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_47rotationy_sin, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 336, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_rotationy_sin, __pyx_t_1) < 0) __PYX_ERR(0, 336, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":351
+  /* "DarkNews/Cfourvec.pyx":351
  * 	return res
  * #******************************
  * def rotationy_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign=1):             # <<<<<<<<<<<<<<
  * 
  * 	cdef int i, m;
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_49rotationy_cos, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 351, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_49rotationy_cos, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 351, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_rotationy_cos, __pyx_t_1) < 0) __PYX_ERR(0, 351, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":367
+  /* "DarkNews/Cfourvec.pyx":367
  * 
  * #******************************
  * def rotationz(ndarray[double, ndim=2] v4, ndarray[double] theta):             # <<<<<<<<<<<<<<
  * 
  * 	cdef int i, m;
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_51rotationz, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 367, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_51rotationz, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 367, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_rotationz, __pyx_t_1) < 0) __PYX_ERR(0, 367, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":381
+  /* "DarkNews/Cfourvec.pyx":381
  * 	return res
  * #******************************
  * def rotationz_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):             # <<<<<<<<<<<<<<
  * 
  * 	cdef int i, m;
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_53rotationz_sin, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 381, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_53rotationz_sin, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 381, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_rotationz_sin, __pyx_t_1) < 0) __PYX_ERR(0, 381, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":395
+  /* "DarkNews/Cfourvec.pyx":395
  * 	return res
  * #******************************
  * def rotationz_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign = 1):             # <<<<<<<<<<<<<<
  * 
  * 	cdef int i, m;
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_55rotationz_cos, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 395, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_55rotationz_cos, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 395, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_rotationz_cos, __pyx_t_1) < 0) __PYX_ERR(0, 395, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":410
+  /* "DarkNews/Cfourvec.pyx":410
  * 
  * #******************************
  * def L(ndarray[double, ndim=2] v4, ndarray[double] beta):             # <<<<<<<<<<<<<<
  * 	cdef int i, m;
  * 	m = beta.shape[0]
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_57L, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_57L, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 410, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_L, __pyx_t_1) < 0) __PYX_ERR(0, 410, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":424
+  /* "DarkNews/Cfourvec.pyx":424
  * 
  * #******************************
  * def T(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] theta, ndarray[double] phi):             # <<<<<<<<<<<<<<
  * 	return L( rotationy( rotationz(v4,-phi), theta), -beta)
  * 
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_59T, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 424, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_59T, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 424, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_T, __pyx_t_1) < 0) __PYX_ERR(0, 424, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":428
+  /* "DarkNews/Cfourvec.pyx":428
  * 
  * #******************************
  * def Tinv(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] ctheta, ndarray[double] phi):             # <<<<<<<<<<<<<<
  * 	return rotationz( rotationy_cos( L(v4, beta), ctheta, sign=-1), phi)
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8Darknews_8Cfourvec_61Tinv, NULL, __pyx_n_s_Darknews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 428, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8DarkNews_8Cfourvec_61Tinv, NULL, __pyx_n_s_DarkNews_Cfourvec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 428, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_Tinv, __pyx_t_1) < 0) __PYX_ERR(0, 428, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Darknews/Cfourvec.pyx":1
+  /* "DarkNews/Cfourvec.pyx":1
  * #cython: boundscheck=False             # <<<<<<<<<<<<<<
  * #cython: language_level=3
  * #cython: wraparound=False
@@ -14358,7 +14358,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-exnkuq13/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1014
+  /* "../../../../private/var/folders/my/7j7cn6f92_z66yvbb11lgt2r0000gn/T/pip-build-env-3k7yzf5a/overlay/lib/python3.9/site-packages/numpy/__init__.pxd":1014
  * 
  * 
  * cdef inline NPY_DATETIMEUNIT get_datetime64_unit(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -14373,11 +14373,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init Darknews.Cfourvec", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init DarkNews.Cfourvec", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init Darknews.Cfourvec");
+    PyErr_SetString(PyExc_ImportError, "init DarkNews.Cfourvec");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

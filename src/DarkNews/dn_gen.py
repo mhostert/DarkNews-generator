@@ -22,7 +22,7 @@ def dn_gen():
     parser.add_argument("--m5", type=float, help="mass of the fifth neutrino")
     parser.add_argument("--m6", type=float, help="mass of the sixth neutrino")
 
-    parser.add_argument("--HNLtype", help="D_or_M: dirac or majorana", choices=DEFAULTS._choices['HNLtype'])
+    parser.add_argument("--HNLtype", help="HNLtype: dirac or majorana", choices=DEFAULTS._choices['HNLtype'])
 
     # neutral lepton mixing
     parser.add_argument("--ue4", type=float, help="Ue4")

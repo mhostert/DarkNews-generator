@@ -28,9 +28,12 @@ class GenLauncher:
         "UD4", "UD5", "UD6", "m4", "m5", "m6", "mzprime", "HNLtype", 
         "mu_tr_e4", "mu_tr_e5", "mu_tr_e6", "mu_tr_mu4", "mu_tr_mu5", "mu_tr_mu6", 
         "mu_tr_tau4", "mu_tr_tau5", "mu_tr_tau6", "mu_tr_44", "mu_tr_45", "mu_tr_46", "mu_tr_55", "mu_tr_56",  
+        "s_e4", "s_e5", "s_e6", "s_mu4", "s_mu5", "s_mu6", "s_tau4", "s_tau5", "s_tau6", 
+        "s_44", "s_45", "s_46", "s_55", "s_56", "s_66", "mhprime","theta",
         "decay_products", "exp", "nopelastic", "nocoh", "noHC", "noHF", 
-        "log", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
-        "pandas", "numpy", "hepevt", "hepevt_unweigh", "hepevt_events", "sample_geometry", "summary_plots", "path"
+        "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
+        "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "hepevt_events", 
+        "sparse", "print_to_float32", "sample_geometry", "summary_plots", "path"
     ]
 
     def __init__(self, param_file=None, **kwargs):
@@ -82,13 +85,30 @@ class GenLauncher:
         self.mu_tr_55 = 0.0
         self.mu_tr_56 = 0.0
         self.mu_tr_66 = 0.0
+        self.theta = 0.0
+        self.mhprime = 1e10
+        self.s_e4 = 0.0
+        self.s_e5 = 0.0
+        self.s_e6 = 0.0
+        self.s_mu4 = 0.0
+        self.s_mu5 = 0.0
+        self.s_mu6 = 0.0
+        self.s_tau4 = 0.0
+        self.s_tau5 = 0.0
+        self.s_tau6 = 0.0
+        self.s_44 = 0.0
+        self.s_45 = 0.0
+        self.s_46 = 0.0
+        self.s_55 = 0.0
+        self.s_56 = 0.0
+        self.s_66 = 0.0
         self.decay_products = "e+e-"
         self.exp = "miniboone_fhc"
         self.nopelastic = False
         self.nocoh = False
         self.noHC = False
         self.noHF = False
-        self.log = "INFO"
+        self.loglevel = "INFO"
         self.verbose = False
         self.logfile = None
         self.neval = int(1e4)
@@ -96,10 +116,13 @@ class GenLauncher:
         self.neval_warmup = int(1e3)
         self.nint_warmup = 10
         self.pandas = True
-        self.numpy = True
+        self.parquet = False
+        self.numpy = False
         self.hepevt = False
         self.hepevt_unweigh = False
         self.hepevt_events = 100
+        self.sparse = False
+        self.print_to_float32 = False
         self.sample_geometry = False
         self.summary_plots = True
         self.path = "."
@@ -121,7 +144,7 @@ class GenLauncher:
         self.prettyprinter = prettyprinter
         self.configure_logger(
             logger=logger,
-            level=self.log,
+            loglevel=self.loglevel,
             prettyprinter=self.prettyprinter,
             verbose=self.verbose,
             logfile=self.logfile
@@ -201,7 +224,7 @@ class GenLauncher:
             setattr(self, parameter, value)
         # at the end, if kwargs is not empty, that would mean some parameters were unused, i.e. they are spelled wrong or do not exist: raise AttributeError
         if len(kwargs) != 0:
-            raise AttributeError(f"Parameters " + ", ".join(kwargs.keys()) + "were unused, are they maybe spelt wrong?")
+            raise AttributeError(f"Parameters " + ", ".join(kwargs.keys()) + " were unused. Either not supported or spelled wrong.")
 
     def _create_all_MC_cases(self, **kwargs):
         """ Create MC_events objects and run the MC computations
@@ -303,10 +326,10 @@ class GenLauncher:
         return self.gen_cases
 
 
-    def run(self, log=None, verbose=None, logfile=None, path="."):
+    def run(self, loglevel=None, verbose=None, logfile=None, path="."):
         
         ####################################################
-        args = {"log": log, "verbose": verbose, "logfile": logfile, "path": path}
+        args = {"loglevel": loglevel, "verbose": verbose, "logfile": logfile, "path": path}
         for attr in args.keys():
             if args[attr] is not None:
                 setattr(self, attr, args[attr])
@@ -316,7 +339,7 @@ class GenLauncher:
         self.configure_logger( 
             logger = logger,
             prettyprinter = self.prettyprinter,
-            level = self.log, 
+            loglevel = self.loglevel, 
             verbose = self.verbose,
             logfile = self.logfile
         )
@@ -338,17 +361,19 @@ class GenLauncher:
         prettyprinter.info(f"Generation successful\n\nTotal events predicted:\n({np.sum(self.df['w_event_rate']):.3g} +/- {np.sqrt(np.sum(self.df['w_event_rate']**2)):.3g}) events.")
 
         ############################################################################
-        # Print events to file -- currently in data/exp/m4____mzprime____.dat 
-        if self.numpy:
-            dn.printer.print_events_to_ndarray(self.data_path, self.df)
+        # Print events to file
         if self.pandas:
-            dn.printer.print_events_to_pandas(self.data_path, self.df)
+            dn.printer.print_events_to_pandas(self.data_path, self.df, sparse=self.sparse, print_to_float32=self.print_to_float32)
+        if self.parquet:
+            dn.printer.print_events_to_parquet(self.data_path, self.df, sparse=self.sparse, print_to_float32=self.print_to_float32)
+        if self.numpy:
+            dn.printer.print_events_to_ndarray(self.data_path, self.df, sparse=self.sparse, print_to_float32=self.print_to_float32)
         if self.hepevt:
-            dn.printer.print_unweighted_events_to_HEPEVT(self.df, unweigh= self.hepevt_unweigh, max_events=self.hepevt_events)
+            dn.printer.print_unweighted_events_to_HEPEVT(self.df, unweigh= self.hepevt_unweigh, max_events=self.hepevt_events, sparse=self.sparse)
         
         return self.df
 
-    def configure_logger(self, logger, level=logging.INFO, prettyprinter = None, logfile = None, verbose=False):
+    def configure_logger(self, logger, loglevel=logging.INFO, prettyprinter = None, logfile = None, verbose=False):
         ''' 
         Configure the DarkNews logger 
             
@@ -357,10 +382,10 @@ class GenLauncher:
             prettyprint --> secondary logger for pretty-print messages. Cannot override the main logger level
 
         '''
-        level = level.upper()
-        _numeric_level = getattr(logging, level, None)
+        loglevel = loglevel.upper()
+        _numeric_level = getattr(logging, loglevel, None)
         if not isinstance(_numeric_level, int):
-            raise ValueError('Invalid log level: %s' % self.log)  
+            raise ValueError('Invalid log level: %s' % self.loglevel)  
         logger.setLevel(_numeric_level)
 
         if logfile:
@@ -372,7 +397,7 @@ class GenLauncher:
             handler = logging.StreamHandler(stream=sys.stdout)
             if prettyprinter:
                 pretty_handler = logging.StreamHandler(stream=sys.stdout)
-                pretty_handler.setLevel(level)
+                pretty_handler.setLevel(loglevel)
                 delimiter = '---------------------------------------------------------'
                 pretty_handler.setFormatter(logging.Formatter(delimiter+'\n%(message)s\n'))
                 # update pretty printer 
@@ -380,7 +405,7 @@ class GenLauncher:
                     prettyprinter.handlers.clear()
                 prettyprinter.addHandler(pretty_handler)
 
-        handler.setLevel(level)
+        handler.setLevel(loglevel)
         if verbose:
             handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(name)s:\n\t%(message)s\n', datefmt='%H:%M:%S'))
         else:

@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 import numpy as np
 import dill 
 
@@ -9,6 +10,23 @@ from . import const
 from . import pdg
 from . import Cfourvec as Cfv
 
+# Create target Directory if it doesn't exist
+def create_folder(PATH_data):
+	if not os.path.exists(PATH_data):
+		os.makedirs(PATH_data)
+	if PATH_data[-1] != '/':
+		PATH_data += '/'
+	return PATH_data
+
+# Keep only Enu, charged leptons, photons, and weights
+def get_sparse_df(df_gen):
+	# keep neutrino energy
+	keep_cols = ['P_projectile']
+	for col in df_gen.columns.levels[0]:
+		if '_ell_' in col or '_gamma' in col or 'w_decay' in col or 'w_event' in col:
+			keep_cols.append(col)
+	return df_gen[keep_cols].drop([('P_projectile','1'),('P_projectile','2'),('P_projectile','3')], axis=1)
+		
 
 def unweigh_events(df_gen, nevents, prob_col = 'w_event_rate', **kwargs):
 	'''
@@ -33,26 +51,53 @@ def unweigh_events(df_gen, nevents, prob_col = 'w_event_rate', **kwargs):
 
 
 
-def print_events_to_pandas(PATH_data, df_gen):
-	
-	# Create target Directory if it doesn't exist
-	if not os.path.exists(PATH_data):
-		os.makedirs(PATH_data)
-	if PATH_data[-1] != '/':
-		PATH_data += '/'
+def print_events_to_ndarray(PATH_data, df_gen, sparse=False, print_to_float32=False):
+	out_file_name = create_folder(PATH_data)+f"ndarray.npy"
+	if sparse:
+		df_sparse = get_sparse_df(df_gen)
+		if print_to_float32:
+			array_gen = df_sparse.to_numpy(dtype=np.float32)
+		else:
+			array_gen = df_sparse.to_numpy(dtype=np.float64)
+	else:
+		# convert to numeric values
+		df_gen.loc[df_gen['helicity']=='conserving', 'helicity'] = +1
+		df_gen.loc[df_gen['helicity']=='flipping', 'helicity'] = -1
+		array_gen = df_gen.drop(['underlying_process','target','scattering_regime'],axis=1, level=0).to_numpy(dtype=np.float64)
+
+	np.save(out_file_name, array_gen, allow_pickle=False)
+	prettyprinter.info(f"Events in numpy array saved to file successfully:\n{out_file_name}")
+	return array_gen
+
+def print_events_to_parquet(PATH_data, df_gen, sparse=False, print_to_float32=False):
+	out_file_name = PATH_data+f"pandas_df.parquet"
+	if sparse:
+		df_sparse = get_sparse_df(df_gen)
+		if print_to_float32:
+			df_sparse = df_sparse.apply(pd.to_numeric, downcast='float')
+		df_sparse.to_parquet(out_file_name, engine='pyarrow')
+	else:
+		df_gen.to_parquet(out_file_name, engine='pyarrow')
+	prettyprinter.info(f"Events in pandas dataframe saved to parquet file successfully:\n{out_file_name}")
+	return df_gen
+
+def print_events_to_pandas(PATH_data, df_gen, sparse=False, print_to_float32=False):
 	out_file_name = PATH_data+f"pandas_df.pckl"
-	
-	# pickles DarkNews classes with support for lambda functions
-	dill.dump(df_gen, open(out_file_name, 'wb'))
+	if sparse:
+		df_sparse = get_sparse_df(df_gen)
+		if print_to_float32:
+			df_sparse = df_sparse.apply(pd.to_numeric, downcast='float')
+		dill.dump(df_sparse, open(out_file_name, 'wb'))
+	else:
+		# pickles DarkNews classes with support for lambda functions
+		dill.dump(df_gen, open(out_file_name, 'wb'))
 	prettyprinter.info(f"Events in pandas dataframe saved to file successfully:\n{out_file_name}")
-	# aux_df.to_pickle(out_file_name)
-	# pickle.dump(aux_df, open(out_file_name, 'wb'	))
 	return df_gen
 
 def print_in_order(x):
     return ' '.join(f'{t:.8g}' for t in list(x))
 
-def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
+def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100, sparse=False):
 	'''
 		Print events to HEPevt format.
 
@@ -155,7 +200,7 @@ def print_unweighted_events_to_HEPEVT(df_gen, unweigh=False, max_events=100):
 					f" {df_gen['pos_scatt','0'][i]:.8g}"
 					"\n"
 					))
-
+					
 		f.write((	# Target
 					f"0 "
 					f" {int(df_gen['target_pdgid'][i])}"
