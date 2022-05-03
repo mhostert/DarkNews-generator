@@ -4,7 +4,7 @@ import argparse
 from DarkNews.GenLauncher import GenLauncher
 
 def dn_gen():
-    DEFAULTS = GenLauncher(log='error')
+    DEFAULTS = GenLauncher(loglevel='error')
     # Default case implements the 3+2 model of Ballett et al, Phys. Rev. D 101, 115025 (2020) (https://arxiv.org/abs/1903.07589)
 
     # --------------
