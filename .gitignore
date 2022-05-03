@@ -158,3 +158,6 @@ examples/data/
 # Jaime directory and notebook
 analysis_jaime/
 muboone_analysis.ipynb
+
+# __TEST files
+**/__TEST*.py

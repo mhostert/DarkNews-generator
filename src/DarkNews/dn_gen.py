@@ -22,7 +22,7 @@ def dn_gen():
     parser.add_argument("--m5", type=float, help="mass of the fifth neutrino")
     parser.add_argument("--m6", type=float, help="mass of the sixth neutrino")
 
-    parser.add_argument("--D_or_M", help="D_or_M: dirac or majorana", choices=DEFAULTS._choices['D_or_M'])
+    parser.add_argument("--HNLtype", help="D_or_M: dirac or majorana", choices=DEFAULTS._choices['HNLtype'])
 
     # neutral lepton mixing
     parser.add_argument("--ue4", type=float, help="Ue4")
@@ -46,7 +46,7 @@ def dn_gen():
     parser.add_argument("--alphaD", type=float, help="U(1)_d  alpha_dark = (g_dark^2 /4 pi)")
 
     # kinetic mixing options
-    parser.add_argument("--epsilon", type=float, help="epsilon^2")
+    parser.add_argument("--epsilon", type=float, help="epsilon")
     parser.add_argument("--epsilon2", type=float, help="epsilon^2")
     parser.add_argument("--alpha_epsilon2", type=float, help="alpha_QED*epsilon^2")
     parser.add_argument("--chi", type=float, help="chi")
@@ -112,7 +112,12 @@ def dn_gen():
     kwargs = vars(parser.parse_args())
 
     gen_object = GenLauncher(**kwargs)
-    gen_object.run(log=kwargs.get("log", "INFO"), verbose=kwargs.get("verbose", None), logfile=kwargs.get("logfile", None), path=kwargs.get("path", "."))
+    gen_object.run(
+        log=kwargs.get("log", DEFAULTS.log),
+        verbose=kwargs.get("verbose", DEFAULTS.verbose),
+        logfile=kwargs.get("logfile", DEFAULTS.logfile),
+        path=kwargs.get("path", DEFAULTS.path)
+    )
 
 if __name__ == "__main__":
     dn_gen()
