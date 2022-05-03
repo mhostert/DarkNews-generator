@@ -113,7 +113,7 @@ def dn_gen():
 
     gen_object = GenLauncher(**kwargs)
     gen_object.run(
-        log=kwargs.get("loglevel", DEFAULTS.loglevel),
+        loglevel=kwargs.get("loglevel", DEFAULTS.loglevel),
         verbose=kwargs.get("verbose", DEFAULTS.verbose),
         logfile=kwargs.get("logfile", DEFAULTS.logfile),
         path=kwargs.get("path", DEFAULTS.path)
