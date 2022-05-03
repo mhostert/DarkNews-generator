@@ -23,7 +23,7 @@ def get_sparse_df(df_gen):
 	# keep neutrino energy
 	keep_cols = ['P_projectile']
 	for col in df_gen.columns.levels[0]:
-		if '_ell_' in col or '_gamma' in col or 'w_decay' in col or 'w_event' in col:
+		if '_ell_' in col or '_gamma' in col or 'w_decay' in col or 'w_event' in col or 'N_parent' in col:
 			keep_cols.append(col)
 	return df_gen[keep_cols].drop([('P_projectile','1'),('P_projectile','2'),('P_projectile','3')], axis=1)
 		
