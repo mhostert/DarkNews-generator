@@ -1,3 +1,4 @@
+# fluxes from AliagaSoplin:2016shs
 name = "MINERVA_FHC_ME"
 fluxfile = "../fluxes/NUMI_FHC_ME_unofficial.dat"
 flux_norm = 1
@@ -14,4 +15,4 @@ fiducial_mass_per_target = [
     fiducial_mass*6/7,
     fiducial_mass*1/7
 ]
-POTs = 0.73 * 1.16e21
+POTs = 1.16e21

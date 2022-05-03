@@ -18,7 +18,7 @@ class GenLauncher:
 
     # handle parameters that can assume only certain values
     _choices = {
-        "D_or_M": ["dirac", "majorana"],
+        "HNLtype": ["dirac", "majorana"],
         "decay_products": ["e+e-", "mu+mu-", "photon"]
     }
 

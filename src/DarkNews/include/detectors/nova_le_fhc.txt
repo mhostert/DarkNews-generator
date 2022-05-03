@@ -1,3 +1,4 @@
+# flux from https://publicdocs.fnal.gov/cgi-bin/ShowDocument?docid=8
 name = "NOvA_FHC"
 fluxfile = "../fluxes/NOvA_FHC.dat"
 flux_norm = 1

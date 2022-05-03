@@ -1,3 +1,4 @@
+# flux files https://arxiv.org/src/1607.00704/anc
 name = "NUMI_FHC_LE"
 fluxfile = "../fluxes/NUMI_FHC_LE.dat"
 flux_norm = 1

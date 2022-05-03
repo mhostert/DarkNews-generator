@@ -1,6 +1,6 @@
 # Data Released with A.A. Aguilar-Arevalo et al., “The Neutrino Flux Prediction at MiniBooNE”, arXiv:0806.1449[hep-ex], Phys. Rev. D. 79, 072002 (2009).
 name = "MiniBooNE_FHC"
-fluxfile = "../fluxes/MiniBooNE_FHC.dat"
+fluxfile = "../fluxes/MiniBooNE_RHC.dat"
 flux_norm = 1
 erange = [
     0.1,
@@ -15,4 +15,4 @@ fiducial_mass_per_target = [
     fiducial_mass*12/14, 
     fiducial_mass*2/14
 ] # tons
-POTs = 18.75e20
+POTs = 11.27e20

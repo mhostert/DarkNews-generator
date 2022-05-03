@@ -78,20 +78,20 @@ It is possible to run the generator in two ways.
 In both cases, the generated dataset is saved into a directory tree which is created by default in the same folder the generator is run.  
 The directory tree has the following form:
 ```
-<path>/data/<exp>/<model_name>/<relevant_masses>_<D_or_M>/
+<path>/data/<exp>/<model_name>/<relevant_masses>_<HNLtype>/
 ```
 where:
 * `<path>`: is the value of the `path` argument (or option), default to `./`
 * `<exp>`: is the value of the `exp` argument (or option), default set to `miniboone_fhc`
 * `<model_name>`: is the name of the chosen model according to the values of the chosen parameters; it can be `3plus1`, `3plus2`, `3plus3`
 * `<relevant_masses>`: it is a string made of strings of the kind `"<parameter>_<mass>"` separated by underscores, where `<parameter>` is the name of a mass parameter among `mzprime`, `m4`, `m5`, `m6`; while `<mass>` is a the value, formatted as float, of `<parameter>`
-* `<D_or_M>`: is the value of the `D_or_M` argument (or option), default set to `majorana`
+* `<HNLtype>`: is the value of the `HNLtype` argument (or option), default set to `majorana`
 
 ### Command line functionality
 
 It is possible to run the generator through the script `bin/dn_gen`, passing the parameters as options.
 ```sh
-dn_gen --mzprime=1.25 --m4=0.140 --neval=1000 --D_or_M=dirac --log=INFO
+dn_gen --mzprime=1.25 --m4=0.140 --neval=1000 --HNLtype=dirac --log=INFO
 ```
 Run `dn_gen --help` to inspect the meaning of each parameter.
 
@@ -100,7 +100,7 @@ Run `dn_gen --help` to inspect the meaning of each parameter.
 It is possible to run the generator by creating an instance of the `DarkNews.GenLauncher.GenLauncher` class and calling its `run` method.
 ```python
 from DarkNews.GenLauncher import GenLauncher
-gen_object = GenLauncher(mzprime=1.25, m4=0.140, neval=1000, D_or_M="dirac")
+gen_object = GenLauncher(mzprime=1.25, m4=0.140, neval=1000, HNLtype="dirac")
 gen_object.run(log="INFO")
 ```
 The parameters are passed directly while instantiating the `GenLauncher` object.
@@ -127,7 +127,7 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **m4**      | `float`                 | Mass of the fourth neutrino | 0.14         |
 | **m5**      | `float`                 | Mass of the fifth neutrino  | `None`       |
 | **m6**      | `float`                 | Mass of the sixth neutrino  | `None`       |
-| **D_or_M**  | `["dirac", "majorana"]` | Dirac or majorana           | `"majorana"` |
+| **HNLtype**  | `["dirac", "majorana"]` | Dirac or majorana           | `"majorana"` |
 
 ##### Mixings
 

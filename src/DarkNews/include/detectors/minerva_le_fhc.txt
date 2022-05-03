@@ -1,3 +1,4 @@
+# flux files https://arxiv.org/src/1607.00704/anc
 name = "MINERVA_FHC_LE"
 fluxfile = "../fluxes/NUMI_FHC_LE.dat"
 flux_norm = 1
@@ -14,4 +15,4 @@ fiducial_mass_per_target = [
     fiducial_mass*6/7,
     fiducial_mass*1/7
 ]
-POTs = 0.73 * 3.43e20
+POTs = 3.43e20
