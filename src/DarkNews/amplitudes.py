@@ -12,9 +12,26 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
 
             process: UpscatteringProcess object with all model parameters and scope of upscattering process
 
-            get_terms:  All -- returns a dictionary with all the separate contributions to the xsecs
-                                separating diagrams with Z', Z, S, etc.
-                        options: 
+            diagrams:   all -- returns a dictionary with all the separate contributions to the xsecs
+                        separating diagrams with Z', Z, S, etc.
+
+                        NC_SQR
+                        
+                        KinMix_SQR
+                        KinMix_NC_inter
+                        
+                        MassMix_SQR
+                        MassMix_NC_inter
+                        KinMix_MassMix_inter
+                        
+                        TMM_SQR
+                        
+                        Scalar_SQR
+                        Scalar_NC_inter
+                        Scalar_KinMix_inter
+                        Scalar_MassMix_inter
+                    
+                        total
 
     '''
 
@@ -153,7 +170,7 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
         def Lmunu_Hmunu_Scalar_MassMix_inter():
             return (Cprimehad*Cij*FFscalar*mHNL*Shad*Sij*(4*FFNCf1*(M*M) + FFNCf2*t)*(s*Sqrt((M*M*M*M + (mHNL*mHNL - s)*(mHNL*mHNL - s) - 2*(M*M)*(mHNL*mHNL + s))/(s*s))*(2*(M*M) + mHNL*mHNL - 2*s - t) + h*(2*(M*M*M*M) + mHNL*mHNL*mHNL*mHNL + M*M*(-(mHNL*mHNL) - 4*s + t) - mHNL*mHNL*(3*s + t) + s*(2*s + 3*t))))/(M*s*Sqrt((M*M*M*M + (mHNL*mHNL - s)*(mHNL*mHNL - s) - 2*(M*M)*(mHNL*mHNL + s))/(s*s))*(MSCALAR*MSCALAR - t)*(-(MZBOSON*MZBOSON) + t))
     else:
-        print(f"Error! Could not find HNL type '{process.TheoryModel.HNLtype}'.")
+        logger.error(f"Error! Could not find HNL type '{process.TheoryModel.HNLtype}'.")
         raise ValueError
 
 
@@ -186,7 +203,7 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
     
     E1CM = (s - M**2)/2.0/np.sqrt(s)
     E3CM = (s + mHNL**2 - M**2)/2.0/np.sqrt(s)
-    p1CM = E1CM # massless projectile
+    p1CM = E1CM # always assuming massless projectile
     p3CM = np.sqrt(E3CM**2 - mHNL**2)
 
     # jacobian -- from angle to Q2
@@ -194,6 +211,10 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
 
     # hadronic spin average
     spin_average = 1/2
+    
+    # final prefactor: dsigma = prefactor*LmunuHmunu
+    prefactor = flux_factor * phase_space * physical_jacobian * spin_average * invGeV2_to_attobarn
+
 
     # from amplitude to diff xsec:
     diff_xsec_terms = {}
@@ -201,16 +222,21 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
     for diagram, lmnhmn in Lmunu_Hmunu.items():
         if (diagram in diagrams) or ('all' in diagrams) or ('total' in diagrams):
             # all diff xsec terms
-            diff_xsec_terms[diagram] = flux_factor * lmnhmn() * phase_space * physical_jacobian * spin_average * invGeV2_to_attobarn
+            diff_xsec_terms[diagram] =  lmnhmn() * prefactor
             # summing all contributions (Z,Z',S,interferences,etc)
             diff_xsec_terms['total'] += diff_xsec_terms[diagram]
 
-    if 'total' in diagrams:
-        return diff_xsec_terms['total']
-    elif 'all' in diagrams:
+    # raise warning for any requested diagram not picked up here and setting to zero 
+    for missing_diagram in list(set(diagrams) - set(diff_xsec_terms.keys())):
+        logger.warning(f'Warning: Diagram not found. Either not implemented or misspelled. Setting amplitude it to zero: {missing_diagram}')
+        diff_xsec_terms[missing_diagram] =  prefactor*0.0
+   
+    if 'all' in diagrams:
+        # return all individual diagrams in a dictionary
         return diff_xsec_terms
     else:
-        return diff_xsec_terms
+        # return the sum of all diagrams requested
+        return diff_xsec_terms['total']
 
 
 

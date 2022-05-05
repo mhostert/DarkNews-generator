@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import vegas as vg
+import copy 
 
 from DarkNews import logger, prettyprinter
 
@@ -352,8 +353,8 @@ class XsecCalc:
     def __init__(self, nuclear_target, bsm_model, **kwargs):
         
         # default parameters
-        self.nu_projectile = pdg.numu
-        self.nu_upscattered = pdg.neutrino4
+        self.upscattered='4'
+        self.nu_projectile=pdg.numu
         self.scattering_regime = 'coherent'
         self.helicity = 'conserving'
         self.__dict__.update(kwargs)
@@ -367,6 +368,7 @@ class XsecCalc:
             self.target = self.nuclear_target.get_constituent_nucleon('neutron')
         else:
             logger.error(f"Scattering regime {self.scattering_regime} not supported.")
+        
         # How many constituent targets inside scattering regime? 
         if self.scattering_regime == 'coherent':
             self.target_multiplicity = 1
@@ -379,6 +381,7 @@ class XsecCalc:
 
         self.bsm_model = bsm_model
         # scope for upscattering process
+        self.nu_upscattered=getattr(self.bsm_model,f'neutrino{self.upscattered}')
         self.ups_case = model.UpscatteringProcess(nu_projectile=self.nu_projectile, 
                                                     nu_upscattered=self.nu_upscattered,
                                                     target=self.target,
@@ -389,22 +392,18 @@ class XsecCalc:
 
         #############
         # vectorize total cross section calculator using vegas integration
-        self.total_xsec = np.vectorize(self.scalar_total_xsec, excluded=['self','diagrams'])
+        self.vectorized_total_xsec = np.vectorize(self.scalar_total_xsec, excluded=['self','diagram','NINT','NEVAL','NINT_warmup','NEVAL_warmup'])
 
-    def scalar_total_xsec(self, Enu, diagrams=['total'], NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup):
-        """ 
-            Returns the total upscattering xsec for a fixed neutrino energy
-        """
-        DIM = 1
-        self.Enu = Enu
+        self.calculable_diagrams = find_calculable_diagrams(self.bsm_model)
 
+
+    def scalar_total_xsec(self, Enu, diagram='total', NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup):
         # below threshold
         if Enu < (self.Ethreshold):
             return 0.0
-
-        all_xsecs=0.0
-        for diagram in diagrams:
-            batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=self.Enu, MC_case=self, diagram=diagram)
+        else:
+            DIM = 1
+            batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=Enu, MC_case=self, diagram=diagram)
             integ   = vg.Integrator(DIM*[[0.0, 1.0]]) # unit hypercube
             
             integrals = run_vegas(batch_f, integ, adapt_to_errors=True,
@@ -413,13 +412,27 @@ class XsecCalc:
                                         NINT_warmup=NINT_warmup, 
                                         NEVAL_warmup=NEVAL_warmup)
             logger.debug(f"Main VEGAS run completed.")
+            
+            return integrals['diff_xsec'].mean*batch_f.norm['diff_xsec']
 
+    def total_xsec(self, Enu, diagrams=['total'], NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup):
+        """ 
+            Returns the total upscattering xsec for a fixed neutrino energy
+        """
+        self.Enu = Enu
+        all_xsecs=0.0
+        for diagram in diagrams:
+            if diagram in self.calculable_diagrams or diagram=='total':
+                tot_xsec = self.vectorized_total_xsec(Enu, diagram=diagram, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
+            else:
+                logger.warning(f'Warning: Diagram not found. Either not implemented or misspelled. Setting tot xsec it to zero: {diagram}')
+                tot_xsec = 0.0*Enu
+            
             #############
             # integrated xsec coverted to cm^2
-            all_xsecs += integrals['diff_xsec'].mean*const.attobarn_to_cm2*batch_f.norm['diff_xsec']*self.target_multiplicity
+            all_xsecs += tot_xsec*const.attobarn_to_cm2*self.target_multiplicity
             logger.debug(f"Total cross section for {diagram} calculated.")
 
-            
         return all_xsecs
 
     def diff_xsec_Q2(self, Enu, Q2, diagrams=['total']):
@@ -427,7 +440,10 @@ class XsecCalc:
         s = Enu*self.ups_case.MA*2+self.ups_case.MA**2
         physical =  ((Q2 > ps.upscattering_Q2min(Enu, self.ups_case.m_ups, self.ups_case.MA)) & (Q2 < ps.upscattering_Q2max(Enu, self.ups_case.m_ups, self.ups_case.MA)))
         diff_xsecs=amps.upscattering_dxsec_dQ2([s,-Q2,0.0], process=self.ups_case, diagrams=diagrams)
-        return {key: diff_xsecs[key]*physical for key in diff_xsecs.keys()}
+        if type(diff_xsecs) is dict:
+            return {key: diff_xsecs[key]*physical for key in diff_xsecs.keys()}
+        else:
+            return diff_xsecs*physical
 
 
 
@@ -484,3 +500,25 @@ def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=
 
         # sample again, now saving result and turning off further adaption
         return integ(batch_f,  nitn = NINT, neval = NEVAL, uses_jac=True, **kwargs)#, adapt=False)
+
+def find_calculable_diagrams(bsm_model):
+    calculable_diagrams = []
+    calculable_diagrams.append('NC_SQR')
+    if bsm_model.is_kinetically_mixed: 
+        calculable_diagrams.append('KinMix_SQR')
+        calculable_diagrams.append('KinMix_NC_inter')
+    if bsm_model.is_mass_mixed: 
+        calculable_diagrams.append('MassMix_SQR')
+        calculable_diagrams.append('MassMix_NC_inter')
+        if bsm_model.is_kinetically_mixed: 
+            calculable_diagrams.append('KinMix_MassMix_inter')
+    if bsm_model.is_TMM: 
+        calculable_diagrams.append('TMM_SQR')
+    if bsm_model.is_scalar_mixed: 
+        calculable_diagrams.append('Scalar_SQR')
+        calculable_diagrams.append('Scalar_NC_inter')
+        if bsm_model.is_kinetically_mixed: 
+            calculable_diagrams.append('Scalar_KinMix_inter')
+        if bsm_model.is_mass_mixed: 
+            calculable_diagrams.append('Scalar_MassMix_inter')
+    return calculable_diagrams

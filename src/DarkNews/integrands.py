@@ -28,6 +28,8 @@ def Sqrt(x):
 	return np.sqrt(x)
 
 
+
+
 class UpscatteringXsec(vg.BatchIntegrand):
 
 	def __init__(self, dim, Enu, MC_case, diagram='total'):
@@ -45,7 +47,7 @@ class UpscatteringXsec(vg.BatchIntegrand):
 			self.QMAX = 2 # GeV
 		elif self.MC_case.scattering_regime in ['p-el','n-el']:
 			self.QMIN = 0 # GeV
-			self.QMAX = 2 # GeV
+			self.QMAX = 5 # GeV
 		elif self.MC_case.scattering_regime in ['DIS']:
 			self.QMIN = 2 # GeV
 			self.QMAX = np.inf # GeV
@@ -61,8 +63,11 @@ class UpscatteringXsec(vg.BatchIntegrand):
 		_throw = self.__call__(np.random.rand(self.dim,20000), np.ones((self.dim,20000)))
 		for key,val in _throw.items():
 			self.norm[key] = np.mean(val)
-
-
+			# cannot normalize zero integrand
+			if self.norm[key] == 0.0:
+				logger.warning(f'Warning: mean of integrand is zero. Vegas may break.')
+				self.norm[key] = 1
+	
 	def __call__(self, x, jac):
 
 		ups_case = self.MC_case.ups_case
@@ -85,7 +90,8 @@ class UpscatteringXsec(vg.BatchIntegrand):
 		##############################################
 		# Upscattering amplitude squared (spin summed -- not averaged)
 		diff_xsec = amps.upscattering_dxsec_dQ2([s,t,u], self.MC_case.ups_case, diagrams = [self.diagram])
-		diff_xsec = np.sum([diff_xsec[diagram] for diagram in diff_xsec.keys()])
+		if type(diff_xsec) is dict:
+			diff_xsec = np.sum([diff_xsec[diagram] for diagram in diff_xsec.keys()])
 		# hypercube jacobian (vegas hypercube --> physical limits) transformation
 		hypercube_jacobian = (Q2lmax - Q2lmin)*np.exp(Q2l)
 		diff_xsec *= hypercube_jacobian
@@ -94,7 +100,6 @@ class UpscatteringXsec(vg.BatchIntegrand):
 		# return all differential quantities of interest
 		self.int_dic = OrderedDict()		
 		self.int_dic['diff_xsec'] = diff_xsec
-		
 		##############################################
 		# normalization
 		self.int_dic['diff_xsec'] /= self.norm['diff_xsec']
@@ -128,7 +133,10 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		_throw = self.__call__(np.random.rand(self.dim,10000), np.ones((self.dim,10000)))
 		for key,val in _throw.items():
 			self.norm[key] = np.mean(val)
-
+			# cannot normalize zero integrand
+			if self.norm[key] == 0:
+				self.norm[key] = 1
+				
 	def __call__(self, x, jac):
 
 		self.int_dic = OrderedDict()		

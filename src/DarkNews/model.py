@@ -251,6 +251,8 @@ class Model:
 
         if not model_file:
 
+            self.name = 'Untitled'
+
             self.Ue4		= 0.0
             self.Umu4		= 0.0
             self.Utau4		= 0.0
@@ -350,7 +352,8 @@ class Model:
         for i in range(len(self.hnl_masses)):
             
             # PDGID  =  59(particle spin code: 0-scalar 1-fermion 2-vector)(generation number)
-            hnl = pdg.new_particle(name=f'N{4+i}', pdgid=5914+i, latex_name=f'N_{{{4+i}}}', mass=self.hnl_masses[i]*1e3)
+            # GeV units in particle module!
+            hnl = pdg.new_particle(name=f'N{4+i}', pdgid=5914+i, latex_name=f'N_{{{4+i}}}', mass=self.hnl_masses[i])
             setattr(self, f'neutrino{4+i}', hnl)
             self.nu_spectrum.append(getattr(self,  f'neutrino{4+i}'))
             
