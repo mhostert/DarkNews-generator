@@ -20,7 +20,7 @@ class GenLauncher:
     # handle parameters that can assume only certain values
     _choices = {
         "HNLtype": ["dirac", "majorana"],
-        "decay_products": ["e+e-", "mu+mu-", "photon"]
+        "decay_product": ["e+e-", "mu+mu-", "photon"]
     }
     # parameters names list
     _parameters = [
@@ -31,20 +31,31 @@ class GenLauncher:
         "mu_tr_tau4", "mu_tr_tau5", "mu_tr_tau6", "mu_tr_44", "mu_tr_45", "mu_tr_46", "mu_tr_55", "mu_tr_56",  
         "s_e4", "s_e5", "s_e6", "s_mu4", "s_mu5", "s_mu6", "s_tau4", "s_tau5", "s_tau6", 
         "s_44", "s_45", "s_46", "s_55", "s_56", "s_66", "mhprime","theta",
-        "decay_products", "exp", "nopelastic", "nocoh", "noHC", "noHF", 
+        "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", 
         "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
         "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "hepevt_events", 
         "sparse", "print_to_float32", "sample_geometry", "summary_plots", "path"
     ]
 
     def __init__(self, param_file=None, **kwargs):
-        '''
-            Instantiate an object to make the runs, allowing the user to set the parameters' value.
+        """GenLauncher launches the generator with user-defined model parameters, experimental configs, and generation settings.
+            
+            It instantiates an object to that can run the generator for the user-defined settings.
             There are different ways to accomplish this:
                 - file: read the file in input, parsing it looking for the different variables' values;
                 - other arguments: variables' values.
             If a variable is not provided, it sets the default.
             at the end it looks inside the kwargs (so kwargs overwrite file definitions).
+
+        Args:
+            param_file (str, optional): path to model file. Defaults to None, which uses the parameters set at run-time.
+            **kwargs: list of user-defined parameters
+
+        Raises:
+            ValueError: when model, exp, or generation parameters are not well defined.
+        """
+        '''
+            
         '''
 
         # set defaults
@@ -103,7 +114,7 @@ class GenLauncher:
         self.s_55 = 0.0
         self.s_56 = 0.0
         self.s_66 = 0.0
-        self.decay_products = "e+e-"
+        self.decay_product = "e+e-"
         self.exp = "miniboone_fhc"
         self.nopelastic = False
         self.nocoh = False
@@ -257,7 +268,7 @@ class GenLauncher:
                     'FLAVORS': [dn.pdg.numu],
                     'UPSCATTERED_NUS': self.upscattered_nus,
                     'OUTGOING_NUS': self.outgoing_nus,
-                    'DECAY_PRODUCTS': [self.decay_products],
+                    'DECAY_PRODUCTS': [self.decay_product],
                     'SCATTERING_REGIMES': ['coherent', 'p-el'],#, 'n-el'],
                 }
         # override default with kwargs
@@ -333,10 +344,25 @@ class GenLauncher:
         return self.gen_cases
 
 
-    def run(self, loglevel=None, verbose=None, logfile=None, path="."):
+    def run(self, loglevel=None, verbose=None, logfile=None):
+        """
+        Run GenLauncher generation of events
+
+        Args:            
+            loglevel (int, optional): what logging level to use. Can be logging.(DEBUG, INFO, WARNING, or ERROR). Defaults to logging.INFO.
+            
+            prettyprinter (logging.Logger, optional): if passed, configures this logger for the prettyprint. Defaults to None.
+            
+            logfile (str, optional): path to file where to log the output. Defaults to None.
+            
+            verbose (bool, optional): If true, keep date and time in the logger format. Defaults to False.
         
+        Returns:
+            pd.DataFrame: the final pandas dataframe with all the events
+        """
+
         ####################################################
-        args = {"loglevel": loglevel, "verbose": verbose, "logfile": logfile, "path": path}
+        args = {"loglevel": loglevel, "verbose": verbose, "logfile": logfile}
         for attr in args.keys():
             if args[attr] is not None:
                 setattr(self, attr, args[attr])
@@ -369,26 +395,50 @@ class GenLauncher:
 
         ############################################################################
         # Print events to file
+        self.dn_printer = dn.printer.Printer(self.df, sparse=self.sparse, print_to_float32=self.print_to_float32)
         if self.pandas:
-            dn.printer.print_events_to_pandas(self.data_path, self.df, sparse=self.sparse, print_to_float32=self.print_to_float32)
+            self.dn_printer.print_events_to_pandas()
         if self.parquet:
-            dn.printer.print_events_to_parquet(self.data_path, self.df, sparse=self.sparse, print_to_float32=self.print_to_float32)
+            self.dn_printer.print_events_to_parquet()
         if self.numpy:
-            dn.printer.print_events_to_ndarray(self.data_path, self.df, sparse=self.sparse, print_to_float32=self.print_to_float32)
+            self.dn_printer.print_events_to_ndarray()
         if self.hepevt:
-            dn.printer.print_unweighted_events_to_HEPEVT(self.df, unweigh= self.hepevt_unweigh, max_events=self.hepevt_events, sparse=self.sparse)
+            self.dn_printer.print_events_to_HEPEVT(unweigh= self.hepevt_unweigh, 
+                                                    max_events=self.hepevt_events,
+                                                    decay_product=self.decay_product)
         
         return self.df
 
+
+
+
     def configure_logger(self, logger, loglevel=logging.INFO, prettyprinter = None, logfile = None, verbose=False):
-        ''' 
+        """
         Configure the DarkNews logger 
             
-            logger --> main logger of DarkNews. It handles all debug, info, warning, and error messages
+            logger --> 
 
-            prettyprint --> secondary logger for pretty-print messages. Cannot override the main logger level
+            prettyprint --> secondary logger for pretty-print messages. 
 
-        '''
+        Args:
+            logger (logging.Logger): main DarkNews logger to be configured. 
+                                    It handles all debug, info, warning, and error messages
+            
+            loglevel (int, optional): what logging level to use. 
+                                    Can be logging.(DEBUG, INFO, WARNING, or ERROR). Defaults to logging.INFO.
+            
+            prettyprinter (logging.Logger, optional): if passed, configures this logger for the prettyprint. 
+                                                    Cannot override the main logger levelCannot override the main logger level. 
+                                                    Defaults to None.
+            
+            logfile (str, optional): path to file where to log the output. Defaults to None.
+            
+            verbose (bool, optional): If true, keep date and time in the logger format. Defaults to False.
+
+        Raises:
+            ValueError: _description_
+        """
+
         loglevel = loglevel.upper()
         _numeric_level = getattr(logging, loglevel, None)
         if not isinstance(_numeric_level, int):

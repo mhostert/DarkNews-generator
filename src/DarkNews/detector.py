@@ -14,8 +14,7 @@ from .AssignmentParser import AssignmentParser
 
 
 class Detector():
-    """ 
-
+    """
     Detector is a collection of necessary variables for cross-section and event rate
     calculations, e.g., energy range, target type, weight, and POTs for exposure.
     
@@ -27,6 +26,11 @@ class Detector():
                             in the path `DarkNews/include/detector/exp_module.txt`.
                             the file should contain parameters specific for
                             that experiment if it is user defined.
+
+    Raises:
+        FileNotFoundError: if no detector file was found
+        KeyError: if a required field is not specified in the detector file
+        
     """
     PATH_CONFIG_FILES = os.path.join(local_dir, "include/detectors")
     KEYWORDS = {
@@ -39,7 +43,8 @@ class Detector():
         "minos_le_fhc": os.path.join(PATH_CONFIG_FILES, "minos_le_fhc.txt"),
         "minos_me_fhc": os.path.join(PATH_CONFIG_FILES, "minos_me_fhc.txt"),
         "nd280_fhc": os.path.join(PATH_CONFIG_FILES, "nd280_fhc.txt"),
-        "nova_le_fhc": os.path.join(PATH_CONFIG_FILES, "nova_le_fhc.txt")
+        "nova_le_fhc": os.path.join(PATH_CONFIG_FILES, "nova_le_fhc.txt"),
+        "fasernu": os.path.join(PATH_CONFIG_FILES, "fasernu.txt")
     }
 
     def __init__(self, experiment):

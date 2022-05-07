@@ -33,6 +33,18 @@ def Sqrt(x):
 class UpscatteringXsec(vg.BatchIntegrand):
 
 	def __init__(self, dim, Enu, MC_case, diagram='total'):
+		"""
+		Vegas integrand for diff cross section for upscattering
+
+		Args:
+			dim (int): integration dimensions
+			Enu (float): neutrino energy to be considered
+			MC_case (DarkNews.MC.MC_events): the main Monte-Carlo class of DarkNews
+			diagram (str, optional): _description_. Defaults to 'total'.
+
+		Raises:
+			ValueError: if cannot find diagrams to be computed
+		"""
 		self.dim = dim
 		self.Enu = Enu
 		self.MC_case = MC_case
@@ -109,6 +121,19 @@ class UpscatteringXsec(vg.BatchIntegrand):
 class UpscatteringHNLDecay(vg.BatchIntegrand):
 
 	def __init__(self, dim, Emin, Emax, MC_case):
+		"""
+		Vegas integrand for the process of upscattering with subsequent decays. 
+		Scattering diff xsec and diff decay rates are integrated simultaneously.
+
+		Args:
+			dim (int): _description_
+			Emin (float): min neutrino energy to integrate flux
+			Emax (float): max neutrino energy to integrate flux
+			MC_case (DarkNews.MC.MC_events): the main Monte-Carlo class of DarkNews
+
+		Raises:
+			ValueError: if cannot find what decay process to consider
+		"""
 		self.dim = dim
 		self.Emax = Emax
 		self.Emin = Emin
@@ -296,8 +321,22 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		return self.int_dic
 
 
-def get_momenta_from_vegas_samples(vsamples=None, MC_case=None, w=None, I=None):
+def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
+	"""
+	Construct the four momenta of all particles in the upscattering+decay process from the
+	vegas weights.
 
+	Args:
+		vsamples (np.ndarray, optional): integration samples obtained from vegas
+				as hypercube coordinates. Always in the interval [0,1].
+
+		MC_case (DarkNews.MC.MC_events): the main Monte-Carlo class of DarkNews
+
+	Returns:
+		dict: each key corresponds to a set of four momenta for a given particle involved,
+			so the values are 2D np.ndarrays with each row a different event and each column a different
+			four momentum component. Contains also the weights.
+	"""
 
 	four_momenta = {}
 

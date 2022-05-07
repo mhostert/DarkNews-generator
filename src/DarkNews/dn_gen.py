@@ -74,7 +74,7 @@ def dn_gen():
     parser.add_argument("--mu_tr_66", type=float, help="TMM mu_tr_tau6")
 
     # visible final states in HNL decay
-    parser.add_argument("--decay_products", help="decay process of interest", choices=DEFAULTS._choices['decay_products'])
+    parser.add_argument("--decay_product", help="decay process of interest", choices=DEFAULTS._choices['decay_product'])
 
     # experiments    
     parser.add_argument("--exp", type=str.lower, help="experiment file path or keyword")

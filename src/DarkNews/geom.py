@@ -8,10 +8,33 @@ pyximport.install(
     )
 from . import Cfourvec as Cfv
 
-class Chisel(object):
-	
+class Chisel():
+
 	def __init__(self, nsamples, box = np.array(3*[[-0.5,0.5]]), name='my_mold'):
+		"""
+		Sculptor of detector geometries. We start with a cuboid full of uniformly generated points and 
+		start sculpting the desired detector geometry by iteratively cutting events in given 3D objects.
+		One can then find the union or intersection of these objects. The available objects are:
+			* rectangle
+			* sphere
+			* cylinder
+			* spherical_cap
 		
+		More complex and final pre-defined objects are also available:
+			* the microboone cryostat as a junction of a tubbe with two spherical caps.
+
+		A desired set of points randomly distributed across a final 3D object can then found by iteratively
+		creating more sculptors with the same Chisel, until the desired number of points is reached.
+
+		Args:
+			nsamples (int): number of locations to generate
+			box (numpy.ndarray, optional): size of the initial cuboid. Defaults to a cube: np.array(3*[[-0.5,0.5]]).
+			name (str, optional): _description_. Defaults to 'my_mold'.
+
+		Raises:
+			ValueError: raised when the chisel suspects that the detector geometry is not specified correctly.
+		"""
+
 		self.name = name
 		self.nsamples = nsamples
 
@@ -119,6 +142,7 @@ class Chisel(object):
 		return mask_full
 	
 
+# distribute events in df accross the pre-defined MicroBooNE (cryostat) volume
 def microboone_geometry(df):
 
 	nsamples = len(df.index)
@@ -151,8 +175,9 @@ def microboone_geometry(df):
 	df['pos_scatt', '3'] = events[2,:nsamples]
 
 
+# distribute events in df accross the pre-defined spherical MiniBooNE volume 
 def miniboone_geometry(df):
-	
+
 	nsamples = len(df.index)
 	
 	detector_box = np.array([[-600,600], [-600,600], [-600,600]])
@@ -177,7 +202,7 @@ def miniboone_geometry(df):
 	df['pos_scatt', '2'] = events[1,:nsamples]
 	df['pos_scatt', '3'] = events[2,:nsamples]
 
-
+# assing all events in df a scattering position at 4-position (0,0,0,0)
 def point_geometry(df):
 	nsamples = len(df.index)
 	df['pos_scatt', '0'] = np.zeros((nsamples,))
@@ -187,21 +212,32 @@ def point_geometry(df):
 
 
 def place_decay(df, df_column, l_decay_proper_cm, label='decay_pos'):
+	""" find decay positions given scattering positions and lifetime (sample from exponential) and
+		save that in the dataframe (in-place)
 
+	Args:
+		df (pd.DataFrame): _description_
+		df_column (str): column of the dataframe to use -- this determines which particle we are using 
+		l_decay_proper_cm (float): the proper decay length of the particle (obtained from vegas or otherwise)
+		label (str, optional): label to be used for the dataframe new columns. Defaults to 'decay_pos'.
+	"""
 	# four momentum as numpy array
 	p = df[df_column].to_numpy()
 
 	# parent mass
 	M = np.sqrt(Cfv.dot4(p,p))
-
-	gammabeta = np.sqrt((p[:,0]/M)**2 - 1)
+	# momentum
+	pvec = np.sqrt(p[:,0]**2 - M**2)
+	beta = pvec/p[:,0]
+	gamma = 1/np.sqrt(1 - beta**2)
+	gammabeta = gamma*beta
 
 	######################
-	# Displacement from decay propability
+	# sample displacement from decay propability
 	d_decay = np.random.exponential(scale = l_decay_proper_cm*gammabeta) # centimeters
 
 	# direction of N
-	df[label, '0'] = df['pos_scatt', '0'] + d_decay/(gammabeta*const.c_LIGHT)
+	df[label, '0'] = df['pos_scatt', '0'] + d_decay/(beta*const.c_LIGHT)
 	df[label, '1'] = df['pos_scatt', '1'] + Cfv.get_3direction(p)[:,0]*d_decay
 	df[label, '2'] = df['pos_scatt', '2'] + Cfv.get_3direction(p)[:,1]*d_decay
 	df[label, '3'] = df['pos_scatt', '3'] + Cfv.get_3direction(p)[:,2]*d_decay

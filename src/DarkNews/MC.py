@@ -351,7 +351,7 @@ class MC_events:
 class XsecCalc:
 
     def __init__(self, nuclear_target, bsm_model, **kwargs):
-        
+
         # default parameters
         self.upscattered='4'
         self.nu_projectile=pdg.numu
@@ -449,7 +449,10 @@ class XsecCalc:
 
 # merge all generation cases into one dictionary
 def get_merged_MC_output(df1,df2):
-    
+    """
+        take two pandas dataframes with events and combine them.
+        Resetting index to go from (0,n_1+n_2) where n_i is the number of events in dfi
+    """
     logger.debug(f"Appending {df2.underlying_process[0]}")
     df = pd.concat([df1, df2], axis = 0).reset_index(drop=True)    
     
@@ -457,14 +460,23 @@ def get_merged_MC_output(df1,df2):
 
 
 def get_samples(integ, batch_integrand, return_jac=False):
-    '''    
-        Accesses integration samples for a single iteration as in vegas/_vegas.pyx
-        
-        Args:  
-            integ:              Vegas integrator object initialized by the user.
-            batch_integrand:    Vegas batch_integrand object created by the user. These are defined in integrands.py
+    """_summary_
 
-    '''
+    Args:
+        integ (vegas.Integrator): vegas integrator object initialized by the user.
+        
+        batch_integrand (vegas.BatchIntegrand): vegas batch_integrand object created by the user. 
+        These are defined in integrands.py
+        
+        return_jac (bool, optional): if True, returns the jacobian of the integrand as well. Defaults to False.
+
+    Raises:
+        ValueError: if the integrand evaluates to nan
+
+    Returns:
+        tuple of np.ndarrays:  
+    """
+    
     unit_samples = batch_integrand.dim*[[]]
     weights = defaultdict(partial(np.ndarray,0))
 
@@ -492,16 +504,43 @@ def get_samples(integ, batch_integrand, return_jac=False):
     else:
         return np.array(unit_samples), weights
 
-def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=1000, **kwargs):
-        
-        # warm up the MC, adapting to the integrand
-        integ(batch_f, nitn=NINT_warmup, neval=NEVAL_warmup, uses_jac=True, **kwargs)
-        logger.debug(f"VEGAS warm-up completed.")
 
-        # sample again, now saving result and turning off further adaption
-        return integ(batch_f,  nitn = NINT, neval = NEVAL, uses_jac=True, **kwargs)#, adapt=False)
+def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=1000, **kwargs):
+    """ 
+    Function that calls vegas evaluations. This function defines the vegas parameters used by 
+    DarkNews throughout.
+
+    Args:
+        integ (vegas.Integrator): vegas integrator object initialized by the user.
+
+        batch_integrand (vegas.BatchIntegrand): vegas batch_integrand object created by the user. 
+
+        NINT (int, optional): number of iterations for vegas. Defaults to 10.
+        NEVAL (int, optional): number of evaluations in an iteration for vegas to 1000.
+        NINT_warmup (int, optional): same as above, but for warmup run. Defaults to 10.
+        NEVAL_warmup (int, optional): same as above, but for warmup run. Defaults to 1000.
+
+    Returns:
+        integ (vegas.Integrator): with the evaluated integrals.
+    """
+
+    # warm up the MC, adapting to the integrand
+    integ(batch_f, nitn=NINT_warmup, neval=NEVAL_warmup, uses_jac=True, **kwargs)
+    logger.debug(f"VEGAS warm-up completed.")
+
+    # sample again, now saving result and turning off further adaption
+    return integ(batch_f,  nitn = NINT, neval = NEVAL, uses_jac=True, **kwargs)#, adapt=False)
+
 
 def find_calculable_diagrams(bsm_model):
+    """ 
+    Args:
+        bsm_model (DarkNews.model.Model): main BSM model class of DarkNews
+
+    Returns:
+        list: with all non-zero upscattering diagrams to be computed in this model.
+    """
+
     calculable_diagrams = []
     calculable_diagrams.append('NC_SQR')
     if bsm_model.is_kinetically_mixed: 

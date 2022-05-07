@@ -11,14 +11,30 @@ from .const import *
 
 
 class NuclearTarget:
-    """ for scattering on a nuclear target 
-    Args:
-        
-        name: name of the target. Can be either "electron" or the name of the element (e.g. C12, Pb208).
-    
-    """
 
     def __init__(self, name):
+        """
+        Main DarkNews class for the nucleus to be used in a neutrino scattering event.
+
+        It contains target properties like number of protons, neutrons, informations on the mass, as well 
+        as all the Nuclear Data Table information on:
+            nuclear_Eb, 
+            atomic_Eb, 
+            atomic_mass, 
+            excess_mass, 
+            nuclear_mass, 
+            beta_decay_energy.
+
+        It also provides the nuclear form factors as functions to
+        
+        Its daughter class, BoundNucleon(), handles the nucleons inside the nucleus.
+            
+        Args:
+            name (str): name of the target. Can be either "electron" or the name of the element
+            following the Nuclear Data Table format (e.g. C12, Pb208).
+
+        """
+
         self.name = name
         
         #####################################        
@@ -96,11 +112,7 @@ class NuclearTarget:
             name: 'proton' or 'neutron'
         """
         def __init__(self, nucleus, name):
-           
-            # if not nucleus.is_nucleus:
-            #     print(f"Error! Sattering target {nucleus.name} is not a nucleus with bound {name}.")
-            #     raise ValueError 
-
+        
             self.nucleus = nucleus
             self.A = int(name=='proton' or name == 'neutron')
             self.Z = int(name=='proton')
@@ -148,7 +160,10 @@ def assign_form_factors(target):
             
             key = 'name+A', e.g. key = 'Pb208' or 'C12'.
         
-        All units in GeV, except otherwise specified
+        All units in GeV, except otherwise specified.
+
+        Args:
+            target (DarkNews.nuclear_tools.Target): instance of main DarkNews target object.
     '''
 
     # Nucleus

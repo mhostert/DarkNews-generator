@@ -7,33 +7,41 @@ from DarkNews import logger
 
 
 def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
-    '''
-        Return the differential cross section for upscattering in attobarns
+    """ 
+    Computes the differential cross section for upscattering in attobarns
 
-            process: UpscatteringProcess object with all model parameters and scope of upscattering process
+    Args:
+        x_phase_space (list): a list of arrays with [s,t,u] variables
+        process (DarkNews.model.UpscatteringProcess): object reprensenting a given upscattering process.
+        diagrams (list, optional): specify what diagrams to include. 
+                                    all -- returns a dictionary with all the separate contributions to the xsecs
+                                    separating diagrams with Z', Z, S, etc.
 
-            diagrams:   all -- returns a dictionary with all the separate contributions to the xsecs
-                        separating diagrams with Z', Z, S, etc.
+                                    NC_SQR
+                                    
+                                    KinMix_SQR
+                                    KinMix_NC_inter
+                                    
+                                    MassMix_SQR
+                                    MassMix_NC_inter
+                                    KinMix_MassMix_inter
+                                    
+                                    TMM_SQR
+                                    
+                                    Scalar_SQR
+                                    Scalar_NC_inter
+                                    Scalar_KinMix_inter
+                                    Scalar_MassMix_inter
+                                
+                                    total
 
-                        NC_SQR
-                        
-                        KinMix_SQR
-                        KinMix_NC_inter
-                        
-                        MassMix_SQR
-                        MassMix_NC_inter
-                        KinMix_MassMix_inter
-                        
-                        TMM_SQR
-                        
-                        Scalar_SQR
-                        Scalar_NC_inter
-                        Scalar_KinMix_inter
-                        Scalar_MassMix_inter
-                    
-                        total
+    Raises:
+        ValueError: if HNL type not recognized
 
-    '''
+    Returns:
+        numpy.ndarray or dict: either an array with the differential xsec in attobarns at each phase-space point 
+                or a dictioary of such values for each diagram.
+    """
 
     # kinematics
     s,t,u = x_phase_space
