@@ -110,13 +110,14 @@ class Printer:
 			self.df_gen.loc[self.df_gen['helicity']=='conserving', 'helicity'] = +1
 			self.df_gen.loc[self.df_gen['helicity']=='flipping', 'helicity'] = -1
 			# remove non-numeric entries
-			df = self.df_gen.drop(['underlying_process','target','scattering_regime'],axis=1, level=0) 
-			cols = [f'{v[0]}_{v[1]}' if v[1] else f'{v[0]}' for v in df.columns.values]
-			self.array_gen = df.to_numpy(dtype=np.float64)
+			self.df_for_numpy = self.df_gen.drop(['underlying_process','target','scattering_regime'],axis=1, level=0) 
+			cols = [f'{v[0]}_{v[1]}' if v[1] else f'{v[0]}' for v in self.df_for_numpy.columns.values]
+			self.array_gen = self.df_for_numpy.to_numpy(dtype=np.float64)
 
-		np.savez(f'{self.out_file_name}ndarray.npz', self.array_gen, **kwargs)
+		np.save(f'{self.out_file_name}ndarray.npy', self.array_gen, **kwargs)
 		prettyprinter.info(f"Events in numpy array saved to file successfully:\n{self.out_file_name}")
 		return self.array_gen
+
 
 	def print_events_to_parquet(self, **kwargs):
 		""" 

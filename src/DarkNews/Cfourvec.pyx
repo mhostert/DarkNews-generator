@@ -430,10 +430,32 @@ def Tinv(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] cthet
 
 
 #******************************
-def hepevt_printer(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] ctheta, ndarray[double] phi):
+def hepevt_printer(ndarray[double, ndim=3] np_events):
 	cdef int i, m;
-	m = v4.shape[0]
-	cdef ndarray[double, ndim=2] res = np.empty((m,4))
+	m = np_events.shape[0]
+	// cdef ndarray[double, ndim=2] res = np.empty((m,4))
+	
+	# pre-computing some variables
+	mass_projectile = Cfv.mass(np_events[:,0:4])
+	mass_target = Cfv.mass(df_gen['P_target'].to_numpy())
+	mass_decay_N_parent = Cfv.mass(df_gen['P_decay_N_parent'].to_numpy())
+	mass_recoil = Cfv.mass(df_gen['P_recoil'].to_numpy())
+	mass_decay_N_daughter = Cfv.mass(df_gen['P_decay_N_daughter'].to_numpy())
+
+	pvec_projectile = df_gen['P_projectile'][['1','2','3']].to_numpy()
+	pvec_target = df_gen['P_target'][['1','2','3']].to_numpy()
+	pvec_decay_N_parent = df_gen['P_decay_N_parent'][['1','2','3']].to_numpy()
+	pvec_recoil = df_gen['P_recoil'][['1','2','3']].to_numpy()
+	pvec_decay_N_daughter = df_gen['P_decay_N_daughter'][['1','2','3']].to_numpy()
+	pvec_decay_ell_minus = df_gen['P_decay_ell_minus'][['1','2','3']].to_numpy()
+	pvec_decay_ell_plus = df_gen['P_decay_ell_plus'][['1','2','3']].to_numpy()
+
+
+	pvec_pos_decay = df_gen['pos_decay'][['1','2','3']].to_numpy()
+	pvec_pos_scatt = df_gen['pos_scatt'][['1','2','3']].to_numpy()
+
+	
+	
 	with nogil:
 		for i in range(m):
 			res[i,0] = v4[i,0]
