@@ -52,11 +52,11 @@ class GenLauncher:
             **kwargs: list of user-defined parameters
 
         Raises:
+            AttributeError: when unused parameters are specified (raise only a
+                warning if unused parameters are specified within the model file).
+            FileNotFoundError: when param_file is specified, but the path is invalid.
             ValueError: when model, exp, or generation parameters are not well defined.
         """
-        '''
-            
-        '''
 
         # set defaults
         self.gD = 1.0
@@ -144,7 +144,7 @@ class GenLauncher:
             self._load_file(param_file)
 
         # load constructor parameters
-        self._load_parameters(**kwargs)
+        self._load_parameters(raise_errors=True, **kwargs)
 
         # build args_dict to pass to various methods
         args_dict = {}
@@ -225,9 +225,9 @@ class GenLauncher:
             print(f"File '{file}' not found.")
             raise
         # store variables
-        self._load_parameters(**parser.parameters)
+        self._load_parameters(raise_errors=False, **parser.parameters)
 
-    def _load_parameters(self, **kwargs):
+    def _load_parameters(self, raise_errors=True, **kwargs):
         # start from the list of parameters available
         for parameter in self._parameters:
             # take the value from the kwargs, if not provided, go to next parameter
@@ -242,7 +242,10 @@ class GenLauncher:
             setattr(self, parameter, value)
         # at the end, if kwargs is not empty, that would mean some parameters were unused, i.e. they are spelled wrong or do not exist: raise AttributeError
         if len(kwargs) != 0:
-            raise AttributeError(f"Parameters " + ", ".join(kwargs.keys()) + " were unused. Either not supported or spelled wrong.")
+            if raise_errors:
+                raise AttributeError("Parameters " + ", ".join(kwargs.keys()) + " were unused. Either not supported or spelled wrong.")
+            else:
+                logger.warning("Parameters " + ", ".join(kwargs.keys()) + " will not be used.")
 
     def _create_all_MC_cases(self, **kwargs):
         """ Create MC_events objects and run the MC computations
