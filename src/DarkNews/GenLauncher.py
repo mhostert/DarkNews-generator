@@ -117,6 +117,7 @@ class GenLauncher:
         self.decay_product = "e+e-"
         self.exp = "miniboone_fhc"
         self.nopelastic = False
+        self.include_nelastic = False
         self.nocoh = False
         self.noHC = False
         self.noHF = False
@@ -257,12 +258,14 @@ class GenLauncher:
                 INCLUDE_HF (bool):          flag to include helicity flipping case
                 NO_COH (bool):              flag to skip coherent case
                 NO_PELASTIC (bool):         flag to skip proton elastic case
+                INCLUDE_NELASTIC (bool):         flag to skip neutron elastic case
                 DECAY_PRODUCTS (list):      decay processes to include
         """
         
         # Default values
         scope = {  'NO_COH': self.nocoh,
                     'NO_PELASTIC': self.nopelastic,
+                    'INCLUDE_NELASTIC': self.include_nelastic,
                     'INCLUDE_HC': not self.noHC,
                     'INCLUDE_HF': not self.noHF,
                     'FLAVORS': [dn.pdg.numu],
@@ -309,13 +312,15 @@ class GenLauncher:
                                 # skip disallowed regimes
                                 if (
                                         ( (scattering_regime in ['n-el']) and (nuclear_target.N < 1)) # no neutrons
-                                        |
+                                        or
                                         ( (scattering_regime in ['coherent']) and (not nuclear_target.is_nucleus)) # coherent = p-el for hydrogen
                                     ):
                                     continue 
                                 elif ( (scattering_regime in ['coherent'] and scope['NO_COH'])
-                                    | 
+                                    or 
                                         (scattering_regime in ['p-el'] and scope['NO_PELASTIC'])
+                                    or
+                                        (scattering_regime in ['n-el']) and (not scope['INCLUDE_NELASTIC']) # do not include n-el
                                     ):
                                     continue
                                 else:

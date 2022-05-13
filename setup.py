@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # boostrap install numpy and Cython
 # from setuptools import dist
 # dist.Distribution().fetch_build_eggs(['Cython>=0.15.1', 'numpy>=1.10', 'wheel'])
@@ -15,3 +17,5 @@ setup_args = dict(
 
 if __name__ == "__main__":
     setup(**setup_args)
+
+

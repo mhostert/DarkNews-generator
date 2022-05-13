@@ -1,0 +1,18 @@
+# fluxes from ?????????
+name = "MINERVA_RHC_ME"
+fluxfile = "../fluxes/NUMI_RHC_ME_unofficial.dat"
+flux_norm = 1
+erange = [
+    0.1,
+    19
+]
+nuclear_targets = [
+    'C12',
+    'H1'
+] 
+fiducial_mass = 5.99 # tons
+fiducial_mass_per_target = [
+    fiducial_mass*6/7,
+    fiducial_mass*1/7
+]
+POTs = 1.22e21

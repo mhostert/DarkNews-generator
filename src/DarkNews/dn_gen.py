@@ -82,6 +82,7 @@ def dn_gen():
     # scattering types
     parser.add_argument("--nopelastic", help="do not generate proton elastic events", action="store_true")
     parser.add_argument("--nocoh", help="do not generate coherent events", action="store_true")
+    parser.add_argument("--include_nelastic", help="generate neutron elastic events", action="store_true")
 
     parser.add_argument("--noHC", help="do not include helicity conserving events", action="store_true")
     parser.add_argument("--noHF", help="do not include helicity flipping events", action="store_true")
@@ -113,10 +114,9 @@ def dn_gen():
 
     gen_object = GenLauncher(**kwargs)
     gen_object.run(
-        loglevel=kwargs.get("loglevel", DEFAULTS.loglevel),
-        verbose=kwargs.get("verbose", DEFAULTS.verbose),
-        logfile=kwargs.get("logfile", DEFAULTS.logfile),
-        path=kwargs.get("path", DEFAULTS.path)
+        loglevel=kwargs.get("loglevel", gen_object.loglevel),
+        verbose=kwargs.get("verbose", gen_object.verbose),
+        logfile=kwargs.get("logfile", gen_object.logfile),
     )
 
 if __name__ == "__main__":
