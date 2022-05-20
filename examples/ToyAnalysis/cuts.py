@@ -109,10 +109,10 @@ def MB_smear(samples, m):
 		print("Smearing...")
 	size_samples = np.shape(samples)[0]
 
-	E = samples['t']
-	px = samples['x']
-	py = samples['y']
-	pz = samples['z']
+	E = samples['0']
+	px = samples['1']
+	py = samples['2']
+	pz = samples['3']
 
 	P = np.sqrt(df_dot3(samples, samples))
 
@@ -140,7 +140,7 @@ def MB_smear(samples, m):
 						P[i]*np.sin(theta[i])*np.sin(phi[i]),
 						P[i]*np.cos(theta[i])] for i in range(size_samples)])
 
-	aux_df = pd.DataFrame(np.stack([smeared[:,0],smeared[:,1],smeared[:,2],smeared[:,3]], axis=-1), columns=['t','x','y','z'])
+	aux_df = pd.DataFrame(np.stack([smeared[:,0],smeared[:,1],smeared[:,2],smeared[:,3]], axis=-1), columns=['0','1','2','3'])
 
 	return aux_df
 
@@ -155,10 +155,10 @@ def MicroBooNE_smear(samples, m):
 		print("Smearing...")
 	size_samples = np.shape(samples)[0]
 
-	E = samples['t']
-	px = samples['x']
-	py = samples['y']
-	pz = samples['z']
+	E = samples['0']
+	px = samples['1']
+	py = samples['2']
+	pz = samples['3']
 
 	P = np.sqrt(df_dot3(samples, samples))
 
@@ -194,7 +194,7 @@ def MicroBooNE_smear(samples, m):
 						P[i]*np.sin(theta[i])*np.sin(phi[i]),
 						P[i]*np.cos(theta[i])] for i in range(size_samples)])
 
-	aux_df = pd.DataFrame(np.stack([smeared[:,0],smeared[:,1],smeared[:,2],smeared[:,3]], axis=-1), columns=['t','x','y','z'])
+	aux_df = pd.DataFrame(np.stack([smeared[:,0],smeared[:,1],smeared[:,2],smeared[:,3]], axis=-1), columns=['0','1','2','3'])
 
 	return aux_df
 

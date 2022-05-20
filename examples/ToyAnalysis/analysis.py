@@ -36,7 +36,7 @@ def compute_MB_spectrum(df, THRESHOLD=0.030, ANGLE_MAX=13, EVENT_TYPE='asymmetri
 	plp  = df['P_decay_ell_plus']
 	pHad = df['P_recoil']
 
-	w = df['w_rate'].to_numpy()
+	w = df['w_event_rate'].to_numpy()
 
 	sample_size = np.shape(plp)[0]
 
@@ -49,15 +49,15 @@ def compute_MB_spectrum(df, THRESHOLD=0.030, ANGLE_MAX=13, EVENT_TYPE='asymmetri
 	pZ = plp+plm
 
 	# compute some funky true kinematical variables
-	costhetaN = pN['z']/np.sqrt( df_dot3(pN,pN) )
-	costhetanu = pnu['z']/np.sqrt( df_dot3(pnu,pnu) )
-	costhetaHad = pHad['z']/np.sqrt( df_dot3(pHad,pHad) )
+	costhetaN = pN['3']/np.sqrt( df_dot3(pN,pN) )
+	costhetanu = pnu['3']/np.sqrt( df_dot3(pnu,pnu) )
+	costhetaHad = pHad['3']/np.sqrt( df_dot3(pHad,pHad) )
 	
-	EN   = pN['t']
-	EZ = pZ['t']
-	Elp  = plp['t']
-	Elm  = plm['t']
-	EHad = pHad['t']
+	EN   = pN['0']
+	EZ = pZ['0']
+	Elp  = plp['0']
+	Elm  = plm['0']
+	EHad = pHad['0']
 
 	Mhad = np.sqrt( df_dot4(pHad, pHad) )
 	Mn = np.sqrt( df_dot4(pN,pN))
@@ -66,9 +66,9 @@ def compute_MB_spectrum(df, THRESHOLD=0.030, ANGLE_MAX=13, EVENT_TYPE='asymmetri
 	# print(plm)
 	# compute some reco kinematical variables from smeared electrons
 	invmass = np.sqrt( df_dot4(pZ,pZ) )
-	costheta_sum = pZ['z']/np.sqrt( df_dot3(pZ,pZ) )
-	costhetalp = plp['z']/np.sqrt( df_dot3(plp,plp) )
-	costhetalm = plm['z']/np.sqrt( df_dot3(plm,plm) )
+	costheta_sum = pZ['3']/np.sqrt( df_dot3(pZ,pZ) )
+	costhetalp = plp['3']/np.sqrt( df_dot3(plp,plp) )
+	costhetalm = plm['3']/np.sqrt( df_dot3(plm,plm) )
 	Delta_costheta = df_dot3(plm,plp)/np.sqrt(df_dot3(plm,plm))/np.sqrt(df_dot3(plp,plp))
 
 	############################################################################
@@ -176,7 +176,7 @@ def compute_muB_spectrum(df, THRESHOLD=0.01, ANGLE_MAX=5, event_type='both', muB
 	plm  = df['P_decay_ell_minus']
 	plp  = df['P_decay_ell_plus']
 
-	w = df['w_rate'].to_numpy()
+	w = df['w_event_rate'].to_numpy()
 
 	sample_size = np.shape(plp)[0]
 
@@ -245,23 +245,23 @@ def signal_events(pep, pem, w, THRESHOLD=0.03, ANGLE_MAX=13.0, EVENT_TYPE='both'
 	size_samples = np.shape(pep)[0]
 
 	# electron kinematics
-	Eep = pep['t']
+	Eep = pep['0']
 
-	Eem = pem['t']
+	Eem = pem['0']
 
 	# angle of separation between ee
 	cosdelta_ee = (df_dot3(pep,pem)/np.sqrt( df_dot3(pem,pem))/np.sqrt( df_dot3(pep,pep)))
 	theta_ee = np.arccos(cosdelta_ee)*180.0/np.pi
 
 	# two individual angles
-	costheta_ep = (pep['z']/np.sqrt( df_dot3(pep,pep))).to_numpy()
+	costheta_ep = (pep['3']/np.sqrt( df_dot3(pep,pep))).to_numpy()
 	theta_ep = np.arccos(costheta_ep)*180.0/np.pi
 
-	costheta_em = (pem['z']/np.sqrt( df_dot3(pem,pem))).to_numpy()
+	costheta_em = (pem['3']/np.sqrt( df_dot3(pem,pem))).to_numpy()
 	theta_em = np.arccos(costheta_em)*180.0/np.pi
 
 	# this is the angle of the combination of ee with the neutrino beam
-	costheta_comb = ((pem['z']+pep['z'])/np.sqrt( df_dot3(pem+pep,pem+pep))).to_numpy()
+	costheta_comb = ((pem['3']+pep['3'])/np.sqrt( df_dot3(pem+pep,pem+pep))).to_numpy()
 	theta_comb = np.arccos(costheta_comb)*180.0/np.pi
 
 

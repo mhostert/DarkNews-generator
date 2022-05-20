@@ -38,6 +38,5 @@ def test_MB_rates_of_BPs(light_DP_gen):
     
     df = light_DP_gen
 
-    assert (df_std.to_numpy()[nda!=0]/nda[nda!=0]!=1).sum() == 0 
-    assert (df_pq.to_numpy()[nda!=0]/nda[nda!=0]!=1).sum() == 0
+    assert np.abs(np.sum(df.w_event_rate) - 
 
