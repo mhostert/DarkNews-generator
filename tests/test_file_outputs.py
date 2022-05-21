@@ -35,7 +35,5 @@ def test_output(light_DP_gen):
 
 
 def test_MB_rates_of_BPs(light_DP_gen):
-    
     df = light_DP_gen
-
     assert np.abs(np.sum(df.w_event_rate) - np.sum(df.w_event_rate)) <1e-4
