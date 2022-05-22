@@ -34,7 +34,7 @@ class GenLauncher:
         "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", 
         "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
         "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "hepevt_events", 
-        "sparse", "print_to_float32", "sample_geometry", "summary_plots", "path"
+        "sparse", "print_to_float32", "sample_geometry", "summary_plots", "path", "seed"
     ]
 
     def __init__(self, param_file=None, **kwargs):
@@ -139,6 +139,7 @@ class GenLauncher:
         self.sample_geometry = False
         self.summary_plots = True
         self.path = "."
+        self.seed = None
 
         # load file if not None
         if param_file is not None:
@@ -179,7 +180,8 @@ class GenLauncher:
         dn.MC.NINT_warmup = self.nint_warmup
         dn.MC.NEVAL = self.neval
         dn.MC.NINT  = self.nint
-
+        dn.MC.seed  = self.seed
+        
         ####################################################
         # Set the model to use
 

@@ -382,3 +382,13 @@ HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughte
 | **scattering\_regime**    | <!-- --> | *object* | Regime can be coherent or p-elastic |
 | **helicity**              | <!-- --> | *object* | Helicity process: can be flipping or conserving; flipping is suppressed |
 | **underlying\_process**   | <!-- --> | *object* | String of the underlying process, e.g, "nu(mu) + proton_in_C12 -> N4 +  proton_in_C12 -> nu(mu) + e+ + e- + proton_in_C12" |
+
+
+### The event generator engine
+
+DarkNews relies on vegas to integrate and sample differential cross sections and decay rates. 
+The main point of contact with vegas is through the Integrator class, which will receive the DarkNews integrands
+containing the differential rates.
+
+By default, Vegas uses numpy's random number generator, which in turn uses the Mersenne Twister pseudo-random number generator. It is possible to set a seed for numpy's random number generator using numpy.seed().
+The reproducibility of the Vegas samples and integral are only guaranteed for the same series and number of calls to numpy.random, which effectively means, the same number of neval, nint, as well as neval_warmup, nint_warmup.

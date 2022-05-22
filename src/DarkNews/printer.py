@@ -10,6 +10,10 @@ from . import const
 from . import pdg
 from . import Cfourvec as Cfv
 
+import pyarrow.parquet as pq
+import pyarrow as pa
+
+
 def print_in_order(x):
     return ' '.join(f'{t:.8g}' for t in list(x))
 
@@ -126,14 +130,16 @@ class Printer:
 			This format cannot save df.attrs to file.
 
 		"""
-		kwargs['engine']=kwargs.get('engine','pyarrow')
+		# kwargs['engine']=kwargs.get('engine','pyarrow')
 		
 		if self.sparse:
-			self.df_sparse.to_parquet(f"{self.out_file_name}pandas_df.parquet", **kwargs)
+			pq.write_table(pa.Table.from_pandas(self.df_sparse), f"{self.out_file_name}pandas_df.parquet", **kwargs)
+			# self.df_sparse.to_parquet(f"{self.out_file_name}pandas_df.parquet", **kwargs)
 			prettyprinter.info(f"Events in sparse pandas dataframe saved to parquet file successfully:\n{self.out_file_name}")
 			return self.df_sparse
 		else:
-			self.df_gen.to_parquet(f"{self.out_file_name}pandas_df.parquet", **kwargs)
+			pq.write_table(pa.Table.from_pandas(self.df_gen), f"{self.out_file_name}pandas_df.parquet", **kwargs)
+			# self.df_gen.to_parquet(f"{self.out_file_name}pandas_df.parquet", **kwargs)
 			prettyprinter.info(f"Events in pandas dataframe saved to parquet file successfully:\n{self.out_file_name}")
 			return self.df_gen
 
