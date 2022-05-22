@@ -181,6 +181,7 @@ class GenLauncher:
         dn.MC.NEVAL = self.neval
         dn.MC.NINT  = self.nint
         
+        
         ####################################################
         # Set the model to use
 
@@ -392,6 +393,10 @@ class GenLauncher:
         # Set theory params and run generation of events
         
         prettyprinter.info(f"Generating Events using the neutrino-nucleus upscattering engine")
+        # numpy set used by vegas
+        if self.seed:
+            np.random.seed(self.seed)
+            
         self.df = self.gen_cases[0].get_MC_events()
         for mc in self.gen_cases[1:]:
             self.df = dn.MC.get_merged_MC_output(self.df, mc.get_MC_events())

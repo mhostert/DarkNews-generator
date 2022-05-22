@@ -109,7 +109,7 @@ def dn_gen():
 
     parser.add_argument("--summary_plots", help="generate summary plots of kinematics", action="store_false")
     parser.add_argument("--path", help="path where to save run's outputs")
-    parser.add_argument("--seed", help="numpy seed to be used by vegas")
+    parser.add_argument("--seed", help="numpy seed to be used by vegas.")
 
     kwargs = vars(parser.parse_args())
 
@@ -118,7 +118,6 @@ def dn_gen():
         loglevel=kwargs.get("loglevel", gen_object.loglevel),
         verbose=kwargs.get("verbose", gen_object.verbose),
         logfile=kwargs.get("logfile", gen_object.logfile),
-        seed=kwargs.get("seed", gen_object.seed),
     )
 
 if __name__ == "__main__":
