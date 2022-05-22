@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import dill 
-
+from pathlib import Path
 from particle import literals as lp
 
 from . import logger, prettyprinter
@@ -82,9 +82,7 @@ class Printer:
 	def create_dir(self):
 		if not os.path.exists(self.data_path):
 			os.makedirs(self.data_path)
-		if self.data_path[-1] != '/':
-			self.data_path += '/'
-		return self.data_path
+		return Path(self.data_path)
 
 	# Keep only Enu, charged leptons, photons, and weights
 	def get_sparse_df(self, df_gen):
