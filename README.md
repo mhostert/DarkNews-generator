@@ -7,7 +7,7 @@ DarkNews is an event generator for new physics processes at accelerator neutrino
 <br>[![License: MIT](https://img.shields.io/badge/License-MIT-deeppink.svg)](https://opensource.org/licenses/MIT)
 [![InspireHEP](https://img.shields.io/badge/InspireHEP-Abdullahi:xxx2022-dodgerblue.svg)](https://arxiv.org/abs/2202.xxxxx)
 <!-- [![arXiv](https://img.shields.io/badge/arXiv-2202.xxxxxx%20-violet.svg)](https://arxiv.org/abs/2202.xxxxx) -->
-![Tests](https://https://github.com/mhostert/DarkNews-generator/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/mhostert/DarkNews-generator/actions/workflows/tests.yml/badge.svg)
 
 <br>
 
