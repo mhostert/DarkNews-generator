@@ -11,7 +11,7 @@ def dn_gen():
     # User specified
     # particle masses
     # use argument_default=argparse.SUPPRESS so no defaults attributes are instantiated in the final Namespace
-    parser = argparse.ArgumentParser(description="Generate dark nu events", formatter_class=argparse.ArgumentDefaultsHelpFormatter, argument_default=argparse.SUPPRESS)
+    parser = argparse.ArgumentParser(description="Generate upscattering events", formatter_class=argparse.ArgumentDefaultsHelpFormatter, argument_default=argparse.SUPPRESS)
 
     ##### file containing the parameters
     parser.add_argument("--param-file", type=str, help="file containing parameters definitions")
@@ -109,6 +109,7 @@ def dn_gen():
 
     parser.add_argument("--summary_plots", help="generate summary plots of kinematics", action="store_false")
     parser.add_argument("--path", help="path where to save run's outputs")
+    parser.add_argument("--seed", help="numpy seed to be used by vegas")
 
     kwargs = vars(parser.parse_args())
 
@@ -117,6 +118,7 @@ def dn_gen():
         loglevel=kwargs.get("loglevel", gen_object.loglevel),
         verbose=kwargs.get("verbose", gen_object.verbose),
         logfile=kwargs.get("logfile", gen_object.logfile),
+        seed=kwargs.get("seed", gen_object.seed),
     )
 
 if __name__ == "__main__":

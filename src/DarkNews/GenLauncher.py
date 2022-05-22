@@ -180,7 +180,6 @@ class GenLauncher:
         dn.MC.NINT_warmup = self.nint_warmup
         dn.MC.NEVAL = self.neval
         dn.MC.NINT  = self.nint
-        dn.MC.seed  = self.seed
         
         ####################################################
         # Set the model to use
