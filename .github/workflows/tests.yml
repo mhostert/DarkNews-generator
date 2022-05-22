@@ -24,5 +24,3 @@ jobs:
         pip install tox tox-gh-actions
     - name: Test with tox
       run: tox
-    - name: Dynamic Badges
-      uses: Schneegans/dynamic-badges-action@v1.4.0
