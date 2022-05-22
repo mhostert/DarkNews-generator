@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
 
-# boostrap install numpy and Cython
-# from setuptools import dist
-# dist.Distribution().fetch_build_eggs(['Cython>=0.15.1', 'numpy>=1.10', 'wheel'])
-
 # proceed as usual
 from setuptools import setup, find_packages, Extension
 import numpy as np

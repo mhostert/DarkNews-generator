@@ -6,14 +6,7 @@ import logging
 mylogger = logging.getLogger(__name__)
 
 
-#CYTHON
-import pyximport
-pyximport.install(
-    language_level=3,
-    pyimport=False,
-    )
 from . import Cfourvec as Cfv
-
 from . import const
 from .const import *
 from . import phase_space

@@ -1,11 +1,5 @@
 import numpy as np
 from . import const
-#CYTHON
-import pyximport
-pyximport.install(
-    language_level=3,
-    pyimport=False,
-    )
 from . import Cfourvec as Cfv
 
 class Chisel():

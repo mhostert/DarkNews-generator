@@ -4,12 +4,6 @@ import random
 
 from DarkNews import logger
 
-#CYTHON
-import pyximport
-pyximport.install(
-    language_level=3,
-    pyimport=False,
-    )
 from . import Cfourvec as Cfv
 from . import const
 from . import fourvec
