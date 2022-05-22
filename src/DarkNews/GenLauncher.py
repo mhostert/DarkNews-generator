@@ -2,6 +2,7 @@ import logging
 import sys
 import numpy as np
 import os
+from pathlib import Path
 
 # Dark Neutrino and MC stuff
 import DarkNews as dn
@@ -189,7 +190,7 @@ class GenLauncher:
         if (self.bsm_model.m4 and not self.bsm_model.m5 and not self.bsm_model.m6) :
             self.upscattered_nus = [dn.pdg.neutrino4]
             self.outgoing_nus =[dn.pdg.nulight]
-            self.data_path = f'{self.path}/data/{self.exp}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/'
+            self.data_path = Path(f'{self.path}/data/{self.exp}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         # 3+2
         elif (self.bsm_model.m4 and self.bsm_model.m5 and not self.bsm_model.m6):
@@ -198,13 +199,13 @@ class GenLauncher:
             self.outgoing_nus =[dn.pdg.neutrino4]
             # upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5]
             # outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4]
-            self.data_path = f'{self.path}/data/{self.exp}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/'
+            self.data_path = Path(f'{self.path}/data/{self.exp}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         # 3+3
         elif (self.bsm_model.m4 and self.bsm_model.m5 and self.bsm_model.m6):
             self.upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
             self.outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
-            self.data_path = f'{self.path}/data/{self.exp}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/'
+            self.data_path = Path(f'{self.path}/data/{self.exp}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         else:
             logger.error('ERROR! Mass spectrum not allowed.')
