@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+    <title>MiniBooNE Nue Data Release 2020</title>
+  </head>
+
+  <body topmargin="0" bgcolor="#ffffff" marginheight="0">
+    <center>
+      <img src="https://www-boone.fnal.gov/images/spacer1x1.gif" alt="" border="0" height="19" width="1"><br>
+
+      <table border="0" cellpadding="0" cellspacing="0" width="593">
+	<tbody>
+	  <tr>
+	    <td valign="top"><img src="https://www-boone.fnal.gov/images/hptopleft.gif" alt="" border="0" height="58" width="8"><a href="https://www-boone.fnal.gov/index.html"><img src="https://www-boone.fnal.gov/images/animation1.gif" alt="" border="0" height="58" width="224"></a><a href="https://www-boone.fnal.gov/index.html"><img src="https://www-boone.fnal.gov/images/hptitle.gif" alt="" border="0" height="58" width="361"></a></td>
+	  </tr>
+	  <tr>
+	    <td colspan="7" valign="top"><img src="https://www-boone.fnal.gov/images/leftspace.gif" border="0"><a href="https://www-boone.fnal.gov/publicpages/index.html"><img src="https://www-boone.fnal.gov/images/aboutboone.gif" alt="about BooNE" border="0"></a><a href="https://www-boone.fnal.gov/about/index.html"><img src="https://www-boone.fnal.gov/images/aboutneutrinos.gif" alt="about neutrinos" border="0"></a><a href="https://www-boone.fnal.gov/public/introduction/Introduction.html"><img src="https://www-boone.fnal.gov/images/virtualtour.gif" alt="virtual tour" border="0"></a><a href="https://www-boone.fnal.gov/internalpages/index.html"><img src="https://www-boone.fnal.gov/images/booneatwork.gif" alt="BooNE at work" border="0"></a><a href="https://www.fnal.gov/faw/fermilab_at_work.html"><img src="https://www-boone.fnal.gov/images/fermilabatwork.gif" alt="Fermilab at work" border="0"></a><a href="https://ppd.fnal.gov/"><img src="https://www-boone.fnal.gov/images/ppdhome.gif" alt="PPD home page" border="0"></a><img src="https://www-boone.fnal.gov/images/rightspace.gif" border="0"><br>
+	      <img src="https://www-boone.fnal.gov/images/midlines2.gif" alt="" border="0" height="16" width="593"></td>
+	  </tr>
+	</tbody>
+      </table>
+    </center>
+    
+    <center>
+      <h2>Data Release for A.A. Aguilar-Arevalo et al.,
+	<a href="https://arxiv.org/abs/2006.16883">
+	  "Updated MiniBooNE Neutrino Oscillation Results with Increased Data and New Background Studies"</a>,
+	arXiv:2006.16883<br>
+      </h2>
+      
+      <br>
+      
+      <div style="text-align: left;">
+	The following MiniBooNE information from the 2020 &nu;<sub>e</sub> appearance paper is made available to the public:<br>
+        <i>NOTE: An error was found in an earlier version of this data release. This error was corrected on February 20, 2021.</i>
+	<br>
+
+<a name="fit200">
+<ul>
+  <li><span style="font-weight: bold;">Neutrino mode fit in 200 MeV - 3000 MeV reconstructed neutrino energy range</span></li>
+</ul>
+<!--
+<div style="margin-left: 40px;">
+<ul>
+    <li><a href="numode/cont_fake_oct19_contNu_1s.txt">1 sigma limit contour</a>, <a href="numode/cont_fake_oct19_contNu_90.txt">90% limit contour</a> and <a href="numode/cont_fake_oct19_contNu_99.txt">99% limit contour</a>. Limit curves for a 2-neutrino muon-to-electron neutrino and antineutrino oscillation fit. Frequentist studies were performed to determine the proper coverage. Each file contains a set of (sin<sup>2</sup>(2&theta;), &Delta;m<sup>2</sup> ) points on a given contour.
+    </li>
+    <li><a href="numode/likihood_surface_contNu.txt">ntuple file</a> of MiniBooNE 2-dimensional likelihood surface as a function of (&nbsp;&Delta;m<sup>2</sup>,&nbsp;sin<sup>2</sup>(2&theta;) )  in the range (&nbsp;10<sup>-2</sup>&lt; &Delta;m<sup>2</sup> (eV<sup>2</sup> &lt; 10<sup>2</sup>, 3&middot;10<sup>-4&nbsp;</sup>&lt;&nbsp;sin<sup>2</sup>(2&theta;) &lt; 1 ). The file contains 36,100 rows, one for each&nbsp;(&nbsp;&Delta;m<sup>2</sup>,&nbsp;sin<sup>2</sup>(2&theta;) ) pair of values, and 3 columns per row with the following format: <div style="color: rgb(102,0,0)">(&Delta;m<sup>2</sup> (eV<sup>2</sup>), &nbsp;sin<sup>2</sup>(2&theta;), -2ln(L))<br></div>
+    </li>
+
+</ul>
+</div>
+-->
+<ul>
+  <ul>
+
+    <li><a href="numode/miniboone_binboundaries_nue_lowe.txt">1D array</a> of bin boundaries in electron (anti)neutrino reconstructed neutrino energy</li>
+    <li>Neutrino mode</li>
+    <ul>
+        <li><a href="numode/miniboone_nuedata_lowe.txt">1D array</a> of observed electron neutrino candidate events per reconstructed neutrino energy bin</li>
+	<li><a href="numode/miniboone_numudata.txt">1D array</a> of observed muon neutrino charged-current quasi-elastic (CCQE) candidate events as a function of reconstructed neutrino energy (note: not the same bin boundaries as electron neutrino candidate events)</li>
+	<li><a href="numode/miniboone_nuebgr_lowe.txt">1D array</a> of predicted background electron neutrino candidate events per reconstructed neutrino energy bin</li>
+	<li><a href="numode/miniboone_numu.txt">1D array</a> of predicted muon neutrino CCQE candidate events per reconstructed neutrino energy bin</li>
+	<li><a href="numode/miniboone_numunuefullosc_ntuple.txt">muon-to-electron neutrino full transmutation ntuple file</a> of
+	     17,204 predicted&nbsp;muon-to-electron neutrino and antineutrino full transmutation events,
+	     containing information on reconstructed neutrino energy, true neutrino
+	     energy, neutrino baseline, and event weight for each event</li>
+    </ul>
+    <li><a href="numode/miniboone_full_fractcovmatrix_nu_lowe.txt">2D array</a> of 
+        fractional covariance matrix for muon-to-electron neutrino mode full transmutation events, 
+	predicted neutrino mode electron neutrino background events, and predicted neutrino mode muon neutrino CCQE events 
+	(three side-by-side diagonal blocks) per reconstructed neutrino energy bin, including systematic 
+	uncertainties for all three samples, and statistical uncertainty for the 
+	predicted neutrino mode electron neutrino background and predicted neutrino mode muon neutrino CCQE events</li>
+  </ul>
+</ul>
+
+
+
+<br>
+
+<h3>Contact Information</h3>
+
+
+<ul>
+
+  <li>For clarifications on how to use MiniBooNE public data or for enquiries about additional data not linked from this page, please contact: <a href="mailto:sbrice@fnal.gov">Steve Brice</a>, <a href="mailto:en-chuan@lanl.gov">En-Chuan Huang</a>, or <a href="mailto:vdwater@fnal.gov">Richard Van de Water</a> </li>
+
+</ul>
+
+
+<br>
+
+
+<h3>Acknowledgments</h3>
+
+
+<ul>
+
+
+  <li>If you are using data linked from this page, please reference the following paper:</li>
+
+
+</ul>
+
+
+A. A. Aguilar-Arevalo <span style="font-style: italic;">et al. </span>[MiniBooNE Collaboration], <span style="font-style: italic;"><a href="https://arxiv.org/abs/2006.16883">
+	  "Updated MiniBooNE Neutrino Oscillation Results with Increased Data and New Background Studies"</a></span><br>
+<br>
+
+
+
+<ul>
+
+
+
+  <li>The MiniBooNE collaboration wishes to acknowledge the support of <a href="https://www.fnal.gov">Fermilab</a>, the&nbsp;<a href="https://www.doe.gov">U.S. Department of Energy</a>, and the <a href="https://www.nsf.gov">U.S. National Science Foundation</a> for the construction, operation, beam delivery, and data analysis of the MiniBooNE experiment</li>
+
+
+
+</ul>
+
+
+
+</div>
+
+
+
+<br>
+
+
+
+</center>
+
+
+<p align="center"><img src="https://www-boone.fnal.gov/oscillation.gif" height="3">
+</p>
+
+
+
+</body>
+</html>

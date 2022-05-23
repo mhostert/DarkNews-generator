@@ -9,6 +9,7 @@ stats
  
 # data folder
 data/*
+examples/data/*
 
 # vscode settings
 .vscode/*

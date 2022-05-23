@@ -2,13 +2,17 @@ import os
 import pandas as pd
 import numpy as np
 import dill 
-
+from pathlib import Path
 from particle import literals as lp
 
 from . import logger, prettyprinter
 from . import const
 from . import pdg
 from . import Cfourvec as Cfv
+
+import pyarrow.parquet as pq
+import pyarrow as pa
+
 
 def print_in_order(x):
     return ' '.join(f'{t:.8g}' for t in list(x))
@@ -78,9 +82,7 @@ class Printer:
 	def create_dir(self):
 		if not os.path.exists(self.data_path):
 			os.makedirs(self.data_path)
-		if self.data_path[-1] != '/':
-			self.data_path += '/'
-		return self.data_path
+		return Path(self.data_path)
 
 	# Keep only Enu, charged leptons, photons, and weights
 	def get_sparse_df(self, df_gen):
@@ -110,13 +112,14 @@ class Printer:
 			self.df_gen.loc[self.df_gen['helicity']=='conserving', 'helicity'] = +1
 			self.df_gen.loc[self.df_gen['helicity']=='flipping', 'helicity'] = -1
 			# remove non-numeric entries
-			df = self.df_gen.drop(['underlying_process','target','scattering_regime'],axis=1, level=0) 
-			cols = [f'{v[0]}_{v[1]}' if v[1] else f'{v[0]}' for v in df.columns.values]
-			self.array_gen = df.to_numpy(dtype=np.float64)
+			self.df_for_numpy = self.df_gen.drop(['underlying_process','target','scattering_regime'],axis=1, level=0) 
+			cols = [f'{v[0]}_{v[1]}' if v[1] else f'{v[0]}' for v in self.df_for_numpy.columns.values]
+			self.array_gen = self.df_for_numpy.to_numpy(dtype=np.float64)
 
-		np.savez(f'{self.out_file_name}ndarray.npz', self.array_gen, **kwargs)
+		np.save(f'{self.out_file_name}ndarray.npy', self.array_gen, **kwargs)
 		prettyprinter.info(f"Events in numpy array saved to file successfully:\n{self.out_file_name}")
 		return self.array_gen
+
 
 	def print_events_to_parquet(self, **kwargs):
 		""" 
@@ -125,14 +128,16 @@ class Printer:
 			This format cannot save df.attrs to file.
 
 		"""
-		kwargs['engine']=kwargs.get('engine','pyarrow')
+		# kwargs['engine']=kwargs.get('engine','pyarrow')
 		
 		if self.sparse:
-			self.df_sparse.to_parquet(f"{self.out_file_name}pandas_df.parquet", **kwargs)
+			pq.write_table(pa.Table.from_pandas(self.df_sparse), f"{self.out_file_name}pandas_df.parquet", **kwargs)
+			# self.df_sparse.to_parquet(f"{self.out_file_name}pandas_df.parquet", **kwargs)
 			prettyprinter.info(f"Events in sparse pandas dataframe saved to parquet file successfully:\n{self.out_file_name}")
 			return self.df_sparse
 		else:
-			self.df_gen.to_parquet(f"{self.out_file_name}pandas_df.parquet", **kwargs)
+			pq.write_table(pa.Table.from_pandas(self.df_gen), f"{self.out_file_name}pandas_df.parquet", **kwargs)
+			# self.df_gen.to_parquet(f"{self.out_file_name}pandas_df.parquet", **kwargs)
 			prettyprinter.info(f"Events in pandas dataframe saved to parquet file successfully:\n{self.out_file_name}")
 			return self.df_gen
 

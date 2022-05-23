@@ -20,14 +20,14 @@ prettyprinter.propagate = False
 
 
 #CYTHON -- MAC OS X FIX --  https://github.com/cython/cython/issues/1725
-import pyximport
-numpy_path = numpy.get_include()
-os.environ['CFLAGS'] = "-I" + numpy_path
-pyximport.install(
-	language_level=3,
-    pyimport=False,
-    setup_args={'include_dirs': numpy.get_include()}
-    )
+# import pyximport
+# numpy_path = numpy.get_include()
+# os.environ['CFLAGS'] = "-I" + numpy_path
+# pyximport.install(
+# 	language_level=3,
+#     pyimport=False,
+#     setup_args={'include_dirs': numpy.get_include()}
+#     )
 # from . import Cfourvec as Cfv
 
 

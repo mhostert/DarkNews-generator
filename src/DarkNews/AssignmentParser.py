@@ -244,7 +244,8 @@ class AssignmentParser:
 
     def parse_file(self, file, comments="#"):
         # read file
-        with open(file, "r") as f:
+        print(file)
+        with open(file, "r", encoding="utf8") as f:
             lines = f.readlines()
         # create a clean text without blank lines and comments
         clean_text = ""

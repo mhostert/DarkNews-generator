@@ -2,6 +2,7 @@ import logging
 import sys
 import numpy as np
 import os
+from pathlib import Path
 
 # Dark Neutrino and MC stuff
 import DarkNews as dn
@@ -34,7 +35,7 @@ class GenLauncher:
         "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", 
         "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
         "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "hepevt_events", 
-        "sparse", "print_to_float32", "sample_geometry", "summary_plots", "path"
+        "sparse", "print_to_float32", "sample_geometry", "summary_plots", "path", "seed"
     ]
 
     def __init__(self, param_file=None, **kwargs):
@@ -117,6 +118,7 @@ class GenLauncher:
         self.decay_product = "e+e-"
         self.exp = "miniboone_fhc"
         self.nopelastic = False
+        self.include_nelastic = False
         self.nocoh = False
         self.noHC = False
         self.noHF = False
@@ -138,6 +140,7 @@ class GenLauncher:
         self.sample_geometry = False
         self.summary_plots = True
         self.path = "."
+        self.seed = None
 
         # load file if not None
         if param_file is not None:
@@ -178,7 +181,8 @@ class GenLauncher:
         dn.MC.NINT_warmup = self.nint_warmup
         dn.MC.NEVAL = self.neval
         dn.MC.NINT  = self.nint
-
+        
+        
         ####################################################
         # Set the model to use
 
@@ -186,7 +190,7 @@ class GenLauncher:
         if (self.bsm_model.m4 and not self.bsm_model.m5 and not self.bsm_model.m6) :
             self.upscattered_nus = [dn.pdg.neutrino4]
             self.outgoing_nus =[dn.pdg.nulight]
-            self.data_path = f'{self.path}/data/{self.exp}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/'
+            self.data_path = Path(f'{self.path}/data/{self.exp}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         # 3+2
         elif (self.bsm_model.m4 and self.bsm_model.m5 and not self.bsm_model.m6):
@@ -195,13 +199,13 @@ class GenLauncher:
             self.outgoing_nus =[dn.pdg.neutrino4]
             # upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5]
             # outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4]
-            self.data_path = f'{self.path}/data/{self.exp}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/'
+            self.data_path = Path(f'{self.path}/data/{self.exp}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         # 3+3
         elif (self.bsm_model.m4 and self.bsm_model.m5 and self.bsm_model.m6):
             self.upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
             self.outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
-            self.data_path = f'{self.path}/data/{self.exp}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/'
+            self.data_path = Path(f'{self.path}/data/{self.exp}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         else:
             logger.error('ERROR! Mass spectrum not allowed.')
@@ -260,12 +264,14 @@ class GenLauncher:
                 INCLUDE_HF (bool):          flag to include helicity flipping case
                 NO_COH (bool):              flag to skip coherent case
                 NO_PELASTIC (bool):         flag to skip proton elastic case
+                INCLUDE_NELASTIC (bool):         flag to skip neutron elastic case
                 DECAY_PRODUCTS (list):      decay processes to include
         """
         
         # Default values
         scope = {  'NO_COH': self.nocoh,
                     'NO_PELASTIC': self.nopelastic,
+                    'INCLUDE_NELASTIC': self.include_nelastic,
                     'INCLUDE_HC': not self.noHC,
                     'INCLUDE_HF': not self.noHF,
                     'FLAVORS': [dn.pdg.numu],
@@ -312,13 +318,15 @@ class GenLauncher:
                                 # skip disallowed regimes
                                 if (
                                         ( (scattering_regime in ['n-el']) and (nuclear_target.N < 1)) # no neutrons
-                                        |
+                                        or
                                         ( (scattering_regime in ['coherent']) and (not nuclear_target.is_nucleus)) # coherent = p-el for hydrogen
                                     ):
                                     continue 
                                 elif ( (scattering_regime in ['coherent'] and scope['NO_COH'])
-                                    | 
+                                    or 
                                         (scattering_regime in ['p-el'] and scope['NO_PELASTIC'])
+                                    or
+                                        (scattering_regime in ['n-el']) and (not scope['INCLUDE_NELASTIC']) # do not include n-el
                                     ):
                                     continue
                                 else:
@@ -386,6 +394,10 @@ class GenLauncher:
         # Set theory params and run generation of events
         
         prettyprinter.info(f"Generating Events using the neutrino-nucleus upscattering engine")
+        # numpy set used by vegas
+        if self.seed:
+            np.random.seed(self.seed)
+            
         self.df = self.gen_cases[0].get_MC_events()
         for mc in self.gen_cases[1:]:
             self.df = dn.MC.get_merged_MC_output(self.df, mc.get_MC_events())

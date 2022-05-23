@@ -11,7 +11,7 @@ def dn_gen():
     # User specified
     # particle masses
     # use argument_default=argparse.SUPPRESS so no defaults attributes are instantiated in the final Namespace
-    parser = argparse.ArgumentParser(description="Generate dark nu events", formatter_class=argparse.ArgumentDefaultsHelpFormatter, argument_default=argparse.SUPPRESS)
+    parser = argparse.ArgumentParser(description="Generate upscattering events", formatter_class=argparse.ArgumentDefaultsHelpFormatter, argument_default=argparse.SUPPRESS)
 
     ##### file containing the parameters
     parser.add_argument("--param-file", type=str, help="file containing parameters definitions")
@@ -82,6 +82,7 @@ def dn_gen():
     # scattering types
     parser.add_argument("--nopelastic", help="do not generate proton elastic events", action="store_true")
     parser.add_argument("--nocoh", help="do not generate coherent events", action="store_true")
+    parser.add_argument("--include_nelastic", help="generate neutron elastic events", action="store_true")
 
     parser.add_argument("--noHC", help="do not include helicity conserving events", action="store_true")
     parser.add_argument("--noHF", help="do not include helicity flipping events", action="store_true")
@@ -108,15 +109,15 @@ def dn_gen():
 
     parser.add_argument("--summary_plots", help="generate summary plots of kinematics", action="store_false")
     parser.add_argument("--path", help="path where to save run's outputs")
+    parser.add_argument("--seed", help="numpy seed to be used by vegas.")
 
     kwargs = vars(parser.parse_args())
 
     gen_object = GenLauncher(**kwargs)
     gen_object.run(
-        loglevel=kwargs.get("loglevel", DEFAULTS.loglevel),
-        verbose=kwargs.get("verbose", DEFAULTS.verbose),
-        logfile=kwargs.get("logfile", DEFAULTS.logfile)#,
-        # path=kwargs.get("path", DEFAULTS.path)
+        loglevel=kwargs.get("loglevel", gen_object.loglevel),
+        verbose=kwargs.get("verbose", gen_object.verbose),
+        logfile=kwargs.get("logfile", gen_object.logfile),
     )
 
 if __name__ == "__main__":
