@@ -115,8 +115,8 @@ def dn_gen():
     gen_object.run(
         loglevel=kwargs.get("loglevel", DEFAULTS.loglevel),
         verbose=kwargs.get("verbose", DEFAULTS.verbose),
-        logfile=kwargs.get("logfile", DEFAULTS.logfile),
-        path=kwargs.get("path", DEFAULTS.path)
+        logfile=kwargs.get("logfile", DEFAULTS.logfile)#,
+        # path=kwargs.get("path", DEFAULTS.path)
     )
 
 if __name__ == "__main__":
