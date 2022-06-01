@@ -47,7 +47,6 @@ from DarkNews import MC
 # Physics modules
 from DarkNews import model
 from DarkNews import decay_rates
-from DarkNews import xsecs
 
 # for output of MC 
 from DarkNews import printer

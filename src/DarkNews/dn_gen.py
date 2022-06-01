@@ -37,9 +37,9 @@ def dn_gen():
     parser.add_argument("--Utau5", type=float, help="Utau5")
     parser.add_argument("--Utau6", type=float, help="Utau6")
 
-    parser.add_argument("--Ud4", type=float, help="UD4")
-    parser.add_argument("--Ud5", type=float, help="UD5")
-    parser.add_argument("--Ud6", type=float, help="UD6")
+    parser.add_argument("--UD4", type=float, help="UD4")
+    parser.add_argument("--UD5", type=float, help="UD5")
+    parser.add_argument("--UD6", type=float, help="UD6")
 
     # dark coupling choices
     parser.add_argument("--gD", type=float, help="U(1)_d dark coupling")
