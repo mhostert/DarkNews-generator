@@ -1,6 +1,6 @@
 # flux files digitized from and normalized assuming an area of 3x3 m^2
 name = "NUTEV_FHC"
-fluxfile = "../fluxes/nutev_fhc.dat"
+fluxfile = "../fluxes/NuTeV_FHC.dat"
 flux_norm = 1
 erange = [
     1,

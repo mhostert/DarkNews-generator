@@ -262,7 +262,6 @@ class Printer:
 		pvec_pos_decay = df_gen['pos_decay'][['1','2','3']].to_numpy()
 		pvec_pos_scatt = df_gen['pos_scatt'][['1','2','3']].to_numpy()
 
-		# print(df_gen['P_projectile'][['1','2','3']].to_numpy()[0])
 		# string to be saved to file
 		hepevt_string = ''
 		hepevt_string += f"{tot_events_to_print}\n"
