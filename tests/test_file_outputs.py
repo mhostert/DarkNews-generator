@@ -32,12 +32,11 @@ def test_output(light_DP_gen_all_outputs):
     assert (df_std.to_numpy()[nda!=0]/nda[nda!=0]!=1).sum() == 0 
     assert (df_pq.to_numpy()[nda!=0]/nda[nda!=0]!=1).sum() == 0
 
-    # check 
+
+def test_MB_rates_of_BPs(gen_all_benchmarks):
+    df = gen_all_benchmarks
+    # check seeded generation
     expec = 12903.909075535918
     assert (np.abs(np.sum(df['w_event_rate']) - expec)/expec < 0.01)
 
 
-
-def test_MB_rates_of_BPs(light_DP_gen_all_outputs):
-    df = light_DP_gen_all_outputs
-    assert np.abs(np.sum(df.w_event_rate) - np.sum(df.w_event_rate)) <1e-4

@@ -38,8 +38,7 @@ def gen_all_benchmarks():
     ud4 = 1.
     epsilon_def = np.sqrt(2e-10/const.alphaQED)
     gen = GenLauncher(mzprime=0.03, m4=0.420, epsilon=epsilon_def, Umu4=umu4_def, UD4=ud4_def, gD=gD_def, 
-                        neval=1000, HNLtype="dirac", exp="miniboone_fhc", loglevel='ERROR')
-    df_1 = gen.df
-    
-    
-    return df_1, df_2, df_3, df_4
+                        neval=1000, HNLtype="dirac", exp="miniboone_fhc", loglevel='ERROR', seed=42)
+
+    return gen.run(loglevel="INFO")
+
