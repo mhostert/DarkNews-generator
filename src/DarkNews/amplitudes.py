@@ -71,7 +71,6 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
 
     mu_tr = process.mu_tr
 
-    MAJ = process.MAJ
     h = process.h_upscattered
 
 

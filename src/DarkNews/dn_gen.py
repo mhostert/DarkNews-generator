@@ -132,7 +132,7 @@ def dn_gen():
 
     parser.add_argument("--summary_plots", help="generate summary plots of kinematics", action="store_false")
     parser.add_argument("--path", help="path where to save run's outputs")
-    parser.add_argument("--seed", help="numpy seed to be used by vegas.")
+    parser.add_argument("--seed", type=int, help="numpy seed to be used by vegas.")
 
     kwargs = vars(parser.parse_args())
 
