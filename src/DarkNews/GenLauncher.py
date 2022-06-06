@@ -169,7 +169,7 @@ class GenLauncher:
 
         #########################
         # Set BSM parameters
-        self.bsm_model = dn.model.create_model(**args_dict)
+        self.bsm_model = dn.model.create_3portal_model(**args_dict)
 
         ####################################################
         # Choose experiment and scope of simulation
