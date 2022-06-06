@@ -4,12 +4,15 @@
 <img align="left" src="assets/logo_2.svg" width="180" title="DarkNews-logo">
 DarkNews is an event generator for new physics processes at accelerator neutrino experiments based on Vegas. It simulates neutrino upscattering to heavy neutrinos as well as heavy neutrino decays to dileptons via neutrino, vector, and transition magnetic moment portals.
 
-<br>[![License: MIT](https://img.shields.io/badge/License-MIT-deeppink.svg)](https://opensource.org/licenses/MIT)
+
+![Tests](https://github.com/mhostert/DarkNews-generator/actions/workflows/tests.yml/badge.svg)
 [![InspireHEP](https://img.shields.io/badge/InspireHEP-Abdullahi:xxx2022-dodgerblue.svg)](https://arxiv.org/abs/2202.xxxxx)
+<!-- [![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/mhostert/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/raw/DarkNews-generator__heads_main.json)] -->
+<!-- <br>[![License: MIT](https://img.shields.io/badge/License-MIT-deeppink.svg)](https://opensource.org/licenses/MIT) -->
 <!-- [![arXiv](https://img.shields.io/badge/arXiv-2202.xxxxxx%20-violet.svg)](https://arxiv.org/abs/2202.xxxxx) -->
 
-<br>
 
+<br>
 
 
 ## Table of Contents
@@ -382,3 +385,13 @@ HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughte
 | **scattering\_regime**    | <!-- --> | *object* | Regime can be coherent or p-elastic |
 | **helicity**              | <!-- --> | *object* | Helicity process: can be flipping or conserving; flipping is suppressed |
 | **underlying\_process**   | <!-- --> | *object* | String of the underlying process, e.g, "nu(mu) + proton_in_C12 -> N4 +  proton_in_C12 -> nu(mu) + e+ + e- + proton_in_C12" |
+
+
+### The event generator engine
+
+DarkNews relies on vegas to integrate and sample differential cross sections and decay rates. 
+The main point of contact with vegas is through the Integrator class, which will receive the DarkNews integrands
+containing the differential rates.
+
+By default, Vegas uses numpy's random number generator, which in turn uses the Mersenne Twister pseudo-random number generator. It is possible to set a seed for numpy's random number generator using numpy.seed().
+The reproducibility of the Vegas samples and integral are only guaranteed for the same series and number of calls to numpy.random, which effectively means, the same number of neval, nint, as well as neval_warmup, nint_warmup.

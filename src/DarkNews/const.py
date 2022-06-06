@@ -47,6 +47,7 @@ attobarn_to_cm2 = 1e-42
 invGeV2_to_attobarn = invGeV2_to_cm2*cm2_to_attobarn
 
 GeV2_to_cm3s = invGeV2_to_cm2*c_LIGHT
+invcm3_to_eV3 = invGeV2_to_cm2**(3/2)*1e27
 
 g_to_eV = 5.6095886031e32 # eV
 kg_to_eV = 5.6095886031e35 # eV
@@ -157,57 +158,56 @@ Fneutral_eta = fneutral_eta/np.sqrt(2.0)
 ################################################
 # CKM elements
 # PDG2019
-lamCKM = 0.22453;
-ACKM = 0.836;
-rhoBARCKM = 0.122;
-etaBARCKM = 0.355;
-rhoCKM = rhoBARCKM/(1-lamCKM*lamCKM/2.0);
-etaCKM = etaBARCKM/(1-lamCKM*lamCKM/2.0);
+lamCKM = 0.22453
+ACKM = 0.836
+rhoBARCKM = 0.122
+etaBARCKM = 0.355
+rhoCKM = rhoBARCKM/(1-lamCKM*lamCKM/2.0)
+etaCKM = etaBARCKM/(1-lamCKM*lamCKM/2.0)
 
-s12 = lamCKM;
-s23 = ACKM*lamCKM**2;
+s12 = lamCKM
+s23 = ACKM*lamCKM**2
 s13e = ACKM*lamCKM**3*(rhoCKM + 1j*etaCKM)*np.sqrt(1.0 - ACKM**2*lamCKM**4)/(np.sqrt(1.0 - lamCKM**2)*(1.0 - ACKM**2*lamCKM**4*(rhoCKM + 1j*etaCKM) ))
-c12 = np.sqrt(1 - s12**2);
-c23 = np.sqrt(1 - s23**2);
-c13 = np.sqrt(1 - abs(s13e)**2);
-
-Vud = c12*c13;
-Vus = s12*c13;
-Vub = np.conj(s13e);
-Vcd = -s12*c23-c12*s23*s13e;
-Vcs = c12*c23-s12*s23*s13e;
-Vcb = s23*c13;
-Vtd = s12*s23-c12*c23*s13e;
-Vts = -c12*s23-s12*c23*s13e;
-Vtb = c23*c13;
+c12 = np.sqrt(1 - s12**2)
+c23 = np.sqrt(1 - s23**2)
+c13 = np.sqrt(1 - abs(s13e)**2)
+Vud = c12*c13
+Vus = s12*c13
+Vub = np.conj(s13e)
+Vcd = -s12*c23-c12*s23*s13e
+Vcs = c12*c23-s12*s23*s13e
+Vcb = s23*c13
+Vtd = s12*s23-c12*c23*s13e
+Vts = -c12*s23-s12*c23*s13e
+Vtb = c23*c13
 
 
 ################################################
 # PMNS parameters
 # NuFit Oct 2021 -- http://www.nu-fit.org/?q=node/238#label85
 
-s12 = np.sqrt(0.304);
-s23 = np.sqrt(0.450);
-s13 = np.sqrt(0.02246);
-c12 = np.sqrt(1 - s12**2);
-c23 = np.sqrt(1 - s23**2);
-c13 = np.sqrt(1 - s13**2);
-delta = 230*deg_to_rad;
+s12 = np.sqrt(0.304)
+s23 = np.sqrt(0.450)
+s13 = np.sqrt(0.02246)
+c12 = np.sqrt(1 - s12**2)
+c23 = np.sqrt(1 - s23**2)
+c13 = np.sqrt(1 - s13**2)
+delta = 230*deg_to_rad
 
-Ue1 = c12*c13;
-Ue2 = s12*c13;
-Ue3 = s13*np.exp(-delta*1j);
-Umu1 = -s12*c23-c12*s23*s13*np.exp(delta*1j);
-Umu2 = c12*c23-s12*s23*s13*np.exp(delta*1j);
-Umu3 = s23*c13;
-Utau1 = s12*s23-c12*c23*s13*np.exp(delta*1j);
-Utau2 = -c12*s23-s12*c23*s13*np.exp(delta*1j);
-Utau3 = c23*c13;
+Ue1 = c12*c13
+Ue2 = s12*c13
+Ue3 = s13*np.exp(-delta*1j)
+Umu1 = -s12*c23-c12*s23*s13*np.exp(delta*1j)
+Umu2 = c12*c23-s12*s23*s13*np.exp(delta*1j)
+Umu3 = s23*c13
+Utau1 = s12*s23-c12*c23*s13*np.exp(delta*1j)
+Utau2 = -c12*s23-s12*c23*s13*np.exp(delta*1j)
+Utau3 = c23*c13
 UPMNS = np.matrix([  
                     [Ue1,Ue2,Ue3],
                     [Umu1,Umu2,Umu3],
                     [Utau1,Utau2,Utau3]
-                ], dtype=complex);
+                ], dtype=complex)
 
 
 ################################################

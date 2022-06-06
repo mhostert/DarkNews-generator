@@ -1,5 +1,3 @@
-import numpy
-import os
 import sys 
 from pathlib import Path
 local_dir = Path(__file__).parent
@@ -19,20 +17,9 @@ logger.propagate = False
 prettyprinter.propagate = False
 
 
-#CYTHON -- MAC OS X FIX --  https://github.com/cython/cython/issues/1725
-import pyximport
-numpy_path = numpy.get_include()
-os.environ['CFLAGS'] = "-I" + numpy_path
-pyximport.install(
-	language_level=3,
-    pyimport=False,
-    setup_args={'include_dirs': numpy.get_include()}
-    )
-# from . import Cfourvec as Cfv
-
-
-
 # Definition modules
+from DarkNews.GenLauncher import GenLauncher
+
 from DarkNews import pdg
 from DarkNews import const
 from DarkNews import fourvec
@@ -41,13 +28,16 @@ from DarkNews import phase_space
 # Experimental setups
 from DarkNews import detector
 
+# Physics modules
+from DarkNews import decay_rates
+from DarkNews import model
+
+from DarkNews.model import UpscatteringProcess 
+from DarkNews.model import FermionDileptonDecay 
+from DarkNews.model import FermionSinglePhotonDecay 
+
 # Monte Carlo modules
 from DarkNews import MC
-
-# Physics modules
-from DarkNews import model
-from DarkNews import decay_rates
-from DarkNews import xsecs
 
 # for output of MC 
 from DarkNews import printer

@@ -7,33 +7,41 @@ from DarkNews import logger
 
 
 def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
-    '''
-        Return the differential cross section for upscattering in attobarns
+    """ 
+    Computes the differential cross section for upscattering in attobarns
 
-            process: UpscatteringProcess object with all model parameters and scope of upscattering process
+    Args:
+        x_phase_space (list): a list of arrays with [s,t,u] variables
+        process (DarkNews.model.UpscatteringProcess): object reprensenting a given upscattering process.
+        diagrams (list, optional): specify what diagrams to include. 
+                                    all -- returns a dictionary with all the separate contributions to the xsecs
+                                    separating diagrams with Z', Z, S, etc.
 
-            diagrams:   all -- returns a dictionary with all the separate contributions to the xsecs
-                        separating diagrams with Z', Z, S, etc.
+                                    NC_SQR
+                                    
+                                    KinMix_SQR
+                                    KinMix_NC_inter
+                                    
+                                    MassMix_SQR
+                                    MassMix_NC_inter
+                                    KinMix_MassMix_inter
+                                    
+                                    TMM_SQR
+                                    
+                                    Scalar_SQR
+                                    Scalar_NC_inter
+                                    Scalar_KinMix_inter
+                                    Scalar_MassMix_inter
+                                
+                                    total
 
-                        NC_SQR
-                        
-                        KinMix_SQR
-                        KinMix_NC_inter
-                        
-                        MassMix_SQR
-                        MassMix_NC_inter
-                        KinMix_MassMix_inter
-                        
-                        TMM_SQR
-                        
-                        Scalar_SQR
-                        Scalar_NC_inter
-                        Scalar_KinMix_inter
-                        Scalar_MassMix_inter
-                    
-                        total
+    Raises:
+        ValueError: if HNL type not recognized
 
-    '''
+    Returns:
+        numpy.ndarray or dict: either an array with the differential xsec in attobarns at each phase-space point 
+                or a dictioary of such values for each diagram.
+    """
 
     # kinematics
     s,t,u = x_phase_space
@@ -63,7 +71,6 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
 
     mu_tr = process.mu_tr
 
-    MAJ = process.MAJ
     h = process.h_upscattered
 
 
@@ -105,7 +112,8 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
             return (Chad*Chad*Cij*Cji*(16*FFNCga*FFNCgp*(mHNL*mHNL)*(-(mHNL*mHNL) + t) + (4*(FFNCgp*FFNCgp)*(mHNL*mHNL)*t*(-(mHNL*mHNL) + t))/(M*M) - 8*FFNCf1*FFNCf2*(mHNL*mHNL*mHNL*mHNL + mHNL*mHNL*t - 2*(t*t)) + 8*(FFNCf1*FFNCf1)*(2*(M*M*M*M) - 4*(M*M)*s + 2*(s*s) + 2*s*t + t*t - mHNL*mHNL*(2*s + t)) + 8*(FFNCga*FFNCga)*(2*(M*M*M*M) + 2*(s*s) + 4*(M*M)*(mHNL*mHNL - s - t) + 2*s*t + t*t - mHNL*mHNL*(2*s + t)) - (FFNCf2*FFNCf2*(4*(M*M*M*M)*t + 4*(M*M)*(mHNL*mHNL*mHNL*mHNL + mHNL*mHNL*t - 2*t*(s + t)) + t*(mHNL*mHNL*mHNL*mHNL + 4*s*(s + t) - mHNL*mHNL*(4*s + t))))/(M*M) + (16*FFNCf1*FFNCga*h*(2*(M*M*M*M)*t + t*(-(mHNL*mHNL*mHNL*mHNL) + mHNL*mHNL*(-s + t) + s*(2*s + t)) + M*M*(4*(mHNL*mHNL*mHNL*mHNL) - 3*(mHNL*mHNL)*t - t*(4*s + t))))/(s*Sqrt((M*M*M*M + (mHNL*mHNL - s)*(mHNL*mHNL - s) - 2*(M*M)*(mHNL*mHNL + s))/(s*s))) + (16*FFNCf2*FFNCga*h*(2*(M*M*M*M)*t + t*(-(mHNL*mHNL*mHNL*mHNL) + mHNL*mHNL*(-s + t) + s*(2*s + t)) + M*M*(4*(mHNL*mHNL*mHNL*mHNL) - 3*(mHNL*mHNL)*t - t*(4*s + t))))/(s*Sqrt((M*M*M*M + (mHNL*mHNL - s)*(mHNL*mHNL - s) - 2*(M*M)*(mHNL*mHNL + s))/(s*s)))))/(2.*((MZBOSON*MZBOSON - t)*(MZBOSON*MZBOSON - t)))
         # kinetic mixing term SQR
         def Lmunu_Hmunu_KinMix_SQR():
-            return ((-8*FFf1*FFf2*(M*M)*(mHNL*mHNL*mHNL*mHNL + mHNL*mHNL*t - 2*(t*t)) + 8*(FFf1*FFf1)*(M*M)*(2*(M*M*M*M) - 4*(M*M)*s + 2*(s*s) + 2*s*t + t*t - mHNL*mHNL*(2*s + t)) - FFf2*FFf2*(4*(M*M*M*M)*t + 4*(M*M)*(mHNL*mHNL*mHNL*mHNL + mHNL*mHNL*t - 2*t*(s + t)) + t*(mHNL*mHNL*mHNL*mHNL + 4*s*(s + t) - mHNL*mHNL*(4*s + t))))*(Vhad*Vhad)*Vij*Vji)/(2.*(M*M)*((mzprime*mzprime - t)*(mzprime*mzprime - t)))
+            # return ((-8*FFf1*FFf2*(M*M)*(mHNL*mHNL*mHNL*mHNL + mHNL*mHNL*t - 2*(t*t)) + 8*(FFf1*FFf1)*(M*M)*(2*(M*M*M*M) - 4*(M*M)*s + 2*(s*s) + 2*s*t + t*t - mHNL*mHNL*(2*s + t)) - FFf2*FFf2*(4*(M*M*M*M)*t + 4*(M*M)*(mHNL*mHNL*mHNL*mHNL + mHNL*mHNL*t - 2*t*(s + t)) + t*(mHNL*mHNL*mHNL*mHNL + 4*s*(s + t) - mHNL*mHNL*(4*s + t))))*(Vhad*Vhad)*Vij*Vji)/(2.*(M*M)*((mzprime*mzprime - t)*(mzprime*mzprime - t)))
+            return ((-(FFf2*FFf2*(s*Sqrt((M*M*M*M + (mHNL*mHNL - s)*(mHNL*mHNL - s) - 2*(M*M)*(mHNL*mHNL + s))/(s*s))*(4*(M*M)*(mHNL*mHNL*mHNL*mHNL) + (2*(M*M) + mHNL*mHNL - 2*s)*(2*(M*M) + mHNL*mHNL - 2*s)*t - (8*(M*M) + mHNL*mHNL - 4*s)*(t*t)) + h*(4*(M*M)*(mHNL*mHNL*mHNL*mHNL)*(M*M + mHNL*mHNL - s) + (2*(M*M) - 4*M*mHNL + mHNL*mHNL - 2*s)*(2*(M*M) + 4*M*mHNL + mHNL*mHNL - 2*s)*(M*M + mHNL*mHNL - s)*t - (8*(M*M*M*M) + mHNL*mHNL*mHNL*mHNL - 3*(mHNL*mHNL)*s + 4*(s*s) - 3*(M*M)*(3*(mHNL*mHNL) + 4*s))*(t*t)))) - 8*FFf1*FFf2*(M*M)*(s*Sqrt((M*M*M*M + (mHNL*mHNL - s)*(mHNL*mHNL - s) - 2*(M*M)*(mHNL*mHNL + s))/(s*s))*(mHNL*mHNL*mHNL*mHNL + mHNL*mHNL*t - 2*(t*t)) + h*(mHNL*mHNL - 2*t)*(mHNL*mHNL*mHNL*mHNL - s*t + M*M*(mHNL*mHNL + t) - mHNL*mHNL*(s + t))) + 8*(FFf1*FFf1)*(M*M)*(s*Sqrt((M*M*M*M + (mHNL*mHNL - s)*(mHNL*mHNL - s) - 2*(M*M)*(mHNL*mHNL + s))/(s*s))*(2*(M*M*M*M) - 4*(M*M)*s + 2*(s*s) + 2*s*t + t*t - mHNL*mHNL*(2*s + t)) + h*(2*(M*M*M*M*M*M) - 2*((mHNL*mHNL - s)*(mHNL*mHNL - s))*s - 2*(M*M*M*M)*(mHNL*mHNL + 3*s) + (mHNL*mHNL*mHNL*mHNL + mHNL*mHNL*s - 2*(s*s))*t - (mHNL*mHNL + s)*(t*t) + M*M*(6*(s*s) + 2*s*t + t*t + mHNL*mHNL*(-2*s + t)))))*(Vhad*Vhad)*Vij*Vji)/(4.*(M*M)*s*Sqrt((M*M*M*M + (mHNL*mHNL - s)*(mHNL*mHNL - s) - 2*(M*M)*(mHNL*mHNL + s))/(s*s))*((mzprime*mzprime - t)*(mzprime*mzprime - t)))
         # kinetic mixing + SM NC interference
         def Lmunu_Hmunu_KinMix_NC_inter():
             return ((Chad*(4*FFf1*(M*M)*(s*Sqrt((M*M*M*M + (mHNL*mHNL - s)*(mHNL*mHNL - s) - 2*(M*M)*(mHNL*mHNL + s))/(s*s))*(-(FFNCf2*(mHNL*mHNL*mHNL*mHNL + mHNL*mHNL*t - 2*(t*t))) + 2*FFNCf1*(2*(M*M*M*M) - 4*(M*M)*s + 2*(s*s) + 2*s*t + t*t - mHNL*mHNL*(2*s + t))) + 2*FFNCga*h*(2*(M*M*M*M)*t + t*(-(mHNL*mHNL*mHNL*mHNL) + mHNL*mHNL*(-s + t) + s*(2*s + t)) + M*M*(4*(mHNL*mHNL*mHNL*mHNL) - 3*(mHNL*mHNL)*t - t*(4*s + t)))) + FFf2*(8*FFNCga*h*(M*M)*(2*(M*M*M*M)*t + t*(-(mHNL*mHNL*mHNL*mHNL) + mHNL*mHNL*(-s + t) + s*(2*s + t)) + M*M*(4*(mHNL*mHNL*mHNL*mHNL) - 3*(mHNL*mHNL)*t - t*(4*s + t))) - s*Sqrt((M*M*M*M + (mHNL*mHNL - s)*(mHNL*mHNL - s) - 2*(M*M)*(mHNL*mHNL + s))/(s*s))*(4*FFNCf1*(M*M)*(mHNL*mHNL*mHNL*mHNL + mHNL*mHNL*t - 2*(t*t)) + FFNCf2*(4*(M*M*M*M)*t + 4*(M*M)*(mHNL*mHNL*mHNL*mHNL + mHNL*mHNL*t - 2*t*(s + t)) + t*(mHNL*mHNL*mHNL*mHNL + 4*s*(s + t) - mHNL*mHNL*(4*s + t))))))*Vhad*(Cji*Vij + Cij*Vji))/(M*M*s*Sqrt((M*M*M*M + (mHNL*mHNL - s)*(mHNL*mHNL - s) - 2*(M*M)*(mHNL*mHNL + s))/(s*s))*(MZBOSON*MZBOSON - t)*(-(mzprime*mzprime) + t)))

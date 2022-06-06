@@ -6,14 +6,7 @@ import logging
 mylogger = logging.getLogger(__name__)
 
 
-#CYTHON
-import pyximport
-pyximport.install(
-    language_level=3,
-    pyimport=False,
-    )
 from . import Cfourvec as Cfv
-
 from . import const
 from .const import *
 from . import phase_space
@@ -27,28 +20,37 @@ def lam(a,b,c):
 def Sqrt(x):
 	return np.sqrt(x)
 
-
-
-
 class UpscatteringXsec(vg.BatchIntegrand):
 
-	def __init__(self, dim, Enu, MC_case, diagram='total'):
+	def __init__(self, dim, Enu, ups_case, diagram='total'):
+		"""
+		Vegas integrand for diff cross section for upscattering
+
+		Args:
+			dim (int): integration dimensions
+			Enu (float): neutrino energy to be considered
+			ups_case (DarkNews.model.UpscatteringProcess): the upscattering class of DarkNews
+			diagram (str, optional): _description_. Defaults to 'total'.
+
+		Raises:
+			ValueError: if cannot find diagrams to be computed
+		"""
 		self.dim = dim
 		self.Enu = Enu
-		self.MC_case = MC_case
+		self.ups_case = ups_case
 		self.diagram = diagram
 		if not isinstance(self.diagram, str):
 			logger.error(f"ERROR. Cannot calculate total cross section for more than one diagram at a time. Passed diagram={self.diagram}.")
 			raise ValueError
 		
 		# Enforce Q2 range
-		if self.MC_case.scattering_regime == 'coherent':
+		if self.ups_case.scattering_regime == 'coherent':
 			self.QMIN = 0 # GeV
 			self.QMAX = 2 # GeV
-		elif self.MC_case.scattering_regime in ['p-el','n-el']:
+		elif self.ups_case.scattering_regime in ['p-el','n-el']:
 			self.QMIN = 0 # GeV
 			self.QMAX = 5 # GeV
-		elif self.MC_case.scattering_regime in ['DIS']:
+		elif self.ups_case.scattering_regime in ['DIS']:
 			self.QMIN = 2 # GeV
 			self.QMAX = np.inf # GeV
 		else:
@@ -70,12 +72,12 @@ class UpscatteringXsec(vg.BatchIntegrand):
 	
 	def __call__(self, x, jac):
 
-		ups_case = self.MC_case.ups_case
+		ups_case = self.ups_case
 
 		##############################################
 		# Upscattering Kinematics
 		Enu = self.Enu
-		M = self.MC_case.target.mass
+		M = ups_case.target.mass
 
 		Q2lmin = np.log(phase_space.upscattering_Q2min(Enu, ups_case.m_ups, M))
 		Q2lmax = np.log(np.minimum(phase_space.upscattering_Q2max(Enu, ups_case.m_ups, M), self.QMAX**2 ))
@@ -89,7 +91,7 @@ class UpscatteringXsec(vg.BatchIntegrand):
 
 		##############################################
 		# Upscattering amplitude squared (spin summed -- not averaged)
-		diff_xsec = amps.upscattering_dxsec_dQ2([s,t,u], self.MC_case.ups_case, diagrams = [self.diagram])
+		diff_xsec = amps.upscattering_dxsec_dQ2([s,t,u], self.ups_case, diagrams = [self.diagram])
 		if type(diff_xsec) is dict:
 			diff_xsec = np.sum([diff_xsec[diagram] for diagram in diff_xsec.keys()])
 		# hypercube jacobian (vegas hypercube --> physical limits) transformation
@@ -106,9 +108,23 @@ class UpscatteringXsec(vg.BatchIntegrand):
 
 		return self.int_dic
 
+
 class UpscatteringHNLDecay(vg.BatchIntegrand):
 
 	def __init__(self, dim, Emin, Emax, MC_case):
+		"""
+		Vegas integrand for the process of upscattering with subsequent decays. 
+		Scattering diff xsec and diff decay rates are integrated simultaneously.
+
+		Args:
+			dim (int): _description_
+			Emin (float): min neutrino energy to integrate flux
+			Emax (float): max neutrino energy to integrate flux
+			MC_case (DarkNews.MC.MC_events): the main Monte-Carlo class of DarkNews
+
+		Raises:
+			ValueError: if cannot find what decay process to consider
+		"""
 		self.dim = dim
 		self.Emax = Emax
 		self.Emin = Emin
@@ -144,7 +160,7 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		ups_case = self.MC_case.ups_case
 		decay_case = self.MC_case.decay_case
 
-		M = self.MC_case.target.mass
+		M = ups_case.target.mass
 		m_parent = ups_case.m_ups
 		m_daughter = decay_case.m_daughter
 		mzprime = ups_case.mzprime
@@ -168,7 +184,7 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		t_scatt = -Q2
 		u_scatt = 2*M**2 + m_parent**2 - s_scatt + Q2 # massless projectile
 
-		diff_xsec = amps.upscattering_dxsec_dQ2([s_scatt,t_scatt,u_scatt], self.MC_case.ups_case)
+		diff_xsec = amps.upscattering_dxsec_dQ2([s_scatt,t_scatt,u_scatt], ups_case)
 
 		# hypercube jacobian (vegas hypercube --> physical limits) transformation
 		hypercube_jacobian = (Q2lmax - Q2lmin)*np.exp(Q2l) * (self.Emax - self.Emin)
@@ -296,8 +312,22 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 		return self.int_dic
 
 
-def get_momenta_from_vegas_samples(vsamples=None, MC_case=None, w=None, I=None):
+def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
+	"""
+	Construct the four momenta of all particles in the upscattering+decay process from the
+	vegas weights.
 
+	Args:
+		vsamples (np.ndarray, optional): integration samples obtained from vegas
+				as hypercube coordinates. Always in the interval [0,1].
+
+		MC_case (DarkNews.MC.MC_events): the main Monte-Carlo class of DarkNews
+
+	Returns:
+		dict: each key corresponds to a set of four momenta for a given particle involved,
+			so the values are 2D np.ndarrays with each row a different event and each column a different
+			four momentum component. Contains also the weights.
+	"""
 
 	four_momenta = {}
 

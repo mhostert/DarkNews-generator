@@ -3,6 +3,7 @@ from scipy import interpolate
 from particle import literals as lp
 from pathlib import Path
 import os.path
+import os
 local_dir = Path(__file__).parent
 
 from . import logger, prettyprinter
@@ -14,8 +15,7 @@ from .AssignmentParser import AssignmentParser
 
 
 class Detector():
-    """ 
-
+    """
     Detector is a collection of necessary variables for cross-section and event rate
     calculations, e.g., energy range, target type, weight, and POTs for exposure.
     
@@ -27,19 +27,29 @@ class Detector():
                             in the path `DarkNews/include/detector/exp_module.txt`.
                             the file should contain parameters specific for
                             that experiment if it is user defined.
+
+    Raises:
+        FileNotFoundError: if no detector file was found
+        KeyError: if a required field is not specified in the detector file
+        
     """
-    PATH_CONFIG_FILES = os.path.join(local_dir, "include/detectors")
+    PATH_CONFIG_FILES = os.path.join(local_dir, Path("include/detectors"))
     KEYWORDS = {
         "dune_nd_fhc": os.path.join(PATH_CONFIG_FILES, "dune_nd_fhc.txt"),
         "dune_nd_rhc": os.path.join(PATH_CONFIG_FILES, "dune_nd_rhc.txt"),
         "microboone": os.path.join(PATH_CONFIG_FILES, "microboone.txt"),
         "minerva_le_fhc": os.path.join(PATH_CONFIG_FILES, "minerva_le_fhc.txt"),
         "minerva_me_fhc": os.path.join(PATH_CONFIG_FILES, "minerva_me_fhc.txt"),
+        "minerva_me_rhc": os.path.join(PATH_CONFIG_FILES, "minerva_me_fhc.txt"),
         "miniboone_fhc": os.path.join(PATH_CONFIG_FILES, "miniboone_fhc.txt"),
+        "miniboone_rhc": os.path.join(PATH_CONFIG_FILES, "miniboone_rhc.txt"),
         "minos_le_fhc": os.path.join(PATH_CONFIG_FILES, "minos_le_fhc.txt"),
         "minos_me_fhc": os.path.join(PATH_CONFIG_FILES, "minos_me_fhc.txt"),
         "nd280_fhc": os.path.join(PATH_CONFIG_FILES, "nd280_fhc.txt"),
-        "nova_le_fhc": os.path.join(PATH_CONFIG_FILES, "nova_le_fhc.txt")
+        "nova_le_fhc": os.path.join(PATH_CONFIG_FILES, "nova_le_fhc.txt"),
+        "fasernu": os.path.join(PATH_CONFIG_FILES, "fasernu.txt"),
+        "nutev_fhc": os.path.join(PATH_CONFIG_FILES, "nutev_fhc.txt"),
+        "nutev_rhc": os.path.join(PATH_CONFIG_FILES, "nutev_rhc.txt")
     }
 
     def __init__(self, experiment):
@@ -48,7 +58,7 @@ class Detector():
             # experiment is initially interpreted as a path to a local file
             experiment_file = experiment
             parser.parse_file(file=experiment_file, comments="#")
-        except FileNotFoundError as err:
+        except (OSError, IOError) as err:
             # if no file is found, then it is interpreted as a keyword for a pre-defined experiment
             if experiment in self.KEYWORDS:
                 experiment_file = self.KEYWORDS[experiment]
@@ -81,7 +91,7 @@ class Detector():
         
         # load neutrino fluxes
         exp_dir = os.path.dirname(experiment_file)
-        _enu, *_fluxes = np.genfromtxt(f'{exp_dir}/{self.FLUXFILE}',unpack=True)
+        _enu, *_fluxes = np.genfromtxt(Path(f'{exp_dir}/{self.FLUXFILE}'),unpack=True)
         self.FLUX_FUNCTIONS = 6*[[]]
         for i in range(len(_fluxes)):
             self.FLUX_FUNCTIONS[i] = interpolate.interp1d(_enu, _fluxes[i]*self.FLUX_NORM, fill_value=0.0, bounds_error=False)
