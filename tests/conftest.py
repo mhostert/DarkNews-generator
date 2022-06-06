@@ -28,6 +28,7 @@ def light_DP_gen_all_outputs():
 
     return gen.run(loglevel="INFO")
 
+
 @pytest.fixture(scope='session')
 def gen_all_benchmarks():
 
@@ -39,6 +40,14 @@ def gen_all_benchmarks():
     epsilon_def = np.sqrt(2e-10/const.alphaQED)
     gen = GenLauncher(mzprime=0.03, m4=0.420, epsilon=epsilon_def, Umu4=umu4_def, UD4=ud4_def, gD=gD_def, 
                         neval=1000, HNLtype="dirac", exp="miniboone_fhc", loglevel='ERROR', seed=42)
+    df_light = gen.run(loglevel="INFO")
 
-    return gen.run(loglevel="INFO")
+
+    gen = GenLauncher(mzprime=1.25, m4=0.150, epsilon=epsilon_def, Umu4=umu4_def, UD4=ud4_def, gD=gD_def, 
+                        neval=1000, HNLtype="dirac", exp="miniboone_fhc", loglevel='ERROR', seed=42)
+    df_heavy = gen.run(loglevel="INFO")
+
+
+
+    return df_light, df_heavy
 

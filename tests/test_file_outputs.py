@@ -34,9 +34,11 @@ def test_output(light_DP_gen_all_outputs):
 
 
 def test_MB_rates_of_BPs(gen_all_benchmarks):
-    df = gen_all_benchmarks
+    df_light,df_heavy = gen_all_benchmarks
     # check seeded generation
     expec = 12903.909075535918
-    assert (np.abs(np.sum(df['w_event_rate']) - expec)/expec < 0.01)
+    assert (np.abs(np.sum(df_light['w_event_rate']) - expec)/expec < 0.01)
 
-
+    # check seeded generation
+    expec = 4.965717632634995
+    assert (np.abs(np.sum(df_heavy['w_event_rate']) - expec)/expec < 0.01)
