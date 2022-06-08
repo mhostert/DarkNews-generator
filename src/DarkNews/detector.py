@@ -58,7 +58,7 @@ class Detector():
             # experiment is initially interpreted as a path to a local file
             experiment_file = experiment
             parser.parse_file(file=experiment_file, comments="#")
-        except (OSError, IOError) as err:
+        except (OSError, IOError, FileNotFoundError) as err:
             # if no file is found, then it is interpreted as a keyword for a pre-defined experiment
             if experiment in self.KEYWORDS:
                 experiment_file = self.KEYWORDS[experiment]
@@ -89,9 +89,15 @@ class Detector():
         for fid_mass, target in zip(self.FIDUCIAL_MASS_PER_TARGET, self.NUCLEAR_TARGETS):
             self.NUMBER_OF_TARGETS[f'{target.name}'] = fid_mass*const.t_to_GeV/(target.mass)
         
-        # load neutrino fluxes
+        # load neutrino fluxes: first try with path relative to experiment file, if error try with path from original config files
         exp_dir = os.path.dirname(experiment_file)
-        _enu, *_fluxes = np.genfromtxt(Path(f'{exp_dir}/{self.FLUXFILE}'),unpack=True)
+        try:
+            _enu, *_fluxes = np.genfromtxt(Path(f'{exp_dir}/{self.FLUXFILE}'), unpack=True)
+        except FileNotFoundError:
+            try:
+                _enu, *_fluxes = np.genfromtxt(Path(f'{self.PATH_CONFIG_FILES}/{self.FLUXFILE}'), unpack=True)
+            except FileNotFoundError:
+                raise FileNotFoundError(f"Fluxes file {self.FLUXFILE} not found neither in current experiment file path nor in config file path.")
         self.FLUX_FUNCTIONS = 6*[[]]
         for i in range(len(_fluxes)):
             self.FLUX_FUNCTIONS[i] = interpolate.interp1d(_enu, _fluxes[i]*self.FLUX_NORM, fill_value=0.0, bounds_error=False)
