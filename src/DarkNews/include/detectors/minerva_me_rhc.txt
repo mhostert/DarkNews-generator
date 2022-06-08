@@ -1,6 +1,6 @@
-# fluxes from ?????????
+# fluxes from https://inspirehep.net/files/50ab72442625d61ca778785b5dd42f76
 name = "MINERVA_RHC_ME"
-fluxfile = "../fluxes/NUMI_RHC_ME_unofficial.dat"
+fluxfile = "../fluxes/NUMI_RHC_ME.dat"
 flux_norm = 1
 erange = [
     0.1,

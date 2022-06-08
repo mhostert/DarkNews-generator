@@ -340,17 +340,13 @@ class GenLauncher:
                                             }
 
                                     if scope['INCLUDE_HC']:  # helicity conserving scattering
-                                        self.gen_cases.append(dn.MC.MC_events(self.experiment, **args, helicity = 'conserving'))
+                                        self.gen_cases.append(dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, **args, helicity = 'conserving'))
 
                                     if scope['INCLUDE_HF']:  # helicity flipping scattering
-                                        self.gen_cases.append(dn.MC.MC_events(self.experiment, **args, helicity = 'flipping'))
+                                        self.gen_cases.append(dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, **args, helicity = 'flipping'))
 
                                     logger.debug(f"Created an MC instance of {self.gen_cases[-1].underl_process_name}.")
                                     
-        
-        # Assign new physics parameters
-        for g in self.gen_cases:
-            g.set_theory_params(self.bsm_model)
             
         return self.gen_cases
 

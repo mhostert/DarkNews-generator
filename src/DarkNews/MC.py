@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import vegas as vg
-import copy 
 
 from DarkNews import logger, prettyprinter
 
@@ -42,6 +41,7 @@ class MC_events:
 
     def __init__(self,
                 experiment, 
+                bsm_model,
                 **kwargs):
 
         # default parameters
@@ -64,19 +64,6 @@ class MC_events:
         else:
             self.nuclear_target = self.experiment.NUCLEAR_TARGETS[0]
             logger.warning('No target passed to MC_events, using first entry in experiment class instead.')
-
-        if scope['scattering_regime'] == 'coherent':
-            self.target = self.nuclear_target
-        elif scope['scattering_regime'] == 'p-el':
-            self.target = self.nuclear_target.get_constituent_nucleon('proton')
-        elif scope['scattering_regime'] == 'n-el':
-            self.target = self.nuclear_target.get_constituent_nucleon('neutron')
-        elif scope['scattering_regime'] == 'DIS':
-            self.target = self.nuclear_target.get_constituent_quarks()
-        else:
-            logger.error(f"Scattering regime {scope['scattering_regime']} not supported.")
-
-        self.MA = self.target.mass 
 
         # identifiers for particles in the process 
         self.nu_projectile = scope['nu_projectile']
@@ -106,27 +93,19 @@ class MC_events:
 
         else:
             logger.error(f"Error! Could not find decay product: {scope['decay_product']}")
-            raise ValueError
-
-        # process being considered
-        self.underl_process_name = f'{self.nu_projectile.name} {self.target.name} --> {self.nu_upscattered.name}  {self.target.name} --> {self.nu_outgoing.name} {DECAY_PRODUCTS} {self.target.name}'
-    
+            raise ValueError    
 
 
-    def set_theory_params(self, bsm_model):
-        """ 
-            Sets the theory parameters for the current process
 
-            Also defines upscattering and decay objects
-
-        """
         self.bsm_model = bsm_model
         # scope for upscattering process
         self.ups_case = model.UpscatteringProcess(nu_projectile=self.nu_projectile, 
                                                     nu_upscattered=self.nu_upscattered,
-                                                    target=self.target,
+                                                    nuclear_target=self.nuclear_target,
+                                                    scattering_regime=self.scope['scattering_regime'],
                                                     helicity=self.helicity,
                                                     TheoryModel=bsm_model)
+
         if self.decays_to_dilepton:
             # scope for decay process
             self.decay_case = model.FermionDileptonDecay(nu_parent=self.nu_upscattered,
@@ -145,9 +124,7 @@ class MC_events:
             logger.error("Error! Could not determine what type of decay class to use.")
             raise ValueError
 
-        self.Ethreshold = self.ups_case.m_ups**2 / 2.0 / self.ups_case.MA + self.ups_case.m_ups
-
-        if self.Ethreshold > self.experiment.ERANGE[-1]:
+        if self.ups_case.Ethreshold > self.experiment.ERANGE[-1]:
             logger.error(f"Particle {self.nu_upscattered.name} is too heavy to be produced in the energy range of experiment {self.experiment.NAME}")
             raise ValueError
 
@@ -156,6 +133,8 @@ class MC_events:
             logger.error(f"Error! Mass of HNL produced in neutrino scattering, m_ups = {self.ups_case.m_upscattered} GeV, different from that of parent HNL, m_parent = { self.decay_case.m_parent} GeV.")
             raise ValueError
 
+        # process being considered
+        self.underl_process_name = f'{self.nu_projectile.name} {self.ups_case.target.name} --> {self.nu_upscattered.name}  {self.ups_case.target.name} --> {self.nu_outgoing.name} {DECAY_PRODUCTS} {self.ups_case.target.name}'
 
     def get_total_xsec(self, Enu):
         """ 
@@ -167,7 +146,7 @@ class MC_events:
         self.Enu = Enu
 
         # below threshold
-        if Enu < (self.Ethreshold):
+        if Enu < (self.ups_case.Ethreshold):
             return 0.0
 
         batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=self.Enu, MC_case=self)
@@ -215,7 +194,7 @@ class MC_events:
         # Some experimental definitions
         #self.exp = experiment  # NO NEED TO STORE THIS
         self.flux = self.experiment.neutrino_flux(self.nu_projectile)
-        self.EMIN = max(self.experiment.ERANGE[0], 1.05 * self.Ethreshold)
+        self.EMIN = max(self.experiment.ERANGE[0], 1.05 * self.ups_case.Ethreshold)
         self.EMAX = self.experiment.ERANGE[1]
 
 
@@ -318,10 +297,10 @@ class MC_events:
         # flux averaged xsec weights (neglecting kinematics of decay)
         df_gen['w_flux_avg_xsec'] = weights['diff_flux_avg_xsec']*const.attobarn_to_cm2*target_multiplicity*exposure*batch_f.norm['diff_flux_avg_xsec']
 
-        df_gen['target']       = np.full(tot_nevents, self.target.name)
-        df_gen['target_pdgid'] = np.full(tot_nevents, self.target.pdgid)
+        df_gen['target']       = np.full(tot_nevents, self.ups_case.target.name)
+        df_gen['target_pdgid'] = np.full(tot_nevents, self.ups_case.target.pdgid)
 
-        df_gen['scattering_regime']  = np.full(tot_nevents, self.scope['scattering_regime'])
+        df_gen['scattering_regime']  = np.full(tot_nevents, self.ups_case.scattering_regime)
         df_gen['helicity']           = np.full(tot_nevents, self.helicity)
         df_gen['underlying_process'] = np.full(tot_nevents, self.underl_process_name)
 
@@ -346,104 +325,6 @@ class MC_events:
 
         return df_gen
 
-
-
-class XsecCalc:
-
-    def __init__(self, nuclear_target, bsm_model, **kwargs):
-
-        # default parameters
-        self.upscattered='4'
-        self.nu_projectile=pdg.numu
-        self.scattering_regime = 'coherent'
-        self.helicity = 'conserving'
-        self.__dict__.update(kwargs)
-        
-        self.nuclear_target = nuclear_target
-        if self.scattering_regime == 'coherent':
-            self.target = self.nuclear_target
-        elif self.scattering_regime == 'p-el':
-            self.target = self.nuclear_target.get_constituent_nucleon('proton')
-        elif self.scattering_regime == 'n-el':
-            self.target = self.nuclear_target.get_constituent_nucleon('neutron')
-        else:
-            logger.error(f"Scattering regime {self.scattering_regime} not supported.")
-        
-        # How many constituent targets inside scattering regime? 
-        if self.scattering_regime == 'coherent':
-            self.target_multiplicity = 1
-        elif self.scattering_regime == 'p-el':
-            self.target_multiplicity = self.nuclear_target.Z
-        elif self.scattering_regime == 'n-el':
-            self.target_multiplicity = self.nuclear_target.N
-        else:
-            logger.error(f"Scattering regime {self.scattering_regime} not supported.")
-
-        self.bsm_model = bsm_model
-        # scope for upscattering process
-        self.nu_upscattered=getattr(self.bsm_model,f'neutrino{self.upscattered}')
-        self.ups_case = model.UpscatteringProcess(nu_projectile=self.nu_projectile, 
-                                                    nu_upscattered=self.nu_upscattered,
-                                                    target=self.target,
-                                                    helicity=self.helicity,
-                                                    TheoryModel=self.bsm_model)
-
-        self.Ethreshold = self.ups_case.m_ups**2 / 2.0 / self.ups_case.MA + self.ups_case.m_ups
-
-        #############
-        # vectorize total cross section calculator using vegas integration
-        self.vectorized_total_xsec = np.vectorize(self.scalar_total_xsec, excluded=['self','diagram','NINT','NEVAL','NINT_warmup','NEVAL_warmup'])
-
-        self.calculable_diagrams = find_calculable_diagrams(self.bsm_model)
-
-
-    def scalar_total_xsec(self, Enu, diagram='total', NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup):
-        # below threshold
-        if Enu < (self.Ethreshold):
-            return 0.0
-        else:
-            DIM = 1
-            batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=Enu, MC_case=self, diagram=diagram)
-            integ   = vg.Integrator(DIM*[[0.0, 1.0]]) # unit hypercube
-            
-            integrals = run_vegas(batch_f, integ, adapt_to_errors=True,
-                                        NINT=NINT, 
-                                        NEVAL=NEVAL, 
-                                        NINT_warmup=NINT_warmup, 
-                                        NEVAL_warmup=NEVAL_warmup)
-            logger.debug(f"Main VEGAS run completed.")
-            
-            return integrals['diff_xsec'].mean*batch_f.norm['diff_xsec']
-
-    def total_xsec(self, Enu, diagrams=['total'], NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup):
-        """ 
-            Returns the total upscattering xsec for a fixed neutrino energy
-        """
-        self.Enu = Enu
-        all_xsecs=0.0
-        for diagram in diagrams:
-            if diagram in self.calculable_diagrams or diagram=='total':
-                tot_xsec = self.vectorized_total_xsec(Enu, diagram=diagram, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
-            else:
-                logger.warning(f'Warning: Diagram not found. Either not implemented or misspelled. Setting tot xsec it to zero: {diagram}')
-                tot_xsec = 0.0*Enu
-            
-            #############
-            # integrated xsec coverted to cm^2
-            all_xsecs += tot_xsec*const.attobarn_to_cm2*self.target_multiplicity
-            logger.debug(f"Total cross section for {diagram} calculated.")
-
-        return all_xsecs
-
-    def diff_xsec_Q2(self, Enu, Q2, diagrams=['total']):
-
-        s = Enu*self.ups_case.MA*2+self.ups_case.MA**2
-        physical =  ((Q2 > ps.upscattering_Q2min(Enu, self.ups_case.m_ups, self.ups_case.MA)) & (Q2 < ps.upscattering_Q2max(Enu, self.ups_case.m_ups, self.ups_case.MA)))
-        diff_xsecs=amps.upscattering_dxsec_dQ2([s,-Q2,0.0], process=self.ups_case, diagrams=diagrams)
-        if type(diff_xsecs) is dict:
-            return {key: diff_xsecs[key]*physical for key in diff_xsecs.keys()}
-        else:
-            return diff_xsecs*physical
 
 
 
@@ -530,34 +411,3 @@ def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=
 
     # sample again, now saving result and turning off further adaption
     return integ(batch_f,  nitn = NINT, neval = NEVAL, uses_jac=True, **kwargs)#, adapt=False)
-
-
-def find_calculable_diagrams(bsm_model):
-    """ 
-    Args:
-        bsm_model (DarkNews.model.Model): main BSM model class of DarkNews
-
-    Returns:
-        list: with all non-zero upscattering diagrams to be computed in this model.
-    """
-
-    calculable_diagrams = []
-    calculable_diagrams.append('NC_SQR')
-    if bsm_model.is_kinetically_mixed: 
-        calculable_diagrams.append('KinMix_SQR')
-        calculable_diagrams.append('KinMix_NC_inter')
-    if bsm_model.is_mass_mixed: 
-        calculable_diagrams.append('MassMix_SQR')
-        calculable_diagrams.append('MassMix_NC_inter')
-        if bsm_model.is_kinetically_mixed: 
-            calculable_diagrams.append('KinMix_MassMix_inter')
-    if bsm_model.is_TMM: 
-        calculable_diagrams.append('TMM_SQR')
-    if bsm_model.is_scalar_mixed: 
-        calculable_diagrams.append('Scalar_SQR')
-        calculable_diagrams.append('Scalar_NC_inter')
-        if bsm_model.is_kinetically_mixed: 
-            calculable_diagrams.append('Scalar_KinMix_inter')
-        if bsm_model.is_mass_mixed: 
-            calculable_diagrams.append('Scalar_MassMix_inter')
-    return calculable_diagrams

@@ -25,21 +25,21 @@ def dn_gen():
     parser.add_argument("--HNLtype", help="HNLtype: dirac or majorana", choices=DEFAULTS._choices['HNLtype'])
 
     # neutral lepton mixing
-    parser.add_argument("--ue4", type=float, help="Ue4")
-    parser.add_argument("--ue5", type=float, help="Ue5")
-    parser.add_argument("--ue6", type=float, help="Ue6")
+    parser.add_argument("--Ue4", type=float, help="Ue4")
+    parser.add_argument("--Ue5", type=float, help="Ue5")
+    parser.add_argument("--Ue6", type=float, help="Ue6")
 
-    parser.add_argument("--umu4", type=float, help="Umu4")
-    parser.add_argument("--umu5", type=float, help="Umu5")
-    parser.add_argument("--umu6", type=float, help="Umu6")
+    parser.add_argument("--Umu4", type=float, help="Umu4")
+    parser.add_argument("--Umu5", type=float, help="Umu5")
+    parser.add_argument("--Umu6", type=float, help="Umu6")
 
-    parser.add_argument("--utau4", type=float, help="Utau4")
-    parser.add_argument("--utau5", type=float, help="Utau5")
-    parser.add_argument("--utau6", type=float, help="Utau6")
+    parser.add_argument("--Utau4", type=float, help="Utau4")
+    parser.add_argument("--Utau5", type=float, help="Utau5")
+    parser.add_argument("--Utau6", type=float, help="Utau6")
 
-    parser.add_argument("--ud4", type=float, help="UD4")
-    parser.add_argument("--ud5", type=float, help="UD5")
-    parser.add_argument("--ud6", type=float, help="UD6")
+    parser.add_argument("--UD4", type=float, help="UD4")
+    parser.add_argument("--UD5", type=float, help="UD5")
+    parser.add_argument("--UD6", type=float, help="UD6")
 
     # dark coupling choices
     parser.add_argument("--gD", type=float, help="U(1)_d dark coupling")
@@ -64,14 +64,37 @@ def dn_gen():
     parser.add_argument("--mu_tr_tau5", type=float, help="TMM mu_tr_tau5")
     parser.add_argument("--mu_tr_tau6", type=float, help="TMM mu_tr_tau6")
 
-    parser.add_argument("--mu_tr_44", type=float, help="TMM mu_tr_tau4")
-    parser.add_argument("--mu_tr_45", type=float, help="TMM mu_tr_tau5")
-    parser.add_argument("--mu_tr_46", type=float, help="TMM mu_tr_tau6")
+    parser.add_argument("--mu_tr_44", type=float, help="TMM mu_tr_44")
+    parser.add_argument("--mu_tr_45", type=float, help="TMM mu_tr_45")
+    parser.add_argument("--mu_tr_46", type=float, help="TMM mu_tr_46")
 
-    parser.add_argument("--mu_tr_55", type=float, help="TMM mu_tr_tau5")
-    parser.add_argument("--mu_tr_56", type=float, help="TMM mu_tr_tau6")
+    parser.add_argument("--mu_tr_55", type=float, help="TMM mu_tr_55")
+    parser.add_argument("--mu_tr_56", type=float, help="TMM mu_tr_56")
 
-    parser.add_argument("--mu_tr_66", type=float, help="TMM mu_tr_tau6")
+    parser.add_argument("--mu_tr_66", type=float, help="TMM mu_tr_66")
+
+    # Scalar vertices
+    parser.add_argument("--s_e4", type=float, help="scalar vertex s_e4")
+    parser.add_argument("--s_e5", type=float, help="scalar vertex s_e5")
+    parser.add_argument("--s_e6", type=float, help="scalar vertex s_e6")
+
+    parser.add_argument("--s_mu4", type=float, help="scalar vertex s_mu4")
+    parser.add_argument("--s_mu5", type=float, help="scalar vertex s_mu5")
+    parser.add_argument("--s_mu6", type=float, help="scalar vertex s_mu6")
+
+    parser.add_argument("--s_tau4", type=float, help="scalar vertex s_tau4")
+    parser.add_argument("--s_tau5", type=float, help="scalar vertex s_tau5")
+    parser.add_argument("--s_tau6", type=float, help="scalar vertex s_tau6")
+
+    parser.add_argument("--s_44", type=float, help="scalar vertex s_44")
+    parser.add_argument("--s_45", type=float, help="scalar vertex s_45")
+    parser.add_argument("--s_46", type=float, help="scalar vertex s_46")
+
+    parser.add_argument("--s_55", type=float, help="scalar vertex s_55")
+    parser.add_argument("--s_56", type=float, help="scalar vertex s_56")
+
+    parser.add_argument("--s_66", type=float, help="scalar vertex s_66")
+
 
     # visible final states in HNL decay
     parser.add_argument("--decay_product", help="decay process of interest", choices=DEFAULTS._choices['decay_product'])
@@ -109,7 +132,7 @@ def dn_gen():
 
     parser.add_argument("--summary_plots", help="generate summary plots of kinematics", action="store_false")
     parser.add_argument("--path", help="path where to save run's outputs")
-    parser.add_argument("--seed", help="numpy seed to be used by vegas.")
+    parser.add_argument("--seed", type=int, help="numpy seed to be used by vegas.")
 
     kwargs = vars(parser.parse_args())
 

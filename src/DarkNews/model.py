@@ -1,4 +1,5 @@
 import numpy as np
+import vegas as vg
 import math
 
 from DarkNews import logger, prettyprinter
@@ -6,9 +7,13 @@ from DarkNews import logger, prettyprinter
 from particle import literals as lp
 
 from DarkNews import const 
-from DarkNews import decay_rates as dr
 from DarkNews import pdg
+from DarkNews import integrands
+from DarkNews import decay_rates as dr
+from DarkNews import amplitudes as amps
+from DarkNews import phase_space as ps
 
+from DarkNews import MC
 
 def create_model(**kwargs):
 
@@ -91,17 +96,37 @@ class UpscatteringProcess:
     
     '''
 
-    def __init__(self, nu_projectile, nu_upscattered, target, TheoryModel, helicity):
+    def __init__(self, nu_projectile, nu_upscattered, nuclear_target, scattering_regime, TheoryModel, helicity):
 
-        self.MAJ = int(TheoryModel.HNLtype == 'majorana')
+        self.nuclear_target = nuclear_target
+        self.scattering_regime = scattering_regime
+        if self.scattering_regime == 'coherent':
+            self.target = self.nuclear_target
+        elif self.scattering_regime == 'p-el':
+            self.target = self.nuclear_target.get_constituent_nucleon('proton')
+        elif self.scattering_regime == 'n-el':
+            self.target = self.nuclear_target.get_constituent_nucleon('neutron')
+        elif self.scattering_regime == 'DIS':
+            self.target = self.nuclear_target.get_constituent_quarks()
+        else:
+            logger.error(f"Scattering regime {scattering_regime} not supported.")
+
+        # How many constituent targets inside scattering regime? 
+        if self.scattering_regime == 'coherent':
+            self.target_multiplicity = 1
+        elif self.scattering_regime == 'p-el':
+            self.target_multiplicity = self.nuclear_target.Z
+        elif self.scattering_regime == 'n-el':
+            self.target_multiplicity = self.nuclear_target.N
+        else:
+            logger.error(f"Scattering regime {self.scattering_regime} not supported.")
 
         self.nu_projectile = nu_projectile
         self.nu_upscattered = nu_upscattered
-        self.target = target
         self.TheoryModel = TheoryModel
         self.helicity = helicity
 
-        self.MA = target.mass
+        self.MA = self.target.mass
         self.mzprime = TheoryModel.mzprime
         self.mhprime = TheoryModel.mhprime
         self.m_ups = self.nu_upscattered.mass
@@ -124,27 +149,82 @@ class UpscatteringProcess:
 
         ###############
         # Hadronic vertices
-        if target.is_nucleus:
-            self.Chad = const.gweak/2.0/const.cw*np.abs((1.0-4.0*const.s2w)*target.Z-target.N)
-            self.Vhad = const.eQED*TheoryModel.epsilon*target.Z
-            self.Shad = TheoryModel.cSproton*target.Z + TheoryModel.cSneutron*target.N
-        elif target.is_proton:
+        if self.target.is_nucleus:
+            self.Chad = const.gweak/2.0/const.cw*np.abs((1.0-4.0*const.s2w)*self.target.Z-self.target.N)
+            self.Vhad = const.eQED*TheoryModel.epsilon*self.target.Z
+            self.Shad = TheoryModel.cSproton*self.target.Z + TheoryModel.cSneutron*self.target.N
+        elif self.target.is_proton:
             self.Chad = TheoryModel.cVproton
             self.Vhad = TheoryModel.dVproton
             self.Shad = TheoryModel.cSproton
-        elif target.is_neutron:
+        elif self.target.is_neutron:
             self.Chad = TheoryModel.cVneutron
             self.Vhad = TheoryModel.dVneutron
             self.Shad = TheoryModel.cSneutron
         # mass mixed vertex
         self.Cprimehad = self.Chad*TheoryModel.epsilonZ
 
+        # Neutrino energy threshold
+        self.Ethreshold = self.m_ups**2 / 2.0 / self.MA + self.m_ups
+
+        # vectorize total cross section calculator using vegas integration
+        self.vectorized_total_xsec = np.vectorize(self.scalar_total_xsec, excluded=['self','diagram','NINT','NEVAL','NINT_warmup','NEVAL_warmup'])
+
+        self.calculable_diagrams = find_calculable_diagrams(TheoryModel)
+
+    def scalar_total_xsec(self, Enu, diagram='total', NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup):
+        # below threshold
+        if Enu < (self.Ethreshold):
+            return 0.0
+        else:
+            DIM = 1
+            batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=Enu, ups_case=self, diagram=diagram)
+            integ   = vg.Integrator(DIM*[[0.0, 1.0]]) # unit hypercube
+            
+            integrals = MC.run_vegas(batch_f, integ, adapt_to_errors=True,
+                                        NINT=NINT, 
+                                        NEVAL=NEVAL, 
+                                        NINT_warmup=NINT_warmup, 
+                                        NEVAL_warmup=NEVAL_warmup)
+            logger.debug(f"Main VEGAS run completed.")
+            
+            return integrals['diff_xsec'].mean*batch_f.norm['diff_xsec']
+
+    def total_xsec(self, Enu, diagrams=['total'], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup):
+        """ 
+            Returns the total upscattering xsec for a fixed neutrino energy
+        """
+        self.Enu = Enu
+        all_xsecs=0.0
+        for diagram in diagrams:
+            if diagram in self.calculable_diagrams or diagram=='total':
+                tot_xsec = self.vectorized_total_xsec(Enu, diagram=diagram, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
+            else:
+                logger.warning(f'Warning: Diagram not found. Either not implemented or misspelled. Setting tot xsec it to zero: {diagram}')
+                tot_xsec = 0.0*Enu
+            
+            #############
+            # integrated xsec coverted to cm^2
+            all_xsecs += tot_xsec*const.attobarn_to_cm2*self.target_multiplicity
+            logger.debug(f"Total cross section for {diagram} calculated.")
+
+        return all_xsecs
+
+    def diff_xsec_Q2(self, Enu, Q2, diagrams=['total']):
+
+        s = Enu*self.MA*2+self.MA**2
+        physical =  ((Q2 > ps.upscattering_Q2min(Enu, self.m_ups, self.MA)) & (Q2 < ps.upscattering_Q2max(Enu, self.m_ups, self.MA)))
+        diff_xsecs=amps.upscattering_dxsec_dQ2([s,-Q2,0.0], process=self, diagrams=diagrams)
+        if type(diff_xsecs) is dict:
+            return {key: diff_xsecs[key]*physical for key in diff_xsecs.keys()}
+        else:
+            return diff_xsecs*physical
+
 
 
 class FermionDileptonDecay:
 
     def __init__(self, nu_parent, nu_daughter, final_lepton1, final_lepton2, TheoryModel, h_parent=-1):
-
 
         self.TheoryModel = TheoryModel
         self.HNLtype = TheoryModel.HNLtype
@@ -794,3 +874,32 @@ class HNLparticle():
         self.brs = brs
 
 
+def find_calculable_diagrams(bsm_model):
+    """ 
+    Args:
+        bsm_model (DarkNews.model.Model): main BSM model class of DarkNews
+
+    Returns:
+        list: with all non-zero upscattering diagrams to be computed in this model.
+    """
+
+    calculable_diagrams = []
+    calculable_diagrams.append('NC_SQR')
+    if bsm_model.is_kinetically_mixed: 
+        calculable_diagrams.append('KinMix_SQR')
+        calculable_diagrams.append('KinMix_NC_inter')
+    if bsm_model.is_mass_mixed: 
+        calculable_diagrams.append('MassMix_SQR')
+        calculable_diagrams.append('MassMix_NC_inter')
+        if bsm_model.is_kinetically_mixed: 
+            calculable_diagrams.append('KinMix_MassMix_inter')
+    if bsm_model.is_TMM: 
+        calculable_diagrams.append('TMM_SQR')
+    if bsm_model.is_scalar_mixed: 
+        calculable_diagrams.append('Scalar_SQR')
+        calculable_diagrams.append('Scalar_NC_inter')
+        if bsm_model.is_kinetically_mixed: 
+            calculable_diagrams.append('Scalar_KinMix_inter')
+        if bsm_model.is_mass_mixed: 
+            calculable_diagrams.append('Scalar_MassMix_inter')
+    return calculable_diagrams

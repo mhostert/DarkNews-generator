@@ -116,7 +116,7 @@ class Printer:
 			cols = [f'{v[0]}_{v[1]}' if v[1] else f'{v[0]}' for v in self.df_for_numpy.columns.values]
 			self.array_gen = self.df_for_numpy.to_numpy(dtype=np.float64)
 
-		np.save(f'{self.out_file_name}ndarray.npy', self.array_gen, **kwargs)
+		np.save(Path(f'{self.out_file_name}/ndarray.npy'), self.array_gen, **kwargs)
 		prettyprinter.info(f"Events in numpy array saved to file successfully:\n{self.out_file_name}")
 		return self.array_gen
 
@@ -131,13 +131,11 @@ class Printer:
 		# kwargs['engine']=kwargs.get('engine','pyarrow')
 		
 		if self.sparse:
-			pq.write_table(pa.Table.from_pandas(self.df_sparse), f"{self.out_file_name}pandas_df.parquet", **kwargs)
-			# self.df_sparse.to_parquet(f"{self.out_file_name}pandas_df.parquet", **kwargs)
+			pq.write_table(pa.Table.from_pandas(self.df_sparse), Path(f"{self.out_file_name}/pandas_df.parquet"), **kwargs)
 			prettyprinter.info(f"Events in sparse pandas dataframe saved to parquet file successfully:\n{self.out_file_name}")
 			return self.df_sparse
 		else:
-			pq.write_table(pa.Table.from_pandas(self.df_gen), f"{self.out_file_name}pandas_df.parquet", **kwargs)
-			# self.df_gen.to_parquet(f"{self.out_file_name}pandas_df.parquet", **kwargs)
+			pq.write_table(pa.Table.from_pandas(self.df_gen), Path(f"{self.out_file_name}/pandas_df.parquet"), **kwargs)
 			prettyprinter.info(f"Events in pandas dataframe saved to parquet file successfully:\n{self.out_file_name}")
 			return self.df_gen
 
@@ -150,12 +148,12 @@ class Printer:
 
 		"""
 		if self.sparse:
-			dill.dump(self.df_sparse, open(f'{self.out_file_name}pandas_df.pckl', 'wb'), **kwargs)
+			dill.dump(self.df_sparse, open(Path(f'{self.out_file_name}/pandas_df.pckl'), 'wb'), **kwargs)
 			prettyprinter.info(f"Events in sparse pandas dataframe saved to file successfully:\n{self.out_file_name}")
 			return self.df_sparse
 		else:
 			# pickles DarkNews classes with support for lambda functions
-			dill.dump(self.df_gen, open(f'{self.out_file_name}pandas_df.pckl', 'wb'), **kwargs)
+			dill.dump(self.df_gen, open(Path(f'{self.out_file_name}/pandas_df.pckl'), 'wb'), **kwargs)
 			prettyprinter.info(f"Events in pandas dataframe saved to file successfully:\n{self.out_file_name}")
 			return self.df_gen
 
@@ -262,7 +260,6 @@ class Printer:
 		pvec_pos_decay = df_gen['pos_decay'][['1','2','3']].to_numpy()
 		pvec_pos_scatt = df_gen['pos_scatt'][['1','2','3']].to_numpy()
 
-		# print(df_gen['P_projectile'][['1','2','3']].to_numpy()[0])
 		# string to be saved to file
 		hepevt_string = ''
 		hepevt_string += f"{tot_events_to_print}\n"
