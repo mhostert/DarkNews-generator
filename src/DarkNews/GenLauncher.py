@@ -34,8 +34,8 @@ class GenLauncher:
         "s_44", "s_45", "s_46", "s_55", "s_56", "s_66", "mhprime","theta",
         "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", 
         "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
-        "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "hepevt_events", 
-        "sparse", "print_to_float32", "sample_geometry", "summary_plots", "path", "seed"
+        "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "unweighed_hepevt_events", 
+        "sparse", "print_to_float32", "sample_geometry", "make_summary_plots", "path", "seed"
     ]
 
     def __init__(self, param_file=None, **kwargs):
@@ -134,11 +134,11 @@ class GenLauncher:
         self.numpy = False
         self.hepevt = False
         self.hepevt_unweigh = False
-        self.hepevt_events = 100
+        self.unweighed_hepevt_events = 100
         self.sparse = False
         self.print_to_float32 = False
         self.sample_geometry = False
-        self.summary_plots = True
+        self.make_summary_plots = False
         self.path = "."
         self.seed = None
 
@@ -166,6 +166,9 @@ class GenLauncher:
         )
 
         prettyprinter.info(self.banner)
+
+        if self.hepevt_unweigh:
+            logger.warning(f'Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hepevt events. Currently: n_unweighted/n_eval = {self.unweighed_hepevt_events/self.neval/100}%.')
 
         #########################
         # Set BSM parameters
@@ -215,7 +218,7 @@ class GenLauncher:
         try:
             os.makedirs(self.data_path)
         except OSError:
-            logger.warning("Note that the directory tree for this run already exists.")
+            logger.warning("Directory tree for this run already exists. Overriding it.")
 
         ####################################################
         # Create all MC cases
@@ -429,9 +432,22 @@ class GenLauncher:
             self.dn_printer.print_events_to_ndarray()
         if self.hepevt:
             self.dn_printer.print_events_to_HEPEVT(unweigh= self.hepevt_unweigh, 
-                                                    max_events=self.hepevt_events,
+                                                    max_events=self.unweighed_hepevt_events,
                                                     decay_product=self.decay_product)
         
+        #############################################################################
+        # Make summary plots?
+        if self.make_summary_plots:
+            logger.info("Making summary plots of the kinematics of the process...")
+            try:
+                import matplotlib
+            except ImportError as e:
+                logger.warning("Warning! Could not find matplotlib -- stopping the making of summary plots.")
+            else:
+                self.path_to_summary_plots = Path(self.data_path)/'summary_plots/'
+                dn.plot_tools.batch_plot(self.df, self.path_to_summary_plots, title='DarKNews')
+            logger.info(f"Plots saved in {self.path_to_summary_plots}.")
+
         return self.df
 
 

@@ -1,32 +1,28 @@
+import os 
 import numpy as np
-import scipy 
-import math
-import pandas as pd
+from scipy.interpolate import splprep, splev
+from pathlib import Path
 
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import rc, rcParams
 from matplotlib.pyplot import *
 from matplotlib.pyplot import cm
-from collections import defaultdict
-from functools import partial
-import seaborn as sns
 import matplotlib.patches as mpatches
-
 
 from DarkNews import *
 from ToyAnalysis import analysis
 from ToyAnalysis import fourvec as fv
 from ToyAnalysis import toy_logger
 
-
 ###########################
 fsize=12
 fsize_annotate=10
 
 std_figsize = (1.2*3.7,1.3*2.3617)
-std_axes_form  =[0.16,0.16,0.81,0.76]
+std_axes_form  = [0.16,0.16,0.81,0.76]
 
-# standard figure creation 
+# standard figure  
 def std_fig(ax_form=std_axes_form, 
             figsize=std_figsize,
             rasterized=False):
@@ -44,7 +40,7 @@ def std_fig(ax_form=std_axes_form,
     ax = fig.add_axes(ax_form, rasterized=rasterized)
     ax.patch.set_alpha(0.0)
 
-    return fig,ax
+    return fig, ax
 
 # standard saving function
 def std_savefig(fig, path, dpi=400, **kwargs):
@@ -64,7 +60,7 @@ def sci_notation(num, decimal_digits=1, precision=None, exponent=None):
     """
     if num != 0:
         if exponent is None:
-            exponent = int(math.floor(math.log10(abs(num))))
+            exponent = int(np.floor(np.log10(abs(num))))
         coeff = round(num / float(10**exponent), decimal_digits)
         if precision is None:
             precision = decimal_digits
@@ -72,7 +68,6 @@ def sci_notation(num, decimal_digits=1, precision=None, exponent=None):
         return r"${0:.{2}f}\cdot10^{{{1:d}}}$".format(coeff, exponent, precision)
     else:
         return r"0"
-# ^^^
 
 def get_hist(ax):
     n,bins = [],[]
@@ -88,10 +83,10 @@ def plot_all_rates(df, case_name, Nevents=550, truth_plots=False, title=None, pl
     
     toy_logger.info("Plot MiniBooNE signal in {PATH_MB}")
     if path:
-    	PATH_MB = path
+        PATH_MB = path
     else:
-    	PATH_MB = f'plots/{case_name}_miniboone/'
-    	
+        PATH_MB = Path(f'plots/{case_name}_miniboone/')
+
     if not os.path.exists(PATH_MB):
         os.makedirs(PATH_MB)
 
@@ -107,34 +102,20 @@ def plot_all_rates(df, case_name, Nevents=550, truth_plots=False, title=None, pl
         total_Nevent_MB = bag_reco_MB['reco_w'].sum()
     batch_plot_signalMB(bag_reco_MB, PATH_MB, BP=case_name, title=title, NEVENTS=total_Nevent_MB,loc=loc)
 
-    # plot event rates at MuBooNE weighted appropriately for POT and efficiencies
-    if plot_muB:
-        PATH_muB = f'plots/{case_name}_microboone/'
-        if not os.path.exists(PATH_muB):
-            os.makedirs(PATH_muB)
-
-        bag_reco_muB = analysis.compute_muB_spectrum(df, EVENT_TYPE='ovl', BP=case_name)
-        # POT * n_targets(CH2)
-        N_MB = 18.75e20 * 818.0/(8*const.m_proton + 6*const.m_neutron)
-        N_muB = 12.25e20 * 85/(18*const.m_proton + 22*const.m_neutron)
-        predicted_muB_events = (np.sum(bag_reco_muB['reco_w'])/np.sum(bag_reco_MB['reco_w'])) * N_muB/N_MB * (desired_MB_events)
-        total_Nevent_muB = predicted_muB_events/bag_reco_muB['reco_eff'][0]
-        batch_plot_signalmuB(bag_reco_muB, PATH_muB, title=title,NEVENTS=total_Nevent_muB)
-    
     # plot true variables for MiniBooNE
     if truth_plots:
-        batch_plot(df, f'{PATH_MB}/truth_level_plots/', title=title)
+        batch_plot(df, Path(f'{PATH_MB}/truth_level_plots/'), title=title)
 
 
 
 def batch_plot_signalMB(obs, PATH, title='Dark News', NEVENTS=1, kde=False, BP = "",loc=''):
 
     #################### HISTOGRAMS 1D - STACKED ####################################################
-    histogram1D_data_stacked(PATH+"/"+"1D_Enu_data_stacked", obs, r"$E_{\rm \nu}/$GeV", title,
+    histogram1D_data_stacked(PATH/"1D_Enu_data_stacked", obs, r"$E_{\rm \nu}/$GeV", title,
         varplot='reco_Enu', tot_events=NEVENTS,loc=loc)
-    histogram1D_data_stacked(PATH+"/"+"1D_Evis_data_stacked", obs, r"$E_{\rm vis}/$GeV", title,
+    histogram1D_data_stacked(PATH/"1D_Evis_data_stacked", obs, r"$E_{\rm vis}/$GeV", title,
         varplot='reco_Evis', tot_events=NEVENTS,loc=loc)
-    histogram1D_data_stacked(PATH+"/"+"1D_costheta_data_stacked", obs, r"$\cos\theta$", title,
+    histogram1D_data_stacked(PATH/"1D_costheta_data_stacked", obs, r"$\cos\theta$", title,
         varplot='reco_costheta_beam', tot_events=NEVENTS,loc=loc)
 
     ###################### HISTOGRAM 2D ##################################################
@@ -150,23 +131,12 @@ def batch_plot_signalMB(obs, PATH, title='Dark News', NEVENTS=1, kde=False, BP =
 def batch_plot_signalMB_bf(obs, PATH, title='Dark News', NEVENTS=1, kde=False, BP = "",loc=''):
 
     #################### HISTOGRAMS 1D - STACKED ####################################################
-    histogram1D_data_stacked(PATH+"/"+BP+"1D_Enu_data_stacked", obs, r"$E_{\rm \nu}/$GeV", title,
+    histogram1D_data_stacked(PATH/BP/"1D_Enu_data_stacked", obs, r"$E_{\rm \nu}/$GeV", title,
         varplot='reco_Enu', tot_events=NEVENTS,loc=loc)
-    histogram1D_data_stacked(PATH+"/"+BP+"1D_Evis_data_stacked", obs, r"$E_{\rm vis}/$GeV", title,
+    histogram1D_data_stacked(PATH/BP/"1D_Evis_data_stacked", obs, r"$E_{\rm vis}/$GeV", title,
         varplot='reco_Evis', tot_events=NEVENTS,loc=loc)
-    histogram1D_data_stacked(PATH+"/"+BP+"1D_costheta_data_stacked", obs, r"$\cos\theta$", title,
+    histogram1D_data_stacked(PATH/BP/"1D_costheta_data_stacked", obs, r"$\cos\theta$", title,
         varplot='reco_costheta_beam', tot_events=NEVENTS,loc=loc)   
-
-
-def batch_plot_signalmuB(obs, PATH, title='Dark News', NEVENTS=1, kde=False, BP = ""):
-    
-    #################### HISTOGRAMS 1D - STACKED ####################################################
-    histogram1D_data_muB(PATH+"/"+BP+"1D_Enu_data_stacked", obs, r"$E_{\rm \nu}/$GeV", title,
-        varplot='reco_Enu', tot_events=NEVENTS*(obs['reco_eff'][0]), kde=kde)
-    histogram1D_data_muB(PATH+"/"+BP+"1D_Evis_data_stacked", obs, r"$E_{\rm vis}/$GeV", title,
-        varplot='reco_Evis', tot_events=NEVENTS*(obs['reco_eff'][0]), kde=kde)
-    histogram1D_data_muB(PATH+"/"+BP+"1D_costheta_data_stacked", obs, r"$\cos\theta$", title,
-        varplot='reco_angle', tot_events=NEVENTS*(obs['reco_eff'][0]), kde=kde)
 
 
 # Function for obtaining the histogram data for the simulation at MiniBooNE
@@ -181,9 +151,6 @@ def get_histogram1D(obs, NEVENTS=1, varplot='reco_Evis', get_bins=False,loc='../
     else:
         toy_logger.error('That is not a correct variable!')
         return 1
-    
-    
-    fsize = 10
 
     coherent = (obs['scattering_regime'] == 'coherent')
     pel = (obs['scattering_regime'] == 'p-el')
@@ -309,7 +276,7 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
         
     fsize = 10
     fig = plt.figure()
-    ax = fig.add_axes(axes_form, rasterized=rasterized)
+    ax = fig.add_axes(std_axes_form, rasterized=rasterized)
     ax.patch.set_alpha(0.0)
 
 
@@ -318,8 +285,8 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
     if varplot=='reco_Evis':
 
         # miniboone nu data
-        bin_c, data_MB_enu_nue = np.loadtxt(loc+"aux_data/miniboone_2020/Evis/data_Evis.dat", unpack=True)
-        _, data_MB_bkg = np.loadtxt(loc+"aux_data/miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
+        bin_c, data_MB_enu_nue = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Evis/data_Evis.dat"), unpack=True)
+        _, data_MB_bkg = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Evis/bkg_Evis.dat"), unpack=True)
         bin_c *= 1e-3
         bin_w = 0.05*bin_c/bin_c
         bin_e = np.append(0.1, bin_w/2.0 + bin_c)
@@ -335,10 +302,10 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
     elif varplot=='reco_Enu':
 
         # miniboone nu data 2020
-        _, data_MB = np.loadtxt(loc+"aux_data/miniboone_2020/Enu/data.dat", unpack=True)
-        _, data_MB_bkg = np.loadtxt(loc+"aux_data/miniboone_2020/Enu/constrained_bkg.dat", unpack=True)
-        _, MB_bkg_lower_error_bar = np.loadtxt(loc+"aux_data/miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat", unpack=True)
-        bin_e = np.loadtxt(loc+"aux_data/miniboone_2020/Enu/bin_edges.dat")
+        _, data_MB = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Enu/data.dat"), unpack=True)
+        _, data_MB_bkg = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Enu/constrained_bkg.dat"), unpack=True)
+        _, MB_bkg_lower_error_bar = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat"), unpack=True)
+        bin_e = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Enu/bin_edges.dat"))
         
         
         data_MB = data_MB[:-1]
@@ -365,8 +332,8 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
     elif varplot=='reco_costheta_beam':
 
         # miniboone nu data
-        bin_c, data_MB_cost_nue = np.loadtxt(loc+"aux_data/miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
-        _, data_MB_bkg = np.loadtxt(loc+"aux_data/miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
+        bin_c, data_MB_cost_nue = np.loadtxt(Path(loc+"aux_data/miniboone_2020/cos_Theta/data_cosTheta.dat"), unpack=True)
+        _, data_MB_bkg = np.loadtxt(Path(loc+"aux_data/miniboone_2020/cos_Theta/bkg_cosTheta.dat"), unpack=True)
         bin_w = np.ones(len(bin_c))*0.1
         bin_e = np.linspace(-1,1,21)
         units = 1
@@ -412,396 +379,9 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
     else:
         ax.set_ylim(-20,ax.get_ylim()[1]*1.1)
         ax.set_ylabel(r"Excess events",fontsize=fsize)
-
-    
-    plt.savefig(plotname+'.pdf',dpi=400)
-
-    plt.close()
-
-####### Deprecated
-# Main plotting function for signal at MiniBooNE (stacked histograms)
-# def histogram1D_data_stacked_seaborn(plotname, obs, XLABEL, TITLE, varplot='reco_costheta_beam', tot_events  = 1.0, kde = False):
-    
-#     coherent = (obs['scattering_regime'] == 'coherent')
-#     pel = (obs['scattering_regime'] == 'p-el')
-
-#     HC = (obs['helicity'] == 'conserving')
-#     HF = (obs['helicity'] == 'flipping')
-#     cases = [coherent & HC, pel & HC, coherent & HF, pel & HF]
-#     case_names = [r"coherent conserving", r"p-el conserving", r"coherent flipping", r"p-el flipping"]
-#     case_shorthands = [r"coh HC", r"incoh HC", r"coh HF", r"incoh HF"]
-#     colors=['dodgerblue','violet', 'dodgerblue', 'violet']
-
-#     nevents = []
-#     legends = []
-#     tot_samples = np.size(obs['reco_w'])
-#     for i in range(4):
-#         this_n_events = int(round(np.sum(cases[i])/tot_samples*tot_events))
-#         nevents.append(this_n_events)
-#         legends.append(mpatches.Patch(color=colors[i], label=f'{case_shorthands[i]} ({this_n_events} events)') )
-        
-#     fsize = 10
-#     sns.set_style("white")
-#     fig = plt.figure()
-#     ax = fig.add_axes(axes_form, rasterized=False)
-#     ax.patch.set_alpha(0.0)
-
-
-#     #####################
-#     # MiniBooNE data 
-#     if varplot=='reco_Evis':
-
-#         # miniboone nu data
-#         bin_c, data_MB_enu_nue = np.loadtxt("aux_data/miniboone_2020/Evis/data_Evis.dat", unpack=True)
-#         _, data_MB_bkg = np.loadtxt("aux_data/miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
-#         bin_c *= 1e-3
-#         bin_w = 0.05*bin_c/bin_c
-#         bin_e = np.append(0.1, bin_w/2.0 + bin_c)
-#         hist_type = 'count'
-#         units = 1
-#         data_plot(ax,\
-#                     bin_c,
-#                     bin_w, 
-#                     (data_MB_enu_nue-data_MB_bkg),
-#                     (np.sqrt(data_MB_enu_nue)), 
-#                     (np.sqrt(data_MB_enu_nue)))
-
-#     elif varplot=='reco_Enu':
-
-#         # miniboone nu data 2020
-#         _, data_MB = np.loadtxt("aux_data/miniboone_2020/Enu/data.dat", unpack=True)
-#         _, data_MB_bkg = np.loadtxt("aux_data/miniboone_2020/Enu/constrained_bkg.dat", unpack=True)
-#         _, MB_bkg_lower_error_bar = np.loadtxt("aux_data/miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat", unpack=True)
-#         bin_e = np.loadtxt("aux_data/miniboone_2020/Enu/bin_edges.dat")
-        
-        
-#         data_MB = data_MB[:-1]
-#         bin_e = bin_e[:-1]
-#         data_MB_bkg = data_MB_bkg[:-1]
-#         MB_bkg_lower_error_bar = MB_bkg_lower_error_bar[:-1]
-#         units = 1e3 # from GeV to MeV
-
-#         bin_w = (bin_e[1:] - bin_e[:-1])
-#         bin_c = bin_e[:-1] + bin_w/2
-
-#         data_MB_enu_nue = (data_MB - data_MB_bkg)*bin_w*units
-#         error_bar = np.sqrt( ((data_MB_bkg - MB_bkg_lower_error_bar)*bin_w*units)**2
-#                                 + np.sqrt(data_MB**2*bin_w*units) )
-
-#         hist_type = 'frequency'
-
-#         data_plot(ax,\
-#                     bin_c,
-#                     bin_w, 
-#                     data_MB_enu_nue/bin_w/units,
-#                     error_bar/bin_w/units, 
-#                     error_bar/bin_w/units)
-
-
-#     elif varplot=='reco_costheta_beam':
-
-#         # miniboone nu data
-#         bin_c, data_MB_cost_nue = np.loadtxt("aux_data/miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
-#         _, data_MB_bkg = np.loadtxt("aux_data/miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
-#         bin_w = np.ones(len(bin_c))*0.1
-#         bin_e = np.linspace(-1,1,21)
-#         hist_type = 'count'
-#         units = 1/0.1
-#         data_plot(ax,
-#                 bin_c,
-#                 bin_w, 
-#                 (data_MB_cost_nue-data_MB_bkg),
-#                 np.sqrt(data_MB_cost_nue), 
-#                 np.sqrt(data_MB_cost_nue))
-
-#     df = pd.DataFrame(obs)
-#     df['regime'] = df[['scattering_regime', 'helicity']].agg(' '.join, axis=1)
-#     df['reco_w'] = df['reco_w']/np.sum(df['reco_w'])*tot_events/units
-    
-#     args = {
-#         'x': varplot, 
-#         'stat': hist_type,
-#         'hue': 'regime', 
-#         'hue_order': case_names,
-#         'weights': 'reco_w',
-#         'multiple': 'stack',
-#         'bins': bin_e,
-#         'binrange': (np.min(bin_e),np.max(bin_e)), 
-#         'common_bins': True, 
-#         'common_norm': True, 
-#         'element' : 'bars',
-#         'kde': kde,
-#         'legend': False,
-#         # 'bottom': data_MB_bkg,
-#     }
-
-#     sns.histplot(df, palette=4*['black'], fill=False, lw=0.1, zorder=2, **args)
-#     sns.histplot(df, palette=colors, lw=0, zorder=1, **args)
-
-
-#     ax.set_title(TITLE, fontsize=0.8*fsize)
-#     ax.legend(handles=legends, frameon=False, loc='best')
-#     ax.set_xlabel(XLABEL,fontsize=fsize)
-#     ax.set_xlim(np.min(bin_e),np.max(bin_e))
-
-#     if varplot=='reco_Enu':
-#         ax.set_ylim(0,ax.get_ylim()[1]*1.1)
-#         ax.set_ylabel(r"Excess events/MeV",fontsize=fsize)
-#     else:
-#         ax.set_ylim(-20,ax.get_ylim()[1]*1.1)
-#         ax.set_ylabel(r"Excess events",fontsize=fsize)
-
-#     if kde:
-#         plt.savefig(plotname+'kde.pdf',dpi=400)
-#     else:
-#         plt.savefig(plotname+'.pdf',dpi=400)
-
-#     plt.close()
-
-##### FIX ME
-# Main plotting function for signal at MicroBooNE (stacked histograms)
-def histogram1D_data_muB(plotname, obs, TMIN, TMAX,  XLABEL, TITLE, nbins, regime=None,varplot='reco_angle', tot_events = 1.0, kde = False):
-    
-    sns.set_style("white")
-    
-    fsize = 10
-
-    coherent = (obs['scattering_regime'] == 'coherent')
-    pel = (obs['scattering_regime'] == 'p-el')
-    
-    HC = (obs['helicity'] == 'conserving')
-    HF = (obs['helicity'] == 'flipping')
-
-    #####
-    # FIX ME -- WE NEED TO ITERATE OVER RELEVANT CASES AND BUILD LABELS THAT WAY
-    # THESE LABELS ARE WRITTEN BY HAND AND ARE OLD....
-    label3=r"incoh $N_5\to N_4$"
-    label4=r"coh $N_5\to N_4$"
-    label2=r"incoh $N_6\to N_4$"
-    label1=r"coh $N_6\to N_4$"
-    ALPHA = 0.8
-
-
-    color4='dodgerblue'
-    color3='dodgerblue'
-    color2='violet'
-    color1='violet'
-
-    if varplot=='reco_Evis':
-        
-
-        # microboone nu data for bins
-        Enu_binc, data_MB_enu_nue = np.loadtxt("aux_data/miniboone_2020/Evis/data_Evis.dat", unpack=True)
-        _, data_MB_enu_nue_bkg = np.loadtxt("aux_data/miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
-        Enu_binc *= 1e-3
-        binw_enu = 0.05*Enu_binc/Enu_binc
-        bin_e = np.append(0.1, binw_enu/2.0 + Enu_binc)
-        nbins=np.size(Enu_binc)
-
-        hist4 = np.histogram(obs[varplot][coherent & HC], weights=obs['reco_w'][coherent & HC], bins=bin_e, density = False, range = (TMIN,TMAX) )
-        hist3 = np.histogram(obs[varplot][pel & HC], weights=obs['reco_w'][pel & HC], bins=bin_e, density = False, range = (TMIN,TMAX) )
-        
-        ans0 = hist4[1][:nbins]
-        norm=np.sum(hist3[0]+hist4[0])/tot_events
-        toy_logger.info('NORMALIZATION:',norm)
-        full = (hist3[0]+hist4[0])/norm
-        
-        fig = plt.figure()
-        ax = fig.add_axes(axes_form, rasterized=False)
-        ax.patch.set_alpha(0.0)
-        
-        ax.step(np.append(ans0,10e10), 
-            np.append(full, 0.0), 
-            where='post',
-            c='black', lw = 0.5,rasterized=True)
-        
-        norm=np.sum(hist3[0]+hist4[0])/tot_events
-
-        h4 = hist4[0]/norm
-        h4 = pd.DataFrame(data=h4, columns=['distribution'])
-        h4['Scattering regime'] = 'coherent'
-        h3 = hist3[0]/norm
-        h3 = pd.DataFrame(data=h3, columns=['distribution'])
-        h3['Scattering regime'] = 'incoherent'
-
-        
-        xaxis = (hist4[1][:-1]+hist4[1][1:])/2.
-        sns.set_style("white")
-        sns.set_style("ticks", {"xtick.major.size": 20, "ytick.major.size": 30})
-
-        n3 = len(h3['distribution'])
-        n4 = len(h4['distribution'])
-        hue3 = pd.Series(['incoh' for i in range(n3)])
-        hue4 = pd.Series(['coh' for i in range(n4)])
-        myhue = pd.concat([hue3,hue4],ignore_index=True)
-
-        myhist = pd.concat([h3['distribution'],h4['distribution']],ignore_index=True)
-        myx = pd.Series(xaxis)
-        myx = pd.concat([myx,myx],ignore_index=True)
-        
-        if kde:
-            sns.histplot(x=myx, bins=hist4[1],weights=myhist,hue=myhue,binrange = (TMIN,TMAX), multiple='stack',palette=['lightblue','darkblue'],thresh=0, kde=True)
-        else:
-            sns.histplot(x=myx, bins=hist4[1],weights=myhist,hue=myhue,binrange = (TMIN,TMAX), multiple='stack',palette=['lightblue','darkblue'],thresh=0)
-
-        top_bar = mpatches.Patch(color='lightblue', label=label4 + ' (%i events)'%(round(np.sum(hist4[0]/norm))))
-        bottom_bar = mpatches.Patch(color='darkblue', label=label3 + ' (%i events)'%(round(np.sum(hist3[0]/norm))))
-        plt.legend(handles=[top_bar, bottom_bar],fontsize=fsize)
-        
-        ax.set_ylabel(r"Excess events",fontsize=fsize)
-        ax.set_title(TITLE, fontsize=0.8*fsize)
-
-    elif varplot=='reco_Enu':
-
-        # microboone nu data
-        Enu_binc, data_MB_enu_nue = np.loadtxt("aux_data/miniboone/Enu_excess_nue.dat", unpack=True)
-        Enu_binc, data_MB_enu_nue_errorlow = np.loadtxt("aux_data/miniboone/Enu_excess_nue_lowererror.dat", unpack=True)
-        Enu_binc, data_MB_enu_nue_errorup = np.loadtxt("aux_data/miniboone/Enu_excess_nue_uppererror.dat", unpack=True)
-        binw_enu = np.array([0.1,0.075,0.1,0.075,0.125,0.125,0.15,0.15,0.2,0.2])
-        bin_e = np.array([0.2,0.3,0.375,0.475,0.550,0.675,0.8,0.95,1.1,1.3,1.5])
-        data_MB_enu_nue *=  binw_enu*1e3
-        data_MB_enu_nue_errorlow *= binw_enu*1e3
-        data_MB_enu_nue_errorup *= binw_enu*1e3
-        units = 1e3
-        
-        
-        hist4 = np.histogram(obs[varplot][coherent & HC], weights=obs['reco_w'][coherent & HC], bins=bin_e, density = False, range = (TMIN,TMAX) )
-        hist3 = np.histogram(obs[varplot][pel & HC], weights=obs['reco_w'][pel & HC], bins=bin_e, density = False, range = (TMIN,TMAX) )
-        
-        ans0 = hist4[1][:nbins]
-        norm=np.sum(hist3[0]+hist4[0])/tot_events*binw_enu*units
-        toy_logger.info('NORMALIZATION:',norm)
-        full = (hist3[0]+hist4[0])/norm
-        
-        fig = plt.figure()
-        ax = fig.add_axes(axes_form, rasterized=False)
-        ax.patch.set_alpha(0.0)
-        
-        ax.step(np.append(ans0,10e10), 
-            np.append(full, 0.0), 
-            where='post',
-            c='black', lw = 0.5)
-        
-        h4 = hist4[0]/norm
-        h4 = pd.DataFrame(data=h4, columns=['distribution'])
-        h4['Scattering regime'] = 'coherent'
-        h3 = hist3[0]/norm
-        h3 = pd.DataFrame(data=h3, columns=['distribution'])
-        h3['Scattering regime'] = 'incoherent'
-
-        
-        xaxis = (hist4[1][:-1]+hist4[1][1:])/2.
-        sns.set_style("white")
-        sns.set_style("ticks", {"xtick.major.size": 20, "ytick.major.size": 30})
-
-        n3 = len(h3['distribution'])
-        n4 = len(h4['distribution'])
-        hue3 = pd.Series(['incoh' for i in range(n3)])
-        hue4 = pd.Series(['coh' for i in range(n4)])
-        myhue = pd.concat([hue3,hue4],ignore_index=True)
-
-        myhist = pd.concat([h3['distribution'],h4['distribution']],ignore_index=True)
-        myx = pd.Series(xaxis)
-        myx = pd.concat([myx,myx],ignore_index=True)
-
-        
-        if kde:
-            sns.histplot(x=myx, bins=hist4[1],weights=myhist,hue=myhue,binrange = (TMIN,TMAX), multiple='stack',palette=['lightblue','darkblue'],thresh=0, kde=True)
-        else:
-            sns.histplot(x=myx, bins=hist4[1],weights=myhist,hue=myhue,binrange = (TMIN,TMAX), multiple='stack',palette=['lightblue','darkblue'],thresh=0)
-
-
-        top_bar = mpatches.Patch(color='lightblue', label=label4 + ' (%i events)'%(round(np.sum(hist4[0]/norm))))
-        bottom_bar = mpatches.Patch(color='darkblue', label=label3 + ' (%i events)'%(round(np.sum(hist3[0]/norm))))
-        plt.legend(handles=[top_bar, bottom_bar],fontsize=fsize)
-
-        ax.set_ylabel(r"Excess events/MeV",fontsize=fsize)
-        ax.set_title(TITLE, fontsize=0.8*fsize)
-
-    elif varplot=='reco_angle':
-
-        # microboone nu data
-        cost_binc, data_MB_cost_nue = np.loadtxt("aux_data/miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
-        _, data_MB_cost_nue_bkg = np.loadtxt("aux_data/miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
-        nbins = np.size(cost_binc)
-        binw_cost = np.ones(nbins)*0.1
-        bincost_e = np.linspace(-1,1,21)
-
-        hist4 = np.histogram(np.cos(obs['theta_beam']*np.pi/180)[coherent & HC], weights=obs['reco_w'][coherent & HC], bins=bincost_e, density = False, range = (TMIN,TMAX) )
-        hist3 = np.histogram(np.cos(obs['theta_beam']*np.pi/180)[pel & HC], weights=obs['reco_w'][pel & HC], bins=bincost_e, density = False, range = (TMIN,TMAX) )
-        
-        ans0 = hist4[1][:nbins]
-        norm=np.sum(hist3[0]+hist4[0])/tot_events#*binw_cost
-
-        full = (hist3[0]+hist4[0])/norm
-        
-        fig = plt.figure()
-        ax = fig.add_axes(axes_form, rasterized=False)
-        ax.patch.set_alpha(0.0)
-        
-        ax.step(np.append(ans0,10e10), 
-            np.append(full, 0.0), 
-            where='post',
-            c='black', lw = 0.5)
-        
-        h4 = hist4[0]/norm
-        h4 = pd.DataFrame(data=h4, columns=['distribution'])
-        h4['Scattering regime'] = 'coherent'
-        h3 = hist3[0]/norm
-        h3 = pd.DataFrame(data=h3, columns=['distribution'])
-        h3['Scattering regime'] = 'incoherent'
-
-        
-        xaxis = (hist4[1][:-1]+hist4[1][1:])/2.
-        sns.set_style("white")
-        sns.set_style("ticks", {"xtick.major.size": 20, "ytick.major.size": 30})
-
-        n3 = len(h3['distribution'])
-        n4 = len(h4['distribution'])
-        hue3 = pd.Series(['incoh' for i in range(n3)])
-        hue4 = pd.Series(['coh' for i in range(n4)])
-        myhue = pd.concat([hue3,hue4],ignore_index=True)
-
-        myhist = pd.concat([h3['distribution'],h4['distribution']],ignore_index=True)
-        myx = pd.Series(xaxis)
-        myx = pd.concat([myx,myx],ignore_index=True)
-
-        
-        
-        if kde:
-            sns.histplot(x=myx, bins=hist4[1],weights=myhist,hue=myhue,binrange = (TMIN,TMAX), multiple='stack',palette=['lightblue','darkblue'],thresh=0, kde=True)
-        else:
-            sns.histplot(x=myx, bins=hist4[1],weights=myhist,hue=myhue,binrange = (TMIN,TMAX), multiple='stack',palette=['lightblue','darkblue'],thresh=0)
-
-
-        ax.set_ylabel(r"Excess events",fontsize=fsize)
-        ax.set_title(TITLE, fontsize=0.8*fsize)
-
-    else:
-        toy_logger.error('Error! No plot type specified.')
-
-
-
-    #ax.legend(loc="best", frameon=False, fontsize=0.8*fsize)
-    ax.set_xlabel(XLABEL,fontsize=fsize)
-
-    ax.set_xlim(TMIN,TMAX)
-    # ax.set_yscale('log')
-
-    ax.set_ylim(-20,ax.get_ylim()[1]*1.1)
-    if varplot=='reco_Enu':
-        ax.set_ylim(-0.2,ax.get_ylim()[1]*1.1)
-
-    if kde:
-        plt.savefig(plotname+'kde.pdf',dpi=400)
-    else:
-        plt.savefig(plotname+'.pdf',dpi=400)
-    
-    plt.close()
-
+    std_savefig(fig, plotname, dpi=400)
 
 def errorband_plot(ax, X, BINW, DATA, ERRORLOW, ERRORUP, band=False, **kwargs):
-    
     # ax.step(X, DATA, where='mid', **kwargs)
     ax.fill_between(X, DATA-ERRORLOW, DATA+ERRORUP, step='mid', alpha=0.3, **kwargs)
 
@@ -816,7 +396,7 @@ def histogram1D(plotname, obs, w, TMIN, TMAX,  XLABEL, TITLE, nbins, regime=None
 
     fsize = 10
     fig = plt.figure()
-    ax = fig.add_axes(axes_form, rasterized=rasterized)
+    ax = fig.add_axes(std_axes_form, rasterized=rasterized)
     ax.patch.set_alpha(0.0)
 
     # normalize
@@ -858,9 +438,8 @@ def histogram1D(plotname, obs, w, TMIN, TMAX,  XLABEL, TITLE, nbins, regime=None
     ax.set_ylabel(r"PDF",fontsize=fsize)
 
     ax.set_xlim(TMIN,TMAX)
-    # ax.set_yscale('log')
     ax.set_ylim(0.0,ax.get_ylim()[1]*1.1)
-    plt.savefig(plotname, dpi=400)
+    std_savefig(fig, plotname, dpi=400)
     plt.close()
 
 
@@ -887,11 +466,9 @@ def histogram2D(plotname, obsx, obsy, w,  xrange=None, yrange=None,  xlabel='x',
     cbar_R = fig.colorbar(bar[3],ax=ax)
     cbar_R.ax.set_ylabel(r'a.u.', rotation=90)
 
-    plt.legend(loc="upper left", frameon=False, fontsize=fsize)
     ax.set_xlabel(xlabel,fontsize=fsize)
     ax.set_ylabel(ylabel,fontsize=fsize)
-
-    plt.savefig(plotname)
+    std_savefig(fig, plotname, dpi=400)
     plt.close()
 
 
@@ -912,45 +489,39 @@ def batch_plot(df, PATH, title='Dark News'):
 
     if not os.path.exists(PATH):
         os.mkdir(PATH)
-    
-    # number of events
-    sample_size = len(df.index)
 
-    # four momenta
-    pN   = df['P_decay_N_parent']
-    pnu  = df['P_decay_N_daughter']
-    pZ   = df['P_decay_ell_minus'] + df['P_decay_ell_plus']
-    plm  = df['P_decay_ell_minus']
-    plp  = df['P_decay_ell_plus']
-    pHad = df['P_recoil']
 
+    # some useful definitions for four momenta
+    for i in range(4):
+        df['P_decay_ellell',i] = df['P_decay_ell_minus',f'{i}']+df['P_decay_ell_plus',f'{i}']
+            
     # weights
-    w     = df['w_event_rate']
-    w_pel = df['w_event_rate'][pel]
-    w_coh = df['w_event_rate'][coherent]
+    w     = df['w_event_rate','']
+    w_pel = df['w_event_rate',''][pel]
+    w_coh = df['w_event_rate',''][coherent]
 
     # variables
-    df['E_N']   = pN['0']
-    df['E_Z']   = pZ['0']
-    df['E_lp']  = plp['0']
-    df['E_lm']  = plm['0']
-    df['E_tot'] = plm['0'] + plp['0']
+    df['E_N']   = df['P_decay_N_parent','0']
+    df['E_Z']   = df['P_decay_ell_minus','0'] + df['P_decay_ell_plus','0']
+    df['E_lp']  = df['P_decay_ell_plus','0']
+    df['E_lm']  = df['P_decay_ell_minus','0']
+    df['E_tot'] = df['E_lm'] + df['E_lp']
     df['E_asy'] = (df['E_lp'] - df['E_lm'])/(df['E_lp'] + df['E_lm'])
-    df['E_Had'] = pHad['0']
+    df['E_Had'] = df['P_recoil','0']
 
-    df['M_had'] = fv.df_inv_mass(pHad, pHad)
+    df['M_had'] = fv.df_inv_mass(df['P_recoil'], df['P_recoil'])
     df['Q2'] = -(2*df['M_had']**2-2*df['E_Had']*df['M_had'])
     
-    df['costheta_N']   = fv.df_cos_azimuthal(pN) 
-    df['costheta_nu']  = fv.df_cos_azimuthal(pnu) 
-    df['costheta_Had'] = fv.df_cos_azimuthal(pHad) 
-    df['inv_mass']     = fv.df_inv_mass(plm+plp, plm+plp)
+    df['costheta_N']   = fv.df_cos_azimuthal(df['P_decay_N_parent']) 
+    df['costheta_nu']  = fv.df_cos_azimuthal(df['P_decay_N_daughter']) 
+    df['costheta_Had'] = fv.df_cos_azimuthal(df['P_recoil']) 
+    df['inv_mass']     = fv.df_inv_mass(df['P_decay_ellell'], df['P_decay_ellell'])
     
-    df['costheta_sum'] = fv.df_cos_azimuthal(plm+plp)
-    df['costheta_lp'] = fv.df_cos_azimuthal(plp)
-    df['costheta_lm'] = fv.df_cos_azimuthal(plm)
+    df['costheta_sum'] = fv.df_cos_azimuthal(df['P_decay_ellell'])
+    df['costheta_lp'] = fv.df_cos_azimuthal(df['P_decay_ell_plus'])
+    df['costheta_lm'] = fv.df_cos_azimuthal(df['P_decay_ell_minus'])
 
-    df['costheta_sum_had'] = fv.df_cos_opening_angle(plm+plp, pHad)
+    df['costheta_sum_had'] = fv.df_cos_opening_angle(df['P_decay_ellell'], df['P_recoil'])
     df['theta_sum_had'] = np.arccos(df['costheta_sum_had'])*180/np.pi
     
     df['theta_sum'] = np.arccos(df['costheta_sum'])*180/np.pi
@@ -958,7 +529,7 @@ def batch_plot(df, PATH, title='Dark News'):
     df['theta_lm'] = np.arccos(df['costheta_lm'])*180/np.pi
     df['theta_nu'] = np.arccos(df['costheta_nu'])*180/np.pi
 
-    df['Delta_costheta'] = fv.df_cos_opening_angle(plm,plp)
+    df['Delta_costheta'] = fv.df_cos_opening_angle(df['P_decay_ell_minus'],df['P_decay_ell_plus'])
     df['Delta_theta'] = np.arccos(df['Delta_costheta'])*180/np.pi
 
     df['theta_proton'] = np.arccos(df['costheta_Had'][pel])*180/np.pi
@@ -967,20 +538,17 @@ def batch_plot(df, PATH, title='Dark News'):
     df['T_proton'] = (df['E_Had'] - df['M_had'])[pel]
     df['T_nucleus'] = (df['E_Had'] - df['M_had'])[coherent]
     
-    minus_lead = (plm['0'] >= plp['0'])
-    plus_lead  = (plp['0'] > plm['0'])
+    minus_lead = (df['P_decay_ell_minus','0'] >= df['P_decay_ell_plus','0'])
+    plus_lead  = (df['P_decay_ell_minus','0'] < df['P_decay_ell_plus','0'])
 
-    df['E_subleading'] = np.minimum(plm['0'], plp['0'])
-    df['E_leading'] = np.maximum(plm['0'], plp['0'])
+    df['E_subleading'] = np.minimum(df['P_decay_ell_minus','0'], df['P_decay_ell_plus','0'])
+    df['E_leading'] = np.maximum(df['P_decay_ell_minus','0'],df['P_decay_ell_plus','0'])
 
     df['theta_subleading'] = df['theta_lp']*plus_lead + df['theta_lm']*minus_lead
     df['theta_leading'] = df['theta_lp']*(~plus_lead) + df['theta_lm']*(~minus_lead)
 
     # CCQE neutrino energy
-    df['E_nu_reco'] = const.m_proton * (plp['0'] + plm['0']) / ( const.m_proton - (plp['0'] + plm['0'])*(1.0 - (df['costheta_lm']*plm['0'] + df['costheta_lp'] * plp['0'])/(plp['0'] + plm['0'])  ))
-
-
-
+    df['E_nu_reco'] = const.m_proton * (df['P_decay_ell_plus','0'] + df['P_decay_ell_minus','0']) / ( const.m_proton - (df['P_decay_ell_plus','0'] + df['P_decay_ell_minus','0'])*(1.0 - (df['costheta_lm']*df['P_decay_ell_minus','0'] + df['costheta_lp'] * df['P_decay_ell_plus','0'])/(df['P_decay_ell_plus','0'] + df['P_decay_ell_minus','0'])  ))
 
   ###################### HISTOGRAM 2D ##################################################
     n2D = 40
@@ -1048,10 +616,10 @@ def batch_plot(df, PATH, title='Dark News'):
     histogram1D(PATH+"/1D_Q.pdf", np.sqrt(df['Q2']), w, 0.0, 1., r"$Q/$GeV", title, 10, **args)
     histogram1D(PATH+"/1D_Q2.pdf", df['Q2'], w, 0.0, 1.5, r"$Q^2/$GeV$^2$", title, 10, **args)
     
-    histogram1D(PATH+"/1D_T_proton.pdf", df['T_proton'][pel]*1e3, w_pel, 0.0, 2.0, r"$T_{\rm p^+}$ (MeV)", 'el proton only', 50, **args)
-    histogram1D(PATH+"/1D_theta_proton.pdf", df['theta_proton'][pel]*180.0/np.pi, w_pel, 0.0, 180, r"$\theta_{p^+}$ ($^\circ$)", 'el proton only', 50, **args)
-    histogram1D(PATH+"/1D_T_nucleus.pdf", df['T_nucleus'][coherent]*1e3, w_coh, 0.0, 3, r"$T_{\rm Nucleus}$ (MeV)", 'coh nucleus only', 50, **args)
-    histogram1D(PATH+"/1D_theta_nucleus.pdf", df['theta_nucleus'][coherent]*180.0/np.pi, w_coh, 0.0, 180, r"$\theta_{\rm Nucleus}$ ($^\circ$)", 'coh nucleus only', 50, **args)
+    histogram1D(PATH+"/1D_T_proton.pdf", df['T_proton'][pel]*1e3, w_pel, 0.0, 500.0, r"$T_{\rm p^+}$ (MeV)", 'el proton only', 50, **args)
+    histogram1D(PATH+"/1D_theta_proton.pdf", df['theta_proton'][pel], w_pel, 0.0, 180, r"$\theta_{p^+}$ ($^\circ$)", 'el proton only', 50, **args)
+    histogram1D(PATH+"/1D_T_nucleus.pdf", df['T_nucleus'][coherent]*1e3, w_coh, 0.0, 20, r"$T_{\rm Nucleus}$ (MeV)", 'coh nucleus only', 50, **args)
+    histogram1D(PATH+"/1D_theta_nucleus.pdf", df['theta_nucleus'][coherent], w_coh, 0.0, 180, r"$\theta_{\rm Nucleus}$ ($^\circ$)", 'coh nucleus only', 50, **args)
 
     # energies
     histogram1D(PATH+"/1D_E_lp.pdf", df['E_lp'], w, 0.0, 2.0, r"$E_{\ell^+}$ GeV", title, 100, **args)
@@ -1127,5 +695,3 @@ def plot_closed_region(points, logx=False, logy=False):
         y_new = sy*np.exp(ssy*y_new) 
 
     return x_new, y_new
-
-
