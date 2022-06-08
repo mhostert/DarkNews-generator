@@ -192,7 +192,7 @@ class UpscatteringProcess:
 
     def total_xsec(self, Enu, diagrams=['total'], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup):
         """ 
-            Returns the total upscattering xsec for a fixed neutrino energy
+            Returns the total upscattering xsec for a fixed neutrino energy in cm^2
         """
         self.Enu = Enu
         all_xsecs=0.0
@@ -211,14 +211,16 @@ class UpscatteringProcess:
         return all_xsecs
 
     def diff_xsec_Q2(self, Enu, Q2, diagrams=['total']):
-
+        """ 
+            Returns the differential upscattering xsec for a fixed neutrino energy in cm^2
+        """
         s = Enu*self.MA*2+self.MA**2
         physical =  ((Q2 > ps.upscattering_Q2min(Enu, self.m_ups, self.MA)) & (Q2 < ps.upscattering_Q2max(Enu, self.m_ups, self.MA)))
         diff_xsecs=amps.upscattering_dxsec_dQ2([s,-Q2,0.0], process=self, diagrams=diagrams)
         if type(diff_xsecs) is dict:
             return {key: diff_xsecs[key]*physical for key in diff_xsecs.keys()}
         else:
-            return diff_xsecs*physical
+            return diff_xsecs*physical*const.attobarn_to_cm2*self.target_multiplicity
 
 
 

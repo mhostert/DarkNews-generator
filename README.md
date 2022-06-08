@@ -374,12 +374,10 @@ HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughte
 | <!-- -->                  | **x**    | `float`  | <!-- --> |
 | <!-- -->                  | **y**    | `float`  | <!-- --> |
 | <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **w\_decay\_rate\_0**     | <!-- --> | `float`  | Weight of the decay rate: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>N</sub> |
-| **I\_decay\_rate\_0**     | <!-- --> | `float`  | Total rate &Gamma;<sub>N</sub> |
+| **w\_decay\_rate\_0**     | <!-- --> | `float`  | Weight of the decay rate of primary unstable particle: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>N</sub> |
+| **w\_decay\_rate\_1**     | <!-- --> | `float`  | Weight of the decay rate of secondary unstable particle: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>X</sub> |
 | **w\_event\_rate**        | <!-- --> | `float`  | Weight for the event rate: &Sigma;<sub>i</sub> w<sub>i</sub> = event rate |
-| **I\_event\_rate**        | <!-- --> | `float`  | Total event rate |
 | **w\_flux\_avg\_xsec**    | <!-- --> | `float`  | Weight of the flux averaged cross section: &Sigma;<sub>i</sub> w<sub>i</sub> = int(sigma &sdot; flux) &sdot; exposure |
-| **I\_flux\_avg\_xsec**    | <!-- --> | `float`  | int(sigma &sdot; flux) &sdot; exposure |
 | **target**                | <!-- --> | *object* | Target object, it will typically be a nucleus |
 | **target\_pdgid**         | <!-- --> | `int`    | PDG id of the target |
 | **scattering\_regime**    | <!-- --> | *object* | Regime can be coherent or p-elastic |

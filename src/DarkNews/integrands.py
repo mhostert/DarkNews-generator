@@ -446,7 +446,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
 
 		four_momenta["P_decay_N_parent"]	= P1LAB_decay 
 		four_momenta["P_decay_N_daughter"]	= P2LAB_decay
-		four_momenta["P_decay_gamma"]		= P3LAB_decay
+		four_momenta["P_decay_photon"]		= P3LAB_decay
 
 
 	return four_momenta

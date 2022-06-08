@@ -1,7 +1,7 @@
 import numpy as np
 
-from . import Cfourvec as Cfv
-from . import logger
+from DarkNews import Cfourvec as Cfv
+from DarkNews import logger
 
 X = 0 
 Y = 1

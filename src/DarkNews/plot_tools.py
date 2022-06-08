@@ -180,160 +180,166 @@ def batch_plot(df, PATH, title='Dark News'):
     if not os.path.exists(PATH):
         os.mkdir(PATH)
 
-
-    # some useful definitions for four momenta
-    for i in range(4):
-        df['P_decay_ellell',i] = df['P_decay_ell_minus',f'{i}']+df['P_decay_ell_plus',f'{i}']
-            
     # weights
     w     = df['w_event_rate','']
     w_pel = df['w_event_rate',''][pel]
     w_coh = df['w_event_rate',''][coherent]
-
-    # variables
+    
     df['E_N']   = df['P_decay_N_parent','0']
-    df['E_Z']   = df['P_decay_ell_minus','0'] + df['P_decay_ell_plus','0']
-    df['E_lp']  = df['P_decay_ell_plus','0']
-    df['E_lm']  = df['P_decay_ell_minus','0']
-    df['E_tot'] = df['E_lm'] + df['E_lp']
-    df['E_asy'] = (df['E_lp'] - df['E_lm'])/(df['E_lp'] + df['E_lm'])
     df['E_Had'] = df['P_recoil','0']
-
     df['M_had'] = fv.df_inv_mass(df['P_recoil'], df['P_recoil'])
     df['Q2'] = -(2*df['M_had']**2-2*df['E_Had']*df['M_had'])
     
     df['costheta_N']   = fv.df_cos_azimuthal(df['P_decay_N_parent']) 
     df['costheta_nu']  = fv.df_cos_azimuthal(df['P_decay_N_daughter']) 
     df['costheta_Had'] = fv.df_cos_azimuthal(df['P_recoil']) 
-    df['inv_mass']     = fv.df_inv_mass(df['P_decay_ellell'], df['P_decay_ellell'])
-    
-    df['costheta_sum'] = fv.df_cos_azimuthal(df['P_decay_ellell'])
-    df['costheta_lp'] = fv.df_cos_azimuthal(df['P_decay_ell_plus'])
-    df['costheta_lm'] = fv.df_cos_azimuthal(df['P_decay_ell_minus'])
-
-    df['costheta_sum_had'] = fv.df_cos_opening_angle(df['P_decay_ellell'], df['P_recoil'])
-    df['theta_sum_had'] = np.arccos(df['costheta_sum_had'])*180/np.pi
-    
-    df['theta_sum'] = np.arccos(df['costheta_sum'])*180/np.pi
-    df['theta_lp'] = np.arccos(df['costheta_lp'])*180/np.pi
-    df['theta_lm'] = np.arccos(df['costheta_lm'])*180/np.pi
+    df['theta_N'] = np.arccos(df['costheta_N'])*180/np.pi
     df['theta_nu'] = np.arccos(df['costheta_nu'])*180/np.pi
-
-    df['Delta_costheta'] = fv.df_cos_opening_angle(df['P_decay_ell_minus'],df['P_decay_ell_plus'])
-    df['Delta_theta'] = np.arccos(df['Delta_costheta'])*180/np.pi
 
     df['theta_proton'] = np.arccos(df['costheta_Had'][pel])*180/np.pi
     df['theta_nucleus'] = np.arccos(df['costheta_Had'][coherent])*180/np.pi
     
     df['T_proton'] = (df['E_Had'] - df['M_had'])[pel]
     df['T_nucleus'] = (df['E_Had'] - df['M_had'])[coherent]
-    
-    minus_lead = (df['P_decay_ell_minus','0'] >= df['P_decay_ell_plus','0'])
-    plus_lead  = (df['P_decay_ell_minus','0'] < df['P_decay_ell_plus','0'])
 
-    df['E_subleading'] = np.minimum(df['P_decay_ell_minus','0'], df['P_decay_ell_plus','0'])
-    df['E_leading'] = np.maximum(df['P_decay_ell_minus','0'],df['P_decay_ell_plus','0'])
+    histogram1D(PATH/"1D_E_nu_truth.pdf", df['P_projectile','0'], w, r"$E_\nu^{\rm truth}/$GeV", title, 20, **args)
+    histogram1D(PATH/"1D_E_N.pdf", df['E_N'], w, r"$E_N/$GeV", title, 20, **args)
+    histogram1D(PATH/"1D_cost_nu.pdf", df['costheta_nu'], w, r"$\cos(\theta_{\nu_\mu \nu_{\rm out}})$", title, 40, **args)
+    histogram1D(PATH/"1D_theta_nu.pdf", df['theta_nu'], w, r"$\theta_{\nu_\mu \nu_{\rm out}}$", title, 40, **args)    
+    histogram1D(PATH/"1D_costN.pdf", df['costheta_N'], w, r"$\cos(\theta_{\nu_\mu N})$", title, 20, **args)
 
-    df['theta_subleading'] = df['theta_lp']*plus_lead + df['theta_lm']*minus_lead
-    df['theta_leading'] = df['theta_lp']*(~plus_lead) + df['theta_lm']*(~minus_lead)
-
-    # CCQE neutrino energy
-    df['E_nu_reco'] = const.m_proton * (df['P_decay_ell_plus','0'] + df['P_decay_ell_minus','0']) / ( const.m_proton - (df['P_decay_ell_plus','0'] + df['P_decay_ell_minus','0'])*(1.0 - (df['costheta_lm']*df['P_decay_ell_minus','0'] + df['costheta_lp'] * df['P_decay_ell_plus','0'])/(df['P_decay_ell_plus','0'] + df['P_decay_ell_minus','0'])  ))
-
-  ###################### HISTOGRAM 2D ##################################################
-    n2D = 40
-    args_2d = {"title": title, "nbins": n2D}
-    
-    histogram2D(PATH/"2D_EN_Etot.pdf", df['E_N'], df['E_tot'], w,
-                                xrange=[0.0, 2.0],
-                                yrange=[0.0, 2.0],
-                                xlabel=r"$E_{N}$ (GeV)", 
-                                ylabel=r"$E_{\ell^-}+E_{\ell^+}$ (GeV)",
-                                **args_2d)
-
-    histogram2D(PATH/"2D_Ep_Em.pdf", df['E_lm'], df['E_lp'],w,
-                                xrange=[0.0, 2.0],
-                                yrange=[0.0, 2.0],
-                                xlabel=r"$E_{\ell^-}$ (GeV)", 
-                                ylabel=r"$E_{\ell^+}$ (GeV)",
-                                **args_2d)
-
-    histogram2D(PATH/"2D_dtheta_Etot.pdf", df['Delta_theta'], df['E_tot'], w, \
-                                              xrange=[0.0, 90],
-                                              yrange=[0.0, 2.0],
-                                              xlabel=r"$\Delta \theta_{\ell \ell}$ ($^\circ$)", 
-                                              ylabel=r"$E_{\ell^+}+E_{\ell^-}$ (GeV)",
-                                              **args_2d)
-
-    histogram2D(PATH/"2D_Easyabs_Etot.pdf", np.abs(df['E_asy']), df['Delta_costheta'], w,
-                                xrange=[0.0, 1.0],
-                                yrange=[0.0, 90.0],
-                                xlabel=r"$|E_{\rm asy}|$", 
-                                ylabel=r"$\Delta \theta_{\ell \ell}$ ($^\circ$)",
-                                **args_2d)
-
-    histogram2D(PATH/"2D_Easyabs_Etot.pdf", np.abs(df['E_asy']), df['E_tot'], w,
-                                xrange=[0.0, 1.0],
-                                yrange=[0.0, 2.0],
-                                xlabel=r"$|E_{\rm asy}|$", 
-                                ylabel=r"$E_{\ell^+}+E_{\ell^-}$ (GeV)",
-                                **args_2d)
-
-    histogram2D(PATH/"2D_Easyabs_Etot.pdf", np.abs(df['E_asy']), df['E_tot'], w,
-                                xrange=[0.0, 1.0],
-                                yrange=[0.0, 2.0],
-                                xlabel=r"$|E_{\rm asy}|$", 
-                                ylabel=r"$E_{\ell^+}+E_{\ell^-}$ (GeV)",
-                                **args_2d)
-
-    histogram2D(PATH/"2D_Ehad_Etot.pdf", df['T_proton'][pel]*1e3, df['E_tot'][pel], w_pel,
-                                xrange=[0.0, 1000],
-                                yrange=[0.0, 2.0],
-                                xlabel=r"$T_{\rm proton}$ (MeV)", 
-                                ylabel=r'$E_{\ell^+} + E_{\ell^-}$ (GeV)', 
-                                title=title +' proton-elastic only', nbins=n2D)
-
-
-    histogram2D(PATH/"2D_thetaLead_dtheta.pdf", df['theta_subleading'], df['theta_leading'], w,
-                                                xrange=[0.0, 40.0],
-                                                yrange=[0.0, 40.0],
-                                                xlabel=r"$\theta_{\nu_\mu \ell_{\rm lead}}$ ($^\circ$)", 
-                                                ylabel=r'$\Delta \theta$ ($^\circ$)', 
-                                                **args_2d)
-
-    #################### HISTOGRAMS 1D ####################################################    
-    # momentum exchange
     histogram1D(PATH/"1D_Q.pdf", np.sqrt(df['Q2']), w, r"$Q/$GeV", title, 50, **args)
     histogram1D(PATH/"1D_Q2.pdf", df['Q2'], w, r"$Q^2/$GeV$^2$", title, 50, **args)
     histogram1D(PATH/"1D_T_proton.pdf", df['T_proton'][pel]*1e3, w_pel, r"$T_{\rm p^+}$ (MeV)", 'el proton only', 50, **args)
     histogram1D(PATH/"1D_theta_proton.pdf", df['theta_proton'][pel], w_pel, r"$\theta_{p^+}$ ($^\circ$)", 'el proton only', 50, **args)
     histogram1D(PATH/"1D_T_nucleus.pdf", df['T_nucleus'][coherent]*1e3, w_coh, r"$T_{\rm Nucleus}$ (MeV)", 'coh nucleus only', 50, **args)
     histogram1D(PATH/"1D_theta_nucleus.pdf", df['theta_nucleus'][coherent], w_coh, r"$\theta_{\rm Nucleus}$ ($^\circ$)", 'coh nucleus only', 50, **args)
-    histogram1D(PATH/"1D_E_lp.pdf", df['E_lp'], w, r"$E_{\ell^+}$ GeV", title, 100, **args)
-    histogram1D(PATH/"1D_E_lm.pdf", df['E_lm'], w, r"$E_{\ell^-}$ GeV", title, 100, **args)
-    histogram1D(PATH/"1D_E_tot.pdf", df['E_tot'], w, r"$E_{\ell^-}+E_{\ell^+}$ GeV", title, 100, **args)
-    histogram1D(PATH/"1D_E_nu_truth.pdf", df['P_projectile','0'], w, r"$E_\nu^{\rm truth}/$GeV", title, 20, **args)
-    histogram1D(PATH/"1D_E_nu_QEreco.pdf", df['E_nu_reco'], w, r"$E_\nu^{\rm QE-reco}/$GeV", title, 20, **args)
-    histogram1D(PATH/"1D_E_N.pdf", df['E_N'], w, r"$E_N/$GeV", title, 20, **args)
-    histogram1D(PATH/"1D_E_leading.pdf", df['E_leading'], w, r"$E_{\rm leading}$ GeV", title, 100, **args)
-    histogram1D(PATH/"1D_E_subleading.pdf", df['E_subleading'], w, r"$E_{\rm subleading}$ GeV", title, 100, **args)
-    histogram1D(PATH/"1D_costN.pdf", df['costheta_N'], w, r"$\cos(\theta_{\nu_\mu N})$", title, 20, **args)
-    histogram1D(PATH/"1D_cost_sum.pdf", df['costheta_sum'], w, r"$\cos(\theta_{(ee)\nu_\mu})$", title, 20, **args)
-    histogram1D(PATH/"1D_cost_sum_had.pdf", df['costheta_sum_had'], w, r"$\cos(\theta_{(ee) {\rm hadron}})$", title, 20, **args)
-    histogram1D(PATH/"1D_cost_nu.pdf", df['costheta_nu'], w, r"$\cos(\theta_{\nu_\mu \nu_{\rm out}})$", title, 40, **args)
-    histogram1D(PATH/"1D_theta_nu.pdf", df['theta_nu'], w, r"$\theta_{\nu_\mu \nu_{\rm out}}$", title, 40, **args)
-    histogram1D(PATH/"1D_cost_lp.pdf", df['costheta_lp'],  w, r"$\cos(\theta_{\nu_\mu \ell^+})$", title, 40, **args)
-    histogram1D(PATH/"1D_cost_lm.pdf", df['costheta_lm'], w, r"$\cos(\theta_{\nu_\mu \ell^-})$", title, 40, **args)
-    histogram1D(PATH/"1D_theta_lp.pdf", df['theta_lp'], w, r"$\theta_{\nu_\mu \ell^+}$", title, 40, **args)
-    histogram1D(PATH/"1D_theta_lm.pdf", df['theta_lm'], w, r"$\theta_{\nu_\mu \ell^-}$", title, 40, **args)
-    histogram1D(PATH/"1D_theta_lead.pdf", df['theta_leading'], w, r"$\theta_{\nu_\mu \ell_{\rm lead}}$ ($^\circ$)", title, 40, **args)
-    histogram1D(PATH/"1D_theta_sublead.pdf", df['theta_subleading'], w, r"$\theta_{\nu_\mu \ell_{\rm sublead}}$ ($^\circ$)", title, 40, **args)
-    histogram1D(PATH/"1D_deltacos.pdf", df['Delta_costheta'], w, r"$\cos(\theta_{\ell^+ \ell^-})$", title, 40, **args)
-    histogram1D(PATH/"1D_deltatheta.pdf", df['Delta_theta'], w, r"$\theta_{\ell^+ \ell^-}$", title, 40, **args)
-    histogram1D(PATH/"1D_invmass.pdf", df['inv_mass'], w, r"$m_{\ell^+ \ell^-}$ [GeV]", title, 50, **args)
-    histogram1D(PATH/"1D_asym.pdf", df['E_asy'], w, r"$(E_{\ell^+}-E_{\ell^-})$/($E_{\ell^+}+E_{\ell^-}$)", title, 20, **args)
-    histogram1D(PATH/"1D_asym_abs.pdf", np.abs(df['E_asy']), w, r"$|E_{\ell^+}-E_{\ell^-}|$/($E_{\ell^+}+E_{\ell^-}$)", title, 20, **args)
+    
+    
+    if '_ell_minus' in df.columns.levels[0]:
+        # some useful definitions for four momenta
+        for i in range(4):
+            df['P_decay_ellell',i] = df['P_decay_ell_minus',f'{i}']+df['P_decay_ell_plus',f'{i}']
+                
 
+        # variables
+        df['E_Z']   = df['P_decay_ell_minus','0'] + df['P_decay_ell_plus','0']
+        df['E_lp']  = df['P_decay_ell_plus','0']
+        df['E_lm']  = df['P_decay_ell_minus','0']
+        df['E_tot'] = df['E_lm'] + df['E_lp']
+        df['E_asy'] = (df['E_lp'] - df['E_lm'])/(df['E_lp'] + df['E_lm'])
+
+        df['inv_mass']     = fv.df_inv_mass(df['P_decay_ellell'], df['P_decay_ellell'])
+        
+        df['costheta_sum'] = fv.df_cos_azimuthal(df['P_decay_ellell'])
+        df['costheta_lp'] = fv.df_cos_azimuthal(df['P_decay_ell_plus'])
+        df['costheta_lm'] = fv.df_cos_azimuthal(df['P_decay_ell_minus'])
+
+        df['costheta_sum_had'] = fv.df_cos_opening_angle(df['P_decay_ellell'], df['P_recoil'])
+        df['theta_sum_had'] = np.arccos(df['costheta_sum_had'])*180/np.pi
+        
+        df['theta_sum'] = np.arccos(df['costheta_sum'])*180/np.pi
+        df['theta_lp'] = np.arccos(df['costheta_lp'])*180/np.pi
+        df['theta_lm'] = np.arccos(df['costheta_lm'])*180/np.pi
+
+        df['Delta_costheta'] = fv.df_cos_opening_angle(df['P_decay_ell_minus'],df['P_decay_ell_plus'])
+        df['Delta_theta'] = np.arccos(df['Delta_costheta'])*180/np.pi
+        
+        minus_lead = (df['P_decay_ell_minus','0'] >= df['P_decay_ell_plus','0'])
+        plus_lead  = (df['P_decay_ell_minus','0'] < df['P_decay_ell_plus','0'])
+
+        df['E_subleading'] = np.minimum(df['P_decay_ell_minus','0'], df['P_decay_ell_plus','0'])
+        df['E_leading'] = np.maximum(df['P_decay_ell_minus','0'],df['P_decay_ell_plus','0'])
+
+        df['theta_subleading'] = df['theta_lp']*plus_lead + df['theta_lm']*minus_lead
+        df['theta_leading'] = df['theta_lp']*(~plus_lead) + df['theta_lm']*(~minus_lead)
+
+        # CCQE neutrino energy
+        df['E_nu_reco'] = const.m_proton * (df['P_decay_ell_plus','0'] + df['P_decay_ell_minus','0']) / ( const.m_proton - (df['P_decay_ell_plus','0'] + df['P_decay_ell_minus','0'])*(1.0 - (df['costheta_lm']*df['P_decay_ell_minus','0'] + df['costheta_lp'] * df['P_decay_ell_plus','0'])/(df['P_decay_ell_plus','0'] + df['P_decay_ell_minus','0'])  ))
+
+
+        ###################### HISTOGRAM 2D ##################################################
+        n2D = 40
+        args_2d = {"title": title, "nbins": n2D}
+        
+        histogram2D(PATH/"2D_EN_Etot.pdf", df['E_N'], df['E_tot'], w,
+                                    xrange=[0.0, 2.0],
+                                    yrange=[0.0, 2.0],
+                                    xlabel=r"$E_{N}$ (GeV)", 
+                                    ylabel=r"$E_{\ell^-}+E_{\ell^+}$ (GeV)",
+                                    **args_2d)
+
+        histogram2D(PATH/"2D_Ep_Em.pdf", df['E_lm'], df['E_lp'],w,
+                                    xrange=[0.0, 2.0],
+                                    yrange=[0.0, 2.0],
+                                    xlabel=r"$E_{\ell^-}$ (GeV)", 
+                                    ylabel=r"$E_{\ell^+}$ (GeV)",
+                                    **args_2d)
+
+        histogram2D(PATH/"2D_dtheta_Etot.pdf", df['Delta_theta'], df['E_tot'], w, \
+                                                xrange=[0.0, 90],
+                                                yrange=[0.0, 2.0],
+                                                xlabel=r"$\Delta \theta_{\ell \ell}$ ($^\circ$)", 
+                                                ylabel=r"$E_{\ell^+}+E_{\ell^-}$ (GeV)",
+                                                **args_2d)
+
+        histogram2D(PATH/"2D_Easyabs_Etot.pdf", np.abs(df['E_asy']), df['Delta_costheta'], w,
+                                    xrange=[0.0, 1.0],
+                                    yrange=[0.0, 90.0],
+                                    xlabel=r"$|E_{\rm asy}|$", 
+                                    ylabel=r"$\Delta \theta_{\ell \ell}$ ($^\circ$)",
+                                    **args_2d)
+
+        histogram2D(PATH/"2D_Easyabs_Etot.pdf", np.abs(df['E_asy']), df['E_tot'], w,
+                                    xrange=[0.0, 1.0],
+                                    yrange=[0.0, 2.0],
+                                    xlabel=r"$|E_{\rm asy}|$", 
+                                    ylabel=r"$E_{\ell^+}+E_{\ell^-}$ (GeV)",
+                                    **args_2d)
+
+        histogram2D(PATH/"2D_Easyabs_Etot.pdf", np.abs(df['E_asy']), df['E_tot'], w,
+                                    xrange=[0.0, 1.0],
+                                    yrange=[0.0, 2.0],
+                                    xlabel=r"$|E_{\rm asy}|$", 
+                                    ylabel=r"$E_{\ell^+}+E_{\ell^-}$ (GeV)",
+                                    **args_2d)
+
+        histogram2D(PATH/"2D_Ehad_Etot.pdf", df['T_proton'][pel]*1e3, df['E_tot'][pel], w_pel,
+                                    xrange=[0.0, 1000],
+                                    yrange=[0.0, 2.0],
+                                    xlabel=r"$T_{\rm proton}$ (MeV)", 
+                                    ylabel=r'$E_{\ell^+} + E_{\ell^-}$ (GeV)', 
+                                    title=title +' proton-elastic only', nbins=n2D)
+
+
+        histogram2D(PATH/"2D_thetaLead_dtheta.pdf", df['theta_subleading'], df['theta_leading'], w,
+                                                    xrange=[0.0, 40.0],
+                                                    yrange=[0.0, 40.0],
+                                                    xlabel=r"$\theta_{\nu_\mu \ell_{\rm lead}}$ ($^\circ$)", 
+                                                    ylabel=r'$\Delta \theta$ ($^\circ$)', 
+                                                    **args_2d)
+
+        #################### HISTOGRAMS 1D ####################################################    
+        # momentum exchange
+        histogram1D(PATH/"1D_E_lp.pdf", df['E_lp'], w, r"$E_{\ell^+}$ GeV", title, 100, **args)
+        histogram1D(PATH/"1D_E_lm.pdf", df['E_lm'], w, r"$E_{\ell^-}$ GeV", title, 100, **args)
+        histogram1D(PATH/"1D_E_tot.pdf", df['E_tot'], w, r"$E_{\ell^-}+E_{\ell^+}$ GeV", title, 100, **args)
+        histogram1D(PATH/"1D_E_nu_QEreco.pdf", df['E_nu_reco'], w, r"$E_\nu^{\rm QE-reco}/$GeV", title, 20, **args)
+        histogram1D(PATH/"1D_E_leading.pdf", df['E_leading'], w, r"$E_{\rm leading}$ GeV", title, 100, **args)
+        histogram1D(PATH/"1D_E_subleading.pdf", df['E_subleading'], w, r"$E_{\rm subleading}$ GeV", title, 100, **args)
+        histogram1D(PATH/"1D_cost_sum.pdf", df['costheta_sum'], w, r"$\cos(\theta_{(ee)\nu_\mu})$", title, 20, **args)
+        histogram1D(PATH/"1D_cost_sum_had.pdf", df['costheta_sum_had'], w, r"$\cos(\theta_{(ee) {\rm hadron}})$", title, 20, **args)
+        histogram1D(PATH/"1D_cost_lp.pdf", df['costheta_lp'],  w, r"$\cos(\theta_{\nu_\mu \ell^+})$", title, 40, **args)
+        histogram1D(PATH/"1D_cost_lm.pdf", df['costheta_lm'], w, r"$\cos(\theta_{\nu_\mu \ell^-})$", title, 40, **args)
+        histogram1D(PATH/"1D_theta_lp.pdf", df['theta_lp'], w, r"$\theta_{\nu_\mu \ell^+}$", title, 40, **args)
+        histogram1D(PATH/"1D_theta_lm.pdf", df['theta_lm'], w, r"$\theta_{\nu_\mu \ell^-}$", title, 40, **args)
+        histogram1D(PATH/"1D_theta_lead.pdf", df['theta_leading'], w, r"$\theta_{\nu_\mu \ell_{\rm lead}}$ ($^\circ$)", title, 40, **args)
+        histogram1D(PATH/"1D_theta_sublead.pdf", df['theta_subleading'], w, r"$\theta_{\nu_\mu \ell_{\rm sublead}}$ ($^\circ$)", title, 40, **args)
+        histogram1D(PATH/"1D_deltacos.pdf", df['Delta_costheta'], w, r"$\cos(\theta_{\ell^+ \ell^-})$", title, 40, **args)
+        histogram1D(PATH/"1D_deltatheta.pdf", df['Delta_theta'], w, r"$\theta_{\ell^+ \ell^-}$", title, 40, **args)
+        histogram1D(PATH/"1D_invmass.pdf", df['inv_mass'], w, r"$m_{\ell^+ \ell^-}$ [GeV]", title, 50, **args)
+        histogram1D(PATH/"1D_asym.pdf", df['E_asy'], w, r"$(E_{\ell^+}-E_{\ell^-})$/($E_{\ell^+}+E_{\ell^-}$)", title, 20, **args)
+        histogram1D(PATH/"1D_asym_abs.pdf", np.abs(df['E_asy']), w, r"$|E_{\ell^+}-E_{\ell^-}|$/($E_{\ell^+}+E_{\ell^-}$)", title, 20, **args)
 
 
 def plot_closed_region(points, logx=False, logy=False):
