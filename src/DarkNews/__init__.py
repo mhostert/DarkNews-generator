@@ -16,9 +16,14 @@ if not prettyprinter.hasHandlers():
 logger.propagate = False
 prettyprinter.propagate = False
 
-
+'''
+    These definition modules make import of main DarkNews classes easier.
+    Essentially, it allows DarkNews.XXXX instead of DarkNews.YYYY.XXXX
+'''
 # Definition modules
 from DarkNews.GenLauncher import GenLauncher
+
+
 
 from DarkNews import pdg
 from DarkNews import const
@@ -42,3 +47,5 @@ from DarkNews import MC
 # for output of MC 
 from DarkNews import printer
 from DarkNews import geom
+
+from DarkNews import plot_tools

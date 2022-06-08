@@ -304,7 +304,7 @@ class Printer:
 						f" {int(df_gen['target_pdgid',''].to_numpy()[i])}"
 						f" 0 0 0 0"
 						f" {print_in_order(pvec_target[i])}"
-						f" {df_gen['P_recoil','0'].to_numpy()[i]:.8g}"
+						f" {df_gen['P_target','0'].to_numpy()[i]:.8g}"
 						f" {mass_target[i]:.8g}"
 						f" {print_in_order(pvec_pos_scatt[i])}"
 						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8g}"
@@ -375,10 +375,10 @@ class Printer:
 
 		
 		# HEPevt file name
-		hepevt_file_name = f"{df_gen.attrs['data_path']}HEPevt.dat"
+		hepevt_file_name = f"{Path(f'{self.out_file_name}/HEPevt.dat')}"
 		f = open(hepevt_file_name,"w+") 
 		# print events
-		f.write(hepevt_string.join(lines))
+		f.write(hepevt_string+''.join(lines))
 		f.close()
 
 		prettyprinter.info(f"HEPevt events saved to file successfully:\n{hepevt_file_name}")

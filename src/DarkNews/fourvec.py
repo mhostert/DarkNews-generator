@@ -1,7 +1,7 @@
 import numpy as np
 
-from . import Cfourvec as Cfv
-from . import logger
+from DarkNews import Cfourvec as Cfv
+from DarkNews import logger
 
 X = 0 
 Y = 1
@@ -12,13 +12,13 @@ Z = 2
 # numpy functions
 def dot4(x,y):
 	if (np.size(x)!=4 or np.size(y)!=4):
-		print("ERROR!")
+		logger.error(f"Error! The dot4 product of two vectors with sizes different from 4 is not defined. Sizes s(x)={np.shape(x)} and s(y)={np.shape(y)}.")
 		return 0
 	return x[0]*y[0] - x[1]*y[1] - x[2]*y[2] - x[3]*y[3]
 
 def dot3(x,y):
 	if (np.size(x)!=4 or np.size(y)!=4):
-		print("ERROR!")
+		logger.error(f"Error! The dot3 product of two vectors with sizes different from 4 is not defined. Sizes s(x)={np.shape(x)} and s(y)={np.shape(y)}.")
 	return x[1]*y[1] + x[2]*y[2] + x[3]*y[3]
 
 def cos_opening_angle(x,y):
@@ -27,12 +27,16 @@ def cos_opening_angle(x,y):
 def cos_azimuthal(x):
 	return Cfv.get_cosTheta(x)
 
-THRESHOLD = 0.0
+
 def inv_mass(x,y):
-	mSQR = np.clip(dot4(x,y), THRESHOLD, np.inf)
-	if (mSQR < 0).any():
-		logger.warning("Warning! Trying to compute invariant mass with negative (p_a.p_b) product. Possibly a numerical instability?")
-	return np.sqrt(mSQR)
+	return np.sqrt(Cfv.dot4(x,y))
+
+# THRESHOLD = 0.0
+# def inv_mass(x,y):
+# 	mSQR = np.clip(dot4(x,y), THRESHOLD, np.inf)
+# 	if (mSQR < 0).any():
+# 		logger.warning("Warning! Trying to compute invariant mass with negative (p_a.p_b) product. Possibly a numerical instability?")
+# 	return np.sqrt(mSQR)
 
 def mass(x):
 	return inv_mass(x,x)

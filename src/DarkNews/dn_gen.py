@@ -124,13 +124,17 @@ def dn_gen():
     parser.add_argument("--nint_warmup", type=int, help="number of adaptive iterations in warmup")
 
     # program options
-    parser.add_argument("--pandas", help="If true, prints events in .npy files", action="store_true")
-    parser.add_argument("--numpy", help="If true, prints events in .npy files", action="store_true")
+    parser.add_argument("--pandas", help="If true, prints pandas dataframe to .pckl files", action="store_true")
+    parser.add_argument("--parquet", help="If true, prints pandas dataframe to .parquet files. Loses metadata in attrs.", action="store_true")
+    parser.add_argument("--numpy", help="If true, prints events as ndarrays in a .npy file", action="store_true")
     parser.add_argument("--hepevt", help="If true, unweigh events and print them in HEPEVT-formatted text files", action="store_true")
     parser.add_argument("--hepevt_unweigh", help="unweigh events when printing in HEPEVT format (needs large statistics)", action="store_true")
-    parser.add_argument("--hepevt_events", type=int, help="number of events to accept in HEPEVT format")
+    parser.add_argument("--unweighed_hepevt_events", type=int, help="number of unweighed events to accept in HEPEVT format. Has to be much smaller than neval for unweigh procedure to work.")
 
-    parser.add_argument("--summary_plots", help="generate summary plots of kinematics", action="store_false")
+    parser.add_argument("--sparse", help="drop all information in the event except for visible particle momenta, neutrino energy, and weights.", action="store_true")
+    parser.add_argument("--print_to_float32", help="Use float32 instead of default float64 when printing output to save storage space.", action="store_true")
+
+    parser.add_argument("--make_summary_plots", help="generate summary plots of kinematics", action="store_true")
     parser.add_argument("--path", help="path where to save run's outputs")
     parser.add_argument("--seed", type=int, help="numpy seed to be used by vegas.")
 

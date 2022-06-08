@@ -1,4 +1,4 @@
-<h1 align="center"> Dark News </h1> <br>
+<h1 align="center"> DarkNews </h1> <br>
 
 <!-- <img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="180" title="DarkNews-logo"> -->
 <img align="left" src="assets/logo_2.svg" width="180" title="DarkNews-logo">
@@ -13,6 +13,8 @@ DarkNews is an event generator for new physics processes at accelerator neutrino
 
 
 <br>
+
+**Please note this generator is currently under development, so please expect frequent updates.**
 
 
 ## Table of Contents
@@ -311,7 +313,8 @@ The experiment to use can be specified in two ways through the `exp` argument (o
     * NUMI FHC ME (`"minos_le_fhc"`)
     * NUMI FHC LE (`"minos_me_fhc"`)
     * ND280 FHC (`"nd280_fhc"`)
-    * NOva FHC (`"nova_le_fhc"`)
+    * NOva FHC LE (`"nova_le_fhc"`)
+    * FASERnu (`"fasernu"`)
 1. specifying the file path of an experiment file: every file should be specified using the same rules as for the parameters file, listed in [the previous section](#specify-parameters-via-a-file).
 A template file [`template_custom_experiment.txt`](examples/template_custom_experiment.txt) can be found in [in the `examples` directory](examples/).
 The following parameters must be present (in general it is possible to specify any number of parameters, but only the ones below would be relevant).
@@ -358,11 +361,15 @@ HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughte
 | <!-- -->                  | **x**    | `float`  | <!-- --> |
 | <!-- -->                  | **y**    | `float`  | <!-- --> |
 | <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **P\_decay\_ell\_minus**  | **t**    | `float`  | 4-momenta of e- |
+| **P\_decay\_photon**  | **t**    | `float`  | 4-momenta of the photon (if exists)|
 | <!-- -->                  | **x**    | `float`  | <!-- --> |
 | <!-- -->                  | **y**    | `float`  | <!-- --> |
 | <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **P\_decay\_ell\_plus**   | **t**    | `float`  | 4-momenta of e+ |
+| **P\_decay\_ell\_minus**  | **t**    | `float`  | 4-momenta of e- (if exists)|
+| <!-- -->                  | **x**    | `float`  | <!-- --> |
+| <!-- -->                  | **y**    | `float`  | <!-- --> |
+| <!-- -->                  | **z**    | `float`  | <!-- --> |
+| **P\_decay\_ell\_plus**   | **t**    | `float`  | 4-momenta of e+ (if exists)|
 | <!-- -->                  | **x**    | `float`  | <!-- --> |
 | <!-- -->                  | **y**    | `float`  | <!-- --> |
 | <!-- -->                  | **z**    | `float`  | <!-- --> |
@@ -374,12 +381,10 @@ HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughte
 | <!-- -->                  | **x**    | `float`  | <!-- --> |
 | <!-- -->                  | **y**    | `float`  | <!-- --> |
 | <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **w\_decay\_rate\_0**     | <!-- --> | `float`  | Weight of the decay rate: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>N</sub> |
-| **I\_decay\_rate\_0**     | <!-- --> | `float`  | Total rate &Gamma;<sub>N</sub> |
+| **w\_decay\_rate\_0**     | <!-- --> | `float`  | Weight of the decay rate of primary unstable particle: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>N</sub> |
+| **w\_decay\_rate\_1**     | <!-- --> | `float`  | Weight of the decay rate of secondary unstable particle: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>X</sub> |
 | **w\_event\_rate**        | <!-- --> | `float`  | Weight for the event rate: &Sigma;<sub>i</sub> w<sub>i</sub> = event rate |
-| **I\_event\_rate**        | <!-- --> | `float`  | Total event rate |
 | **w\_flux\_avg\_xsec**    | <!-- --> | `float`  | Weight of the flux averaged cross section: &Sigma;<sub>i</sub> w<sub>i</sub> = int(sigma &sdot; flux) &sdot; exposure |
-| **I\_flux\_avg\_xsec**    | <!-- --> | `float`  | int(sigma &sdot; flux) &sdot; exposure |
 | **target**                | <!-- --> | *object* | Target object, it will typically be a nucleus |
 | **target\_pdgid**         | <!-- --> | `int`    | PDG id of the target |
 | **scattering\_regime**    | <!-- --> | *object* | Regime can be coherent or p-elastic |
