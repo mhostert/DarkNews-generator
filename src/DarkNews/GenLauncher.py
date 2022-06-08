@@ -185,12 +185,13 @@ class GenLauncher:
         
         ####################################################
         # Set the model to use
-
+        # set the path of the experiment name (needed in the case of custom experiment path)
+        exp_path_part = os.path.basename(self.exp).rsplit(".", maxsplit=1)[0]
         # 3+1
         if (self.bsm_model.m4 and not self.bsm_model.m5 and not self.bsm_model.m6) :
             self.upscattered_nus = [dn.pdg.neutrino4]
             self.outgoing_nus =[dn.pdg.nulight]
-            self.data_path = Path(f'{self.path}/data/{self.exp}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
+            self.data_path = Path(f'{self.path}/data/{exp_part_path}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         # 3+2
         elif (self.bsm_model.m4 and self.bsm_model.m5 and not self.bsm_model.m6):
@@ -199,13 +200,13 @@ class GenLauncher:
             self.outgoing_nus =[dn.pdg.neutrino4]
             # upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5]
             # outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4]
-            self.data_path = Path(f'{self.path}/data/{self.exp}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
+            self.data_path = Path(f'{self.path}/data/{exp_part_path}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         # 3+3
         elif (self.bsm_model.m4 and self.bsm_model.m5 and self.bsm_model.m6):
             self.upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
             self.outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
-            self.data_path = Path(f'{self.path}/data/{self.exp}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
+            self.data_path = Path(f'{self.path}/data/{exp_part_path}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         else:
             logger.error('ERROR! Mass spectrum not allowed.')
@@ -351,31 +352,36 @@ class GenLauncher:
         return self.gen_cases
 
 
-    def run(self, loglevel=None, verbose=None, logfile=None):
+    def run(self, loglevel=None, verbose=None, logfile=None, overwrite_path=None):
         """
         Run GenLauncher generation of events
 
         Args:            
             loglevel (int, optional): what logging level to use. Can be logging.(DEBUG, INFO, WARNING, or ERROR). Defaults to logging.INFO.
             
-            prettyprinter (logging.Logger, optional): if passed, configures this logger for the prettyprint. Defaults to None.
-            
-            logfile (str, optional): path to file where to log the output. Defaults to None.
-            
             verbose (bool, optional): If true, keep date and time in the logger format. Defaults to False.
+
+            logfile (str, optional): path to file where to log the output. Defaults to None.
+
+            overwrite_path (str, optional): new path to save the data, it overwrites the default path
         
         Returns:
             pd.DataFrame: the final pandas dataframe with all the events
         """
 
         ####################################################
-        args = {"loglevel": loglevel, "verbose": verbose, "logfile": logfile}
+        args = {"loglevel": loglevel, "verbose": verbose, "logfile": logfile, "overwrite_path": overwrite_path}
         for attr in args.keys():
             if args[attr] is not None:
                 setattr(self, attr, args[attr])
 
         ############
-        # supersede original logger configuration 
+        # temporarily overwrite path
+        old_path = self.data_path
+        self.data_path = Path(overwrite_path + "/")
+
+        ############
+        # superseed original logger configuration 
         self.configure_logger( 
             logger = logger,
             prettyprinter = self.prettyprinter,
@@ -418,6 +424,9 @@ class GenLauncher:
                                                     max_events=self.hepevt_events,
                                                     decay_product=self.decay_product)
         
+        # restore overwritten path
+        self.data_path = old_path
+
         return self.df
 
 
