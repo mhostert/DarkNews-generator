@@ -191,7 +191,7 @@ class GenLauncher:
         if (self.bsm_model.m4 and not self.bsm_model.m5 and not self.bsm_model.m6) :
             self.upscattered_nus = [dn.pdg.neutrino4]
             self.outgoing_nus =[dn.pdg.nulight]
-            self.data_path = Path(f'{self.path}/data/{exp_part_path}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
+            self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         # 3+2
         elif (self.bsm_model.m4 and self.bsm_model.m5 and not self.bsm_model.m6):
@@ -200,23 +200,23 @@ class GenLauncher:
             self.outgoing_nus =[dn.pdg.neutrino4]
             # upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5]
             # outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4]
-            self.data_path = Path(f'{self.path}/data/{exp_part_path}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
+            self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         # 3+3
         elif (self.bsm_model.m4 and self.bsm_model.m5 and self.bsm_model.m6):
             self.upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
             self.outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
-            self.data_path = Path(f'{self.path}/data/{exp_part_path}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
+            self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         else:
             logger.error('ERROR! Mass spectrum not allowed.')
             raise ValueError 
 
         # create directory tree
-        try:
-            os.makedirs(self.data_path)
-        except OSError:
-            logger.warning("Note that the directory tree for this run already exists.")
+        # try:
+        #     os.makedirs(self.data_path)
+        # except OSError:
+        #     logger.warning("Note that the directory tree for this run already exists.")
 
         ####################################################
         # Create all MC cases
@@ -363,22 +363,23 @@ class GenLauncher:
 
             logfile (str, optional): path to file where to log the output. Defaults to None.
 
-            overwrite_path (str, optional): new path to save the data, it overwrites the default path
+            overwrite_path (str, optional): new path to save the data, it overwrites the default.
         
         Returns:
             pd.DataFrame: the final pandas dataframe with all the events
         """
 
         ####################################################
-        args = {"loglevel": loglevel, "verbose": verbose, "logfile": logfile, "overwrite_path": overwrite_path}
+        args = {"loglevel": loglevel, "verbose": verbose, "logfile": logfile}
         for attr in args.keys():
             if args[attr] is not None:
                 setattr(self, attr, args[attr])
 
         ############
         # temporarily overwrite path
-        old_path = self.data_path
-        self.data_path = Path(overwrite_path + "/")
+        if overwrite_path:
+            old_path = self.data_path
+            self.data_path = Path(overwrite_path + "/")
 
         ############
         # superseed original logger configuration 
@@ -425,7 +426,8 @@ class GenLauncher:
                                                     decay_product=self.decay_product)
         
         # restore overwritten path
-        self.data_path = old_path
+        if overwrite_path:
+            self.data_path = old_path
 
         return self.df
 
