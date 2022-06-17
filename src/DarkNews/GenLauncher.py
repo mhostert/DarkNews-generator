@@ -35,7 +35,7 @@ class GenLauncher:
         "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", 
         "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
         "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "unweighed_hepevt_events", 
-        "sparse", "print_to_float32", "sample_geometry", "make_summary_plots", "path", "seed"
+        "sparse", "print_to_float32", "sample_geometry", "make_summary_plots", "path", "seed", "enforce_prompt"
     ]
 
     def __init__(self, param_file=None, **kwargs):
@@ -141,6 +141,7 @@ class GenLauncher:
         self.make_summary_plots = False
         self.path = "."
         self.seed = None
+        self.enforce_prompt = False
 
         # load file if not None
         if param_file is not None:
@@ -168,7 +169,7 @@ class GenLauncher:
         prettyprinter.info(self.banner)
 
         if self.hepevt_unweigh:
-            logger.warning(f'Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hepevt events. Currently: n_unweighted/n_eval = {self.unweighed_hepevt_events/self.neval/100}%.')
+            logger.warning(f'Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hepevt events. Currently: n_unweighted/n_eval = {self.unweighed_hepevt_events/self.neval*100}%.')
 
         #########################
         # Set BSM parameters
@@ -341,6 +342,7 @@ class GenLauncher:
                                             'nu_upscattered' : nu_upscattered,
                                             'nu_outgoing' : nu_outgoing, 
                                             'decay_product' : decay_product,
+                                            'enforce_prompt' : self.enforce_prompt,
                                             }
 
                                     if scope['INCLUDE_HC']:  # helicity conserving scattering

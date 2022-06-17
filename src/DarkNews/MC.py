@@ -51,7 +51,8 @@ class MC_events:
             'nu_outgoing': pdg.nulight,
             'scattering_regime': 'coherent',
             'decay_product': ['e+e-'],
-            'helicity': 'conserving'
+            'helicity': 'conserving',
+            'enforce_prompt': False,
             }
 
         scope.update(kwargs)
@@ -233,8 +234,8 @@ class MC_events:
         tot_nevents = len(weights['diff_event_rate'])
 
         logger.debug(f"Normalization factors in MC: {batch_f.norm}.")
-        logger.debug(f"Vegas results for diff_event_rate: {np.sum(weights['diff_event_rate'])}")
-        logger.debug(f"Vegas results for diff_flux_avg_xsec: {np.sum(weights['diff_flux_avg_xsec'])}")
+        logger.debug(f"Vegas results for diff_event_rate: {weights['diff_event_rate'].sum()}")
+        logger.debug(f"Vegas results for diff_flux_avg_xsec: {weights['diff_flux_avg_xsec'].sum()}")
 
         four_momenta = integrands.get_momenta_from_vegas_samples(samples, MC_case=self)
         ##########################################################################
@@ -268,13 +269,13 @@ class MC_events:
         # Normalize weights and total integral with decay rates and set units to nus*cm^2/POT
         decay_rates = 1
         for decay_step in (k for k in batch_f.int_dic.keys() if 'decay_rate' in k):
-            logger.debug(f"Vegas results for {decay_step}: {np.sum(weights[decay_step])}")
+            logger.debug(f"Vegas results for {decay_step}: {weights[decay_step].sum()}")
             
             # saving decay weights and integrals
             df_gen[f'w_{decay_step}'.replace('diff_','')] = weights[decay_step] * batch_f.norm[decay_step]
             
             # combining all decay rates into one factor
-            decay_rates *= np.sum(df_gen[f'w_{decay_step}'.replace('diff_','')]) 
+            decay_rates *= df_gen[f'w_{decay_step}'.replace('diff_','')].sum()
 
         # How many constituent targets inside scattering regime? 
         if self.scope['scattering_regime'] == 'coherent':
@@ -320,12 +321,18 @@ class MC_events:
         self.experiment.set_geometry()
         self.experiment.place_scatters(df_gen)
 
-        geom.place_decay(df_gen, 'P_decay_N_parent', l_decay_proper_cm=0.0, label='pos_decay')
+        if self.scope['enforce_prompt']:
+            geom.place_decay(df_gen, 'P_decay_N_parent', l_decay_proper_cm=0.0, label='pos_decay')
+        else:
+            # decay only the first mother (typically the HNL produced)
+            l_decay_proper_cm = const.get_decay_rate_in_cm(df_gen[f'w_decay_rate_0'].sum())
+            logger.info(f"Parent {self.ups_case.nu_upscattered.name} proper decay length: {l_decay_proper_cm:.3E} cm.\n")
+            geom.place_decay(df_gen, 'P_decay_N_parent', l_decay_proper_cm=l_decay_proper_cm, label='pos_decay')
 
         ##########################################################################
 
         # print final result
-        logger.info(f"Predicted ({np.sum(df_gen['w_event_rate']):.3g} +/- {np.sqrt(np.sum(df_gen['w_event_rate']**2)):.3g}) events.\n")
+        logger.info(f"Predicted ({df_gen['w_event_rate'].sum():.3g} +/- {np.sqrt((df_gen['w_event_rate']**2).sum()):.3g}) events.\n")
 
         return df_gen
 

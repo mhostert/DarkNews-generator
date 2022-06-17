@@ -218,7 +218,7 @@ class Printer:
 
 		# Unweigh events down to max_events?
 		if unweigh:
-			df_gen = self.get_unweighted_events(self.df_gen, nevents = max_events)
+			df_gen = self.get_unweighted_events(nevents = max_events)
 		else:
 			df_gen = self.df_gen
 

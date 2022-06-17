@@ -134,6 +134,7 @@ def dn_gen():
     parser.add_argument("--sparse", help="drop all information in the event except for visible particle momenta, neutrino energy, and weights.", action="store_true")
     parser.add_argument("--print_to_float32", help="Use float32 instead of default float64 when printing output to save storage space.", action="store_true")
 
+    parser.add_argument("--enforce_prompt", help="forces the particles to decay promptly", action="store_true")
     parser.add_argument("--make_summary_plots", help="generate summary plots of kinematics", action="store_true")
     parser.add_argument("--path", help="path where to save run's outputs")
     parser.add_argument("--seed", type=int, help="numpy seed to be used by vegas.")
