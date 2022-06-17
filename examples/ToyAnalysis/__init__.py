@@ -27,6 +27,7 @@ from ToyAnalysis import Cfourvec as Cfv # cython
 
 # Analysis and plotting modules 
 from ToyAnalysis import analysis
+from ToyAnalysis import analysis_decay
 from ToyAnalysis import cuts
 from ToyAnalysis import plot_tools
 

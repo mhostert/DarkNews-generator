@@ -29,7 +29,7 @@ def cos_azimuthal(x):
 
 
 def inv_mass(x,y):
-	return np.sqrt(Cfv.dot4(x,y))
+	return Cfv.inv_mass(x,y)
 
 # THRESHOLD = 0.0
 # def inv_mass(x,y):

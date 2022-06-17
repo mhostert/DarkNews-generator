@@ -24,7 +24,7 @@ Umu5_def = np.sqrt(1.0e-12)
 epsilon_def = 8e-4
 
 
-def get_data_MB(varplot='reco_Evis',loc='analysis_dn/data'):
+def get_data_MB(varplot='reco_Evis',loc='ToyAnalysis/data'):
     
     if varplot=='reco_Evis':
         _, data = np.loadtxt(loc+"/digitized/miniboone_2020/Evis/data_Evis.dat", unpack=True)
@@ -56,14 +56,15 @@ def get_data_MB(varplot='reco_Evis',loc='analysis_dn/data'):
     return [signal,bkg,sys_signal,sys_bkg]
 
 
-def get_events_df(model='3+1',exp='miniboone_fhc',neval=100000, HNLtype="dirac",mzprime=1.25,m4=0.8,m5=1.0,UD4=UD4_def,UD5=UD5_def,Umu4=Umu4_def,Umu5=Umu5_def,gD=gD_def,epsilon=epsilon_def):
+def get_events_df(model='3+1',exp='miniboone_fhc',neval=100000, HNLtype="dirac",mzprime=1.25,m4=0.8,m5=1.0,UD4=UD4_def,UD5=UD5_def,Umu4=Umu4_def,Umu5=Umu5_def,gD=gD_def,epsilon=epsilon_def, **kwargs):
     if model=='3+1':
-        gen = GenLauncher(mzprime=mzprime, m4=m4, Umu4=Umu4, UD4=UD4, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, exp=exp,sparse=True,print_to_float32=True, pandas=False, parquet=True)
+        gen = GenLauncher(mzprime=mzprime, m4=m4, Umu4=Umu4, UD4=UD4, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, exp=exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
     elif model=='3+1':
-        gen = GenLauncher(mzprime=mzprime, m4=m4, m5=m5, Umu4=Umu4, Umu5=Umu5, UD4=UD4, UD5=UD5, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, exp=exp,sparse=True,print_to_float32=True, pandas=False, parquet=True)
+        gen = GenLauncher(mzprime=mzprime, m4=m4, m5=m5, Umu4=Umu4, Umu5=Umu5, UD4=UD4, UD5=UD5, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, exp=exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
     gen.run(loglevel="ERROR")
     df = gen.df
     decay_l = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0))
+    
     df = df[df.w_event_rate>0]
     
     if exp=='miniboone_fhc':
@@ -82,7 +83,29 @@ def get_events_df(model='3+1',exp='miniboone_fhc',neval=100000, HNLtype="dirac",
 
 class grid_analysis:
 
-    def __init__(self,model='3+1',exp='miniboone_fhc',neval=100000, HNLtype="dirac",x_label='mzprime',y_label='m4',x_range=(0.02,10,10),y_range=(0.01,2,10),log_interval_x=True,log_interval_y=True,mzprime=None,m4=None,m5=None,delta=None,UmuN_max=1e-2,UD4=UD4_def,UD5=UD5_def,Umu4=Umu4_def,Umu5=Umu5_def,gD=gD_def,epsilon=8e-4,cores=1,output_file=None):
+    def __init__(self,model='3+1',
+                    exp='miniboone_fhc',
+                    neval=100000, 
+                    HNLtype="dirac",
+                    x_label='mzprime',
+                    y_label='m4',
+                    x_range=(0.02,10,10),
+                    y_range=(0.01,2,10),
+                    log_interval_x=True,
+                    log_interval_y=True,
+                    mzprime=None,
+                    m4=None,
+                    m5=None,
+                    delta=None,
+                    UmuN_max=1e-2,
+                    UD4=UD4_def,
+                    UD5=UD5_def,
+                    Umu4=Umu4_def,
+                    Umu5=Umu5_def,
+                    gD=gD_def,
+                    epsilon=8e-4,
+                    cores=1,
+                    output_file=None):
         
         # initialize model parameters
         self.model = model
@@ -98,9 +121,9 @@ class grid_analysis:
         self.log_interval_y = log_interval_y
         
         if output_file:
-            self.output_file = output_file + '.dat'
+            self.output_file = output_file
         else:
-            self.output_file = 'fit_' + model[0] + 'p' + model[2] + '_' + HNLtype + '_' + exp + '.dat'
+            self.output_file = f'fit_{model[0]}p{model[2]}_{HNLtype}_{exp}.dat'
         keys_3p1 = ['mzprime','m4']
         keys_3p2 = ['mzprime','m4','m5','delta']
         if log_interval_x:
@@ -154,14 +177,14 @@ class grid_analysis:
             self.v4i = lambda umu4 : self.couplings['gD'] * self.couplings['UD4'] * umu4
             self.vmu4 = lambda umu4 : self.couplings['gD'] * self.couplings['UD4'] * self.couplings['UD4'] * umu4 / np.sqrt(1-umu4**2)
         elif (model == '3+2'):
-            self.couplings = {'UD4' : UD4 if UD4 else Ud4_def, 'UD5' : UD5 if UD5 else UD5_def, 'gD' : gD if gD else gD_def, 'Umu4' : Umu4 if Umu4 else Umu4_def, 'Umu5' : Umu5 if Umu5 else Umu5_def, 'epsilon' : epsilon if epsilon else 1e-2}
+            self.couplings = {'UD4' : UD4 if UD4 else UD4_def, 'UD5' : UD5 if UD5 else UD5_def, 'gD' : gD if gD else gD_def, 'Umu4' : Umu4 if Umu4 else Umu4_def, 'Umu5' : Umu5 if Umu5 else Umu5_def, 'epsilon' : epsilon if epsilon else 1e-2}
             self.vmu5 = lambda umu : self.couplings['gD'] * self.couplings['UD5'] * (umu[0]*self.couplings['UD4'] + umu[1]*self.couplings['UD5']) / np.sqrt(1 - umu[0]**2 - umu[1]**2)
         
         self.r_eps = self.couplings['epsilon']/self.couplings_def['epsilon']
     
 
 
-    def generate_events(self,location='data'):
+    def generate_events(self,location='data', **kwargs):
         if self.model == '3+1':
             def chi2_grid_run(k_y):
                 for k_x in range(self.grid_params['x_points']):
@@ -180,7 +203,7 @@ class grid_analysis:
                         pd.read_parquet(location + '/' + self.exp + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                     except:
                         try:
-                            gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True)
+                            gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                             gen.run(loglevel="ERROR")
                         except:
                             continue
@@ -246,7 +269,7 @@ class grid_analysis:
                         pd.read_parquet(location + '/' + self.exp + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                     except:
                         try:
-                            gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True)
+                            gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                             gen.run(loglevel="ERROR")
                         except:
                             continue
@@ -404,7 +427,7 @@ class grid_analysis:
                         df = av2.compute_spectrum(df, EVENT_TYPE='both')
                         df = df[df.reco_w>0]
                         
-                        if (m5s - m4s >= mzprime):
+                        if (m5s - m4s >= mzs):
                             df = av.select_MB_decay_expo_prob(df,coupling_factor=1,l_decay_proper_cm=decay_l)
                             data_enu[0][6] = decay_l
                         else:
@@ -599,13 +622,13 @@ class grid_analysis_couplings:
             self.v4i = lambda umu4 : self.couplings['gD'] * self.couplings['UD4'] * umu4
             self.vmu4 = lambda umu4 : self.couplings['gD'] * self.couplings['UD4'] * self.couplings['UD4'] * umu4 / np.sqrt(1-umu4**2)
         elif (model == '3+2'):
-            self.couplings = {'UD4' : UD4 if UD4 else Ud4_def, 'UD5' : UD5 if UD5 else UD5_def, 'gD' : gD if gD else gD_def, 'Umu4' : Umu4 if Umu4 else Umu4_def, 'Umu5' : Umu5 if Umu5 else Umu5_def, 'epsilon' : epsilon if epsilon else 1e-2}
+            self.couplings = {'UD4' : UD4 if UD4 else UD4_def, 'UD5' : UD5 if UD5 else UD5_def, 'gD' : gD if gD else gD_def, 'Umu4' : Umu4 if Umu4 else Umu4_def, 'Umu5' : Umu5 if Umu5 else Umu5_def, 'epsilon' : epsilon if epsilon else 1e-2}
             self.vmu5 = lambda umu : self.couplings['gD'] * self.couplings['UD5'] * (umu[0]*self.couplings['UD4'] + umu[1]*self.couplings['UD5']) / np.sqrt(1 - umu[0]**2 - umu[1]**2)
         
         self.r_eps = self.couplings['epsilon']/self.couplings_def['epsilon']
 
     
-    def generate_events(self,location='data'):
+    def generate_events(self,location='data', **kwargs):
         if self.model == '3+1':
             def chi2_grid_run(k_x):
                 if self.x_label == 'm4':
@@ -619,7 +642,7 @@ class grid_analysis_couplings:
                     pd.read_parquet(location + '/' + self.exp + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                 except:
                     try:
-                        gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True)
+                        gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                         gen.run(loglevel="ERROR")
                     except:
                         return "Nothing done"
@@ -671,7 +694,7 @@ class grid_analysis_couplings:
                     pd.read_parquet(location + '/' + self.exp + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                 except:
                     try:
-                        gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True)
+                        gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                         gen.run(loglevel="ERROR")
                     except:
                         return "Nothing done"
@@ -740,7 +763,7 @@ class grid_analysis_couplings:
                     return "Success!"
                     
                 except:
-                    return "Not success!"
+                    return "Failed to run events on the grid!"
 
         elif self.model == '3+2':
             data_list = [location_fit+f'/chi2_enu_3p2_coupling_{k}.dat' for k in range(self.grid_params['x_points'])]
@@ -802,13 +825,13 @@ class grid_analysis_couplings:
                     if df.reco_w.sum()==0:
                         return data_error
                     
-                    if (m5s-m4s<mzprime):
+                    if (m5s-m4s<mzs):
                         df = av.select_MB_decay_expo_prob(df,coupling_factor=self.r_eps,l_decay_proper_cm=decay_l)
                         decay_l_norm = decay_l / (self.r_eps)**2
-                        data = [[m4[k],m5[k],delta,decay_l_norm,0,0,0,mzs] for i in range(n)]
+                        data = [[m4s[k],m5s[k],deltas,decay_l_norm,0,0,0,mzs] for i in range(n)]
                     else:
                         df = av.select_MB_decay_expo_prob(df,coupling_factor=1,l_decay_proper_cm=decay_l)
-                        data = [[m4[k],m5[k],delta,decay_l,0,0,0,mzs] for i in range(n)]
+                        data = [[m4s[k],m5s[k],deltas,decay_l,0,0,0,mzs] for i in range(n)]
                     df = df[df.reco_w>0]
                     
                     if df.reco_w.sum()==0:

@@ -297,18 +297,22 @@ class MC_events:
         # flux averaged xsec weights (neglecting kinematics of decay)
         df_gen['w_flux_avg_xsec'] = weights['diff_flux_avg_xsec']*const.attobarn_to_cm2*target_multiplicity*exposure*batch_f.norm['diff_flux_avg_xsec']
 
-        df_gen['target']       = np.full(tot_nevents, self.ups_case.target.name)
-        df_gen['target_pdgid'] = np.full(tot_nevents, self.ups_case.target.pdgid)
-
-        df_gen['scattering_regime']  = np.full(tot_nevents, self.ups_case.scattering_regime)
-        df_gen['helicity']           = np.full(tot_nevents, self.helicity)
-        df_gen['underlying_process'] = np.full(tot_nevents, self.underl_process_name)
+        df_gen.insert(loc=len(df_gen.columns), column='target', value=np.full(tot_nevents, self.ups_case.target.name))
+        df_gen['target'] = df_gen['target'].astype("string")
+        df_gen.insert(loc=len(df_gen.columns), column='target_pdgid', value=self.ups_case.target.pdgid)
+        df_gen['target_pdgid'] = df_gen['target_pdgid'].astype("int")
+        df_gen.insert(loc=len(df_gen.columns), column='scattering_regime', value=np.full(tot_nevents, self.ups_case.scattering_regime))
+        df_gen['scattering_regime'] = df_gen['scattering_regime'].astype("string")
+        df_gen.insert(loc=len(df_gen.columns), column='helicity', value=np.full(tot_nevents, self.helicity))
+        df_gen['helicity'] = df_gen['helicity'].astype("string")
+        df_gen.insert(loc=len(df_gen.columns), column='underlying_process', value=np.full(tot_nevents, self.underl_process_name))
+        df_gen['underlying_process'] = df_gen['underlying_process'].astype("string")
 
         # saving the experiment class
         df_gen.attrs['experiment'] = self.experiment
 
         # saving the bsm_model class
-        df_gen.attrs['bsm_model'] = self.bsm_model
+        df_gen.attrs['model'] = self.bsm_model
 
         ##########################################################################
         # PROPAGATE PARENT PARTICLE

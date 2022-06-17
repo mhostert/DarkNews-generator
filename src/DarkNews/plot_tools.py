@@ -193,11 +193,11 @@ def batch_plot(df, PATH, title='Dark News'):
     df['costheta_N']   = fv.df_cos_azimuthal(df['P_decay_N_parent']) 
     df['costheta_nu']  = fv.df_cos_azimuthal(df['P_decay_N_daughter']) 
     df['costheta_Had'] = fv.df_cos_azimuthal(df['P_recoil']) 
-    df['theta_N'] = np.arccos(df['costheta_N'])*180/np.pi
-    df['theta_nu'] = np.arccos(df['costheta_nu'])*180/np.pi
+    df['theta_N'] = np.arccos(df['costheta_N'])*const.rad_to_deg
+    df['theta_nu'] = np.arccos(df['costheta_nu'])*const.rad_to_deg
 
-    df['theta_proton'] = np.arccos(df['costheta_Had'][pel])*180/np.pi
-    df['theta_nucleus'] = np.arccos(df['costheta_Had'][coherent])*180/np.pi
+    df['theta_proton'] = np.arccos(df['costheta_Had'][pel])*const.rad_to_deg
+    df['theta_nucleus'] = np.arccos(df['costheta_Had'][coherent])*const.rad_to_deg
     
     df['T_proton'] = (df['E_Had'] - df['M_had'])[pel]
     df['T_nucleus'] = (df['E_Had'] - df['M_had'])[coherent]
@@ -216,7 +216,51 @@ def batch_plot(df, PATH, title='Dark News'):
     histogram1D(PATH/"1D_theta_nucleus.pdf", df['theta_nucleus'][coherent], w_coh, r"$\theta_{\rm Nucleus}$ ($^\circ$)", 'coh nucleus only', 50, **args)
     
     
-    if '_ell_minus' in df.columns.levels[0]:
+    if 'P_decay_photon' in df.columns.levels[0]:
+        # some useful definitions for four momenta
+        
+        # variables
+        df['E_photon']   = df['P_decay_photon','0']
+               
+        df['costheta_photon'] = fv.df_cos_azimuthal(df['P_decay_photon'])
+        df['theta_photon'] = np.arccos(df['costheta_photon'])*const.rad_to_deg
+        
+        df['costheta_photon_had'] = fv.df_cos_opening_angle(df['P_decay_photon'], df['P_recoil'])
+        df['theta_photon_had'] = np.arccos(df['costheta_photon_had'])*const.rad_to_deg
+        
+        # CCQE neutrino energy
+        df['E_nu_reco'] = const.m_proton * df['E_photon'] / ( const.m_proton - df['E_photon']*(1.0 - df['costheta_photon']))
+
+
+        ###################### HISTOGRAM 2D ##################################################
+        n2D = 40
+        args_2d = {"title": title, "nbins": n2D}
+        
+        histogram2D(PATH/"2D_EN_Ephoton.pdf", df['E_N'], df['E_photon'], w,
+                                    xrange=[0.0, 2.0],
+                                    yrange=[0.0, 2.0],
+                                    xlabel=r"$E_{N}$ (GeV)", 
+                                    ylabel=r"$E_\gamma$ (GeV)",
+                                    **args_2d)
+
+        histogram2D(PATH/"2D_Ehad_Ephoton.pdf", df['T_proton'][pel]*1e3, df['E_photon'][pel], w_pel,
+                                    xrange=[0.0, 1000],
+                                    yrange=[0.0, 2.0],
+                                    xlabel=r"$T_{\rm proton}$ (MeV)", 
+                                    ylabel=r'$E_{\ell^+} + E_{\ell^-}$ (GeV)', 
+                                    title=title +' proton-elastic only', nbins=n2D)
+
+        #################### HISTOGRAMS 1D ####################################################    
+        # momentum exchange
+        histogram1D(PATH/"1D_E_photon.pdf", df['E_photon'], w, r"$E_\gamma$ GeV", title, 100, **args)
+        histogram1D(PATH/"1D_E_nu_QEreco.pdf", df['E_nu_reco'], w, r"$E_\nu^{\rm QE-reco}/$GeV", title, 20, **args)
+        histogram1D(PATH/"1D_cost_photon.pdf", df['costheta_photon'], w, r"$\cos(\theta_{\gamma})$", title, 20, **args)
+        histogram1D(PATH/"1D_cost_photon_had.pdf", df['costheta_photon_had'], w, r"$\cos(\theta_{\gamma {\rm hadron}})$", title, 20, **args)
+        histogram1D(PATH/"1D_theta_photon.pdf", df['theta_photon'], w, r"$\theta_{\gamma})$", title, 20, **args)
+        histogram1D(PATH/"1D_theta_photon_had.pdf", df['theta_photon_had'], w, r"$\theta_{\gamma  {\rm hadron}})$", title, 20, **args)
+
+
+    if 'P_decay_ell_minus' in df.columns.levels[0]:
         # some useful definitions for four momenta
         for i in range(4):
             df['P_decay_ellell',i] = df['P_decay_ell_minus',f'{i}']+df['P_decay_ell_plus',f'{i}']
@@ -236,14 +280,14 @@ def batch_plot(df, PATH, title='Dark News'):
         df['costheta_lm'] = fv.df_cos_azimuthal(df['P_decay_ell_minus'])
 
         df['costheta_sum_had'] = fv.df_cos_opening_angle(df['P_decay_ellell'], df['P_recoil'])
-        df['theta_sum_had'] = np.arccos(df['costheta_sum_had'])*180/np.pi
+        df['theta_sum_had'] = np.arccos(df['costheta_sum_had'])*const.rad_to_deg
         
-        df['theta_sum'] = np.arccos(df['costheta_sum'])*180/np.pi
-        df['theta_lp'] = np.arccos(df['costheta_lp'])*180/np.pi
-        df['theta_lm'] = np.arccos(df['costheta_lm'])*180/np.pi
+        df['theta_sum'] = np.arccos(df['costheta_sum'])*const.rad_to_deg
+        df['theta_lp'] = np.arccos(df['costheta_lp'])*const.rad_to_deg
+        df['theta_lm'] = np.arccos(df['costheta_lm'])*const.rad_to_deg
 
         df['Delta_costheta'] = fv.df_cos_opening_angle(df['P_decay_ell_minus'],df['P_decay_ell_plus'])
-        df['Delta_theta'] = np.arccos(df['Delta_costheta'])*180/np.pi
+        df['Delta_theta'] = np.arccos(df['Delta_costheta'])*const.rad_to_deg
         
         minus_lead = (df['P_decay_ell_minus','0'] >= df['P_decay_ell_plus','0'])
         plus_lead  = (df['P_decay_ell_minus','0'] < df['P_decay_ell_plus','0'])

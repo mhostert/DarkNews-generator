@@ -1,4 +1,4 @@
-# flux files digitized from and normalized assuming an area of 3x3 m^2
+# flux files digitized from https://inspirehep.net/files/8b026c0a4d355acc41d6b7848344e6de and normalized assuming an area of 3x3 m^2
 name = "NUTEV_FHC"
 fluxfile = "../fluxes/NuTeV_FHC.dat"
 flux_norm = 1

@@ -343,53 +343,57 @@ Followed by:
 
 HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughter) + e<sup>-</sup> (P\_decay\_ell\_plus) + e<sup>-</sup> (P\_decay\_ell\_minus)
 
-|<!-- -->|<!-- -->|<!-- -->|<!-- -->|
+| **Column**            | **Subcolumn** |**type**  | **description**|
 |:--------------------------|:--------:|:--------:|:-----------------------------------|
-| **P\_projectile**         | **t**    | `float`  | 4-momenta of beam neutrino |
-| <!-- -->                  | **x**    | `float`  | <!-- --> |
-| <!-- -->                  | **y**    | `float`  | <!-- --> |
-| <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **P\_decay\_N\_parent**   | **t**    | `float`  | 4-momenta of HNL\_parent |
-| <!-- -->                  | **x**    | `float`  | <!-- --> |
-| <!-- -->                  | **y**    | `float`  | <!-- --> |
-| <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **P\_target**             | **t**    | `float`  | 4-momenta of nucleus |
-| <!-- -->                  | **x**    | `float`  | <!-- --> |
-| <!-- -->                  | **y**    | `float`  | <!-- --> |
-| <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **P\_recoil**             | **t**    | `float`  | 4-momenta of recoiled nucleus |
-| <!-- -->                  | **x**    | `float`  | <!-- --> |
-| <!-- -->                  | **y**    | `float`  | <!-- --> |
-| <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **P\_decay\_photon**  | **t**    | `float`  | 4-momenta of the photon (if exists)|
-| <!-- -->                  | **x**    | `float`  | <!-- --> |
-| <!-- -->                  | **y**    | `float`  | <!-- --> |
-| <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **P\_decay\_ell\_minus**  | **t**    | `float`  | 4-momenta of e- (if exists)|
-| <!-- -->                  | **x**    | `float`  | <!-- --> |
-| <!-- -->                  | **y**    | `float`  | <!-- --> |
-| <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **P\_decay\_ell\_plus**   | **t**    | `float`  | 4-momenta of e+ (if exists)|
-| <!-- -->                  | **x**    | `float`  | <!-- --> |
-| <!-- -->                  | **y**    | `float`  | <!-- --> |
-| <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **P\_decay\_N\_daughter** | **t**    | `float`  | 4-momenta of HNL\_daughter / nu\_daughter |
-| <!-- -->                  | **x**    | `float`  | <!-- --> |
-| <!-- -->                  | **y**    | `float`  | <!-- --> |
-| <!-- -->                  | **z**    | `float`  | <!-- --> |
-| **decay\_displacement**   | **t**    | `float`  | Distance travelled by N\_parent |
-| <!-- -->                  | **x**    | `float`  | <!-- --> |
-| <!-- -->                  | **y**    | `float`  | <!-- --> |
-| <!-- -->                  | **z**    | `float`  | <!-- --> |
+| **P\_projectile**         | **0**    | `float`  | 4-momenta of beam neutrino |
+| <!-- -->                  | **1**    | `float`  | <!-- --> |
+| <!-- -->                  | **2**    | `float`  | <!-- --> |
+| <!-- -->                  | **3**    | `float`  | <!-- --> |
+| **P\_decay\_N\_parent**   | **0**    | `float`  | 4-momenta of HNL\_parent |
+| <!-- -->                  | **1**    | `float`  | <!-- --> |
+| <!-- -->                  | **2**    | `float`  | <!-- --> |
+| <!-- -->                  | **3**    | `float`  | <!-- --> |
+| **P\_target**             | **0**    | `float`  | 4-momenta of nucleus |
+| <!-- -->                  | **1**    | `float`  | <!-- --> |
+| <!-- -->                  | **2**    | `float`  | <!-- --> |
+| <!-- -->                  | **3**    | `float`  | <!-- --> |
+| **P\_recoil**             | **0**    | `float`  | 4-momenta of recoiled nucleus |
+| <!-- -->                  | **1**    | `float`  | <!-- --> |
+| <!-- -->                  | **2**    | `float`  | <!-- --> |
+| <!-- -->                  | **3**    | `float`  | <!-- --> |
+| **P\_decay\_photon**      | **0**    | `float`  | 4-momenta of photon (if it exists)|
+| <!-- -->                  | **1**    | `float`  | <!-- --> |
+| <!-- -->                  | **2**    | `float`  | <!-- --> |
+| <!-- -->                  | **3**    | `float`  | <!-- --> |
+| **P\_decay\_ell\_minus**  | **0**    | `float`  | 4-momenta of e- (if it exists)|
+| <!-- -->                  | **1**    | `float`  | <!-- --> |
+| <!-- -->                  | **2**    | `float`  | <!-- --> |
+| <!-- -->                  | **3**    | `float`  | <!-- --> |
+| **P\_decay\_ell\_plus**   | **0**    | `float`  | 4-momenta of e+ (if it exists)|
+| <!-- -->                  | **1**    | `float`  | <!-- --> |
+| <!-- -->                  | **2**    | `float`  | <!-- --> |
+| <!-- -->                  | **3**    | `float`  | <!-- --> |
+| **P\_decay\_N\_daughter** | **0**    | `float`  | 4-momenta of HNL\_daughter / nu\_daughter |
+| <!-- -->                  | **1**    | `float`  | <!-- --> |
+| <!-- -->                  | **2**    | `float`  | <!-- --> |
+| <!-- -->                  | **3**    | `float`  | <!-- --> |
+| **pos_scatt**             | **0**    | `float`  | upscattering position|
+| <!-- -->                  | **1**    | `float`  | <!-- --> |
+| <!-- -->                  | **2**    | `float`  | <!-- --> |
+| <!-- -->                  | **3**    | `float`  | <!-- --> |
+| **pos_decay**             | **0**    | `float`  | decay position of primary particle (N\_parent) -- no secondary decay position is saved. |
+| <!-- -->                  | **1**    | `float`  | <!-- --> |
+| <!-- -->                  | **2**    | `float`  | <!-- --> |
+| <!-- -->                  | **3**    | `float`  | <!-- --> |
 | **w\_decay\_rate\_0**     | <!-- --> | `float`  | Weight of the decay rate of primary unstable particle: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>N</sub> |
 | **w\_decay\_rate\_1**     | <!-- --> | `float`  | Weight of the decay rate of secondary unstable particle: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>X</sub> |
 | **w\_event\_rate**        | <!-- --> | `float`  | Weight for the event rate: &Sigma;<sub>i</sub> w<sub>i</sub> = event rate |
 | **w\_flux\_avg\_xsec**    | <!-- --> | `float`  | Weight of the flux averaged cross section: &Sigma;<sub>i</sub> w<sub>i</sub> = int(sigma &sdot; flux) &sdot; exposure |
-| **target**                | <!-- --> | *object* | Target object, it will typically be a nucleus |
+| **target**                | <!-- --> | *string* | Name of the target object, it will typically be a nucleus |
 | **target\_pdgid**         | <!-- --> | `int`    | PDG id of the target |
-| **scattering\_regime**    | <!-- --> | *object* | Regime can be coherent or p-elastic |
-| **helicity**              | <!-- --> | *object* | Helicity process: can be flipping or conserving; flipping is suppressed |
-| **underlying\_process**   | <!-- --> | *object* | String of the underlying process, e.g, "nu(mu) + proton_in_C12 -> N4 +  proton_in_C12 -> nu(mu) + e+ + e- + proton_in_C12" |
+| **scattering\_regime**    | <!-- --> | *string* | Regime can be coherent or p-elastic |
+| **helicity**              | <!-- --> | *string* | Helicity process: can be flipping or conserving; flipping is suppressed |
+| **underlying\_process**   | <!-- --> | *string* | String of the underlying process, e.g, "nu(mu) + proton_in_C12 -> N4 +  proton_in_C12 -> nu(mu) + e+ + e- + proton_in_C12" |
 
 
 ### The event generator engine

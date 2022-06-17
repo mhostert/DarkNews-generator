@@ -120,7 +120,11 @@ def mass(ndarray[double, ndim=2] x):
 	cdef ndarray[double,ndim=1] s = np.empty((m))
 	with nogil:
 		for i in range(m):
-			s[i] = sqrt(x[i,0]*x[i,0] - x[i,1]*x[i,1] - x[i,2]*x[i,2] - x[i,3]*x[i,3])
+			s[i] = x[i,0]*x[i,0] - x[i,1]*x[i,1] - x[i,2]*x[i,2] - x[i,3]*x[i,3]
+		if s[i] <= 0.0:
+			s[i]=0
+		else:
+			s[i]=sqrt(s[i])
 	return  s
 
 #******************************
@@ -130,7 +134,12 @@ def inv_mass(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
 	cdef ndarray[double,ndim=1] s = np.empty((m))
 	with nogil:
 		for i in range(m):
-			s[i] = sqrt(x[i,0]*y[i,0] - x[i,1]*y[i,1] - x[i,2]*y[i,2] - x[i,3]*y[i,3])
+			s[i] = x[i,0]*y[i,0] - x[i,1]*y[i,1] - x[i,2]*y[i,2] - x[i,3]*y[i,3]
+			if s[i] <= 0.0:
+			print("im working")
+				s[i]=0
+			else:
+				s[i]=sqrt(s[i])
 	return  s
 
 #******************************

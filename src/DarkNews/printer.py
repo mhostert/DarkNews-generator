@@ -15,7 +15,7 @@ import pyarrow as pa
 
 
 def print_in_order(x):
-    return ' '.join(f'{t:.8g}' for t in list(x))
+    return ' '.join(f'{t:.8E}' for t in list(x))
 
 
 class Printer:
@@ -89,7 +89,7 @@ class Printer:
 		# keep neutrino energy
 		keep_cols = ['P_projectile']
 		for col in df_gen.columns.levels[0]:
-			if '_ell_' in col or '_gamma' in col or 'w_decay' in col or 'w_event' in col or 'N_parent' in col:
+			if '_ell_' in col or '_photon' in col or 'w_decay' in col or 'w_event' in col or 'N_parent' in col:
 				keep_cols.append(col)
 		return df_gen[keep_cols].drop([('P_projectile','1'),('P_projectile','2'),('P_projectile','3')], axis=1)
 			
@@ -185,7 +185,7 @@ class Printer:
 
 
 
-	def print_events_to_HEPEVT(self, unweigh=False, max_events=100, sparse=False, decay_product='e+e-'):
+	def print_events_to_HEPEVT(self, filename=None, unweigh=False, max_events=100, sparse=False, decay_product='e+e-'):
 		'''
 			Print events to HEPevt format.
 
@@ -284,7 +284,7 @@ class Printer:
 			if unweigh:
 				lines.append(f"{i} 7\n")
 			else:
-				lines.append(f"{i} 7 {df_gen['w_event_rate',''].to_numpy()[i]:.8g}\n")
+				lines.append(f"{i} 7 {df_gen['w_event_rate',''].to_numpy()[i]:.8E}\n")
 
 			# scattering inital states
 			lines.append((	# Projectile
@@ -292,10 +292,10 @@ class Printer:
 						f" {projectile_flavor}"
 						f" 0 0 0 0"
 						f" {print_in_order(pvec_projectile[i])}"
-						f" {df_gen['P_projectile','0'].to_numpy()[i]:.8g}"
-						f" {mass_projectile[i]:.8g}"
+						f" {df_gen['P_projectile','0'].to_numpy()[i]:.8E}"
+						f" {mass_projectile[i]:.8E}"
 						f" {print_in_order(pvec_pos_scatt[i])}"
-						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8g}"
+						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
 						"\n"
 						))
 						
@@ -304,10 +304,10 @@ class Printer:
 						f" {int(df_gen['target_pdgid',''].to_numpy()[i])}"
 						f" 0 0 0 0"
 						f" {print_in_order(pvec_target[i])}"
-						f" {df_gen['P_target','0'].to_numpy()[i]:.8g}"
-						f" {mass_target[i]:.8g}"
+						f" {df_gen['P_target','0'].to_numpy()[i]:.8E}"
+						f" {mass_target[i]:.8E}"
 						f" {print_in_order(pvec_pos_scatt[i])}"
-						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8g}"
+						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
 						"\n"
 						))
 
@@ -317,10 +317,10 @@ class Printer:
 						f" {int(pdg.neutrino5.pdgid)}"
 						f" 0 0 0 0"
 						f" {print_in_order(pvec_decay_N_parent[i])}"
-						f" {df_gen['P_decay_N_parent','0'].to_numpy()[i]:.8g}"
-						f" {mass_decay_N_parent[i]:.8g}"
+						f" {df_gen['P_decay_N_parent','0'].to_numpy()[i]:.8E}"
+						f" {mass_decay_N_parent[i]:.8E}"
 						f" {print_in_order(pvec_pos_scatt[i])}"
-						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8g}"
+						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
 						"\n"
 						))
 
@@ -329,10 +329,10 @@ class Printer:
 						f" {int(df_gen['target_pdgid',''].to_numpy()[i])}"
 						f" 0 0 0 0"
 						f" {print_in_order(pvec_recoil[i])}"
-						f" {df_gen['P_recoil','0'].to_numpy()[i]:.8g}"
-						f" {mass_recoil[i]:.8g}"
+						f" {df_gen['P_recoil','0'].to_numpy()[i]:.8E}"
+						f" {mass_recoil[i]:.8E}"
 						f" {print_in_order(pvec_pos_scatt[i])}"
-						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8g}"
+						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
 						'\n'
 						))
 
@@ -342,10 +342,10 @@ class Printer:
 						f" {int(pdg.nulight.pdgid)}"
 						f" 0 0 0 0"
 						f" {print_in_order(pvec_decay_N_daughter[i])}"
-						f" {df_gen['P_decay_N_daughter','0'].to_numpy()[i]:.8g}"
-						f" {mass_decay_N_daughter[i]:.8g}"
+						f" {df_gen['P_decay_N_daughter','0'].to_numpy()[i]:.8E}"
+						f" {mass_decay_N_daughter[i]:.8E}"
 						f" {print_in_order(pvec_pos_decay[i])}"
-						f" {df_gen['pos_decay','0'].to_numpy()[i]:.8g}"
+						f" {df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
 						'\n'
 						))
 
@@ -354,10 +354,10 @@ class Printer:
 						f" {id_lepton_minus}"
 						f" 0 0 0 0"
 						f" {print_in_order(pvec_decay_ell_minus[i])}"
-						f" {df_gen['P_decay_ell_minus','0'].to_numpy()[i]:.8g}"
-						f" {const.m_e:.8g}"
+						f" {df_gen['P_decay_ell_minus','0'].to_numpy()[i]:.8E}"
+						f" {const.m_e:.8E}"
 						f" {print_in_order(pvec_pos_decay[i])}"
-						f" {df_gen['pos_decay','0'].to_numpy()[i]:.8g}"
+						f" {df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
 						"\n"
 						))
 
@@ -366,16 +366,20 @@ class Printer:
 						f" {id_lepton_plus}"
 						f" 0 0 0 0"
 						f" {print_in_order(pvec_decay_ell_plus[i])}"
-						f" {df_gen['P_decay_ell_plus','0'].to_numpy()[i]:.8g}"
-						f" {const.m_e:.8g}"
+						f" {df_gen['P_decay_ell_plus','0'].to_numpy()[i]:.8E}"
+						f" {const.m_e:.8E}"
 						f" {print_in_order(pvec_pos_decay[i])}"
-						f" {df_gen['pos_decay','0'].to_numpy()[i]:.8g}"
+						f" {df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
 						"\n"
 						))
 
 		
 		# HEPevt file name
-		hepevt_file_name = f"{Path(f'{self.out_file_name}/HEPevt.dat')}"
+		if filename:
+			hepevt_file_name=filename
+		else:
+			hepevt_file_name = f"{Path(f'{self.out_file_name}/HEPevt.dat')}"
+
 		f = open(hepevt_file_name,"w+") 
 		# print events
 		f.write(hepevt_string+''.join(lines))
