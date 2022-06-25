@@ -209,7 +209,6 @@ class FermionDileptonDecay:
         else:
             self.CC_mixing1 = 0
             self.CC_mixing2 = 0
-
         ## Minus sign important for interference!
         self.CC_mixing2 *= -1
 

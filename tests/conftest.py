@@ -17,10 +17,10 @@ def SM_gen():
 @pytest.fixture(scope='session')
 def light_DP_gen_all_outputs():
 
-    gen = GenLauncher(mzprime=0.03, m4=0.420, neval=1000, exp="miniboone_fhc", loglevel='INFO',
+    gen = GenLauncher(mzprime=0.03, m4=0.420, neval=1000, exp="miniboone_fhc", loglevel='ERROR',
                         parquet=True, numpy=True, hepevt=True, sparse=True, print_to_float32=True, **MODEL_KWARGS)
 
-    return gen.run(loglevel="INFO")
+    return gen.run()
 
 
 @pytest.fixture(scope='session')
@@ -32,8 +32,8 @@ def gen_simplest_benchmarks():
     gen = GenLauncher(mzprime=1.25, m4=0.150, neval=1000, exp="miniboone_fhc", loglevel='ERROR', seed=42, **MODEL_KWARGS)
     df_heavy = gen.run()
 
-    gen = GenLauncher(mu_tr_mu4=1e-6, decay_product='e+e-', Umu4=0.0,
-                        neval=1000, HNLtype="dirac", exp="miniboone_fhc", loglevel='ERROR', seed=42)
+    gen = GenLauncher(mu_tr_mu4=1e-6, m4=0.150, epsilon=0.0, gD=0.0, Umu4=0.0,
+                    neval=1000, exp="miniboone_fhc", loglevel='ERROR', seed=42)
     df_TMM = gen.run()
 
     return df_light, df_heavy, df_TMM
@@ -48,11 +48,11 @@ def gen_other_final_states():
     gen = GenLauncher(mzprime=1.25, m4=0.5, decay_product='mu+mu-', neval=1000, exp="miniboone_fhc", loglevel='ERROR', seed=42, **MODEL_KWARGS)
     df_heavy = gen.run()
 
-    gen = GenLauncher(mu_tr_mu4=1e-6, decay_product='mu+mu-', Umu4=0.0,
+    gen = GenLauncher(mu_tr_mu4=1e-6, m4=0.5, epsilon=0.0, gD=0.0, decay_product='mu+mu-', Umu4=0.0,
                         neval=1000, HNLtype="dirac", exp="miniboone_fhc", loglevel='ERROR', seed=42)
     df_TMM_mumu = gen.run()
 
-    gen = GenLauncher(mu_tr_mu4=1e-6, decay_product='photon', Umu4=0.0,
+    gen = GenLauncher(mu_tr_mu4=1e-6, m4=0.5, epsilon=0.0, gD=0.0, decay_product='photon', Umu4=0.0,
                         neval=1000, HNLtype="dirac", exp="miniboone_fhc", loglevel='ERROR', seed=42)
     df_TMM_photon = gen.run()
 

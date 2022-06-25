@@ -91,8 +91,8 @@ m_W = 80.37912 # GeV
 m_Z = 91.187621 # GeV
 
 m_e =  0.5109989500015e-3 # GeV
-m_mu =  0.1134289257 # GeV
-m_tau =  1.77682 # GeV
+m_mu =  0.1056583755 # GeV
+m_tau =  1.77686 # GeV
 
 # charged hadrons
 m_charged_pion = 0.1396

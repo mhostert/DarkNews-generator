@@ -46,30 +46,40 @@ def test_MB_rates_of_BPs(SM_gen,
     expect = 0.038374333394344776
     assert close_enough(SM_gen.w_event_rate.sum(), expect), 'seeded SM generation has changed!'
     
+    
     #######
     df_light,df_heavy,df_TMM = gen_simplest_benchmarks
     # check seeded generation
     expect = 13504.557608335577
-    assert close_enough(df_light.w_event_rate, expect, 'seeded light dark photon has changed!'
+    assert close_enough(df_light.w_event_rate.sum(), expect), 'seeded light dark photon has changed!'
 
     # check seeded generation
     expect = 6.384879373980034
-    assert close_enough(df_heavy.w_event_rate, expect, 'seeded heavy dark photon has changed!'
+    assert close_enough(df_heavy.w_event_rate.sum(), expect), 'seeded heavy dark photon has changed!'
 
     # check seeded generation
-    expect = 6.384879373980034
-    assert close_enough(df_TMM.w_event_rate, expect, 'seeded heavy dark photon has changed!'
+    expect = 52283.95934407082
+    assert close_enough(df_TMM.w_event_rate.sum(), expect), 'seeded heavy dark photon has changed!'
 
+    
     #######
     df_light, df_heavy, df_TMM_mumu, df_TMM_photon = gen_other_final_states
     # check seeded generation
-    expect = 13504.557608335577
-    assert close_enough(df_light.w_event_rate, expect, 'seeded light dark photon has changed!'
+    expect = 205.54654591769042
+    assert close_enough(df_light.w_event_rate.sum(), expect), 'seeded light dark photon to muons has changed!'
 
     # check seeded generation
-    expect = 6.384879373980034
-    assert close_enough(df_heavy.w_event_rate, expect, 'seeded heavy dark photon has changed!'
+    expect = 2.490401387114275
+    assert close_enough(df_heavy.w_event_rate.sum(), expect), 'seeded heavy dark photon to muons has changed!'
 
     # check seeded generation
-    expect = 6.384879373980034
-    assert close_enough(df_TMM.w_event_rate, expect, 'seeded heavy dark photon has changed!'
+    expect = 3426.3242951081183
+    assert close_enough(df_TMM_mumu.w_event_rate.sum(), expect), 'seeded light dark photon to muons has changed!'
+    assert 'P_decay_ell_plus' in df_TMM_mumu.columns
+    assert df_TMM_mumu['P_decay_ell_plus','0'].min() > dn.const.m_mu, 'Mu+ energy smaller than its mass? Not generating for muons?'
+    assert df_TMM_mumu['P_decay_ell_minus','0'].min() > dn.const.m_mu, 'Mu- energy smaller than its mass? Not generating for muons?'
+
+    # check seeded generation
+    expect = 3446.785418216368
+    assert close_enough(df_TMM_photon.w_event_rate.sum(), expect), 'seeded heavy dark photon to muons has changed!'
+    assert 'P_decay_photon' in df_TMM_photon.columns
