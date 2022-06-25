@@ -146,7 +146,9 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 			raise ValueError
 
 		# normalize integrand with an initial throw
+		logger.debug('Throwing an initial 10000 random points to find the integrand normalization.')
 		_throw = self.__call__(np.random.rand(self.dim,10000), np.ones((self.dim,10000)))
+		logger.debug(f'Throw successfull.')
 		for key,val in _throw.items():
 			self.norm[key] = np.mean(val)
 			# cannot normalize zero integrand

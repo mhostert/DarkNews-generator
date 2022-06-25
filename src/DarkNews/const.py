@@ -18,7 +18,7 @@ from DarkNews import local_dir
 
 ################################################
 # constants of light cm/s
-c_LIGHT = 29979245800
+c_LIGHT = 29_979_245_800
 hb = 6.582119569e-25 # hbar in Gev s
 
 m_proton_in_kg = 1.6726219236951e-27

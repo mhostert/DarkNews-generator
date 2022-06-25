@@ -212,13 +212,12 @@ class MC_events:
             logger.error(f"ERROR! Could not find decay process.")
 
         integrand_type = integrands.UpscatteringHNLDecay
-        
 
         #########################################################################
         # BATCH SAMPLE INTEGRAND OF INTEREST
+        logger.debug(f"Running VEGAS for DIM={DIM}")
         batch_f = integrand_type(dim=DIM, Emin=self.EMIN, Emax=self.EMAX, MC_case=self)
         integ = vg.Integrator(DIM*[[0.0, 1.0]]) # unit hypercube
-        
         result = run_vegas(batch_f, integ, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
         logger.debug(f"Main VEGAS run completed.")
 

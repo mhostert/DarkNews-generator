@@ -213,11 +213,17 @@ class FermionDileptonDecay:
         ## Minus sign important for interference!
         self.CC_mixing2 *= -1
 
+
+        if self.m_parent - self.m_daughter - self.mm - self.mp < 0:
+            logger.error(f"Error! Final states have an excess in mass of {self.m_parent - self.m_daughter - self.mm - self.mp} on top of parent particle.")
+            raise ValueError("Energy not conserved.")
+
         ## Is the mediator on shell?
-        self.on_shell = (self.m_parent - self.m_daughter - self.mm - self.mp > TheoryModel.mzprime)
+        self.on_shell = (self.m_parent - self.m_daughter > TheoryModel.mzprime) and (TheoryModel.mzprime > self.mm + self.mp)
         self.off_shell = not self.on_shell
         ## does it have transition magnetic moment?
         self.TMM = TheoryModel.has_TMM
+
 
 class FermionSinglePhotonDecay:
 
