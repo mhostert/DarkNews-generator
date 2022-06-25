@@ -180,7 +180,6 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **mu_tr_55**       | `float` | TMM mu_tr_54   | 0.0 |
 | **mu_tr_56**       | `float` | TMM mu_tr_55   | 0.0 |
 | **mu_tr_56**       | `float` | TMM mu_tr_66   | 0.0 |
-| **decay_products** | `["e+e-","mu+mu-","photon"]` | Decay process of interest | "e+e-" |
 
 ##### Experiment
 
@@ -188,7 +187,7 @@ Parameters marked as *internal* can not be specified as they are automatically c
 |:--------|:--------:|:-----------------------------------------------------------------|------------------:|
 | **exp** | `string` | The experiment to consider: see [this section](#the-experiments) | `"miniboone_fhc"` |
 
-##### Monte-Carlo options
+##### Monte-Carlo scope
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:---------------|:------:|:------------------------------------------|--------:|
@@ -196,6 +195,8 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **nocoh**      | `bool` | Do not generate coherent events           | `False` | 
 | **noHC**       | `bool` | Do not include helicity conserving events | `False` | 
 | **noHF**       | `bool` | Do not include helicity flipping events   | `False` | 
+| **decay_products** | `["e+e-","mu+mu-","photon"]` | Decay process of interest | "e+e-" |
+| **nu_flavors** | `['nu_e','nu_mu','nu_tau','nu_e_bar','nu_mu_bar','nu_tau_bar']` | projectile neutrino | "nu_mu" |
 
 #### Code behavior options
 
@@ -215,6 +216,7 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **nint**         | `int` | Number of adaptive iterations                | 20    | 
 | **neval_warmup** | `int` | Number of evaluations of integrand in warmup | 1000  | 
 | **nint_warmup**  | `int` | Number of adaptive iterations in warmup      | 10    | 
+| **seed**  | `int` | numpy random number generator seed used in vegas      | None    | 
 
 ##### Output formats
 

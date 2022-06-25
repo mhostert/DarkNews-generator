@@ -11,7 +11,7 @@ def add_common_bsm_arguments(parser, DEFAULTS):
     parser.add_argument("--m5", type=float, help="mass of the fifth neutrino")
     parser.add_argument("--m6", type=float, help="mass of the sixth neutrino")
 
-    parser.add_argument("--HNLtype", help="HNLtype: dirac or majorana", choices=DEFAULTS._choices['HNLtype'])
+    parser.add_argument("--HNLtype", type=str.lower, help="HNLtype: dirac or majorana", choices=DEFAULTS._choices['HNLtype'])
 
     # TMM in GeV^-1
     parser.add_argument("--mu_tr_e4", type=float, help="TMM mu_tr_e4")
@@ -148,7 +148,7 @@ def add_generic_bsm_arguments(parser, DEFAULTS):
 
 def add_scope_arguments(parser, DEFAULTS):
     # visible final states in HNL decay
-    parser.add_argument("--decay_product", help="decay process of interest", choices=DEFAULTS._choices['decay_product'])
+    parser.add_argument("--decay_product", type=str.lower, help="decay process of interest", choices=DEFAULTS._choices['decay_product'])
 
     # experiments    
     parser.add_argument("--exp", type=str.lower, help="experiment file path or keyword")
@@ -161,13 +161,16 @@ def add_scope_arguments(parser, DEFAULTS):
     parser.add_argument("--noHC", help="do not include helicity conserving events", action="store_true")
     parser.add_argument("--noHF", help="do not include helicity flipping events", action="store_true")
 
+    parser.add_argument('--nu_flavors', type=str.lower, action='store', nargs='+', choices=['nu_e','nu_mu','nu_tau','nu_e_bar','nu_mu_bar','nu_tau_bar'])
+
+
 
 def add_mc_arguments(parser, DEFAULTS):
     ###########
     # run related arguments
-    parser.add_argument("--loglevel", help="Logging level")
+    parser.add_argument("--loglevel", type=str.lower, help="Logging level")
     parser.add_argument("--verbose", help="Verbose for logging", action="store_true")
-    parser.add_argument("--logfile", help="Path to logfile. If not set, use std output.")
+    parser.add_argument("--logfile", type=str, help="Path to logfile. If not set, use std output.")
 
     # Vegas parameters 
     parser.add_argument("--neval", type=int, help="number of evaluations of integrand")
@@ -188,5 +191,5 @@ def add_mc_arguments(parser, DEFAULTS):
 
     parser.add_argument("--enforce_prompt", help="forces the particles to decay promptly", action="store_true")
     parser.add_argument("--make_summary_plots", help="generate summary plots of kinematics", action="store_true")
-    parser.add_argument("--path", help="path where to save run's outputs")
+    parser.add_argument("--path", type=str, help="path where to save run's outputs")
     parser.add_argument("--seed", type=int, help="numpy seed to be used by vegas.")

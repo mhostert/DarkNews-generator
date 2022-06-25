@@ -3,6 +3,7 @@ import sys
 import numpy as np
 import os
 from pathlib import Path
+from particle import literals as lp
 
 # Dark Neutrino and MC stuff
 import DarkNews as dn
@@ -30,7 +31,7 @@ class Launcher:
         "mu_tr_tau4", "mu_tr_tau5", "mu_tr_tau6", "mu_tr_44", "mu_tr_45", "mu_tr_46", "mu_tr_55", "mu_tr_56",  
         "s_e4", "s_e5", "s_e6", "s_mu4", "s_mu5", "s_mu6", "s_tau4", "s_tau5", "s_tau6", 
         "s_44", "s_45", "s_46", "s_55", "s_56", "s_66", "mhprime","theta",
-        "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", 
+        "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", "nu_flavors",
         "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
         "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "unweighed_hepevt_events", 
         "sparse", "print_to_float32", "sample_geometry", "make_summary_plots", "path", "seed", "enforce_prompt"
@@ -96,6 +97,7 @@ class Launcher:
         self.s_55 = 0.0
         self.s_56 = 0.0
         self.s_66 = 0.0
+        self.nu_flavors = ['nu_mu']
 
         self.decay_product = "e+e-"
         self.exp = "miniboone_fhc"
@@ -172,6 +174,8 @@ class Launcher:
         dn.MC.NEVAL = self.neval
         dn.MC.NINT  = self.nint
         
+        # get the initial projectiles
+        self.projectiles = [getattr(lp,nu) for nu in self.nu_flavors]
         
         ####################################################
         # Set the model to use
@@ -265,7 +269,7 @@ class Launcher:
                     'INCLUDE_NELASTIC': self.include_nelastic,
                     'INCLUDE_HC': not self.noHC,
                     'INCLUDE_HF': not self.noHF,
-                    'FLAVORS': [dn.pdg.numu],
+                    'FLAVORS': self.projectiles,
                     'UPSCATTERED_NUS': self.upscattered_nus,
                     'OUTGOING_NUS': self.outgoing_nus,
                     'DECAY_PRODUCTS': [self.decay_product],
