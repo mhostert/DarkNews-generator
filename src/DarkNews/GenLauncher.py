@@ -351,8 +351,8 @@ class Launcher:
 
     def _drop_zero_weight_samples(self):
         zero_entries = (self.df['w_event_rate'] == 0)
-        if zero_entries.sum()/len(self.df.index) > 0.05:
-            logger.warning(f"Warning: number of entries with w_event_rate = 0 surpasses 5% of number of samples. Found: {zero_entries.sum()/len(self.df.index)}.")
+        if zero_entries.sum()/len(self.df.index) > 0.01:
+            logger.warning(f"Warning: number of entries with w_event_rate = 0 surpasses 1% of number of samples. Found: {zero_entries.sum()/len(self.df.index)}.")
         self.df = self.df.drop(self.df[zero_entries].index).reset_index(drop=True)
 
     def run(self, loglevel=None, verbose=None, logfile=None, overwrite_path=None):

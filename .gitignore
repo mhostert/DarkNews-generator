@@ -1,6 +1,7 @@
 # pdfs
 plots/*
 examples/plots/*
+examples/test_*
 
 # profiler
 stats
