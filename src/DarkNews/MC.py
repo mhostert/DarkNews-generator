@@ -7,14 +7,12 @@ from DarkNews import logger, prettyprinter
 from collections import defaultdict
 from functools import partial
 
-from . import model 
+from . import processes
 from . import integrands
 
 from . import const
 from . import pdg
 from . import geom
-from . import amplitudes as amps
-from . import phase_space as ps
 
 NINT = 10
 NEVAL = 1000
@@ -100,7 +98,7 @@ class MC_events:
 
         self.bsm_model = bsm_model
         # scope for upscattering process
-        self.ups_case = model.UpscatteringProcess(nu_projectile=self.nu_projectile, 
+        self.ups_case = processes.UpscatteringProcess(nu_projectile=self.nu_projectile, 
                                                     nu_upscattered=self.nu_upscattered,
                                                     nuclear_target=self.nuclear_target,
                                                     scattering_regime=self.scope['scattering_regime'],
@@ -109,7 +107,7 @@ class MC_events:
 
         if self.decays_to_dilepton:
             # scope for decay process
-            self.decay_case = model.FermionDileptonDecay(nu_parent=self.nu_upscattered,
+            self.decay_case = processes.FermionDileptonDecay(nu_parent=self.nu_upscattered,
                                                     nu_daughter=self.nu_outgoing,
                                                     final_lepton1 = self.decay_product, 
                                                     final_lepton2 = self.decay_product,
@@ -117,7 +115,7 @@ class MC_events:
                                                     TheoryModel=bsm_model)
         elif self.decays_to_singlephoton:
             # scope for decay process
-            self.decay_case = model.FermionSinglePhotonDecay(nu_parent=self.nu_upscattered,
+            self.decay_case = processes.FermionSinglePhotonDecay(nu_parent=self.nu_upscattered,
                                                     nu_daughter=self.nu_outgoing,
                                                     h_parent = self.ups_case.h_upscattered,
                                                     TheoryModel=bsm_model)

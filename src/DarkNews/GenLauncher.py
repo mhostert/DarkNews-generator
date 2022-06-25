@@ -9,7 +9,7 @@ import DarkNews as dn
 from DarkNews import logger, prettyprinter
 from DarkNews.AssignmentParser import AssignmentParser
 
-class GenLauncher:
+class Launcher:
 
     banner = r"""   ______           _        _   _                     
    |  _  \         | |      | \ | |                    
@@ -24,10 +24,8 @@ class GenLauncher:
         "decay_product": ["e+e-", "mu+mu-", "photon"]
     }
     # parameters names list
-    _parameters = [
-        "gD", "alphaD", "epsilon", "epsilon2", "chi", "alpha_epsilon2", 
-        "Ue4", "Ue5", "Ue6", "Umu4", "Umu5", "Umu6", "Utau4", "Utau5", "Utau6", 
-        "UD4", "UD5", "UD6", "m4", "m5", "m6", "mzprime", "HNLtype", 
+    _common_parameters = [
+        "m4", "m5", "m6", "mzprime", "HNLtype", 
         "mu_tr_e4", "mu_tr_e5", "mu_tr_e6", "mu_tr_mu4", "mu_tr_mu5", "mu_tr_mu6", 
         "mu_tr_tau4", "mu_tr_tau5", "mu_tr_tau6", "mu_tr_44", "mu_tr_45", "mu_tr_46", "mu_tr_55", "mu_tr_56",  
         "s_e4", "s_e5", "s_e6", "s_mu4", "s_mu5", "s_mu6", "s_tau4", "s_tau5", "s_tau6", 
@@ -37,6 +35,7 @@ class GenLauncher:
         "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "unweighed_hepevt_events", 
         "sparse", "print_to_float32", "sample_geometry", "make_summary_plots", "path", "seed", "enforce_prompt"
     ]
+    _model_creator = None
 
     def __init__(self, param_file=None, **kwargs):
         """GenLauncher launches the generator with user-defined model parameters, experimental configs, and generation settings.
@@ -59,30 +58,13 @@ class GenLauncher:
             ValueError: when model, exp, or generation parameters are not well defined.
         """
 
-        # set defaults
-        self.gD = 1.0
-        self.alphaD = None
-        self.epsilon = 1e-2
-        self.epsilon2 = None
-        self.chi = None
-        self.alpha_epsilon2 = None
-        self.Ue4 = 0.
-        self.Ue5 = 0.
-        self.Ue6 = 0.
-        self.Umu4 = np.sqrt(1.5e-6*7/4)
-        self.Umu5 = np.sqrt(11.5e-6)
-        self.Umu6 = 0.
-        self.Utau4 = 0.
-        self.Utau5 = 0.
-        self.Utau6 = 0.
-        self.UD4 = 1.0
-        self.UD5 = 1.0
-        self.UD6 = 1.0
-        self.m4 = 0.140
+        # DEFAULTS
+        self.m4 = 0.150
         self.m5 = None
         self.m6 = None
         self.mzprime = 1.25
-        self.HNLtype = "majorana"
+        self.mhprime = None
+        self.HNLtype = "dirac"
         self.mu_tr_e4 = 0.0
         self.mu_tr_e5 = 0.0
         self.mu_tr_e6 = 0.0
@@ -99,7 +81,6 @@ class GenLauncher:
         self.mu_tr_56 = 0.0
         self.mu_tr_66 = 0.0
         self.theta = 0.0
-        self.mhprime = 1e10
         self.s_e4 = 0.0
         self.s_e5 = 0.0
         self.s_e6 = 0.0
@@ -115,6 +96,7 @@ class GenLauncher:
         self.s_55 = 0.0
         self.s_56 = 0.0
         self.s_66 = 0.0
+
         self.decay_product = "e+e-"
         self.exp = "miniboone_fhc"
         self.nopelastic = False
@@ -173,7 +155,11 @@ class GenLauncher:
 
         #########################
         # Set BSM parameters
-        self.bsm_model = dn.model.create_3portal_HNL_model(**args_dict)
+        if self._model_creator:
+            self.bsm_model = self._model_creator(**args_dict)
+        else:
+            logger.warning(f'Could not find a model creator -- using three portal model.')
+            self.bsm_model = dn.model.create_3portal_HNL_model(**args_dict)
 
         ####################################################
         # Choose experiment and scope of simulation
@@ -192,13 +178,13 @@ class GenLauncher:
         # set the path of the experiment name (needed in the case of custom experiment path)
         exp_path_part = os.path.basename(self.exp).rsplit(".", maxsplit=1)[0]
         # 3+1
-        if (self.bsm_model.m4 and not self.bsm_model.m5 and not self.bsm_model.m6) :
+        if (self.bsm_model.m4 is not None and self.bsm_model.m5 is None and self.bsm_model.m6 is None) :
             self.upscattered_nus = [dn.pdg.neutrino4]
             self.outgoing_nus =[dn.pdg.nulight]
             self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         # 3+2
-        elif (self.bsm_model.m4 and self.bsm_model.m5 and not self.bsm_model.m6):
+        elif (self.bsm_model.m4 is not None and self.bsm_model.m5 is not None and not self.bsm_model.m6 is None):
             ## FIXING 3+2 process chain to be numu --> N5 --> N4
             self.upscattered_nus = [dn.pdg.neutrino5]
             self.outgoing_nus =[dn.pdg.neutrino4]
@@ -207,7 +193,7 @@ class GenLauncher:
             self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         # 3+3
-        elif (self.bsm_model.m4 and self.bsm_model.m5 and self.bsm_model.m6):
+        elif (self.bsm_model.m4 is not None and self.bsm_model.m5 is not None and self.bsm_model.m6 is not None):
             self.upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
             self.outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
             self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
@@ -231,7 +217,7 @@ class GenLauncher:
         try:
             parser.parse_file(file=file, comments="#")
         except FileNotFoundError:
-            print(f"File '{file}' not found.")
+            logger.error(f"Error! File '{file}' not found.")
             raise
         # store variables
         self._load_parameters(raise_errors=False, **parser.parameters)
@@ -252,7 +238,7 @@ class GenLauncher:
         # at the end, if kwargs is not empty, that would mean some parameters were unused, i.e. they are spelled wrong or do not exist: raise AttributeError
         if len(kwargs) != 0:
             if raise_errors:
-                raise AttributeError("Parameters " + ", ".join(kwargs.keys()) + " were unused. Either not supported or spelled wrong.")
+                raise AttributeError("Parameters " + ", ".join(kwargs.keys()) + " were unused. Either not supported or misspelled.")
             else:
                 logger.warning("Parameters " + ", ".join(kwargs.keys()) + " will not be used.")
 
@@ -524,3 +510,130 @@ class GenLauncher:
         if (logger.hasHandlers()):
             logger.handlers.clear()    
         logger.addHandler(handler)
+
+
+
+
+################ 
+# Three portal model
+class GenLauncher(Launcher):
+
+    def __init__(self, param_file=None, **kwargs):
+        """
+            Same as Launcher, but for three portal model
+        """
+
+        # parameters names list
+        self._parameters = self._common_parameters + ["gD", "epsilon","alphaD","epsilon2","chi","alpha_epsilon2",
+            "Ue4", "Ue5", "Ue6", "Umu4", "Umu5", "Umu6", "Utau4", "Utau5", "Utau6", "UD4", "UD5", "UD6"]
+
+        # set defaults
+        self.gD = 1.0
+        self.alphaD = None
+        self.epsilon = 1e-3
+        self.epsilon2 = None
+        self.chi = None
+        self.alpha_epsilon2 = None
+        self.Ue4 = 0.0
+        self.Ue5 = 0.0
+        self.Ue6 = 0.0
+        self.Umu4 = 1e-4
+        self.Umu5 = 0.0
+        self.Umu6 = 0.0
+        self.Utau4 = 0.0
+        self.Utau5 = 0.0
+        self.Utau6 = 0.0
+        self.UD4 = 1.0
+        self.UD5 = 1.0
+        self.UD6 = 1.0
+
+        self._model_creator = dn.model.create_3portal_HNL_model
+
+        super().__init__(param_file=None, **kwargs)
+
+
+################ 
+# Generic interaction model
+class GenLauncherGeneric(Launcher):
+
+    def __init__(self, param_file=None, **kwargs):
+        """
+            Same as Launcher, but for three portal model
+        """
+
+        # parameters names list
+        self._parameters = self._common_parameters + ["c_e4", "c_e5", "c_e6", "c_mu4", "c_mu5", "c_mu6", 
+        "c_tau4", "c_tau5", "c_tau6", "c_44", "c_45", "c_46", "c_55", "c_56", "c_66", 
+        "d_e4", "d_e5", "d_e6", "d_mu4", "d_mu5", "d_mu6", "d_tau4", "d_tau5", "d_tau6", 
+        "d_44", "d_45", "d_46", "d_55", "d_56", "d_66", 
+        "ceV","ceA", "cuV", "cuA", "cdV", "cdA", "deV", "deA", "duV", "duA", "ddV", "ddA", 
+        "deS", "deP", "duS", "duP", "ddS", "ddP",
+        "cprotonV", "cneutronV", "cprotonA", "cneutronA", "dprotonV", "dneutronV", "dprotonA", "dneutronA", 
+        "dprotonS", "dneutronS", "dprotonP", "dneutronP"]
+
+        # set defaults
+        self.c_e4 = 0.0
+        self.c_e5 = 0.0
+        self.c_e6 = 0.0
+        self.c_mu4 = 0.0
+        self.c_mu5 = 0.0
+        self.c_mu6 = 0.0
+        self.c_tau4 = 0.0
+        self.c_tau5 = 0.0
+        self.c_tau6 = 0.0
+        self.c_44 = 0.0
+        self.c_45 = 0.0
+        self.c_46 = 0.0
+        self.c_55 = 0.0
+        self.c_56 = 0.0
+        self.c_66 = 0.0
+        self.d_e4 = 0.0
+        self.d_e5 = 0.0
+        self.d_e6 = 0.0
+        self.d_mu4 = 0.0
+        self.d_mu5 = 0.0
+        self.d_mu6 = 0.0
+        self.d_tau4 = 0.0
+        self.d_tau5 = 0.0
+        self.d_tau6 = 0.0
+        self.d_44 = 0.0
+        self.d_45 = 0.0
+        self.d_46 = 0.0
+        self.d_55 = 0.0
+        self.d_56 = 0.0
+        self.d_66 = 0.0
+        self.ceV = 0.0
+        self.ceA = 0.0
+        self.cuV = 0.0
+        self.cuA = 0.0
+        self.cdV = 0.0
+        self.cdA = 0.0
+        self.deV = 0.0
+        self.deA = 0.0
+        self.duV = 0.0
+        self.duA = 0.0
+        self.ddV = 0.0
+        self.ddA = 0.0
+        self.deS = 0.0
+        self.deP = 0.0
+        self.duS = 0.0
+        self.duP = 0.0
+        self.ddS = 0.0
+        self.ddP = 0.0
+        
+        self.cprotonV = 0.0
+        self.cneutronV = 0.0
+        self.cprotonA = 0.0
+        self.cneutronA = 0.0
+        self.dprotonV = 0.0
+        self.dneutronV = 0.0
+        self.dprotonA = 0.0
+        self.dneutronA = 0.0
+        self.dprotonS = 0.0
+        self.dneutronS = 0.0
+        self.dprotonP = 0.0
+        self.dneutronP = 0.0
+        
+        self._model_creator = dn.model.create_generic_HNL_model
+
+        super().__init__(param_file=None, **kwargs)

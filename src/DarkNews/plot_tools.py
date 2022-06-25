@@ -252,12 +252,12 @@ def batch_plot(df, PATH, title='Dark News'):
 
         #################### HISTOGRAMS 1D ####################################################    
         # momentum exchange
-        histogram1D(PATH/"1D_E_photon.pdf", df['E_photon'], w, r"$E_\gamma$ GeV", title, 100, **args)
-        histogram1D(PATH/"1D_E_nu_QEreco.pdf", df['E_nu_reco'], w, r"$E_\nu^{\rm QE-reco}/$GeV", title, 20, **args)
-        histogram1D(PATH/"1D_cost_photon.pdf", df['costheta_photon'], w, r"$\cos(\theta_{\gamma})$", title, 20, **args)
-        histogram1D(PATH/"1D_cost_photon_had.pdf", df['costheta_photon_had'], w, r"$\cos(\theta_{\gamma {\rm hadron}})$", title, 20, **args)
-        histogram1D(PATH/"1D_theta_photon.pdf", df['theta_photon'], w, r"$\theta_{\gamma})$", title, 20, **args)
-        histogram1D(PATH/"1D_theta_photon_had.pdf", df['theta_photon_had'], w, r"$\theta_{\gamma  {\rm hadron}})$", title, 20, **args)
+        histogram1D(PATH/"1D_E_photon.pdf", df['E_photon'], w, r"$E_\gamma$/GeV", title, 100, TMIN=0.0, **args)
+        histogram1D(PATH/"1D_E_nu_QEreco.pdf", df['E_nu_reco'], w, r"$E_\nu^{\rm QE-reco}/$GeV", title, 40, TMIN=0.0, **args)
+        histogram1D(PATH/"1D_cost_photon.pdf", df['costheta_photon'], w, r"$\cos(\theta_{\gamma})$", title, 40, TMIN=-1, TMAX=1, **args)
+        histogram1D(PATH/"1D_cost_photon_had.pdf", df['costheta_photon_had'], w, r"$\cos(\theta_{\gamma {\rm hadron}})$", title, 40, TMIN=-1, TMAX=1, **args)
+        histogram1D(PATH/"1D_theta_photon.pdf", df['theta_photon'], w, r"$\theta_{\gamma}$ degrees", title, 40, TMIN=0.0, **args)
+        histogram1D(PATH/"1D_theta_photon_had.pdf", df['theta_photon_had'], w, r"$\theta_{\gamma  {\rm hadron}}$ degrees", title, 40, TMIN=0.0, **args)
 
 
     if 'P_decay_ell_minus' in df.columns.levels[0]:

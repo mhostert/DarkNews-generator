@@ -69,7 +69,7 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
     Sij = process.Sij
     Sji = process.Sji
 
-    mu_tr = process.mu_tr
+    mu_tr = process.Tij
 
     h = process.h_upscattered
 
@@ -184,20 +184,20 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=['total']):
 
     Lmunu_Hmunu = {}
     Lmunu_Hmunu['NC_SQR'] = Lmunu_Hmunu_NC_SQR
-    if process.TheoryModel.is_kinetically_mixed: 
+    if process.TheoryModel.has_vector_coupling: 
         Lmunu_Hmunu['KinMix_SQR'] = Lmunu_Hmunu_KinMix_SQR
         Lmunu_Hmunu['KinMix_NC_inter'] = Lmunu_Hmunu_KinMix_NC_inter
     if process.TheoryModel.is_mass_mixed: 
         Lmunu_Hmunu['MassMix_SQR'] = Lmunu_Hmunu_MassMix_SQR
         Lmunu_Hmunu['MassMix_NC_inter'] = Lmunu_Hmunu_MassMix_NC_inter
-        if process.TheoryModel.is_kinetically_mixed: 
+        if process.TheoryModel.has_vector_coupling: 
             Lmunu_Hmunu['KinMix_MassMix_inter'] = Lmunu_Hmunu_KinMix_MassMix_inter
-    if process.TheoryModel.is_TMM: 
+    if process.TheoryModel.has_TMM: 
         Lmunu_Hmunu['TMM_SQR'] = Lmunu_Hmunu_TMM_SQR
-    if process.TheoryModel.is_scalar_mixed: 
+    if process.TheoryModel.has_scalar_coupling: 
         Lmunu_Hmunu['Scalar_SQR'] = Lmunu_Hmunu_Scalar_SQR
         Lmunu_Hmunu['Scalar_NC_inter'] = Lmunu_Hmunu_Scalar_NC_inter
-        if process.TheoryModel.is_kinetically_mixed: 
+        if process.TheoryModel.has_vector_coupling: 
             Lmunu_Hmunu['Scalar_KinMix_inter'] = Lmunu_Hmunu_Scalar_KinMix_inter
         if process.TheoryModel.is_mass_mixed: 
             Lmunu_Hmunu['Scalar_MassMix_inter'] = Lmunu_Hmunu_Scalar_MassMix_inter

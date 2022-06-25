@@ -1,18 +1,7 @@
-#!/usr/bin/env python3
-
 import argparse
-from DarkNews.GenLauncher import GenLauncher
 
-def dn_gen():
-    DEFAULTS = GenLauncher(loglevel='error')
-    # Default case implements the 3+2 model of Ballett et al, Phys. Rev. D 101, 115025 (2020) (https://arxiv.org/abs/1903.07589)
-
-    # --------------
-    # User specified
-    # particle masses
-    # use argument_default=argparse.SUPPRESS so no defaults attributes are instantiated in the final Namespace
-    parser = argparse.ArgumentParser(description="Generate upscattering events", formatter_class=argparse.ArgumentDefaultsHelpFormatter, argument_default=argparse.SUPPRESS)
-
+def add_common_bsm_arguments(parser, DEFAULTS):
+    
     ##### file containing the parameters
     parser.add_argument("--param-file", type=str, help="file containing parameters definitions")
 
@@ -23,33 +12,6 @@ def dn_gen():
     parser.add_argument("--m6", type=float, help="mass of the sixth neutrino")
 
     parser.add_argument("--HNLtype", help="HNLtype: dirac or majorana", choices=DEFAULTS._choices['HNLtype'])
-
-    # neutral lepton mixing
-    parser.add_argument("--Ue4", type=float, help="Ue4")
-    parser.add_argument("--Ue5", type=float, help="Ue5")
-    parser.add_argument("--Ue6", type=float, help="Ue6")
-
-    parser.add_argument("--Umu4", type=float, help="Umu4")
-    parser.add_argument("--Umu5", type=float, help="Umu5")
-    parser.add_argument("--Umu6", type=float, help="Umu6")
-
-    parser.add_argument("--Utau4", type=float, help="Utau4")
-    parser.add_argument("--Utau5", type=float, help="Utau5")
-    parser.add_argument("--Utau6", type=float, help="Utau6")
-
-    parser.add_argument("--UD4", type=float, help="UD4")
-    parser.add_argument("--UD5", type=float, help="UD5")
-    parser.add_argument("--UD6", type=float, help="UD6")
-
-    # dark coupling choices
-    parser.add_argument("--gD", type=float, help="U(1)_d dark coupling")
-    parser.add_argument("--alphaD", type=float, help="U(1)_d  alpha_dark = (g_dark^2 /4 pi)")
-
-    # kinetic mixing options
-    parser.add_argument("--epsilon", type=float, help="epsilon")
-    parser.add_argument("--epsilon2", type=float, help="epsilon^2")
-    parser.add_argument("--alpha_epsilon2", type=float, help="alpha_QED*epsilon^2")
-    parser.add_argument("--chi", type=float, help="chi")
 
     # TMM in GeV^-1
     parser.add_argument("--mu_tr_e4", type=float, help="TMM mu_tr_e4")
@@ -96,6 +58,95 @@ def dn_gen():
     parser.add_argument("--s_66", type=float, help="scalar vertex s_66")
 
 
+def add_three_portal_arguments(parser, DEFAULTS):
+    # neutral lepton mixing
+    parser.add_argument("--Ue4", type=float, help="Ue4")
+    parser.add_argument("--Ue5", type=float, help="Ue5")
+    parser.add_argument("--Ue6", type=float, help="Ue6")
+
+    parser.add_argument("--Umu4", type=float, help="Umu4")
+    parser.add_argument("--Umu5", type=float, help="Umu5")
+    parser.add_argument("--Umu6", type=float, help="Umu6")
+
+    parser.add_argument("--Utau4", type=float, help="Utau4")
+    parser.add_argument("--Utau5", type=float, help="Utau5")
+    parser.add_argument("--Utau6", type=float, help="Utau6")
+
+    parser.add_argument("--UD4", type=float, help="UD4")
+    parser.add_argument("--UD5", type=float, help="UD5")
+    parser.add_argument("--UD6", type=float, help="UD6")
+
+    # dark coupling choices
+    parser.add_argument("--gD", type=float, help="U(1)_d dark coupling")
+    parser.add_argument("--alphaD", type=float, help="U(1)_d  alpha_dark = (g_dark^2 /4 pi)")
+
+    # kinetic mixing options
+    parser.add_argument("--epsilon", type=float, help="epsilon")
+    parser.add_argument("--epsilon2", type=float, help="epsilon^2")
+    parser.add_argument("--alpha_epsilon2", type=float, help="alpha_QED*epsilon^2")
+    parser.add_argument("--chi", type=float, help="chi")
+
+def add_generic_bsm_arguments(parser, DEFAULTS):
+
+    # Z boson couplings
+    parser.add_argument("--c_e4", type=float, help="SM Z boson vertex c_e4 ")
+    parser.add_argument("--c_e5", type=float, help="SM Z boson vertex c_e5 ")
+    parser.add_argument("--c_e6", type=float, help="SM Z boson vertex c_e6 ")
+    parser.add_argument("--c_mu4", type=float, help="SM Z boson vertex c_mu4 ")
+    parser.add_argument("--c_mu5", type=float, help="SM Z boson vertex c_mu5 ")
+    parser.add_argument("--c_mu6", type=float, help="SM Z boson vertex c_mu6 ")
+    parser.add_argument("--c_tau4", type=float, help="SM Z boson vertex c_tau4 ")
+    parser.add_argument("--c_tau5", type=float, help="SM Z boson vertex c_tau5 ")
+    parser.add_argument("--c_tau6", type=float, help="SM Z boson vertex c_tau6 ")
+    parser.add_argument("--c_44", type=float, help="SM Z boson vertex c_44 ")
+    parser.add_argument("--c_45", type=float, help="SM Z boson vertex c_45 ")
+    parser.add_argument("--c_46", type=float, help="SM Z boson vertex c_46 ")
+    parser.add_argument("--c_55", type=float, help="SM Z boson vertex c_55 ")
+    parser.add_argument("--c_56", type=float, help="SM Z boson vertex c_56 ")
+    parser.add_argument("--c_66", type=float, help="SM Z boson vertex c_66 ")
+
+    # Z' vector couplings
+    parser.add_argument("--d_e4", type=float, help="Z' vector vertex d_e4 ")
+    parser.add_argument("--d_e5", type=float, help="Z' vector vertex d_e5 ")
+    parser.add_argument("--d_e6", type=float, help="Z' vector vertex d_e6 ")
+    parser.add_argument("--d_mu4", type=float, help="Z' vector vertex d_mu4 ")
+    parser.add_argument("--d_mu5", type=float, help="Z' vector vertex d_mu5 ")
+    parser.add_argument("--d_mu6", type=float, help="Z' vector vertex d_mu6 ")
+    parser.add_argument("--d_tau4", type=float, help="Z' vector vertex d_tau4 ")
+    parser.add_argument("--d_tau5", type=float, help="Z' vector vertex d_tau5 ")
+    parser.add_argument("--d_tau6", type=float, help="Z' vector vertex d_tau6 ")
+    parser.add_argument("--d_44", type=float, help="Z' vector vertex d_44 ")
+    parser.add_argument("--d_45", type=float, help="Z' vector vertex d_45 ")
+    parser.add_argument("--d_46", type=float, help="Z' vector vertex d_46 ")
+    parser.add_argument("--d_55", type=float, help="Z' vector vertex d_55 ")
+    parser.add_argument("--d_56", type=float, help="Z' vector vertex d_56 ")
+    parser.add_argument("--d_66", type=float, help="Z' vector vertex d_66 ")
+
+    ########################
+    # Charge particle couplings
+    parser.add_argument("--ceV", type=float, help="SM Z boson vector vertex to charged leptons ceV")
+    parser.add_argument("--ceA", type=float, help="SM Z boson axial vertex to charged leptons ceA")
+    parser.add_argument("--cuV", type=float, help="SM Z boson vector vertex to up quark cuV")
+    parser.add_argument("--cuA", type=float, help="SM Z boson axial vertex to up quark cuA")
+    parser.add_argument("--cdV", type=float, help="SM Z boson vector vertex to down quark cdV")
+    parser.add_argument("--cdA", type=float, help="SM Z boson axial vertex to down quark cdA")
+
+    parser.add_argument("--deV", type=float, help="Z' vector vertex to charged leptons deV")
+    parser.add_argument("--deA", type=float, help="Z' axial vertex to charged leptons deA")
+    parser.add_argument("--duV", type=float, help="Z' vector vertex to up quark duV")
+    parser.add_argument("--duA", type=float, help="Z' axial vertex to up quark duA")
+    parser.add_argument("--ddV", type=float, help="Z' vector vertex to down quark ddV")
+    parser.add_argument("--ddA", type=float, help="Z' axial vertex to down quark ddA")
+    
+    parser.add_argument("--cSe", type=float, help="h' scalar vertex to charged leptons cSe")
+    parser.add_argument("--cPe", type=float, help="h' pseudoscalar vertex to charged leptons cPe")
+    parser.add_argument("--cSu", type=float, help="h' scalar vertex to up quark cSu")
+    parser.add_argument("--cPu", type=float, help="h' pseudoscalar vertex to up quark cPu")
+    parser.add_argument("--cSd", type=float, help="h' scalar vertex to down quark cSd")
+    parser.add_argument("--cPd", type=float, help="h' pseudoscalar vertex to down quark cPd")
+
+
+def add_scope_arguments(parser, DEFAULTS):
     # visible final states in HNL decay
     parser.add_argument("--decay_product", help="decay process of interest", choices=DEFAULTS._choices['decay_product'])
 
@@ -111,6 +162,7 @@ def dn_gen():
     parser.add_argument("--noHF", help="do not include helicity flipping events", action="store_true")
 
 
+def add_mc_arguments(parser, DEFAULTS):
     ###########
     # run related arguments
     parser.add_argument("--loglevel", help="Logging level")
@@ -138,15 +190,3 @@ def dn_gen():
     parser.add_argument("--make_summary_plots", help="generate summary plots of kinematics", action="store_true")
     parser.add_argument("--path", help="path where to save run's outputs")
     parser.add_argument("--seed", type=int, help="numpy seed to be used by vegas.")
-
-    kwargs = vars(parser.parse_args())
-
-    gen_object = GenLauncher(**kwargs)
-    gen_object.run(
-        loglevel=kwargs.get("loglevel", gen_object.loglevel),
-        verbose=kwargs.get("verbose", gen_object.verbose),
-        logfile=kwargs.get("logfile", gen_object.logfile),
-    )
-
-if __name__ == "__main__":
-    dn_gen()

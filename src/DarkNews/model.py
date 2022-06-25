@@ -1,5 +1,4 @@
 import numpy as np
-import vegas as vg
 import math
 
 from DarkNews import logger, prettyprinter
@@ -8,45 +7,35 @@ from particle import literals as lp
 
 from DarkNews import const 
 from DarkNews import pdg
-from DarkNews import integrands
 from DarkNews import decay_rates as dr
-from DarkNews import amplitudes as amps
-from DarkNews import phase_space as ps
-
-from DarkNews import MC
 
 def create_3portal_HNL_model(**kwargs):
 
     bsm_model = ThreePortalModel()
 
-    if 'gD' in kwargs:
-        bsm_model.gD = 1.0
-    elif 'alphaD' in kwargs:
-        bsm_model.gD = np.sqrt(4*np.pi*kwargs['alphaD'])
-    
-    
-    if 'epsilon' in kwargs:
-        bsm_model.epsilon = kwargs['epsilon']
-    elif 'epsilon2' in kwargs:
-        bsm_model.epsilon = np.sqrt(kwargs['epsilon2'])
-    elif 'chi' in kwargs:
-        bsm_model.epsilon = kwargs['chi']*const.cw
-    elif 'alpha_epsilon2' in kwargs:
-        bsm_model.epsilon = np.sqrt(kwargs['alpha_epsilon2']/const.alphaQED)
-    else:
-        bsm_model.epsilon = 1e-2
-    
-    # neutrino mixing
-    bsm_model.Umu4  = np.sqrt(1.5e-6*7/4)
+    # if 'gD' in kwargs.keys() and 'alphaD' in kwargs.keys():
+    #     logger.error(f"Error! Two values of dark coupling were specified: gD = {kwargs['gD']} and alphaD = {kwargs['alphaD']}")
+    #     raise AttributeError('Can only set the dark coupling in one way.')
+    # if 'alphaD' in kwargs.keys():
+    #     kwargs['gD'] = np.sqrt(4*np.pi*kwargs['alphaD'])
+    # else:
+    #     kwargs['gD'] = 1.0
 
-    # masses
-    bsm_model.m4 =  0.140
-    bsm_model.mzprime = 1.25
-    bsm_model.HNLtype = "dirac"
-
+    # if (np.array([(key in kwargs.keys())  for key in ['epsilon','epsilon2','chi','alpha_epsilon2']]) ).sum() > 1:
+    #     logger.error(f"Error! Two values of kinetic mixing were specified: {np.intersect1d(['epsilon','epsilon2','chi','alpha_epsilon2'], list(kwargs.keys()))}")
+    #     raise AttributeError('Can only set kinetic mixing in one way.')
+    # elif 'epsilon2' in kwargs.keys():
+    #     kwargs['epsilon'] = np.sqrt(kwargs['epsilon2'])
+    # elif 'chi' in kwargs.keys():
+    #     kwargs['epsilon'] = kwargs['chi']*const.cw
+    # elif 'alpha_epsilon2' in kwargs.keys():
+    #     kwargs['epsilon'] = np.sqrt(kwargs['alpha_epsilon2']/const.alphaQED)
+    # else:
+    #     kwargs['epsilon'] = 1e-2
+    
     # update the attributes of the model with user-defined parameters
     bsm_model.__dict__.update(kwargs)
-
+    
     # lock-in parameters and compute interaction vertices
     bsm_model.set_vertices()
 
@@ -57,18 +46,6 @@ def create_generic_HNL_model(**kwargs):
 
     bsm_model = GenericHNLModel()
 
-    ## Default choices
-    # vector couplings
-    bsm_model.d_mu4=np.sqrt(1.5e-6*7/4)
-    bsm_model.duV=const.eQED*1e-2*2/3
-    bsm_model.ddV=-const.eQED*1e-2*1/3
-    bsm_model.deV=const.eQED*1e-2
-
-    # masses
-    bsm_model.m4 =  0.140
-    bsm_model.mzprime = 1.25
-    bsm_model.HNLtype = "dirac"
-
     # update the attributes of the model with user-defined parameters
     bsm_model.__dict__.update(kwargs)
 
@@ -76,240 +53,6 @@ def create_generic_HNL_model(**kwargs):
     bsm_model.set_vertices()
 
     return bsm_model
-
-
-class UpscatteringProcess:
-    ''' 
-        Describes the process of upscattering with arbitrary vertices and masses
-    
-    '''
-
-    def __init__(self, nu_projectile, nu_upscattered, nuclear_target, scattering_regime, TheoryModel, helicity):
-
-        self.nuclear_target = nuclear_target
-        self.scattering_regime = scattering_regime
-        if self.scattering_regime == 'coherent':
-            self.target = self.nuclear_target
-        elif self.scattering_regime == 'p-el':
-            self.target = self.nuclear_target.get_constituent_nucleon('proton')
-        elif self.scattering_regime == 'n-el':
-            self.target = self.nuclear_target.get_constituent_nucleon('neutron')
-        elif self.scattering_regime == 'DIS':
-            self.target = self.nuclear_target.get_constituent_quarks()
-        else:
-            logger.error(f"Scattering regime {scattering_regime} not supported.")
-
-        # How many constituent targets inside scattering regime? 
-        if self.scattering_regime == 'coherent':
-            self.target_multiplicity = 1
-        elif self.scattering_regime == 'p-el':
-            self.target_multiplicity = self.nuclear_target.Z
-        elif self.scattering_regime == 'n-el':
-            self.target_multiplicity = self.nuclear_target.N
-        else:
-            logger.error(f"Scattering regime {self.scattering_regime} not supported.")
-
-        self.nu_projectile = nu_projectile
-        self.nu_upscattered = nu_upscattered
-        self.TheoryModel = TheoryModel
-        self.helicity = helicity
-
-        self.MA = self.target.mass
-        self.mzprime = TheoryModel.mzprime
-        self.mhprime = TheoryModel.mhprime
-        self.m_ups = self.nu_upscattered.mass
-
-        if self.helicity == 'conserving':
-            self.h_upscattered = -1
-        elif self.helicity == 'flipping':
-            self.h_upscattered = +1
-        else:
-            logger.error(f"Error! Could not find helicity case {self.helicity}")
-        
-
-        self.Cij=TheoryModel.c_aj[pdg.get_lepton_index(nu_projectile), pdg.get_HNL_index(nu_upscattered)]
-        self.Cji=self.Cij
-        self.Vij=TheoryModel.d_aj[pdg.get_lepton_index(nu_projectile), pdg.get_HNL_index(nu_upscattered)]
-        self.Vji=self.Vij
-        self.Sij=TheoryModel.s_aj[pdg.get_lepton_index(nu_projectile), pdg.get_HNL_index(nu_upscattered)]
-        self.Sji=self.Sij
-        self.mu_tr=TheoryModel.t_aj[pdg.get_lepton_index(nu_projectile), pdg.get_HNL_index(nu_upscattered)]
-
-        ###############
-        # Hadronic vertices
-        if self.target.is_nucleus:
-            self.Chad = const.gweak/2.0/const.cw*np.abs((1.0-4.0*const.s2w)*self.target.Z-self.target.N)
-            self.Vhad = const.eQED*TheoryModel.epsilon*self.target.Z
-            self.Shad = TheoryModel.cSproton*self.target.Z + TheoryModel.cSneutron*self.target.N
-        elif self.target.is_proton:
-            self.Chad = TheoryModel.cVproton
-            self.Vhad = TheoryModel.dVproton
-            self.Shad = TheoryModel.cSproton
-        elif self.target.is_neutron:
-            self.Chad = TheoryModel.cVneutron
-            self.Vhad = TheoryModel.dVneutron
-            self.Shad = TheoryModel.cSneutron
-        # mass mixed vertex
-        self.Cprimehad = self.Chad*TheoryModel.epsilonZ
-
-        # Neutrino energy threshold
-        self.Ethreshold = self.m_ups**2 / 2.0 / self.MA + self.m_ups
-
-        # vectorize total cross section calculator using vegas integration
-        self.vectorized_total_xsec = np.vectorize(self.scalar_total_xsec, excluded=['self','diagram','NINT','NEVAL','NINT_warmup','NEVAL_warmup'])
-
-        self.calculable_diagrams = find_calculable_diagrams(TheoryModel)
-
-    def scalar_total_xsec(self, Enu, diagram='total', NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup):
-        # below threshold
-        if Enu < (self.Ethreshold):
-            return 0.0
-        else:
-            DIM = 1
-            batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=Enu, ups_case=self, diagram=diagram)
-            integ   = vg.Integrator(DIM*[[0.0, 1.0]]) # unit hypercube
-            
-            integrals = MC.run_vegas(batch_f, integ, adapt_to_errors=True,
-                                        NINT=NINT, 
-                                        NEVAL=NEVAL, 
-                                        NINT_warmup=NINT_warmup, 
-                                        NEVAL_warmup=NEVAL_warmup)
-            logger.debug(f"Main VEGAS run completed.")
-            
-            return integrals['diff_xsec'].mean*batch_f.norm['diff_xsec']
-
-    def total_xsec(self, Enu, diagrams=['total'], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup):
-        """ 
-            Returns the total upscattering xsec for a fixed neutrino energy in cm^2
-        """
-        self.Enu = Enu
-        all_xsecs=0.0
-        for diagram in diagrams:
-            if diagram in self.calculable_diagrams or diagram=='total':
-                tot_xsec = self.vectorized_total_xsec(Enu, diagram=diagram, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
-            else:
-                logger.warning(f'Warning: Diagram not found. Either not implemented or misspelled. Setting tot xsec it to zero: {diagram}')
-                tot_xsec = 0.0*Enu
-            
-            #############
-            # integrated xsec coverted to cm^2
-            all_xsecs += tot_xsec*const.attobarn_to_cm2*self.target_multiplicity
-            logger.debug(f"Total cross section for {diagram} calculated.")
-
-        return all_xsecs
-
-    def diff_xsec_Q2(self, Enu, Q2, diagrams=['total']):
-        """ 
-            Returns the differential upscattering xsec for a fixed neutrino energy in cm^2
-        """
-        s = Enu*self.MA*2+self.MA**2
-        physical =  ((Q2 > ps.upscattering_Q2min(Enu, self.m_ups, self.MA)) & (Q2 < ps.upscattering_Q2max(Enu, self.m_ups, self.MA)))
-        diff_xsecs=amps.upscattering_dxsec_dQ2([s,-Q2,0.0], process=self, diagrams=diagrams)
-        if type(diff_xsecs) is dict:
-            return {key: diff_xsecs[key]*physical for key in diff_xsecs.keys()}
-        else:
-            return diff_xsecs*physical*const.attobarn_to_cm2*self.target_multiplicity
-
-
-
-class FermionDileptonDecay:
-
-    def __init__(self, nu_parent, nu_daughter, final_lepton1, final_lepton2, TheoryModel, h_parent=-1):
-
-        self.TheoryModel = TheoryModel
-        self.HNLtype = TheoryModel.HNLtype
-        self.h_parent = h_parent
-        
-        # particle masses
-        self.mzprime = TheoryModel.mzprime
-        self.mhprime = TheoryModel.mhprime
-        self.mm = final_lepton1.mass*const.MeV_to_GeV 
-        self.mp = final_lepton2.mass*const.MeV_to_GeV 
-
-        if nu_daughter == pdg.nulight:
-            self.Cih = np.sqrt(np.sum(np.abs(TheoryModel.c_aj[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
-            self.Dih = np.sqrt(np.sum(np.abs(TheoryModel.d_aj[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
-            self.Sih = np.sqrt(np.sum(np.abs(TheoryModel.s_aj[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
-            self.Tih = np.sqrt(np.sum(np.abs(TheoryModel.t_aj[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
-        else:
-            self.Cih = TheoryModel.c_aj[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
-            self.Dih = TheoryModel.d_aj[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
-            self.Sih = TheoryModel.s_aj[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
-            self.Tih = TheoryModel.t_aj[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
-
-
-        if nu_parent == pdg.neutrino4:
-            self.m_parent = TheoryModel.m4
-        elif nu_parent == pdg.neutrino5:
-            self.m_parent = TheoryModel.m5
-        elif nu_parent == pdg.neutrino6:
-            self.m_parent = TheoryModel.m6
-        else:
-            self.m_parent = 0.0
-
-
-        if nu_daughter == pdg.neutrino4:
-            self.m_daughter = TheoryModel.m4
-        elif nu_daughter == pdg.neutrino5:
-            self.m_daughter = TheoryModel.m5
-        elif nu_daughter == pdg.neutrino6:
-            self.m_daughter = TheoryModel.m6
-        else:
-            self.m_daughter = 0.0
-
-
-        # check if CC is allowed 
-        # CC_mixing1 = LNC, CC_mixing2 = LNV channel.
-        if pdg.in_same_doublet(nu_daughter,final_lepton1):
-            self.CC_mixing1 = TheoryModel.Ulep[pdg.get_lepton_index(final_lepton1), pdg.get_HNL_index(nu_parent)]
-            self.CC_mixing2 = TheoryModel.Ulep[pdg.get_lepton_index(final_lepton2), pdg.get_HNL_index(nu_parent)]
-        else:
-            self.CC_mixing1 = 0
-            self.CC_mixing2 = 0
-
-        ## Minus sign important for interference!
-        self.CC_mixing2 *= -1
-
-        ## Is the mediator on shell?
-        self.on_shell = (self.m_parent - self.m_daughter - self.mm - self.mp > TheoryModel.mzprime)
-        self.off_shell = not self.on_shell
-        ## does it have transition magnetic moment?
-        self.TMM = TheoryModel.is_TMM
-
-class FermionSinglePhotonDecay:
-
-    def __init__(self, nu_parent, nu_daughter, TheoryModel, h_parent=-1):
-
-        self.TheoryModel = TheoryModel
-        self.HNLtype = TheoryModel.HNLtype
-        self.h_parent = h_parent
-
-        # mass of the HNLs
-        if nu_daughter == pdg.neutrino4:
-            self.m_daughter = TheoryModel.m4
-        elif nu_daughter == pdg.neutrino5:
-            self.m_daughter = TheoryModel.m5
-        elif nu_daughter == pdg.neutrino6:
-            self.m_daughter = TheoryModel.m6
-        else:
-            self.m_daughter = 0.0
-
-        if nu_parent == pdg.neutrino4:
-            self.m_parent = TheoryModel.m4
-        elif nu_parent == pdg.neutrino5:
-            self.m_parent = TheoryModel.m5
-        elif nu_parent == pdg.neutrino6:
-            self.m_parent = TheoryModel.m6
-        else:
-            self.m_parent = 0.0
-
-        # transition magnetic moment parameter
-        if nu_daughter == pdg.nulight:
-            # |T| = sqrt(|T_ei|^2 + |T_mui|^2 + |T_taui|^2)
-            self.Tih = np.sqrt(np.sum(np.abs(self.TheoryModel.t_aj[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
-            self.m_daughter = 0.0
-        else:
-            self.Tih = self.TheoryModel.t_aj[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
 
 
 class HNLModel:
@@ -332,9 +75,6 @@ class HNLModel:
         self.mzprime    = None
         self.mhprime    = None
 
-        # Initialize spectrum
-        self.nu_spectrum = [lp.nu_e, lp.nu_mu, lp.nu_tau]
-        
         # scalar couplings
         self.s_e4 = 0.0
         self.s_e5 = 0.0
@@ -371,32 +111,35 @@ class HNLModel:
         self.mu_tr_66 = 0.0
 
         # Initilize nucleon couplings. These will be filled with the quark combination, which is what is actually set by the user
-        self.cVproton = None
-        self.cAproton = None
-        self.cVneutron = None
-        self.cAneutron = None
-        self.dVproton = None
-        self.dAproton = None
-        self.dVneutron = None
-        self.dAneutron = None
-        self.cSproton = None
-        self.cSneutron = None
-        self.cPproton = None
-        self.cPneutron = None
+        self.cprotonV = None
+        self.cprotonA = None
+        self.cneutronV = None
+        self.cneutronA = None
+        self.dprotonV = None
+        self.dprotonA = None
+        self.dneutronV = None
+        self.dneutronA = None
+        self.dSproton = None
+        self.dSneutron = None
+        self.dPproton = None
+        self.dPneutron = None
 
     def initialize_spectrum(self):
         
+        # Initialize spectrum
+        self.nu_spectrum = [lp.nu_e, lp.nu_mu, lp.nu_tau]
         self._spectrum = ""
         self.hnl_masses = np.empty(0)
-        if self.m4:
+
+        if self.m4 is not None:
             self.hnl_masses = np.append(self.m4,self.hnl_masses)
             self.neutrino4 = pdg.neutrino4
             self.neutrino4.mass = self.m4
-        if self.m5:
+        if self.m5 is not None:
             self.hnl_masses = np.append(self.m5,self.hnl_masses)
             self.neutrino5 = pdg.neutrino5
             self.neutrino5.mass = self.m5
-        if self.m6:
+        if self.m6 is not None:
             self.hnl_masses = np.append(self.m6,self.hnl_masses)
             self.neutrino6 = pdg.neutrino6
             self.neutrino6.mass = self.m6
@@ -414,6 +157,33 @@ class HNLModel:
         self.n_nus = len(self.nu_spectrum)
         self.n_HNLs = len(self.HNL_spectrum)
         self._spectrum += f"\n\t{self.n_HNLs} {self.HNLtype} heavy neutrino(s)."
+
+
+    def update_spectrum(self):
+
+        # mass mixing between Z' and Z
+        # NOT YET FUNCTIONAL
+        self.is_mass_mixed = False# (self.epsilonZ != 0.0)
+
+        self.has_Zboson_coupling = np.any(self.c_aj[3:,:] != 0)
+        if self.has_Zboson_coupling:
+            self._spectrum += f"\n\t{np.sum(self.c_aj[3:,:]!=0)} non-zero Z boson coupling(s) beyond the SM."
+        
+        self.has_vector_coupling = np.any(self.d_aj != 0)
+        if self.has_vector_coupling:
+            # dark photon 
+            self.zprime = pdg.new_particle(name='zprime', pdgid=5921, mass=self.mzprime*1e3, latex_name='Z^\prime')
+            self._spectrum += f"\n\t{np.sum(self.d_aj!=0)} non-zero Z'-neutrino coupling(s)."
+        
+        self.has_scalar_coupling = np.any(self.s_aj != 0)
+        if self.has_scalar_coupling:
+            # dark scalar 
+            self.hprime = pdg.new_particle(name='hprime', pdgid=5901, mass=self.mhprime*1e3, latex_name='h^\prime')
+            self._spectrum += f"\n\t{np.sum(self.s_aj!=0)} non-zero h'-neutrino coupling(s)."
+        
+        self.has_TMM = np.any(self.t_aj != 0)
+        if self.has_TMM:
+            self._spectrum += f"\n\t{np.sum(self.t_aj!=0)} non-zero transition magnetic moment(s)."
 
 
 
@@ -473,13 +243,12 @@ class GenericHNLModel(HNLModel):
         self.ddV = 0.0
         self.ddA = 0.0
 
-        self.cSe = 0.0
-        self.cSu = 0.0
-        self.cSd = 0.0
-
-        self.cPe = 0.0
-        self.cPu = 0.0
-        self.cPd = 0.0
+        self.deS = 0.0
+        self.deP = 0.0
+        self.duS = 0.0
+        self.duP = 0.0
+        self.ddS = 0.0
+        self.ddP = 0.0
 
     def set_vertices(self):
 
@@ -496,10 +265,7 @@ class GenericHNLModel(HNLModel):
                                 [0,0,0, self.c_45,   self.c_55,    self.c_56],
                                 [0,0,0, self.c_46,   self.c_56,    self.c_66],
                                 ])
-        self.has_Zboson_coupling = np.any(self.c_aj[3:,:] != 0)
-        if self.has_Zboson_coupling:
-            self._spectrum += f"\n\t{np.sum(self.c_aj[3:,:]!=0)} non-zero Z boson coupling(s) beyond the SM."
-        
+
         ####################################################
         # Z' vector couplings
         self.d_aj = np.array([\
@@ -510,11 +276,6 @@ class GenericHNLModel(HNLModel):
                                 [0,0,0, self.d_45,   self.d_55,    self.d_56],
                                 [0,0,0, self.d_46,   self.d_56,    self.d_66],
                                 ])
-        self.has_vector_coupling = np.any(self.d_aj != 0)
-        if self.has_vector_coupling:
-            # dark photon 
-            self.zprime = pdg.new_particle(name='zprime', pdgid=5921, latex_name='Z^\prime')
-            self._spectrum += f"\n\t{np.sum(self.d_aj!=0)} non-zero Z'-neutrino coupling(s)."
 
         ####################################################
         # h' scalar couplings
@@ -526,11 +287,6 @@ class GenericHNLModel(HNLModel):
                                 [0,0,0, self.s_45,   self.s_55,    self.s_56],
                                 [0,0,0, self.s_46,   self.s_56,    self.s_66],
                                 ])
-        self.has_scalar_coupling = np.any(self.s_aj != 0)
-        if self.has_scalar_coupling:
-            # dark scalar 
-            self.hprime = pdg.new_particle(name='hprime', pdgid=5901, latex_name='h^\prime')
-            self._spectrum += f"\n\t{np.sum(self.s_aj!=0)} non-zero h'-neutrino coupling(s)."
         
         ####################################################
         # create the transition mag moment scope
@@ -542,10 +298,7 @@ class GenericHNLModel(HNLModel):
                                 [0,0,0, self.mu_tr_45,   self.mu_tr_55,    self.mu_tr_56],
                                 [0,0,0, self.mu_tr_46,   self.mu_tr_56,    self.mu_tr_66],
                                 ])
-        self.is_TMM = np.any(self.t_aj != 0)
-        if self.is_TMM:
-            self._spectrum += f"\n\t{np.sum(self.t_aj!=0)} non-zero transition magnetic moment(s)."
-
+        
         prettyprinter.info(f"Model:{self._spectrum}")
 
 
@@ -554,32 +307,34 @@ class GenericHNLModel(HNLModel):
         # n.b. lepton vertices already defined
         # for TMM, we already know it has to be (e*charge)
 
-        if not self.cVproton:
-            self.cVproton = 2*self.cuV +self.cdV
-        if not self.cAproton:
-            self.cAproton = 2*self.cuA + self.cdA
-        if not self.cVneutron:
-            self.cVneutron = 2*self.cdV + self.cuV
-        if not self.cAneutron:
-            self.cAneutron = 2*self.cdA + self.cuA
+        if self.cprotonV is None:
+            self.cprotonV = 2*self.cuV +self.cdV
+        if self.cprotonA is None:
+            self.cprotonA = 2*self.cuA + self.cdA
+        if self.cneutronV is None:
+            self.cneutronV = 2*self.cdV + self.cuV
+        if self.cneutronA is None:
+            self.cneutronA = 2*self.cdA + self.cuA
 
-        if not self.dVproton:
-            self.dVproton = 2*self.duV +self.ddV
-        if not self.dAproton:
-            self.dAproton = 2*self.duA + self.ddA
-        if not self.dVneutron:
-            self.dVneutron = 2*self.ddV + self.duV
-        if not self.dAneutron:
-            self.dAneutron = 2*self.ddA + self.duA
+        if self.dprotonV is None:
+            self.dprotonV = 2*self.duV +self.ddV
+        if self.dprotonA is None:
+            self.dprotonA = 2*self.duA + self.ddA
+        if self.dneutronV is None:
+            self.dneutronV = 2*self.ddV + self.duV
+        if self.dneutronA is None:
+            self.dneutronA = 2*self.ddA + self.duA
 
-        if not self.cSproton:
-            self.cSproton = 2*self.cSu +self.cSd
-        if not self.cSneutron:
-            self.cSneutron = 2*self.cSd + self.cSu
-        if not self.cPproton:
-            self.cPproton = 2*self.cPu +self.cPd
-        if not self.cPneutron:
-            self.cPneutron = 2*self.cPd + self.cPu
+        if self.dprotonS is None:
+            self.dprotonS = 2*self.duS +self.ddS
+        if self.dneutronS is None:
+            self.dneutronS = 2*self.ddS + self.duS
+        if self.dprotonP is None:
+            self.dprotonP = 2*self.duP +self.ddP
+        if self.dneutronP is None:
+            self.dneutronP = 2*self.ddP + self.duP
+
+        self.update_spectrum()
 
 
 
@@ -609,8 +364,8 @@ class ThreePortalModel(HNLModel):
         self.UD6		= 1.0
 
         # Z'
-        self.gD         = 1.0
-        self.epsilon    = 1.0 # kinetic mixing
+        self.gD         = None
+        self.epsilon    = None # kinetic mixing
         self.epsilonZ   = 0.0 # mass mixing
         
         # h'
@@ -626,21 +381,6 @@ class ThreePortalModel(HNLModel):
         # initialize spectrum
         self.initialize_spectrum()
 
-        # create the vector mediator scope
-        self.is_kinetically_mixed = (self.epsilon != 0)
-        self.is_mass_mixed = (self.epsilonZ != 0)
-        if self.is_kinetically_mixed or self.is_mass_mixed:
-            # dark photon 
-            self.zprime = pdg.new_particle(name='zprime', pdgid=5921, latex_name='Z^\prime')
-            self._spectrum+="\n\tkinetically mixed Z'"
-
-        # create the scalar mediator scope
-        self.is_scalar_mixed = (self.theta != 0)
-        if self.is_scalar_mixed:
-            # dark scalar 
-            self.hprime = pdg.new_particle(name='hprime', pdgid=5901, latex_name='h^\prime')
-            self._spectrum+="\n\thiggs mixed h'"
-
         # create the scalar couplings
         self.s_aj = np.array([\
                                 [0,0,0, self.s_e4,   self.s_e5,    self.s_e6],
@@ -650,9 +390,6 @@ class ThreePortalModel(HNLModel):
                                 [0,0,0, self.s_45,   self.s_55,    self.s_56],
                                 [0,0,0, self.s_46,   self.s_56,    self.s_66],
                                 ])
-        self.is_scalar_mixed = np.any(self.s_aj != 0)
-        if self.is_scalar_mixed:
-            self._spectrum += f"\n\t{np.sum(self.s_aj!=0)} non-zero scalar-neutrino coupling(s)."
 
         # create the transition mag moment scope
         self.t_aj = np.array([\
@@ -663,9 +400,6 @@ class ThreePortalModel(HNLModel):
                                 [0,0,0, self.mu_tr_45,   self.mu_tr_55,    self.mu_tr_56],
                                 [0,0,0, self.mu_tr_46,   self.mu_tr_56,    self.mu_tr_66],
                                 ])
-        self.is_TMM = np.any(self.t_aj != 0)
-        if self.is_TMM:
-            self._spectrum += f"\n\t{np.sum(self.t_aj!=0)} non-zero transition magnetic moment(s)."
 
         prettyprinter.info(f"Model:{self._spectrum}")
 
@@ -673,10 +407,24 @@ class ThreePortalModel(HNLModel):
         # CHARGED FERMION VERTICES 
         # all the following is true to leading order in chi
         
-        # Kinetic mixing with photon
-        # self.epsilon = const.cw * self.chi
-        self.chi = self.epsilon/const.cw 
-    
+        # Kinetic mixing 
+        if self.chi is not None:
+            self.epsilon = self.epsilon*const.cw
+        elif self.epsilon2 is not None:
+            self.epsilon = np.sqrt(self.epsilon2)
+            self.chi = self.epsilon/const.cw 
+        elif self.alpha_epsilon2 is not None:
+            self.epsilon = np.sqrt(self.alpha_epsilon2/const.alphaQED)
+            self.chi = self.epsilon/const.cw
+        elif self.epsilon is not None:
+            self.chi = self.epsilon/const.cw
+
+        # dark coupling
+        if self.alphaD is not None:
+            self.gD = np.sqrt(4*np.pi*self.alphaD)
+        elif self.gD is not None:
+            pass
+
         self.tanchi = math.tan(self.chi)
         self.sinof2chi  = 2*self.tanchi/(1.0+self.tanchi**2)
         self.cosof2chi  = (1.0 - self.tanchi**2)/(1.0+self.tanchi**2)
@@ -733,16 +481,15 @@ class ThreePortalModel(HNLModel):
         self.ddV = -self._weak_vertex*(-self.sbeta*(-0.5 + 2/3.0*const.s2w) + 1.0/6.0*self.cbeta*const.sw*self.tanchi)
         self.ddA = self._weak_vertex*((self.sbeta - self.cbeta*const.sw*self.tanchi)/2.0)
 
-        self.dVproton = 2*self.duV +self.ddV
-        self.dAproton = 2*self.duA + self.ddA
-        self.dVneutron = 2*self.ddV + self.duV
-        self.dAneutron = 2*self.ddA + self.duA
+        self.dprotonV = 2*self.duV +self.ddV
+        self.dprotonA = 2*self.duA + self.ddA
+        self.dneutronV = 2*self.ddV + self.duV
+        self.dneutronA = 2*self.ddA + self.duA
 
-        self.cVproton = 2*self.cuV +self.cdV
-        self.cAproton = 2*self.cuA + self.cdA
-        self.cVneutron = 2*self.cdV + self.cuV
-        self.cAneutron = 2*self.cdA + self.cuA
-    
+        self.cprotonV = 2*self.cuV +self.cdV
+        self.cprotonA = 2*self.cuA + self.cdA
+        self.cneutronV = 2*self.cdV + self.cuV
+        self.cneutronA = 2*self.cdA + self.cuA
 
         ####################################################
         # NEUTRAL FERMION VERTICES 
@@ -760,7 +507,7 @@ class ThreePortalModel(HNLModel):
         # if PMNS, use dtype=complex
         self.Ulep = np.diag(np.full_like(self.Ue,1))
         # self.Ulep = np.diag(np.full(self.n_nus,1,dtype=complex))
-        # self.Ulep[:3,:3] = const.PMNS # massless light neutrinos
+        # self.Ulep[:3,:3] = const.UPMNS # massless light neutrinos
         
         # loop over HNL indices
         for i in range(3,self.n_HNLs+3):
@@ -837,6 +584,9 @@ class ThreePortalModel(HNLModel):
         self.c_aj = np.hstack((np.diag([1,1,1]),self.c_aj))
         self.d_aj = np.hstack((np.diag([1,1,1]),self.d_aj))
 
+        # make n_nus x n_nus 
+        self.c_aj = np.vstack((self.c_aj,self.c_ij[3:]))
+        self.d_aj = np.vstack((self.d_aj,self.d_ij[3:]))
         self.dlight = 0.0
 
 
@@ -863,10 +613,12 @@ class ThreePortalModel(HNLModel):
         
         self.cSnucleon = self.sintheta*self.c_nucleon_higgs
         # isospin
-        self.cSproton  = self.cSnucleon
-        self.cSneutron = self.cSnucleon
+        self.dprotonS  = self.cSnucleon
+        self.dneutronS = self.cSnucleon
         self.ceS = self.costheta*const.m_e/const.vev_EW/np.sqrt(2)
         self.deS = self.sintheta*const.m_e/const.vev_EW/np.sqrt(2)
+
+        self.update_spectrum()
 
 
     def compute_rates(self):
@@ -1050,33 +802,3 @@ class HNLparticle():
             brs[channel] = self.rates[channel]/self.rate_total
         self.brs = brs
 
-
-def find_calculable_diagrams(bsm_model):
-    """ 
-    Args:
-        bsm_model (DarkNews.model.Model): main BSM model class of DarkNews
-
-    Returns:
-        list: with all non-zero upscattering diagrams to be computed in this model.
-    """
-
-    calculable_diagrams = []
-    calculable_diagrams.append('NC_SQR')
-    if bsm_model.is_kinetically_mixed: 
-        calculable_diagrams.append('KinMix_SQR')
-        calculable_diagrams.append('KinMix_NC_inter')
-    if bsm_model.is_mass_mixed: 
-        calculable_diagrams.append('MassMix_SQR')
-        calculable_diagrams.append('MassMix_NC_inter')
-        if bsm_model.is_kinetically_mixed: 
-            calculable_diagrams.append('KinMix_MassMix_inter')
-    if bsm_model.is_TMM: 
-        calculable_diagrams.append('TMM_SQR')
-    if bsm_model.is_scalar_mixed: 
-        calculable_diagrams.append('Scalar_SQR')
-        calculable_diagrams.append('Scalar_NC_inter')
-        if bsm_model.is_kinetically_mixed: 
-            calculable_diagrams.append('Scalar_KinMix_inter')
-        if bsm_model.is_mass_mixed: 
-            calculable_diagrams.append('Scalar_MassMix_inter')
-    return calculable_diagrams

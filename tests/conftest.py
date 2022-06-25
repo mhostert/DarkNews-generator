@@ -4,50 +4,59 @@ from particle import literals as lp
 from DarkNews import const
 from DarkNews.GenLauncher import GenLauncher
 
+MODEL_KWARGS = {'HNLtype': 'dirac', 'UD4': 1.0, 'alphaD': 0.25, 'Umu4': np.sqrt(9e-7), 'epsilon': np.sqrt(2e-10/const.alphaQED)}
 
 
 # generate a specific set of events to be tested in a session
 @pytest.fixture(scope='session')
 def SM_gen():
-    gen = GenLauncher(gD=0.0, Umu4=1e-3, epsilon=0.0, m4=0.001)
+    gen = GenLauncher(gD=0.0, Umu4=1e-3, epsilon=0.0, m4=0.01, loglevel='ERROR', neval=1000, seed=42)
     return gen.run()
 
 
 @pytest.fixture(scope='session')
 def light_DP_gen_all_outputs():
 
-    ud4_def = 1.0
-    alphaD = 0.25
-    gD_def = np.sqrt(alphaD*4*np.pi)
-    umu4_def = np.sqrt(9e-7)
-    ud4 = 1.
-    epsilon_def = np.sqrt(2e-10/const.alphaQED)
-    gen = GenLauncher(mzprime=0.03, m4=0.420, epsilon=epsilon_def, Umu4=umu4_def, UD4=ud4_def, gD=gD_def, 
-                        neval=1000, HNLtype="dirac", exp="miniboone_fhc", loglevel='INFO',
-                        parquet=True, numpy=True, hepevt=True, sparse=True, print_to_float32=True)
+    gen = GenLauncher(mzprime=0.03, m4=0.420, neval=1000, exp="miniboone_fhc", loglevel='INFO',
+                        parquet=True, numpy=True, hepevt=True, sparse=True, print_to_float32=True, **MODEL_KWARGS)
 
     return gen.run(loglevel="INFO")
 
 
 @pytest.fixture(scope='session')
-def gen_all_benchmarks():
+def gen_simplest_benchmarks():
 
-    ud4_def = 1.0
-    alphaD = 0.25
-    gD_def = np.sqrt(alphaD*4*np.pi)
-    umu4_def = np.sqrt(9e-7)
-    ud4 = 1.
-    epsilon_def = np.sqrt(2e-10/const.alphaQED)
-    gen = GenLauncher(mzprime=0.03, m4=0.420, epsilon=epsilon_def, Umu4=umu4_def, UD4=ud4_def, gD=gD_def, 
+    gen = GenLauncher(mzprime=0.03, m4=0.420, neval=1000, exp="miniboone_fhc", loglevel='ERROR', seed=42, **MODEL_KWARGS)
+    df_light = gen.run()
+
+    gen = GenLauncher(mzprime=1.25, m4=0.150, neval=1000, exp="miniboone_fhc", loglevel='ERROR', seed=42, **MODEL_KWARGS)
+    df_heavy = gen.run()
+
+    gen = GenLauncher(mu_tr_mu4=1e-6, decay_product='e+e-', Umu4=0.0,
                         neval=1000, HNLtype="dirac", exp="miniboone_fhc", loglevel='ERROR', seed=42)
-    df_light = gen.run(loglevel="INFO")
+    df_TMM = gen.run()
+
+    return df_light, df_heavy, df_TMM
 
 
-    gen = GenLauncher(mzprime=1.25, m4=0.150, epsilon=epsilon_def, Umu4=umu4_def, UD4=ud4_def, gD=gD_def, 
+@pytest.fixture(scope='session')
+def gen_other_final_states():
+
+    gen = GenLauncher(mzprime=0.3, m4=0.5, decay_product='mu+mu-', neval=1000, exp="miniboone_fhc", loglevel='ERROR', seed=42, **MODEL_KWARGS)
+    df_light = gen.run()
+
+    gen = GenLauncher(mzprime=1.25, m4=0.5, decay_product='mu+mu-', neval=1000, exp="miniboone_fhc", loglevel='ERROR', seed=42, **MODEL_KWARGS)
+    df_heavy = gen.run()
+
+    gen = GenLauncher(mu_tr_mu4=1e-6, decay_product='mu+mu-', Umu4=0.0,
                         neval=1000, HNLtype="dirac", exp="miniboone_fhc", loglevel='ERROR', seed=42)
-    df_heavy = gen.run(loglevel="INFO")
+    df_TMM_mumu = gen.run()
+
+    gen = GenLauncher(mu_tr_mu4=1e-6, decay_product='photon', Umu4=0.0,
+                        neval=1000, HNLtype="dirac", exp="miniboone_fhc", loglevel='ERROR', seed=42)
+    df_TMM_photon = gen.run()
+
+    return df_light, df_heavy, df_TMM_mumu, df_TMM_photon
 
 
-
-    return df_light, df_heavy
 

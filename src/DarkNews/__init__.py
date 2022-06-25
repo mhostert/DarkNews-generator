@@ -22,24 +22,26 @@ prettyprinter.propagate = False
 '''
 # Definition modules
 from DarkNews.GenLauncher import GenLauncher
-
-
+from DarkNews.GenLauncher import GenLauncherGeneric
 
 from DarkNews import pdg
 from DarkNews import const
 from DarkNews import fourvec
 from DarkNews import phase_space
+from DarkNews import parsing_tools
 
 # Experimental setups
 from DarkNews import detector
+from DarkNews import nuclear_tools
 
 # Physics modules
 from DarkNews import decay_rates
+from DarkNews import processes
 from DarkNews import model
 
-from DarkNews.model import UpscatteringProcess 
-from DarkNews.model import FermionDileptonDecay 
-from DarkNews.model import FermionSinglePhotonDecay 
+from DarkNews.processes import UpscatteringProcess 
+from DarkNews.processes import FermionDileptonDecay 
+from DarkNews.processes import FermionSinglePhotonDecay 
 
 # Monte Carlo modules
 from DarkNews import MC

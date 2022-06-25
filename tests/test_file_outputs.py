@@ -33,12 +33,43 @@ def test_output(light_DP_gen_all_outputs):
     assert (df_pq.to_numpy()[nda!=0]/nda[nda!=0]!=1).sum() == 0
 
 
-def test_MB_rates_of_BPs(gen_all_benchmarks):
-    df_light,df_heavy = gen_all_benchmarks
+def close_enough(x,y, tol=1e-3):
+    return (x - y)/y < tol
+
+
+def test_MB_rates_of_BPs(SM_gen,
+                        gen_simplest_benchmarks,
+                        gen_other_final_states,
+                        ):
+    
+    #######
+    expect = 0.038374333394344776
+    assert close_enough(SM_gen.w_event_rate.sum(), expect), 'seeded SM generation has changed!'
+    
+    #######
+    df_light,df_heavy,df_TMM = gen_simplest_benchmarks
     # check seeded generation
-    expec = 12903.909075535918
-    assert (np.abs(np.sum(df_light['w_event_rate']) - expec)/expec < 0.01)
+    expect = 13504.557608335577
+    assert close_enough(df_light.w_event_rate, expect, 'seeded light dark photon has changed!'
 
     # check seeded generation
-    expec = 4.965717632634995
-    assert (np.abs(np.sum(df_heavy['w_event_rate']) - expec)/expec < 0.01)
+    expect = 6.384879373980034
+    assert close_enough(df_heavy.w_event_rate, expect, 'seeded heavy dark photon has changed!'
+
+    # check seeded generation
+    expect = 6.384879373980034
+    assert close_enough(df_TMM.w_event_rate, expect, 'seeded heavy dark photon has changed!'
+
+    #######
+    df_light, df_heavy, df_TMM_mumu, df_TMM_photon = gen_other_final_states
+    # check seeded generation
+    expect = 13504.557608335577
+    assert close_enough(df_light.w_event_rate, expect, 'seeded light dark photon has changed!'
+
+    # check seeded generation
+    expect = 6.384879373980034
+    assert close_enough(df_heavy.w_event_rate, expect, 'seeded heavy dark photon has changed!'
+
+    # check seeded generation
+    expect = 6.384879373980034
+    assert close_enough(df_TMM.w_event_rate, expect, 'seeded heavy dark photon has changed!'

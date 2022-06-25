@@ -395,6 +395,10 @@ HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughte
 | **helicity**              | <!-- --> | *string* | Helicity process: can be flipping or conserving; flipping is suppressed |
 | **underlying\_process**   | <!-- --> | *string* | String of the underlying process, e.g, "nu(mu) + proton_in_C12 -> N4 +  proton_in_C12 -> nu(mu) + e+ + e- + proton_in_C12" |
 
+#### Additional Attributes
+
+We also make use of the `attrs` property of the pandas dataframe to save the respective Model() and Detector() classes used in the generation. 
+
 
 ### The event generator engine
 

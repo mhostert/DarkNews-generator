@@ -29,7 +29,7 @@ class UpscatteringXsec(vg.BatchIntegrand):
 		Args:
 			dim (int): integration dimensions
 			Enu (float): neutrino energy to be considered
-			ups_case (DarkNews.model.UpscatteringProcess): the upscattering class of DarkNews
+			ups_case (DarkNews.processes.UpscatteringProcess): the upscattering class of DarkNews
 			diagram (str, optional): _description_. Defaults to 'total'.
 
 		Raises:
@@ -205,11 +205,9 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 				cost = -1.0 + (2.0) * x[:, i_var]
 				i_var += 1 
 
-				params = decay_case.TheoryModel
-				vertexSQR = params.UD4**2 * (params.Ue4**2 + params.Umu4**2 + params.Utau4**2)*params.gD**2
-
+				# params.UD4**2 * (params.Ue4**2 + params.Umu4**2 + params.Utau4**2)*params.gD**2
 				self.int_dic['diff_decay_rate_0'] = dr.diff_gamma_Ni_to_Nj_V(cost=cost, 
-													vertex_ij = np.sqrt(vertexSQR), 
+													vertex_ij = np.sqrt(decay_case.Dih), 
 													mi=m_parent, 
 													mj=m_daughter, 
 													mV=mzprime, 
@@ -220,7 +218,7 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 
 				##############################################
 				# mediator decay M --> ell+ ell-
-				self.int_dic['diff_decay_rate_1'] = dr.gamma_V_to_ell_ell(vertex=const.eQED*decay_case.TheoryModel.epsilon, 
+				self.int_dic['diff_decay_rate_1'] = dr.gamma_V_to_ell_ell(vertex=decay_case.TheoryModel.deV, 
 														mV=mzprime, 
 														m_ell=decay_case.mm)\
 														*np.full_like(self.int_dic['diff_decay_rate_0'],1.0)

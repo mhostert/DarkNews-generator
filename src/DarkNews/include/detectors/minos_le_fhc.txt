@@ -4,17 +4,17 @@ fluxfile = "../fluxes/NUMI_FHC_LE.dat"
 flux_norm = 1
 erange = [
     0.1,
-    9
+    20
 ]
 nuclear_targets = [
     'C12',
     'Fe56'
 ]
-fiducial_mass = 28.6 # tons
+fiducial_mass = 28.6 # tons -- 3.57e29 nuclei (20% C and 80% Fe) from MINOS:2016yyz
 massFe = 0.8 * fiducial_mass
 massC  = 0.2 * fiducial_mass
 fiducial_mass_per_target = [
     massC, 
     massFe
 ] # tons
-POTs = 10.56e20 # in FHC + 3.36e20 in RHC
+POTs = 2.8e20 # in FHC
