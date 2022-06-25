@@ -10,6 +10,35 @@ import DarkNews as dn
 from DarkNews import logger, prettyprinter
 from DarkNews.AssignmentParser import AssignmentParser
 
+COMMON_ARGS = [
+        "m4", "m5", "m6", "mzprime", "HNLtype", 
+        "mu_tr_e4", "mu_tr_e5", "mu_tr_e6", "mu_tr_mu4", "mu_tr_mu5", "mu_tr_mu6", 
+        "mu_tr_tau4", "mu_tr_tau5", "mu_tr_tau6", "mu_tr_44", "mu_tr_45", "mu_tr_46", "mu_tr_55", "mu_tr_56",  
+        "s_e4", "s_e5", "s_e6", "s_mu4", "s_mu5", "s_mu6", "s_tau4", "s_tau5", "s_tau6", 
+        "s_44", "s_45", "s_46", "s_55", "s_56", "s_66", "mhprime","theta",
+        "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", "nu_flavors",
+        "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
+        "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "unweighed_hepevt_events", 
+        "sparse", "print_to_float32", "sample_geometry", "make_summary_plots", "path", "seed", "enforce_prompt"
+    ]
+
+THREE_PORTAL_ARGS = [
+        "gD", "epsilon","alphaD","epsilon2","chi","alpha_epsilon2",
+        "Ue4", "Ue5", "Ue6", "Umu4", "Umu5", "Umu6", "Utau4", "Utau5", "Utau6", "UD4", "UD5", "UD6"
+            ]
+
+GENERIC_MODEL_ARGS = [
+        "c_e4", "c_e5", "c_e6", "c_mu4", "c_mu5", "c_mu6", 
+        "c_tau4", "c_tau5", "c_tau6", "c_44", "c_45", "c_46", "c_55", "c_56", "c_66", 
+        "d_e4", "d_e5", "d_e6", "d_mu4", "d_mu5", "d_mu6", "d_tau4", "d_tau5", "d_tau6", 
+        "d_44", "d_45", "d_46", "d_55", "d_56", "d_66", 
+        "ceV","ceA", "cuV", "cuA", "cdV", "cdA", "deV", "deA", "duV", "duA", "ddV", "ddA", 
+        "deS", "deP", "duS", "duP", "ddS", "ddP",
+        "cprotonV", "cneutronV", "cprotonA", "cneutronA", "dprotonV", "dneutronV", "dprotonA", "dneutronA", 
+        "dprotonS", "dneutronS", "dprotonP", "dneutronP"
+        ]
+
+
 class Launcher:
 
     banner = r"""   ______           _        _   _                     
@@ -22,20 +51,11 @@ class Launcher:
     # handle parameters that can assume only certain values
     _choices = {
         "HNLtype": ["dirac", "majorana"],
-        "decay_product": ["e+e-", "mu+mu-", "photon"]
+        "decay_product": ["e+e-", "mu+mu-", "photon"],
+        "nu_flavors": ['nu_e','nu_mu','nu_tau','nu_e_bar','nu_mu_bar','nu_tau_bar']
     }
     # parameters names list
-    _common_parameters = [
-        "m4", "m5", "m6", "mzprime", "HNLtype", 
-        "mu_tr_e4", "mu_tr_e5", "mu_tr_e6", "mu_tr_mu4", "mu_tr_mu5", "mu_tr_mu6", 
-        "mu_tr_tau4", "mu_tr_tau5", "mu_tr_tau6", "mu_tr_44", "mu_tr_45", "mu_tr_46", "mu_tr_55", "mu_tr_56",  
-        "s_e4", "s_e5", "s_e6", "s_mu4", "s_mu5", "s_mu6", "s_tau4", "s_tau5", "s_tau6", 
-        "s_44", "s_45", "s_46", "s_55", "s_56", "s_66", "mhprime","theta",
-        "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", "nu_flavors",
-        "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
-        "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "unweighed_hepevt_events", 
-        "sparse", "print_to_float32", "sample_geometry", "make_summary_plots", "path", "seed", "enforce_prompt"
-    ]
+    _common_parameters = COMMON_ARGS
     _model_creator = None
 
     def __init__(self, param_file=None, **kwargs):
@@ -528,9 +548,7 @@ class GenLauncher(Launcher):
         """
 
         # parameters names list
-        self._parameters = self._common_parameters + ["gD", "epsilon","alphaD","epsilon2","chi","alpha_epsilon2",
-            "Ue4", "Ue5", "Ue6", "Umu4", "Umu5", "Umu6", "Utau4", "Utau5", "Utau6", "UD4", "UD5", "UD6"]
-
+        self._parameters = self._common_parameters + THREE_PORTAL_ARGS
         # set defaults
         self.gD = 1.0
         self.alphaD = None
@@ -566,14 +584,7 @@ class GenLauncherGeneric(Launcher):
         """
 
         # parameters names list
-        self._parameters = self._common_parameters + ["c_e4", "c_e5", "c_e6", "c_mu4", "c_mu5", "c_mu6", 
-        "c_tau4", "c_tau5", "c_tau6", "c_44", "c_45", "c_46", "c_55", "c_56", "c_66", 
-        "d_e4", "d_e5", "d_e6", "d_mu4", "d_mu5", "d_mu6", "d_tau4", "d_tau5", "d_tau6", 
-        "d_44", "d_45", "d_46", "d_55", "d_56", "d_66", 
-        "ceV","ceA", "cuV", "cuA", "cdV", "cdA", "deV", "deA", "duV", "duA", "ddV", "ddA", 
-        "deS", "deP", "duS", "duP", "ddS", "ddP",
-        "cprotonV", "cneutronV", "cprotonA", "cneutronA", "dprotonV", "dneutronV", "dprotonA", "dneutronA", 
-        "dprotonS", "dneutronS", "dprotonP", "dneutronP"]
+        self._parameters = self._common_parameters + GENERIC_MODEL_ARGS
 
         # set defaults
         self.c_e4 = 0.0
