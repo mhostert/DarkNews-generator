@@ -76,39 +76,39 @@ class HNLModel:
         self.mhprime    = None
 
         # scalar couplings
-        self.s_e4 = 0.0
-        self.s_e5 = 0.0
-        self.s_e6 = 0.0
-        self.s_mu4 = 0.0
-        self.s_mu5 = 0.0
-        self.s_mu6 = 0.0
-        self.s_tau4 = 0.0
-        self.s_tau5 = 0.0
-        self.s_tau6 = 0.0
-        self.s_44 = 0.0
-        self.s_45 = 0.0
-        self.s_46 = 0.0
-        self.s_55 = 0.0
-        self.s_56 = 0.0
-        self.s_66 = 0.0
+        self.s_e4 = None
+        self.s_e5 = None
+        self.s_e6 = None
+        self.s_mu4 = None
+        self.s_mu5 = None
+        self.s_mu6 = None
+        self.s_tau4 = None
+        self.s_tau5 = None
+        self.s_tau6 = None
+        self.s_44 = None
+        self.s_45 = None
+        self.s_46 = None
+        self.s_55 = None
+        self.s_56 = None
+        self.s_66 = None
 
         # TMM is always set in a "model-independent" way
         # TMM in GeV^-1
-        self.mu_tr_e4 = 0.0
-        self.mu_tr_e5 = 0.0
-        self.mu_tr_e6 = 0.0
-        self.mu_tr_mu4 = 0.0
-        self.mu_tr_mu5 = 0.0
-        self.mu_tr_mu6 = 0.0
-        self.mu_tr_tau4 = 0.0
-        self.mu_tr_tau5 = 0.0
-        self.mu_tr_tau6 = 0.0
-        self.mu_tr_44 = 0.0
-        self.mu_tr_45 = 0.0
-        self.mu_tr_46 = 0.0
-        self.mu_tr_55 = 0.0
-        self.mu_tr_56 = 0.0
-        self.mu_tr_66 = 0.0
+        self.mu_tr_e4 = None
+        self.mu_tr_e5 = None
+        self.mu_tr_e6 = None
+        self.mu_tr_mu4 = None
+        self.mu_tr_mu5 = None
+        self.mu_tr_mu6 = None
+        self.mu_tr_tau4 = None
+        self.mu_tr_tau5 = None
+        self.mu_tr_tau6 = None
+        self.mu_tr_44 = None
+        self.mu_tr_45 = None
+        self.mu_tr_46 = None
+        self.mu_tr_55 = None
+        self.mu_tr_56 = None
+        self.mu_tr_66 = None
 
         # Initilize nucleon couplings. These will be filled with the quark combination, which is what is actually set by the user
         self.cprotonV = None
@@ -124,7 +124,7 @@ class HNLModel:
         self.dPproton = None
         self.dPneutron = None
 
-    def initialize_spectrum(self):
+    def _initialize_spectrum(self):
         
         # Initialize spectrum
         self.nu_spectrum = [lp.nu_e, lp.nu_mu, lp.nu_tau]
@@ -159,7 +159,7 @@ class HNLModel:
         self._spectrum += f"\n\t{self.n_HNLs} {self.HNLtype} heavy neutrino(s)."
 
 
-    def update_spectrum(self):
+    def _update_spectrum(self):
 
         # mass mixing between Z' and Z
         # NOT YET FUNCTIONAL
@@ -193,67 +193,67 @@ class GenericHNLModel(HNLModel):
         super().__init__(model_file, name)
 
         # Z boson couplings
-        self.c_e4 = 0.0
-        self.c_e5 = 0.0
-        self.c_e6 = 0.0
-        self.c_mu4 = 0.0
-        self.c_mu5 = 0.0
-        self.c_mu6 = 0.0
-        self.c_tau4 = 0.0
-        self.c_tau5 = 0.0
-        self.c_tau6 = 0.0
-        self.c_44 = 0.0
-        self.c_45 = 0.0
-        self.c_46 = 0.0
-        self.c_55 = 0.0
-        self.c_56 = 0.0
-        self.c_66 = 0.0
+        self.c_e4 = None
+        self.c_e5 = None
+        self.c_e6 = None
+        self.c_mu4 = None
+        self.c_mu5 = None
+        self.c_mu6 = None
+        self.c_tau4 = None
+        self.c_tau5 = None
+        self.c_tau6 = None
+        self.c_44 = None
+        self.c_45 = None
+        self.c_46 = None
+        self.c_55 = None
+        self.c_56 = None
+        self.c_66 = None
 
         # vector couplings
-        self.d_e4 = 0.0
-        self.d_e5 = 0.0
-        self.d_e6 = 0.0
-        self.d_mu4 = 0.0
-        self.d_mu5 = 0.0
-        self.d_mu6 = 0.0
-        self.d_tau4 = 0.0
-        self.d_tau5 = 0.0
-        self.d_tau6 = 0.0
-        self.d_44 = 0.0
-        self.d_45 = 0.0
-        self.d_46 = 0.0
-        self.d_55 = 0.0
-        self.d_56 = 0.0
-        self.d_66 = 0.0
+        self.d_e4 = None
+        self.d_e5 = None
+        self.d_e6 = None
+        self.d_mu4 = None
+        self.d_mu5 = None
+        self.d_mu6 = None
+        self.d_tau4 = None
+        self.d_tau5 = None
+        self.d_tau6 = None
+        self.d_44 = None
+        self.d_45 = None
+        self.d_46 = None
+        self.d_55 = None
+        self.d_56 = None
+        self.d_66 = None
 
         ########################
         # Charge particle couplings
 
-        self.ceV = 0.0
-        self.ceA = 0.0
-        self.cuV = 0.0
-        self.cuA = 0.0
-        self.cdV = 0.0
-        self.cdA = 0.0
+        self.ceV = None
+        self.ceA = None
+        self.cuV = None
+        self.cuA = None
+        self.cdV = None
+        self.cdA = None
 
-        self.deV = 0.0
-        self.deA = 0.0
-        self.duV = 0.0
-        self.duA = 0.0
-        self.ddV = 0.0
-        self.ddA = 0.0
+        self.deV = None
+        self.deA = None
+        self.duV = None
+        self.duA = None
+        self.ddV = None
+        self.ddA = None
 
-        self.deS = 0.0
-        self.deP = 0.0
-        self.duS = 0.0
-        self.duP = 0.0
-        self.ddS = 0.0
-        self.ddP = 0.0
+        self.deS = None
+        self.deP = None
+        self.duS = None
+        self.duP = None
+        self.ddS = None
+        self.ddP = None
 
     def set_vertices(self):
 
         # initialize spectrum of HNLs
-        self.initialize_spectrum()
+        self._initialize_spectrum()
 
         ####################################################
         # SM Z boson couplings
@@ -334,7 +334,7 @@ class GenericHNLModel(HNLModel):
         if self.dneutronP is None:
             self.dneutronP = 2*self.ddP + self.duP
 
-        self.update_spectrum()
+        self._update_spectrum()
 
 
 
@@ -379,7 +379,7 @@ class ThreePortalModel(HNLModel):
         """
         
         # initialize spectrum
-        self.initialize_spectrum()
+        self._initialize_spectrum()
 
         # create the scalar couplings
         self.s_aj = np.array([\
@@ -618,7 +618,7 @@ class ThreePortalModel(HNLModel):
         self.ceS = self.costheta*const.m_e/const.vev_EW/np.sqrt(2)
         self.deS = self.sintheta*const.m_e/const.vev_EW/np.sqrt(2)
 
-        self.update_spectrum()
+        self._update_spectrum()
 
 
     def compute_rates(self):

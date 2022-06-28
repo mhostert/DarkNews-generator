@@ -22,7 +22,6 @@ prettyprinter.propagate = False
 '''
 # Definition modules
 from DarkNews.GenLauncher import GenLauncher
-from DarkNews.GenLauncher import GenLauncherGeneric
 
 from DarkNews import pdg
 from DarkNews import const

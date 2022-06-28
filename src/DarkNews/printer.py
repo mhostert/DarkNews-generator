@@ -116,8 +116,9 @@ class Printer:
 			cols = [f'{v[0]}_{v[1]}' if v[1] else f'{v[0]}' for v in self.df_for_numpy.columns.values]
 			self.array_gen = self.df_for_numpy.to_numpy(dtype=np.float64)
 
-		np.save(Path(f'{self.out_file_name}/ndarray.npy'), self.array_gen, **kwargs)
-		prettyprinter.info(f"Events in numpy array saved to file successfully:\n{self.out_file_name}")
+		filename  = Path(f'{self.out_file_name}/ndarray.npy')
+		np.save(filename, self.array_gen, **kwargs)
+		prettyprinter.info(f"Events in numpy array saved to file successfully:\n{filename}")
 		return self.array_gen
 
 
@@ -129,14 +130,14 @@ class Printer:
 
 		"""
 		# kwargs['engine']=kwargs.get('engine','pyarrow')
-		
+		filename = Path(f"{self.out_file_name}/pandas_df.parquet")
 		if self.sparse:
-			pq.write_table(pa.Table.from_pandas(self.df_sparse), Path(f"{self.out_file_name}/pandas_df.parquet"), **kwargs)
-			prettyprinter.info(f"Events in sparse pandas dataframe saved to parquet file successfully:\n{self.out_file_name}")
+			pq.write_table(pa.Table.from_pandas(self.df_sparse), filename, **kwargs)
+			prettyprinter.info(f"Events in sparse pandas dataframe saved to parquet file successfully:\n{filename}")
 			return self.df_sparse
 		else:
-			pq.write_table(pa.Table.from_pandas(self.df_gen), Path(f"{self.out_file_name}/pandas_df.parquet"), **kwargs)
-			prettyprinter.info(f"Events in pandas dataframe saved to parquet file successfully:\n{self.out_file_name}")
+			pq.write_table(pa.Table.from_pandas(self.df_gen), filename, **kwargs)
+			prettyprinter.info(f"Events in pandas dataframe saved to parquet file successfully:\n{filename}")
 			return self.df_gen
 
 	def print_events_to_pandas(self, **kwargs):
@@ -147,14 +148,15 @@ class Printer:
 			Using Dill to serialize the Model, Detector, and NuclearTarget classes to file.
 
 		"""
+		filename= Path(f'{self.out_file_name}/pandas_df.pckl')
 		if self.sparse:
-			dill.dump(self.df_sparse, open(Path(f'{self.out_file_name}/pandas_df.pckl'), 'wb'), **kwargs)
-			prettyprinter.info(f"Events in sparse pandas dataframe saved to file successfully:\n{self.out_file_name}")
+			dill.dump(self.df_sparse, open(filename, 'wb'), **kwargs)
+			prettyprinter.info(f"Events in sparse pandas dataframe saved to file successfully:\n{filename}")
 			return self.df_sparse
 		else:
 			# pickles DarkNews classes with support for lambda functions
-			dill.dump(self.df_gen, open(Path(f'{self.out_file_name}/pandas_df.pckl'), 'wb'), **kwargs)
-			prettyprinter.info(f"Events in pandas dataframe saved to file successfully:\n{self.out_file_name}")
+			dill.dump(self.df_gen, open(filename, 'wb'), **kwargs)
+			prettyprinter.info(f"Events in pandas dataframe saved to file successfully:\n{filename}")
 			return self.df_gen
 
 

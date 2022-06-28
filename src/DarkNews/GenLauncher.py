@@ -18,7 +18,7 @@ COMMON_ARGS = [
         "s_44", "s_45", "s_46", "s_55", "s_56", "s_66", "mhprime","theta",
         "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", "nu_flavors",
         "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
-        "pandas", "parquet", "numpy", "hepevt", "hepevt_unweigh", "unweighed_hepevt_events", 
+        "pandas", "parquet", "numpy", "hepevt", "hepmc3", "hepevt_unweigh", "unweighed_hepevt_events", 
         "sparse", "print_to_float32", "sample_geometry", "make_summary_plots", "path", "seed", "enforce_prompt"
     ]
 
@@ -39,7 +39,7 @@ GENERIC_MODEL_ARGS = [
         ]
 
 
-class Launcher:
+class GenLauncher:
 
     banner = r"""   ______           _        _   _                     
    |  _  \         | |      | \ | |                    
@@ -78,6 +78,23 @@ class Launcher:
             FileNotFoundError: when param_file is specified, but the path is invalid.
             ValueError: when model, exp, or generation parameters are not well defined.
         """
+
+
+        # Choose what model to initialize
+        three_portal_args = set(THREE_PORTAL_ARGS).intersection(kwargs.keys())
+        generic_args = set(GENERIC_MODEL_ARGS).intersection(kwargs.keys())
+        if len(three_portal_args) >= 0 and len(generic_args) == 0: 
+            logger.info("Initializing the three-portal model.")
+            initialize_threeportal_launcher(self)
+        elif len(three_portal_args) == 0 and len(generic_args) > 0: 
+            logger.info("Initializing a generic model.")
+            initialize_generic_launcher(self)
+        elif len(three_portal_args) > 0 and len(generic_args) > 0: 
+            logger.error(f"Generic Model paramters {generic_args} set at the same time as {three_portal_args}. Cannot mix generic and three-portal model arguments together.")
+            raise ValueError("Two types of parameters were found. You cannot mix Generic Model paramters with Three Portal Model parameters.")
+        else:
+            raise ValueError(f"Could not determine what model type to use with kwargs.keys = {kwargs.keys()}")
+
 
         # DEFAULTS
         self.m4 = 0.150
@@ -137,6 +154,7 @@ class Launcher:
         self.parquet = False
         self.numpy = False
         self.hepevt = False
+        self.hepmc3 = False
         self.hepevt_unweigh = False
         self.unweighed_hepevt_events = 100
         self.sparse = False
@@ -208,7 +226,7 @@ class Launcher:
             self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
 
         # 3+2
-        elif (self.bsm_model.m4 is not None and self.bsm_model.m5 is not None and not self.bsm_model.m6 is None):
+        elif (self.bsm_model.m4 is not None and self.bsm_model.m5 is not None and self.bsm_model.m6 is None):
             ## FIXING 3+2 process chain to be numu --> N5 --> N4
             self.upscattered_nus = [dn.pdg.neutrino5]
             self.outgoing_nus =[dn.pdg.neutrino4]
@@ -271,7 +289,7 @@ class Launcher:
 
         Args:
             **kwargs:
-                FLAVORS (list):             input flavors 
+                FLAVORS (list):             input flavors for projectiles ['nu_e','nu_mu','nu_tau','nu_e_bar','nu_mu_bar','nu_tau_bar']
                 UPSCATTERED_NUS (list):     dark NU in upscattering process
                 OUTFOING_NUS (list):        output flavors 
                 SCATTERING_REGIMES (list):  regimes of scattering process (coherent, p-el, n-el)
@@ -463,7 +481,7 @@ class Launcher:
                 logger.warning("Warning! Could not find matplotlib -- stopping the making of summary plots.")
             else:
                 self.path_to_summary_plots = Path(self.data_path)/'summary_plots/'
-                dn.plot_tools.batch_plot(self.df, self.path_to_summary_plots, title='DarKNews')
+                dn.plot_tools.batch_plot(self.df, self.path_to_summary_plots, title='DarkNews')
             logger.info(f"Plots saved in {self.path_to_summary_plots}.")
 
         # restore overwritten path
@@ -538,53 +556,35 @@ class Launcher:
 
 
 
-################ 
 # Three portal model
-class GenLauncher(Launcher):
+def initialize_threeportal_launcher(self, param_file=None, **kwargs):
+    # parameters names list
+    self._parameters = COMMON_ARGS + THREE_PORTAL_ARGS
+    # set defaults
+    self.gD = 1.0
+    self.alphaD = None
+    self.epsilon = 1e-3
+    self.epsilon2 = None
+    self.chi = None
+    self.alpha_epsilon2 = None
+    self.Ue4 = 0.0
+    self.Ue5 = 0.0
+    self.Ue6 = 0.0
+    self.Umu4 = 1e-4
+    self.Umu5 = 0.0
+    self.Umu6 = 0.0
+    self.Utau4 = 0.0
+    self.Utau5 = 0.0
+    self.Utau6 = 0.0
+    self.UD4 = 1.0
+    self.UD5 = 1.0
+    self.UD6 = 1.0
 
-    def __init__(self, param_file=None, **kwargs):
-        """
-            Same as Launcher, but for three portal model
-        """
+    self._model_creator = dn.model.create_3portal_HNL_model
 
+def initialize_generic_launcher(self):
         # parameters names list
-        self._parameters = self._common_parameters + THREE_PORTAL_ARGS
-        # set defaults
-        self.gD = 1.0
-        self.alphaD = None
-        self.epsilon = 1e-3
-        self.epsilon2 = None
-        self.chi = None
-        self.alpha_epsilon2 = None
-        self.Ue4 = 0.0
-        self.Ue5 = 0.0
-        self.Ue6 = 0.0
-        self.Umu4 = 1e-4
-        self.Umu5 = 0.0
-        self.Umu6 = 0.0
-        self.Utau4 = 0.0
-        self.Utau5 = 0.0
-        self.Utau6 = 0.0
-        self.UD4 = 1.0
-        self.UD5 = 1.0
-        self.UD6 = 1.0
-
-        self._model_creator = dn.model.create_3portal_HNL_model
-
-        super().__init__(param_file=None, **kwargs)
-
-
-################ 
-# Generic interaction model
-class GenLauncherGeneric(Launcher):
-
-    def __init__(self, param_file=None, **kwargs):
-        """
-            Same as Launcher, but for three portal model
-        """
-
-        # parameters names list
-        self._parameters = self._common_parameters + GENERIC_MODEL_ARGS
+        self._parameters = COMMON_ARGS + GENERIC_MODEL_ARGS
 
         # set defaults
         self.c_e4 = 0.0
@@ -636,19 +636,19 @@ class GenLauncherGeneric(Launcher):
         self.ddS = 0.0
         self.ddP = 0.0
         
-        self.cprotonV = 0.0
-        self.cneutronV = 0.0
-        self.cprotonA = 0.0
-        self.cneutronA = 0.0
-        self.dprotonV = 0.0
-        self.dneutronV = 0.0
-        self.dprotonA = 0.0
-        self.dneutronA = 0.0
-        self.dprotonS = 0.0
-        self.dneutronS = 0.0
-        self.dprotonP = 0.0
-        self.dneutronP = 0.0
+        self.cprotonV = None
+        self.cneutronV = None
+        self.cprotonA = None
+        self.cneutronA = None
+        self.dprotonV = None
+        self.dneutronV = None
+        self.dprotonA = None
+        self.dneutronA = None
+        self.dprotonS = None
+        self.dneutronS = None
+        self.dprotonP = None
+        self.dneutronP = None
         
         self._model_creator = dn.model.create_generic_HNL_model
 
-        super().__init__(param_file=None, **kwargs)
+
