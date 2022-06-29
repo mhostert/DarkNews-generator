@@ -13,6 +13,7 @@ from . import Cfourvec as Cfv
 import pyarrow.parquet as pq
 import pyarrow as pa
 
+import pyhepmc_ng as hep
 
 def print_in_order(x):
     return ' '.join(f'{t:.8E}' for t in list(x))
@@ -20,7 +21,7 @@ def print_in_order(x):
 
 class Printer:
 
-	def __init__(self, df_gen, data_path=None, sparse=False, print_to_float32=False):
+	def __init__(self, df_gen, data_path=None, sparse=False, print_to_float32=False, decay_product='e+e-'):
 		"""
 		Main printer of DarkNews. Can print events contained in the pandas dataframe to files of various types.
 
@@ -36,10 +37,13 @@ class Printer:
 			print_to_float32 (bool, optional): If true downgrade floats to float32 to save storage space. Only relevant when sparse is True.
 												Defaults to False.
 
+			decay_product (str, optional): what decay products are being used. Choices = ["e+e-", "mu+mu-", "photon"]. Defaults to 'e+e-'.
+
 		"""
 		
 		# main DataFrame
 		self.df_gen = df_gen
+		self.decay_product = decay_product
 		
 		if data_path:
 			self.data_path = data_path
@@ -57,6 +61,8 @@ class Printer:
 		if self._print_to_float32:
 			self.print_to_float32 = self._print_to_float32
 		
+		self._kinematics_in_np_arrays = False
+
 	@property
 	def sparse(self):
 		return self._sparse
@@ -184,10 +190,271 @@ class Printer:
 		return self.df_gen.filter(AccEntries, axis=0).reset_index()
 
 
+	def _prepare_kinematics(self, unweigh=False, unweighed_hep_events=None):
+		""" pre compute the numpy arrays from dataframe to speed up hepmc priting routines. 
+
+		Args:
+			unweigh (bool, optional): _description_. Defaults to False.
+			unweighed_hep_events (_type_, optional): _description_. Defaults to None.
+		"""
+
+		if self._kinematics_in_np_arrays:
+			# Unweigh events down to unweighed_hep_events?
+			if unweigh:
+				df_gen = self.get_unweighted_events(nevents = unweighed_hep_events)
+			else:
+				df_gen = self.df_gen
+
+
+			# sample size (# of events)
+			self.tot_events_to_print = min(len(self.df_gen.index),unweighed_hep_events)
+
+			if not 'pos_scatt' in self.df_gen.columns:
+
+				self.df_gen['pos_scatt', '0'] = np.zeros((self.tot_events_to_print, 0))
+				self.df_gen['pos_scatt', '1'] = np.zeros((self.tot_events_to_print, 0))
+				self.df_gen['pos_scatt', '2'] = np.zeros((self.tot_events_to_print, 0))
+				self.df_gen['pos_scatt', '3'] = np.zeros((self.tot_events_to_print, 0))
+
+			if not 'pos_decay' in self.df_gen.columns:
+
+				self.df_gen['pos_decay', '0'] = self.df_gen['pos_scatt', '0']
+				self.df_gen['pos_decay', '1'] = self.df_gen['pos_scatt', '1']
+				self.df_gen['pos_decay', '2'] = self.df_gen['pos_scatt', '2']
+				self.df_gen['pos_decay', '3'] = self.df_gen['pos_scatt', '3']
+
+
+			# pre-computing some variables
+
+			self.mass_projectile = Cfv.mass(self.df_gen['P_projectile'].to_numpy())
+			self.mass_target = Cfv.mass(self.df_gen['P_target'].to_numpy())
+			self.mass_decay_N_parent = Cfv.mass(self.df_gen['P_decay_N_parent'].to_numpy())
+			self.mass_recoil = Cfv.mass(self.df_gen['P_recoil'].to_numpy())
+			self.mass_decay_N_daughter = Cfv.mass(self.df_gen['P_decay_N_daughter'].to_numpy())
+			self.mass_decay_N_daughter[np.isnan(self.mass_decay_N_daughter)] = 0.0
+			self.mass_decay_ell_minus = Cfv.mass(self.df_gen['P_decay_ell_minus'].to_numpy())
+			self.mass_decay_ell_plus = Cfv.mass(self.df_gen['P_decay_ell_plus'].to_numpy())
+
+			self.pvec_projectile = self.df_gen['P_projectile'].to_numpy()
+			self.pvec_target = self.df_gen['P_target'].to_numpy()
+			self.pvec_decay_N_parent = self.df_gen['P_decay_N_parent'].to_numpy()
+			self.pvec_recoil = self.df_gen['P_recoil'].to_numpy()
+			self.pvec_decay_N_daughter = self.df_gen['P_decay_N_daughter'].to_numpy()
+			
+			if  self.decay_product == 'e+e-' or self.decay_product == 'mu+mu-':
+				self.pvec_decay_ell_minus = self.df_gen['P_decay_ell_minus'].to_numpy()
+				self.pvec_decay_ell_plus = self.df_gen['P_decay_ell_plus'].to_numpy()
+			if  self.decay_product == 'photon':
+				self.pvec_decay_photon = self.df_gen['P_decay_photon'].to_numpy()
+
+			self.pvec_pos_decay = self.df_gen['pos_decay'].to_numpy()
+			self.pvec_pos_scatt = self.df_gen['pos_scatt'].to_numpy()
+
+			# string to be saved to file
+			self.projectile_flavor = int(lp.nu_mu.pdgid)
+			if self.decay_product == 'e+e-':
+				self.id_lepton_minus = int(lp.e_minus.pdgid)
+				self.id_lepton_plus = int(lp.e_plus.pdgid)
+			elif self.decay_product == 'mu+mu-':
+				self.id_lepton_minus = int(lp.mu_minus.pdgid)
+				self.id_lepton_plus = int(lp.mu_plus.pdgid)
+			elif self.decay_product == 'photon':
+				pass
+			else:
+				logger.warning(f'Decay product {self.decay_product} not recognized, assuming it to be e+e-.')
+				self.id_lepton_minus = int(lp.e_minus.pdgid)
+				self.id_lepton_plus = int(lp.e_plus.pdgid)
+
+			# kinematics converted already
+			self._kinematics_in_np_arrays = True
+
+
+		# # sample size (# of events)
+		# tot_events_to_print = len(df_gen.index)
+
+		# if not 'pos_scatt' in df_gen.columns:
+		# 	logger.debug("DEBUG: enforcing pos_scatt = 0")
+		# 	df_gen['pos_scatt', '0'] = np.zeros((tot_events_to_print, 0))
+		# 	df_gen['pos_scatt', '1'] = np.zeros((tot_events_to_print, 0))
+		# 	df_gen['pos_scatt', '2'] = np.zeros((tot_events_to_print, 0))
+		# 	df_gen['pos_scatt', '3'] = np.zeros((tot_events_to_print, 0))
+
+		# if not 'pos_decay' in df_gen.columns:
+		# 	logger.debug("DEBUG: enforcing pos_decay = pos_scatt")
+		# 	df_gen['pos_decay', '0'] = df_gen['pos_scatt', '0']
+		# 	df_gen['pos_decay', '1'] = df_gen['pos_scatt', '1']
+		# 	df_gen['pos_decay', '2'] = df_gen['pos_scatt', '2']
+		# 	df_gen['pos_decay', '3'] = df_gen['pos_scatt', '3']
+
+
+		# # pre-computing some variables
+
+		# mass_projectile = Cfv.mass(df_gen['P_projectile'].to_numpy())
+		# mass_target = Cfv.mass(df_gen['P_target'].to_numpy())
+		# mass_decay_N_parent = Cfv.mass(df_gen['P_decay_N_parent'].to_numpy())
+		# mass_recoil = Cfv.mass(df_gen['P_recoil'].to_numpy())
+		# mass_decay_N_daughter = Cfv.mass(df_gen['P_decay_N_daughter'].to_numpy())
+
+		# pvec_projectile = df_gen['P_projectile'][['1','2','3']].to_numpy()
+		# pvec_target = df_gen['P_target'][['1','2','3']].to_numpy()
+		# pvec_decay_N_parent = df_gen['P_decay_N_parent'][['1','2','3']].to_numpy()
+		# pvec_recoil = df_gen['P_recoil'][['1','2','3']].to_numpy()
+		# pvec_decay_N_daughter = df_gen['P_decay_N_daughter'][['1','2','3']].to_numpy()
+		# pvec_decay_ell_minus = df_gen['P_decay_ell_minus'][['1','2','3']].to_numpy()
+		# pvec_decay_ell_plus = df_gen['P_decay_ell_plus'][['1','2','3']].to_numpy()
+
+
+		# pvec_pos_decay = df_gen['pos_decay'][['1','2','3']].to_numpy()
+		# pvec_pos_scatt = df_gen['pos_scatt'][['1','2','3']].to_numpy()
+
+
+		# projectile_flavor = int(lp.nu_mu.pdgid)
+		# if decay_product == 'e+e-':
+		# 	id_lepton_minus = int(lp.e_minus.pdgid)
+		# 	id_lepton_plus = int(lp.e_plus.pdgid)
+		# elif decay_product == 'mu+mu-':
+		# 	id_lepton_minus = int(lp.mu_minus.pdgid)
+		# 	id_lepton_plus = int(lp.mu_plus.pdgid)
+		# else:
+		# 	id_lepton_minus = int(lp.e_minus.pdgid)
+		# 	id_lepton_plus = int(lp.e_plus.pdgid)
+		# 	logger.warning(f'Decay product {decay_product} not recognized, assuming it to be e+e-.')
+
+
+	def print_events_to_hepevt(self, filename=None, unweigh=False, unweighed_hep_events=100):
+		if not unweigh:
+			logger.warning("WARNING: HEPevt is not a lossless format -- you will lose the event weights. \
+			If you want to force-print weights, use the hepevt_legacy format instead. \
+			Otherwise, please set unweigh=True and set the desired number of unweighted events.")
+		# HEPevt file name
+		if filename:
+			hep_path = filename
+		else:
+			hep_path = Path(f'{self.out_file_name}/HEPevt.dat')
+		self._pyhepmc_printer(hep.WriterHEPEVT(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
+	
+	def print_events_to_hepmc2(self, filename=None, unweigh=False, unweighed_hep_events=100):
+		# HEPevt file name
+		if filename:
+			hep_path = filename
+		else:
+			hep_path = Path(f'{self.out_file_name}/HEPevt.hepmc2')
+		self._pyhepmc_printer(hep.WriterAsciiHepMC2(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
+	
+	def print_events_to_hepmc3(self, filename=None, unweigh=False, unweighed_hep_events=100):
+		# HEPevt file name
+		if filename:
+			hep_path = filename
+		else:
+			hep_path = Path(f'{self.out_file_name}/HEPevt.hepmc3')
+		self._pyhepmc_printer(hep.WriterAscii(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
+
+
+	def _pyhepmc_printer(self, hep_writer, unweigh=False, unweighed_hep_events=100):
+		""" Use pyhepmc to print events to standard HEP formats. 
+
+		Args:
+			hep_writer (an instance of a hep writer bindings): of one of the following types: WriterHEPEVT, WriterAsciiHepMC2, WriterAscii
+			unweigh (bool, optional): if true, unweigh events. Defaults to False.
+			unweighed_hep_events (int, optional): if unweight is true, use this value to determine how many unweighted events to print. Defaults to 100.
+
+		Events are printed using the numpy arrays that have obtained from the pandas dataframe. This speeds up the printing process
+		Four momenta are printed following the convention:
+			
+			px py pz e pdgid status_code
+
+			status_code is defined as:
+				0 Not defined (null entry) Not a meaningful status
+				1 Undecayed physical particle Recommended for all cases
+				2 Decayed physical particle Recommended for all cases
+				3 Documentation line Often used to indicate
+				in/out particles in hard process
+				4 Incoming beam particle Recommended for all cases
+				5-10 Reserved for future standards Should not be used
+				11-200 Generator-dependent For generator usage
+				201- Simulation-dependent For simulation software usage
+				
+
+		"""
+
+		# pre-compute kinematics with numpy for faster index access
+		self._prepare_kinematics(unweig=unweigh, unweighed_hep_events=unweighed_hep_events)
+
+		# converting Lorentz order -- px, py, pz, E
+		hep_order = [1,2,3,0]
+
+		# name of the weights -- w_event_rate, w_flux_avg_xsec, w_decay_rate_0 (, w_decay_rate_1)
+		df_weight_names = [name for name in list(self.df_gen.columns.levels[0]) if 'w' in name]
+
+		# for i in range(df.index[-1]):
+		for i in range(unweighed_hep_events):
+			evt = hep.GenEvent(hep.Units.GEV, hep.Units.CM)
+			evt.event_number = i
+
+			#### Upscattering process 
+			p1 = hep.GenParticle(self.pvec_projectile[i,hep_order], self.projectile_flavor,  4)
+			p1.generated_mass = self.mass_projectile[i]
+			evt.add_particle(p1)
+
+			p2 = hep.GenParticle(self.pvec_target[i,hep_order], int(self.df_gen['target_pdgid',''].to_numpy()[i]),  4)
+			p2.generated_mass = self.mass_target[i]
+			evt.add_particle(p2)
+
+			p3 = hep.GenParticle(self.pvec_decay_N_parent[i,hep_order], int(pdg.neutrino5.pdgid),  2)
+			p3.generated_mass = self.mass_decay_N_parent[i]
+			evt.add_particle(p3)
+
+			p4 = hep.GenParticle(self.pvec_recoil[i,hep_order], int(self.df_gen['target_pdgid',''].to_numpy()[i]),  2)
+			p4.generated_mass = self.mass_recoil[i]
+			evt.add_particle(p4)
+
+			v1 = hep.GenVertex((self.pvec_pos_scatt[i,hep_order]))
+			v1.add_particle_in(p1)
+			v1.add_particle_in(p2)
+			v1.add_particle_out(p3)
+			v1.add_particle_out(p4)
+			
+
+			#### Decay of HNL
+			pnu = hep.GenParticle(self.pvec_decay_N_daughter[i,hep_order], int(pdg.neutrino4.pdgid),  1)
+			pnu.generated_mass = self.mass_decay_N_daughter[i]
+			evt.add_particle(pnu)
+			v2 = hep.GenVertex((self.pvec_pos_decay[i,hep_order]))
+			v2.add_particle_in(p3)
+			v2.add_particle_out(pnu)
+
+			if self.decay_product == 'e+e-' or self.decay_product == 'mu+mu-':
+				pep = hep.GenParticle(self.pvec_decay_ell_plus[i,hep_order], int(self.id_lepton_plus),  1)
+				pep.generated_mass = self.mass_decay_ell_plus[i]
+				evt.add_particle(pep)
+				pem = hep.GenParticle(self.pvec_decay_ell_minus[i,hep_order], int(self.id_lepton_minus),  1)
+				pem.generated_mass = self.mass_decay_ell_minus[i]
+				evt.add_particle(pem)
+				
+				v2.add_particle_out(pep)
+				v2.add_particle_out(pem)
+
+			elif self.decay_product == 'photon':
+				pphoton = hep.GenParticle(self.pvec_decay_photon[i,hep_order], int(lp.photon.pdgid),  1)
+				pphoton.generated_mass = 0.0
+
+				v2.add_particle_out(pphoton)
+			
+			# now add the scattering and decay vertices 
+			evt.add_vertex(v1)
+			evt.add_vertex(v2)
+
+			if not unweigh:
+				evt.run_info = hep.GenRunInfo()
+				evt.run_info.weight_names = df_weight_names
+				evt.weights = [self.df_gen[name,''].to_numpy()[i] for name in df_weight_names]
+
+			# write event to file using the chosen hep writer (HEPevt, hepmc2 or 3)
+			hep_writer.write(evt)
 
 
 
-	def print_events_to_HEPEVT(self, filename=None, unweigh=False, max_events=100, sparse=False, decay_product='e+e-'):
+	def print_events_to_hepevt_legacy(self, filename=None, unweigh=False, unweighed_hep_events=100, sparse=False):
 		'''
 			Print events to HEPevt format.
 
@@ -218,98 +485,41 @@ class Printer:
 
 		'''
 
-		# Unweigh events down to max_events?
-		if unweigh:
-			df_gen = self.get_unweighted_events(nevents = max_events)
-		else:
-			df_gen = self.df_gen
-
-		# sample size (# of events)
-		tot_events_to_print = len(df_gen.index)
-
-		if not 'pos_scatt' in df_gen.columns:
-			logger.debug("DEBUG: enforcing pos_scatt = 0")
-			df_gen['pos_scatt', '0'] = np.zeros((tot_events_to_print, 0))
-			df_gen['pos_scatt', '1'] = np.zeros((tot_events_to_print, 0))
-			df_gen['pos_scatt', '2'] = np.zeros((tot_events_to_print, 0))
-			df_gen['pos_scatt', '3'] = np.zeros((tot_events_to_print, 0))
-
-		if not 'pos_decay' in df_gen.columns:
-			logger.debug("DEBUG: enforcing pos_decay = pos_scatt")
-			df_gen['pos_decay', '0'] = df_gen['pos_scatt', '0']
-			df_gen['pos_decay', '1'] = df_gen['pos_scatt', '1']
-			df_gen['pos_decay', '2'] = df_gen['pos_scatt', '2']
-			df_gen['pos_decay', '3'] = df_gen['pos_scatt', '3']
-
-
-		# pre-computing some variables
-
-		mass_projectile = Cfv.mass(df_gen['P_projectile'].to_numpy())
-		mass_target = Cfv.mass(df_gen['P_target'].to_numpy())
-		mass_decay_N_parent = Cfv.mass(df_gen['P_decay_N_parent'].to_numpy())
-		mass_recoil = Cfv.mass(df_gen['P_recoil'].to_numpy())
-		mass_decay_N_daughter = Cfv.mass(df_gen['P_decay_N_daughter'].to_numpy())
-
-		pvec_projectile = df_gen['P_projectile'][['1','2','3']].to_numpy()
-		pvec_target = df_gen['P_target'][['1','2','3']].to_numpy()
-		pvec_decay_N_parent = df_gen['P_decay_N_parent'][['1','2','3']].to_numpy()
-		pvec_recoil = df_gen['P_recoil'][['1','2','3']].to_numpy()
-		pvec_decay_N_daughter = df_gen['P_decay_N_daughter'][['1','2','3']].to_numpy()
-		pvec_decay_ell_minus = df_gen['P_decay_ell_minus'][['1','2','3']].to_numpy()
-		pvec_decay_ell_plus = df_gen['P_decay_ell_plus'][['1','2','3']].to_numpy()
-
-
-		pvec_pos_decay = df_gen['pos_decay'][['1','2','3']].to_numpy()
-		pvec_pos_scatt = df_gen['pos_scatt'][['1','2','3']].to_numpy()
-
-		# string to be saved to file
-		hepevt_string = ''
-		hepevt_string += f"{tot_events_to_print}\n"
-
-		projectile_flavor = int(lp.nu_mu.pdgid)
-		if decay_product == 'e+e-':
-			id_lepton_minus = int(lp.e_minus.pdgid)
-			id_lepton_plus = int(lp.e_plus.pdgid)
-		elif decay_product == 'mu+mu-':
-			id_lepton_minus = int(lp.mu_minus.pdgid)
-			id_lepton_plus = int(lp.mu_plus.pdgid)
-		else:
-			id_lepton_minus = int(lp.e_minus.pdgid)
-			id_lepton_plus = int(lp.e_plus.pdgid)
-			logger.warning(f'Decay product {decay_product} not recognized, assuming it to be e+e-.')
+		# pre-compute kinematics with numpy for faster index access
+		self._prepare_kinematics(unweig=unweigh, unweighed_hep_events=unweighed_hep_events)
 
 		lines=[]
 		# loop over events
-		for i in df_gen.index:
+		for i in self.df_gen.index:
 			
 			# no particles & event id
 			if unweigh:
 				lines.append(f"{i} 7\n")
 			else:
-				lines.append(f"{i} 7 {df_gen['w_event_rate',''].to_numpy()[i]:.8E}\n")
+				lines.append(f"{i} 7 {self.df_gen['w_event_rate',''].to_numpy()[i]:.8E}\n")
 
 			# scattering inital states
 			lines.append((	# Projectile
 						f"0 "
-						f" {projectile_flavor}"
+						f" {self.projectile_flavor}"
 						f" 0 0 0 0"
-						f" {print_in_order(pvec_projectile[i])}"
-						f" {df_gen['P_projectile','0'].to_numpy()[i]:.8E}"
-						f" {mass_projectile[i]:.8E}"
-						f" {print_in_order(pvec_pos_scatt[i])}"
-						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
+						f" {print_in_order(self.pvec_projectile[i])}"
+						f" {self.df_gen['P_projectile','0'].to_numpy()[i]:.8E}"
+						f" {self.mass_projectile[i]:.8E}"
+						f" {print_in_order(self.pvec_pos_scatt[i])}"
+						f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
 						"\n"
 						))
 						
 			lines.append((	# Target
 						f"0 "
-						f" {int(df_gen['target_pdgid',''].to_numpy()[i])}"
+						f" {int(self.df_gen['target_pdgid',''].to_numpy()[i])}"
 						f" 0 0 0 0"
-						f" {print_in_order(pvec_target[i])}"
-						f" {df_gen['P_target','0'].to_numpy()[i]:.8E}"
-						f" {mass_target[i]:.8E}"
-						f" {print_in_order(pvec_pos_scatt[i])}"
-						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
+						f" {print_in_order(self.pvec_target[i])}"
+						f" {self.df_gen['P_target','0'].to_numpy()[i]:.8E}"
+						f" {self.mass_target[i]:.8E}"
+						f" {print_in_order(self.pvec_pos_scatt[i])}"
+						f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
 						"\n"
 						))
 
@@ -318,23 +528,23 @@ class Printer:
 						f"0 "
 						f" {int(pdg.neutrino5.pdgid)}"
 						f" 0 0 0 0"
-						f" {print_in_order(pvec_decay_N_parent[i])}"
-						f" {df_gen['P_decay_N_parent','0'].to_numpy()[i]:.8E}"
-						f" {mass_decay_N_parent[i]:.8E}"
-						f" {print_in_order(pvec_pos_scatt[i])}"
-						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
+						f" {print_in_order(self.pvec_decay_N_parent[i])}"
+						f" {self.df_gen['P_decay_N_parent','0'].to_numpy()[i]:.8E}"
+						f" {self.mass_decay_N_parent[i]:.8E}"
+						f" {print_in_order(self.pvec_pos_scatt[i])}"
+						f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
 						"\n"
 						))
 
 			lines.append((	# recoiled target
 						f"0 "
-						f" {int(df_gen['target_pdgid',''].to_numpy()[i])}"
+						f" {int(self.df_gen['target_pdgid',''].to_numpy()[i])}"
 						f" 0 0 0 0"
-						f" {print_in_order(pvec_recoil[i])}"
-						f" {df_gen['P_recoil','0'].to_numpy()[i]:.8E}"
-						f" {mass_recoil[i]:.8E}"
-						f" {print_in_order(pvec_pos_scatt[i])}"
-						f" {df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
+						f" {print_in_order(self.pvec_recoil[i])}"
+						f" {self.df_gen['P_recoil','0'].to_numpy()[i]:.8E}"
+						f" {self.mass_recoil[i]:.8E}"
+						f" {print_in_order(self.pvec_pos_scatt[i])}"
+						f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
 						'\n'
 						))
 
@@ -343,39 +553,45 @@ class Printer:
 						f"0 "
 						f" {int(pdg.nulight.pdgid)}"
 						f" 0 0 0 0"
-						f" {print_in_order(pvec_decay_N_daughter[i])}"
-						f" {df_gen['P_decay_N_daughter','0'].to_numpy()[i]:.8E}"
-						f" {mass_decay_N_daughter[i]:.8E}"
-						f" {print_in_order(pvec_pos_decay[i])}"
-						f" {df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
+						f" {print_in_order(self.pvec_decay_N_daughter[i])}"
+						f" {self.df_gen['P_decay_N_daughter','0'].to_numpy()[i]:.8E}"
+						f" {self.mass_decay_N_daughter[i]:.8E}"
+						f" {print_in_order(self.pvec_pos_decay[i])}"
+						f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
 						'\n'
 						))
 
 			lines.append((	# electron
 						f"1 "
-						f" {id_lepton_minus}"
+						f" {self.id_lepton_minus}"
 						f" 0 0 0 0"
-						f" {print_in_order(pvec_decay_ell_minus[i])}"
-						f" {df_gen['P_decay_ell_minus','0'].to_numpy()[i]:.8E}"
+						f" {print_in_order(self.pvec_decay_ell_minus[i])}"
+						f" {self.df_gen['P_decay_ell_minus','0'].to_numpy()[i]:.8E}"
 						f" {const.m_e:.8E}"
-						f" {print_in_order(pvec_pos_decay[i])}"
-						f" {df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
+						f" {print_in_order(self.pvec_pos_decay[i])}"
+						f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
 						"\n"
 						))
 
 			lines.append((	# positron
 						f"1 "
-						f" {id_lepton_plus}"
+						f" {self.id_lepton_plus}"
 						f" 0 0 0 0"
-						f" {print_in_order(pvec_decay_ell_plus[i])}"
-						f" {df_gen['P_decay_ell_plus','0'].to_numpy()[i]:.8E}"
+						f" {print_in_order(self.pvec_decay_ell_plus[i])}"
+						f" {self.df_gen['P_decay_ell_plus','0'].to_numpy()[i]:.8E}"
 						f" {const.m_e:.8E}"
-						f" {print_in_order(pvec_pos_decay[i])}"
-						f" {df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
+						f" {print_in_order(self.pvec_pos_decay[i])}"
+						f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
 						"\n"
 						))
 
 		
+
+		# string to be saved to file
+		hepevt_string = ''
+		hepevt_string += f"{self.tot_events_to_print}\n"
+
+
 		# HEPevt file name
 		if filename:
 			hepevt_file_name=filename

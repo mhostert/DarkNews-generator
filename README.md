@@ -399,7 +399,7 @@ HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughte
 
 #### Additional Attributes
 
-We also make use of the `attrs` property of the pandas dataframe to save the respective Model() and Detector() classes used in the generation. 
+We also make use of the `attrs` property of the pandas dataframe to save the respective HNLModel() and Detector() classes used in the generation. 
 
 
 ### The event generator engine

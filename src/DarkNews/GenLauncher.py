@@ -18,7 +18,8 @@ COMMON_ARGS = [
         "s_44", "s_45", "s_46", "s_55", "s_56", "s_66", "mhprime","theta",
         "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", "nu_flavors",
         "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
-        "pandas", "parquet", "numpy", "hepevt", "hepmc3", "hepevt_unweigh", "unweighed_hepevt_events", 
+        "pandas", "parquet", "numpy", "hepevt", "hepevt_legacy", "hepmc2", "hepmc3", 
+        "hep_unweigh", "unweighed_hep_events", 
         "sparse", "print_to_float32", "sample_geometry", "make_summary_plots", "path", "seed", "enforce_prompt"
     ]
 
@@ -154,9 +155,11 @@ class GenLauncher:
         self.parquet = False
         self.numpy = False
         self.hepevt = False
+        self.hepevt_legacy = False
+        self.hepmc2 = False
         self.hepmc3 = False
-        self.hepevt_unweigh = False
-        self.unweighed_hepevt_events = 100
+        self.hep_unweigh = False
+        self.unweighed_hep_events = 100
         self.sparse = False
         self.print_to_float32 = False
         self.sample_geometry = False
@@ -190,8 +193,8 @@ class GenLauncher:
 
         prettyprinter.info(self.banner)
 
-        if self.hepevt_unweigh:
-            logger.warning(f'Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hepevt events. Currently: n_unweighted/n_eval = {self.unweighed_hepevt_events/self.neval*100}%.')
+        if self.hep_unweigh:
+            logger.warning(f'Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hep-formatted events. Currently: n_unweighed/n_eval = {self.unweighed_hep_events/self.neval*100}%.')
 
         #########################
         # Set BSM parameters
@@ -459,17 +462,21 @@ class GenLauncher:
 
         ############################################################################
         # Print events to file
-        self.dn_printer = dn.printer.Printer(self.df, sparse=self.sparse, print_to_float32=self.print_to_float32)
+        self.dn_printer = dn.printer.Printer(self.df, sparse=self.sparse, print_to_float32=self.print_to_float32, decay_product=self.decay_product)
         if self.pandas:
             self.dn_printer.print_events_to_pandas()
         if self.parquet:
             self.dn_printer.print_events_to_parquet()
         if self.numpy:
             self.dn_printer.print_events_to_ndarray()
+        if self.hepevt_legacy:
+            self.dn_printer.print_events_to_hepevt_legacy(unweigh= self.hep_unweigh, max_events=self.unweighed_hep_events)
+        if self.hepmc2:
+            self.dn_printer.print_events_to_hepmc2(unweigh= self.hep_unweigh, max_events=self.unweighed_hep_events)
+        if self.hepmc3:
+            self.dn_printer.print_events_to_hepmc3(unweigh= self.hep_unweigh, max_events=self.unweighed_hep_events)
         if self.hepevt:
-            self.dn_printer.print_events_to_HEPEVT(unweigh= self.hepevt_unweigh, 
-                                                    max_events=self.unweighed_hepevt_events,
-                                                    decay_product=self.decay_product)
+            self.dn_printer.print_events_to_hepevt(unweigh= self.hep_unweigh, max_events=self.unweighed_hep_events)
 
         #############################################################################
         # Make summary plots?

@@ -1,5 +1,7 @@
+import os
 import pytest
 import numpy as np
+import pandas as pd
 from particle import literals as lp
 from DarkNews import const
 from DarkNews.GenLauncher import GenLauncher
@@ -13,15 +15,19 @@ def SM_gen():
     gen = GenLauncher(gD=0.0, Umu4=1e-3, epsilon=0.0, m4=0.01, loglevel='ERROR', neval=1000, seed=42)
     return gen.run()
 
+# use command line and make summary plots
+@pytest.fixture(scope='session')
+def gen_SM_from_script():
+    os.system("dn_gen --gD=0.0 --Umu4=1e-3 --epsilon=0.0 --m4=0.01 --loglevel='ERROR' --neval=1000 --seed=42 --path=./test_generation --make_summary_plots")
+    df_p = pd.read_pickle('test_generation/pandas_df.pckl')
+    return df_p
 
 @pytest.fixture(scope='session')
 def light_DP_gen_all_outputs():
 
     gen = GenLauncher(mzprime=0.03, m4=0.420, neval=1000, exp="miniboone_fhc", loglevel='ERROR',
                         parquet=True, numpy=True, hepevt=True, sparse=True, print_to_float32=True, **MODEL_KWARGS)
-
     return gen.run()
-
 
 @pytest.fixture(scope='session')
 def gen_simplest_benchmarks():
@@ -37,7 +43,6 @@ def gen_simplest_benchmarks():
     df_TMM = gen.run()
 
     return df_light, df_heavy, df_TMM
-
 
 @pytest.fixture(scope='session')
 def gen_other_final_states():
@@ -57,6 +62,3 @@ def gen_other_final_states():
     df_TMM_photon = gen.run()
 
     return df_light, df_heavy, df_TMM_mumu, df_TMM_photon
-
-
-

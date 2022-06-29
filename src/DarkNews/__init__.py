@@ -2,6 +2,9 @@ import sys
 from pathlib import Path
 local_dir = Path(__file__).parent
 
+'''
+    Initializing loggers
+'''
 import logging
 # for debug and error handling
 logger = logging.getLogger(__name__+'.logger')
@@ -15,6 +18,7 @@ if not prettyprinter.hasHandlers():
     prettyprinter.addHandler(handler)
 logger.propagate = False
 prettyprinter.propagate = False
+
 
 '''
     These definition modules make import of main DarkNews classes easier.

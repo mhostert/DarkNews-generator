@@ -76,7 +76,7 @@ def get_hist(ax):
 
 
 
-def histogram1D(plotname, obs, w, XLABEL, TITLE, nbins, regime=None, colors=None, legends=None, rasterized = True, TMIN=None, TMAX=None,):
+def histogram1D(plotname, obs, w, XLABEL, TITLE, nbins, regime=None, colors=None, legends=None, rasterized = True, TMIN=None, TMAX=None):
 
     fsize = 10
     fig = plt.figure()
@@ -94,7 +94,7 @@ def histogram1D(plotname, obs, w, XLABEL, TITLE, nbins, regime=None, colors=None
     if regime and not legends:
         legends = [f'case {i}' for i in range(nregimes)]
     if regime and not colors:
-        color = cm.rainbow(np.linspace(0, 1, n))
+        color = cm.rainbow(np.linspace(0, 1, nregimes))
         colors = [c for c in color]
 
     if regime:

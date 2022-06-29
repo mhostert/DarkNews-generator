@@ -12,26 +12,6 @@ from DarkNews import decay_rates as dr
 def create_3portal_HNL_model(**kwargs):
 
     bsm_model = ThreePortalModel()
-
-    # if 'gD' in kwargs.keys() and 'alphaD' in kwargs.keys():
-    #     logger.error(f"Error! Two values of dark coupling were specified: gD = {kwargs['gD']} and alphaD = {kwargs['alphaD']}")
-    #     raise AttributeError('Can only set the dark coupling in one way.')
-    # if 'alphaD' in kwargs.keys():
-    #     kwargs['gD'] = np.sqrt(4*np.pi*kwargs['alphaD'])
-    # else:
-    #     kwargs['gD'] = 1.0
-
-    # if (np.array([(key in kwargs.keys())  for key in ['epsilon','epsilon2','chi','alpha_epsilon2']]) ).sum() > 1:
-    #     logger.error(f"Error! Two values of kinetic mixing were specified: {np.intersect1d(['epsilon','epsilon2','chi','alpha_epsilon2'], list(kwargs.keys()))}")
-    #     raise AttributeError('Can only set kinetic mixing in one way.')
-    # elif 'epsilon2' in kwargs.keys():
-    #     kwargs['epsilon'] = np.sqrt(kwargs['epsilon2'])
-    # elif 'chi' in kwargs.keys():
-    #     kwargs['epsilon'] = kwargs['chi']*const.cw
-    # elif 'alpha_epsilon2' in kwargs.keys():
-    #     kwargs['epsilon'] = np.sqrt(kwargs['alpha_epsilon2']/const.alphaQED)
-    # else:
-    #     kwargs['epsilon'] = 1e-2
     
     # update the attributes of the model with user-defined parameters
     bsm_model.__dict__.update(kwargs)
@@ -403,11 +383,9 @@ class ThreePortalModel(HNLModel):
 
         prettyprinter.info(f"Model:{self._spectrum}")
 
-        ####################################################
-        # CHARGED FERMION VERTICES 
-        # all the following is true to leading order in chi
+        #### Assign the correct value of kinetic mixing and gD given user input
         
-        # Kinetic mixing 
+        #### Kinetic mixing 
         if self.chi is not None:
             self.epsilon = self.epsilon*const.cw
         elif self.epsilon2 is not None:
@@ -425,6 +403,8 @@ class ThreePortalModel(HNLModel):
         elif self.gD is not None:
             pass
 
+        #### CHARGED FERMION VERTICES 
+        # all the following is true to leading order in chi
         self.tanchi = math.tan(self.chi)
         self.sinof2chi  = 2*self.tanchi/(1.0+self.tanchi**2)
         self.cosof2chi  = (1.0 - self.tanchi**2)/(1.0+self.tanchi**2)
@@ -469,7 +449,6 @@ class ThreePortalModel(HNLModel):
         self.cdA = self._weak_vertex*(-(self.cbeta + self.sbeta*const.sw*self.tanchi)/2.0)
 
 
-        # if not self.minimal:
         self.deV = self._weak_vertex*(3.0/2.0 * self.cbeta * const.sw * self.tanchi - self.sbeta*(-0.5 + 2*const.s2w))
         self.deA = self._weak_vertex*((self.sbeta - self.cbeta * const.sw * self.tanchi)/2.0)
         # self.deV = const.gweak/(2*const.cw) * 2*const.sw*const.cw**2*self.chi
@@ -498,7 +477,7 @@ class ThreePortalModel(HNLModel):
         self.Utau = [0,0,1,self.Utau4, self.Utau5, self.Utau6]
         self.Udark = [0,0,0,self.UD4, self.UD5, self.UD6]
 
-        ##### FIX-ME -- expand to arbitrary number of dark flavors.
+        ##### FIX-ME -- expand to arbitrary number of dark flavors?
         self.n_dark_HNLs= 1#self.n_HNLs
         # list of dark flavors 
         self.inds_dark = range(const.ind_tau+1,3+self.n_dark_HNLs)
@@ -596,9 +575,8 @@ class ThreePortalModel(HNLModel):
         self.sintheta = np.sin(self.theta)
         self.costheta = np.cos(self.theta)
         
-        # light quark couplings determine higgs coupling to nucleon 
+        #### light quark couplings determine higgs coupling to nucleon 
         # see e.g. arxiv.org/abs/1306.4710
-
         self.sigma_l = 0.058 # GeV
         self.sigma_0 = 0.055 # GeV
         z = 1.49 # isospin breaking parameter
@@ -621,184 +599,184 @@ class ThreePortalModel(HNLModel):
         self._update_spectrum()
 
 
-    def compute_rates(self):
+    # def compute_rates(self):
         
-            ## FIX ME -- GENERALIZE TO N5 and N6
-            ##################
-            # Neutrino 4
-            mh = self.m4
-            rates = {}
-            neutrinos = [lp.nu_e, lp.nu_mu, lp.nu_tau]
+    #         ## FIX ME -- GENERALIZE TO N5 and N6
+    #         ##################
+    #         # Neutrino 4
+    #         mh = self.m4
+    #         rates = {}
+    #         neutrinos = [lp.nu_e, lp.nu_mu, lp.nu_tau]
 
-            # channels with 3 neutrinos in final state
-            rates['nu_nu_nu'] = 0.0
-            for nu_a in neutrinos:
-                rates['nu_nu_nu'] += dr.nui_nuj_nuk_nuk(self, const.N4, nu_a)
+    #         # channels with 3 neutrinos in final state
+    #         rates['nu_nu_nu'] = 0.0
+    #         for nu_a in neutrinos:
+    #             rates['nu_nu_nu'] += dr.nui_nuj_nuk_nuk(self, const.N4, nu_a)
 
-            # channels with 1 neutrino in final states
-            rates['nu_gamma'] = 0
-            rates['nu_e_e'] = 0
-            rates['nu_mu_mu'] = 0
-            rates['nu_e_mu'] = 0
-            rates['nu_pi'] = 0 
-            rates['nu_eta'] = 0
-            rates['e_pi'] = 0
-            rates['e_K'] = 0
-            rates['mu_pi'] = 0
-            rates['mu_K'] = 0
+    #         # channels with 1 neutrino in final states
+    #         rates['nu_gamma'] = 0
+    #         rates['nu_e_e'] = 0
+    #         rates['nu_mu_mu'] = 0
+    #         rates['nu_e_mu'] = 0
+    #         rates['nu_pi'] = 0 
+    #         rates['nu_eta'] = 0
+    #         rates['e_pi'] = 0
+    #         rates['e_K'] = 0
+    #         rates['mu_pi'] = 0
+    #         rates['mu_K'] = 0
 
-            for nu_a in neutrinos:          # nu gamma 
-                rates['nu_gamma'] += dr.nui_nuj_gamma(self, const.N4, nu_a)
-                # dileptons -- already contains the Delta L = 2 channel
-                if mh > 2*lp.e_minus.mass/1e3:
-                    rates['nu_e_e'] += dr.nui_nuj_ell1_ell2(self, const.N4, nu_a, lp.e_minus, lp.e_plus)
-                if mh > lp.e_minus.mass/1e3 + lp.mu_minus.mass/1e3:
-                    rates['nu_e_mu'] += dr.nui_nuj_ell1_ell2(self, const.N4, nu_a, lp.e_minus, lp.mu_plus)
-                    rates['nu_e_mu'] += dr.nui_nuj_ell1_ell2(self, const.N4, nu_a, lp.mu_minus, lp.e_plus)
-                if mh > 2*lp.mu_minus.mass/1e3:
-                    rates['nu_mu_mu'] += dr.nui_nuj_ell1_ell2(self, const.N4, nu_a, lp.mu_minus, lp.mu_plus)
-                # pseudoscalar -- neutral current
-                if mh > lp.pi_0.mass/1e3:
-                    rates['nu_pi'] += dr.nui_nu_P(self, const.N4, nu_a, lp.pi_0)
-                if mh > lp.eta.mass/1e3:
-                    rates['nu_eta'] += dr.nui_nu_P(self, const.N4, nu_a, lp.eta)
+    #         for nu_a in neutrinos:          # nu gamma 
+    #             rates['nu_gamma'] += dr.nui_nuj_gamma(self, const.N4, nu_a)
+    #             # dileptons -- already contains the Delta L = 2 channel
+    #             if mh > 2*lp.e_minus.mass/1e3:
+    #                 rates['nu_e_e'] += dr.nui_nuj_ell1_ell2(self, const.N4, nu_a, lp.e_minus, lp.e_plus)
+    #             if mh > lp.e_minus.mass/1e3 + lp.mu_minus.mass/1e3:
+    #                 rates['nu_e_mu'] += dr.nui_nuj_ell1_ell2(self, const.N4, nu_a, lp.e_minus, lp.mu_plus)
+    #                 rates['nu_e_mu'] += dr.nui_nuj_ell1_ell2(self, const.N4, nu_a, lp.mu_minus, lp.e_plus)
+    #             if mh > 2*lp.mu_minus.mass/1e3:
+    #                 rates['nu_mu_mu'] += dr.nui_nuj_ell1_ell2(self, const.N4, nu_a, lp.mu_minus, lp.mu_plus)
+    #             # pseudoscalar -- neutral current
+    #             if mh > lp.pi_0.mass/1e3:
+    #                 rates['nu_pi'] += dr.nui_nu_P(self, const.N4, nu_a, lp.pi_0)
+    #             if mh > lp.eta.mass/1e3:
+    #                 rates['nu_eta'] += dr.nui_nu_P(self, const.N4, nu_a, lp.eta)
                 
 
-            # CC-only channels  
-            # pseudoscalar -- factor of 2 for delta L=2 channel 
-            if mh > lp.e_minus.mass/1e3+lp.pi_plus.mass/1e3:
-                rates['e_pi'] = dr.nui_l_P(self, const.N4, lp.e_minus, lp.pi_plus)
-            if mh > lp.e_minus.mass/1e3+lp.K_plus.mass/1e3:
-                rates['e_K'] = dr.nui_l_P(self, const.N4, lp.e_minus, lp.K_plus)
+    #         # CC-only channels  
+    #         # pseudoscalar -- factor of 2 for delta L=2 channel 
+    #         if mh > lp.e_minus.mass/1e3+lp.pi_plus.mass/1e3:
+    #             rates['e_pi'] = dr.nui_l_P(self, const.N4, lp.e_minus, lp.pi_plus)
+    #         if mh > lp.e_minus.mass/1e3+lp.K_plus.mass/1e3:
+    #             rates['e_K'] = dr.nui_l_P(self, const.N4, lp.e_minus, lp.K_plus)
             
-            # pseudoscalar -- already contain the Delta L = 2 channel
-            if mh > lp.mu_minus.mass/1e3+lp.pi_plus.mass/1e3:
-                rates['mu_pi'] = dr.nui_l_P(self, const.N4, lp.mu_minus, lp.pi_plus)
-            if mh > lp.mu_minus.mass/1e3+lp.K_plus.mass/1e3:
-                rates['mu_K'] = dr.nui_l_P(self, const.N4, lp.mu_minus, lp.K_plus)
+    #         # pseudoscalar -- already contain the Delta L = 2 channel
+    #         if mh > lp.mu_minus.mass/1e3+lp.pi_plus.mass/1e3:
+    #             rates['mu_pi'] = dr.nui_l_P(self, const.N4, lp.mu_minus, lp.pi_plus)
+    #         if mh > lp.mu_minus.mass/1e3+lp.K_plus.mass/1e3:
+    #             rates['mu_K'] = dr.nui_l_P(self, const.N4, lp.mu_minus, lp.K_plus)
         
-            self.rates = rates          
+    #         self.rates = rates          
 
-            # total decay rate
-            self.rate_total = sum(self.rates.values())
+    #         # total decay rate
+    #         self.rate_total = sum(self.rates.values())
 
-            # total decay rate
-            self.lifetime = const.get_decay_rate_in_s(self.rate_total)
-            self.ctau0 = const.get_decay_rate_in_cm(self.rate_total)
+    #         # total decay rate
+    #         self.lifetime = const.get_decay_rate_in_s(self.rate_total)
+    #         self.ctau0 = const.get_decay_rate_in_cm(self.rate_total)
 
-            # Branchin ratios
-            brs = {}
-            for channel in self.rates.keys():
-                brs[channel] = self.rates[channel]/self.rate_total
-            self.brs = brs
+    #         # Branchin ratios
+    #         brs = {}
+    #         for channel in self.rates.keys():
+    #             brs[channel] = self.rates[channel]/self.rate_total
+    #         self.brs = brs
 
 
-class HNLparticle():
+# class HNLparticle():
 
-    def __init__(self, this_hnl, bsm_model):
+#     def __init__(self, this_hnl, bsm_model):
 
-        self.this_hnl = this_hnl
-        self.bsm_model = bsm_model
+#         self.this_hnl = this_hnl
+#         self.bsm_model = bsm_model
         
-        # Dirac or Majorana
-        self.HNLtype    = bsm_model.HNLtype
+#         # Dirac or Majorana
+#         self.HNLtype    = bsm_model.HNLtype
 
-        self.mHNL = bsm_model.masses[get_HNL_index(this_hnl)]
-
-
-    def _setup_rates(self):
-
-        self.rates = {}
-        self.daughter_neutrinos = self.bsm_model.nu_spectrum[:pdg.get_HNL_index(self.this_hnl)]
+#         self.mHNL = bsm_model.masses[get_HNL_index(this_hnl)]
 
 
-        # Setting all decay BRs to 0
-        for nu_i in self.daughter_neutrinos:
-            for nu_j in self.daughter_neutrinos:
-                for nu_k in self.daughter_neutrinos:
-                    self.rates[f'{nu_i.name}_{nu_j.name}_{nu_k.name}'] = 0
-            self.rates[f'{nu_i.name}_{lp.gamma.name}']                     = 0
-            self.rates[f'{nu_i.name}_{lp.e_plus.name}_{lp.e_minus.name}']  = 0
-            self.rates[f'{nu_i.name}_{lp.mu_plus.name}_{lp.e_minus.name}'] = 0
-            self.rates[f'{nu_i.name}_{lp.e_plus.name}_{lp.mu_minus.name}'] = 0
-            self.rates[f'{nu_i.name}_{mu_plus.name}_{mu_minus.name}']      = 0
-            self.rates[f'{nu_i.name}_{lp.pi_0.name}']                      = 0
-            self.rates[f'{nu_i.name}_{lp.eta.name}']                       = 0
-            self.rates[f'{lp.e_minus.name}_{lp.pi_plus.name}']             = 0
-            self.rates[f'{lp.e_plus.name}_{lp.pi_minus.name}']             = 0
-            self.rates[f'{lp.e_minus.name}_{lp.K_plus.name}']              = 0
-            self.rates[f'{lp.e_plus.name}_{lp.K_minus.name}']              = 0
-            self.rates[f'{lp.mu_minus.name}_{lp.pi_plus.name}']            = 0
-            self.rates[f'{lp.mu_plus.name}_{lp.pi_minus.name}']            = 0
-            self.rates[f'{lp.mu_minus.name}_{lp.K_plus.name}']             = 0
-            self.rates[f'{lp.mu_plus.name}_{lp.K_minus.name}']             = 0
+#     def _setup_rates(self):
+
+#         self.rates = {}
+#         self.daughter_neutrinos = self.bsm_model.nu_spectrum[:pdg.get_HNL_index(self.this_hnl)]
+
+
+#         # Setting all decay BRs to 0
+#         for nu_i in self.daughter_neutrinos:
+#             for nu_j in self.daughter_neutrinos:
+#                 for nu_k in self.daughter_neutrinos:
+#                     self.rates[f'{nu_i.name}_{nu_j.name}_{nu_k.name}'] = 0
+#             self.rates[f'{nu_i.name}_{lp.gamma.name}']                     = 0
+#             self.rates[f'{nu_i.name}_{lp.e_plus.name}_{lp.e_minus.name}']  = 0
+#             self.rates[f'{nu_i.name}_{lp.mu_plus.name}_{lp.e_minus.name}'] = 0
+#             self.rates[f'{nu_i.name}_{lp.e_plus.name}_{lp.mu_minus.name}'] = 0
+#             self.rates[f'{nu_i.name}_{mu_plus.name}_{mu_minus.name}']      = 0
+#             self.rates[f'{nu_i.name}_{lp.pi_0.name}']                      = 0
+#             self.rates[f'{nu_i.name}_{lp.eta.name}']                       = 0
+#             self.rates[f'{lp.e_minus.name}_{lp.pi_plus.name}']             = 0
+#             self.rates[f'{lp.e_plus.name}_{lp.pi_minus.name}']             = 0
+#             self.rates[f'{lp.e_minus.name}_{lp.K_plus.name}']              = 0
+#             self.rates[f'{lp.e_plus.name}_{lp.K_minus.name}']              = 0
+#             self.rates[f'{lp.mu_minus.name}_{lp.pi_plus.name}']            = 0
+#             self.rates[f'{lp.mu_plus.name}_{lp.pi_minus.name}']            = 0
+#             self.rates[f'{lp.mu_minus.name}_{lp.K_plus.name}']             = 0
+#             self.rates[f'{lp.mu_plus.name}_{lp.K_minus.name}']             = 0
        
 
-    def compute_rates(self):
+#     def compute_rates(self):
         
 
-        #################
-        mh = self.mHNL
+#         #################
+#         mh = self.mHNL
 
-        # channels with 3 neutrinos in final state
-        for nu_i in self.daughter_neutrinos:
-            for nu_j in self.daughter_neutrinos:
-                for nu_k in self.daughter_neutrinos:
-                    self.rates[f'{nu_i.name}_{nu_j.name}_{nu_k.name}'] += dr.new_nuh_nui_nuj_nuk(
-                                                                    self.bsm_model, 
-                                                                    initial_neutrino=self.particle,
-                                                                    final_neutrinoi=nu_a,
-                                                                    final_neutrinoj=nu_b,
-                                                                    final_neutrinok=nu_c)
-        for nu_i in self.daughter_neutrinos:          
-            # nu gamma 
-            self.rates[f'{nu_i.name}_{lp.gamma.name}'] += dr.nui_nuj_gamma(self.bsm_model, self.this_hnl, nu_i)
-            # dileptons -- already contains the Delta L = 2 channel
-            # e+e-
-            if mh > 2*lp.e_minus.mass/1e3:
-                self.rates[f'{nu_i.name}_{lp.e_plus.name}_{lp.e_minus.name}'] += dr.nui_nuj_ell1_ell2(self.bsm_model, self.this_hnl, nu_i, lp.e_minus, lp.e_plus)
-            # e+ mu- and # e- mu+
-            if mh > lp.e_minus.mass/1e3 + lp.mu_minus.mass/1e3:
-                self.rates[f'{nu_i.name}_{lp.mu_plus.name}_{lp.e_minus.name}'] += dr.nui_nuj_ell1_ell2(self.bsm_model, self.this_hnl, nu_i, lp.e_minus, lp.mu_plus)
-                self.rates[f'{nu_i.name}_{lp.e_plus.name}_{lp.mu_minus.name}'] += dr.nui_nuj_ell1_ell2(self.bsm_model, self.this_hnl, nu_i, lp.mu_minus, lp.e_plus)
-            # mu+ mu- 
-            if mh > 2*lp.mu_minus.mass/1e3:
-                self.rates[f'{nu_i.name}_{mu_plus.name}_{mu_minus.name}'] += dr.nui_nuj_ell1_ell2(self.bsm_model, self.this_hnl, nu_i, lp.mu_minus, lp.mu_plus)
-            # pseudoscalar -- neutral current
-            if mh > lp.pi_0.mass/1e3:
-                self.rates[f'{nu_i.name}_{lp.pi_0.name}'] += dr.nui_nu_P(self.bsm_model, self.this_hnl, nu_i, lp.pi_0)
-            if mh > lp.eta.mass/1e3:
-                self.rates[f'{nu_i.name}_{lp.eta.name}'] += dr.nui_nu_P(self.bsm_model, self.this_hnl, nu_i, lp.eta)
+#         # channels with 3 neutrinos in final state
+#         for nu_i in self.daughter_neutrinos:
+#             for nu_j in self.daughter_neutrinos:
+#                 for nu_k in self.daughter_neutrinos:
+#                     self.rates[f'{nu_i.name}_{nu_j.name}_{nu_k.name}'] += dr.new_nuh_nui_nuj_nuk(
+#                                                                     self.bsm_model, 
+#                                                                     initial_neutrino=self.particle,
+#                                                                     final_neutrinoi=nu_a,
+#                                                                     final_neutrinoj=nu_b,
+#                                                                     final_neutrinok=nu_c)
+#         for nu_i in self.daughter_neutrinos:          
+#             # nu gamma 
+#             self.rates[f'{nu_i.name}_{lp.gamma.name}'] += dr.nui_nuj_gamma(self.bsm_model, self.this_hnl, nu_i)
+#             # dileptons -- already contains the Delta L = 2 channel
+#             # e+e-
+#             if mh > 2*lp.e_minus.mass/1e3:
+#                 self.rates[f'{nu_i.name}_{lp.e_plus.name}_{lp.e_minus.name}'] += dr.nui_nuj_ell1_ell2(self.bsm_model, self.this_hnl, nu_i, lp.e_minus, lp.e_plus)
+#             # e+ mu- and # e- mu+
+#             if mh > lp.e_minus.mass/1e3 + lp.mu_minus.mass/1e3:
+#                 self.rates[f'{nu_i.name}_{lp.mu_plus.name}_{lp.e_minus.name}'] += dr.nui_nuj_ell1_ell2(self.bsm_model, self.this_hnl, nu_i, lp.e_minus, lp.mu_plus)
+#                 self.rates[f'{nu_i.name}_{lp.e_plus.name}_{lp.mu_minus.name}'] += dr.nui_nuj_ell1_ell2(self.bsm_model, self.this_hnl, nu_i, lp.mu_minus, lp.e_plus)
+#             # mu+ mu- 
+#             if mh > 2*lp.mu_minus.mass/1e3:
+#                 self.rates[f'{nu_i.name}_{mu_plus.name}_{mu_minus.name}'] += dr.nui_nuj_ell1_ell2(self.bsm_model, self.this_hnl, nu_i, lp.mu_minus, lp.mu_plus)
+#             # pseudoscalar -- neutral current
+#             if mh > lp.pi_0.mass/1e3:
+#                 self.rates[f'{nu_i.name}_{lp.pi_0.name}'] += dr.nui_nu_P(self.bsm_model, self.this_hnl, nu_i, lp.pi_0)
+#             if mh > lp.eta.mass/1e3:
+#                 self.rates[f'{nu_i.name}_{lp.eta.name}'] += dr.nui_nu_P(self.bsm_model, self.this_hnl, nu_i, lp.eta)
 
 
-        # CC-only channels  
-        # pseudoscalar 
-        if mh > lp.e_minus.mass/1e3+lp.pi_plus.mass/1e3:
-            self.rates[f'{lp.e_minus.name}_{lp.pi_plus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.e_minus, lp.pi_plus)
-            self.rates[f'{lp.e_plus.name}_{lp.pi_minus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.e_plus, lp.pi_minus)
-        if mh > lp.e_minus.mass/1e3+lp.K_plus.mass/1e3:
-            self.rates[f'{lp.e_minus.name}_{lp.K_plus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.e_minus, lp.K_plus)
-            self.rates[f'{lp.e_plus.name}_{lp.K_minus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.e_plus, lp.K_minus)
+#         # CC-only channels  
+#         # pseudoscalar 
+#         if mh > lp.e_minus.mass/1e3+lp.pi_plus.mass/1e3:
+#             self.rates[f'{lp.e_minus.name}_{lp.pi_plus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.e_minus, lp.pi_plus)
+#             self.rates[f'{lp.e_plus.name}_{lp.pi_minus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.e_plus, lp.pi_minus)
+#         if mh > lp.e_minus.mass/1e3+lp.K_plus.mass/1e3:
+#             self.rates[f'{lp.e_minus.name}_{lp.K_plus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.e_minus, lp.K_plus)
+#             self.rates[f'{lp.e_plus.name}_{lp.K_minus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.e_plus, lp.K_minus)
         
-        # pseudoscalar
-        if mh > lp.mu_minus.mass/1e3+lp.pi_plus.mass/1e3:
-            self.rates[f'{lp.mu_minus.name}_{lp.pi_plus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.mu_minus, lp.pi_plus)
-            self.rates[f'{lp.mu_plus.name}_{lp.pi_minus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.mu_plus, lp.pi_minus)
-        if mh > lp.mu_minus.mass/1e3+lp.K_plus.mass/1e3:
-            self.rates[f'{lp.mu_minus.name}_{lp.K_plus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.mu_minus, lp.K_plus)
-            self.rates[f'{lp.mu_plus.name}_{lp.K_minus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.mu_plus, lp.K_minus)
+#         # pseudoscalar
+#         if mh > lp.mu_minus.mass/1e3+lp.pi_plus.mass/1e3:
+#             self.rates[f'{lp.mu_minus.name}_{lp.pi_plus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.mu_minus, lp.pi_plus)
+#             self.rates[f'{lp.mu_plus.name}_{lp.pi_minus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.mu_plus, lp.pi_minus)
+#         if mh > lp.mu_minus.mass/1e3+lp.K_plus.mass/1e3:
+#             self.rates[f'{lp.mu_minus.name}_{lp.K_plus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.mu_minus, lp.K_plus)
+#             self.rates[f'{lp.mu_plus.name}_{lp.K_minus.name}'] = nui_l_P(self.bsm_model, self.this_hnl, lp.mu_plus, lp.K_minus)
        
 
-        # total decay rate
-        self.rate_total = sum(self.rates.values())
+#         # total decay rate
+#         self.rate_total = sum(self.rates.values())
 
-        # total decay rate
-        self.lifetime = const.get_decay_rate_in_s(self.rate_total)
-        self.ctau0 = const.get_decay_rate_in_cm(self.rate_total)
+#         # total decay rate
+#         self.lifetime = const.get_decay_rate_in_s(self.rate_total)
+#         self.ctau0 = const.get_decay_rate_in_cm(self.rate_total)
 
-        # branching ratios
-        brs = {}
-        for channel in self.rates.keys():
-            brs[channel] = self.rates[channel]/self.rate_total
-        self.brs = brs
+#         # branching ratios
+#         brs = {}
+#         for channel in self.rates.keys():
+#             brs[channel] = self.rates[channel]/self.rate_total
+#         self.brs = brs
 
