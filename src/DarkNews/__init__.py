@@ -1,5 +1,5 @@
-import importlib.metadata
-__version__ = importlib.metadata.version('DarkNews')
+__version__ = '0.0.1'
+VERSION = __version__
 
 import sys 
 from pathlib import Path
