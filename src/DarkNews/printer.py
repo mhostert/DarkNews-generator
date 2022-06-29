@@ -122,7 +122,7 @@ class Printer:
 			cols = [f'{v[0]}_{v[1]}' if v[1] else f'{v[0]}' for v in self.df_for_numpy.columns.values]
 			self.array_gen = self.df_for_numpy.to_numpy(dtype=np.float64)
 
-		filename  = Path(f'{self.out_file_name}/ndarray.npy')
+		filename  = Path(f'{self.out_file_name}/ndarray.npy').__str__()
 		np.save(filename, self.array_gen, **kwargs)
 		prettyprinter.info(f"Events in numpy array saved to file successfully:\n{filename}")
 		return self.array_gen
@@ -136,7 +136,7 @@ class Printer:
 
 		"""
 		# kwargs['engine']=kwargs.get('engine','pyarrow')
-		filename = Path(f"{self.out_file_name}/pandas_df.parquet")
+		filename = Path(f"{self.out_file_name}/pandas_df.parquet").__str__()
 		if self.sparse:
 			pq.write_table(pa.Table.from_pandas(self.df_sparse), filename, **kwargs)
 			prettyprinter.info(f"Events in sparse pandas dataframe saved to parquet file successfully:\n{filename}")
@@ -154,7 +154,7 @@ class Printer:
 			Using Dill to serialize the Model, Detector, and NuclearTarget classes to file.
 
 		"""
-		filename= Path(f'{self.out_file_name}/pandas_df.pckl')
+		filename= Path(f'{self.out_file_name}/pandas_df.pckl').__str__()
 		if self.sparse:
 			dill.dump(self.df_sparse, open(filename, 'wb'), **kwargs)
 			prettyprinter.info(f"Events in sparse pandas dataframe saved to file successfully:\n{filename}")
@@ -198,7 +198,7 @@ class Printer:
 			unweighed_hep_events (_type_, optional): _description_. Defaults to None.
 		"""
 
-		if self._kinematics_in_np_arrays:
+		if not self._kinematics_in_np_arrays:
 			# Unweigh events down to unweighed_hep_events?
 			if unweigh:
 				df_gen = self.get_unweighted_events(nevents = unweighed_hep_events)
@@ -330,7 +330,7 @@ class Printer:
 		if filename:
 			hep_path = filename
 		else:
-			hep_path = Path(f'{self.out_file_name}/HEPevt.dat')
+			hep_path = Path(f'{self.out_file_name}/HEPevt.dat').__str__()
 		self._pyhepmc_printer(hep.WriterHEPEVT(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
 	
 	def print_events_to_hepmc2(self, filename=None, unweigh=False, unweighed_hep_events=100):
@@ -338,7 +338,7 @@ class Printer:
 		if filename:
 			hep_path = filename
 		else:
-			hep_path = Path(f'{self.out_file_name}/HEPevt.hepmc2')
+			hep_path = Path(f'{self.out_file_name}/HEPevt.hepmc2').__str__()
 		self._pyhepmc_printer(hep.WriterAsciiHepMC2(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
 	
 	def print_events_to_hepmc3(self, filename=None, unweigh=False, unweighed_hep_events=100):
@@ -346,7 +346,7 @@ class Printer:
 		if filename:
 			hep_path = filename
 		else:
-			hep_path = Path(f'{self.out_file_name}/HEPevt.hepmc3')
+			hep_path = Path(f'{self.out_file_name}/HEPevt.hepmc3').__str__()
 		self._pyhepmc_printer(hep.WriterAscii(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
 
 
@@ -378,13 +378,18 @@ class Printer:
 		"""
 
 		# pre-compute kinematics with numpy for faster index access
-		self._prepare_kinematics(unweig=unweigh, unweighed_hep_events=unweighed_hep_events)
+		self._prepare_kinematics(unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
 
 		# converting Lorentz order -- px, py, pz, E
 		hep_order = [1,2,3,0]
 
+		ri =  hep.GenRunInfo()
+		from . import __version__
+		ri.tools = [('DarkNews', __version__, 'DarkNews upscattering engine')] 
+
 		# name of the weights -- w_event_rate, w_flux_avg_xsec, w_decay_rate_0 (, w_decay_rate_1)
 		df_weight_names = [name for name in list(self.df_gen.columns.levels[0]) if 'w' in name]
+		ri.weight_names=df_weight_names
 
 		# for i in range(df.index[-1]):
 		for i in range(unweighed_hep_events):
@@ -444,9 +449,8 @@ class Printer:
 			evt.add_vertex(v1)
 			evt.add_vertex(v2)
 
+			evt.run_info = ri
 			if not unweigh:
-				evt.run_info = hep.GenRunInfo()
-				evt.run_info.weight_names = df_weight_names
 				evt.weights = [self.df_gen[name,''].to_numpy()[i] for name in df_weight_names]
 
 			# write event to file using the chosen hep writer (HEPevt, hepmc2 or 3)
@@ -486,7 +490,7 @@ class Printer:
 		'''
 
 		# pre-compute kinematics with numpy for faster index access
-		self._prepare_kinematics(unweig=unweigh, unweighed_hep_events=unweighed_hep_events)
+		self._prepare_kinematics(unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
 
 		lines=[]
 		# loop over events
@@ -594,9 +598,9 @@ class Printer:
 
 		# HEPevt file name
 		if filename:
-			hepevt_file_name=filename
+			hepevt_file_name=Path(filename).__str__()
 		else:
-			hepevt_file_name = f"{Path(f'{self.out_file_name}/HEPevt.dat')}"
+			hepevt_file_name = Path(f'{self.out_file_name}/HEPevt.dat').__str__()
 
 		f = open(hepevt_file_name,"w+") 
 		# print events

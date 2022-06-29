@@ -1,3 +1,6 @@
+import importlib.metadata
+__version__ = importlib.metadata.version('DarkNews')
+
 import sys 
 from pathlib import Path
 local_dir = Path(__file__).parent
