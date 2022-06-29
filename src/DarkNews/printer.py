@@ -97,7 +97,11 @@ class Printer:
 		for col in df_gen.columns.levels[0]:
 			if '_ell_' in col or '_photon' in col or 'w_decay' in col or 'w_event' in col or 'N_parent' in col:
 				keep_cols.append(col)
-		return df_gen[keep_cols].drop([('P_projectile','1'),('P_projectile','2'),('P_projectile','3')], axis=1)
+		
+		# remove unused levels of MultiIndex
+		df = df_gen[keep_cols].drop([('P_projectile','1'),('P_projectile','2'),('P_projectile','3')], axis=1)
+		df.columns = df.columns.remove_unused_levels()
+		return df
 			
 
 	def print_events_to_ndarray(self, **kwargs):
@@ -115,10 +119,10 @@ class Printer:
 			cols = [f'{v[0]}_{v[1]}' if v[1] else f'{v[0]}' for v in self.df_sparse.columns.values]
 		else:
 			# convert to numeric values
-			self.df_gen.loc[self.df_gen['helicity']=='conserving', 'helicity'] = +1
-			self.df_gen.loc[self.df_gen['helicity']=='flipping', 'helicity'] = -1
+			self.df_gen.loc[self.df_gen['helicity']=='conserving', 'helicity'] = '+1'
+			self.df_gen.loc[self.df_gen['helicity']=='flipping', 'helicity'] = '-1'
 			# remove non-numeric entries
-			self.df_for_numpy = self.df_gen.drop(['underlying_process','target','scattering_regime'],axis=1, level=0) 
+			self.df_for_numpy = self.df_gen.drop(['underlying_process','target','scattering_regime'],axis=1, level=0)
 			cols = [f'{v[0]}_{v[1]}' if v[1] else f'{v[0]}' for v in self.df_for_numpy.columns.values]
 			self.array_gen = self.df_for_numpy.to_numpy(dtype=np.float64)
 
@@ -338,7 +342,7 @@ class Printer:
 		if filename:
 			hep_path = filename
 		else:
-			hep_path = Path(f'{self.out_file_name}/HEPevt.hepmc2').__str__()
+			hep_path = Path(f'{self.out_file_name}/hep_ascii.hepmc2').__str__()
 		self._pyhepmc_printer(hep.WriterAsciiHepMC2(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
 	
 	def print_events_to_hepmc3(self, filename=None, unweigh=False, unweighed_hep_events=100):
@@ -346,7 +350,7 @@ class Printer:
 		if filename:
 			hep_path = filename
 		else:
-			hep_path = Path(f'{self.out_file_name}/HEPevt.hepmc3').__str__()
+			hep_path = Path(f'{self.out_file_name}/hep_ascii.hepmc3').__str__()
 		self._pyhepmc_printer(hep.WriterAscii(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
 
 

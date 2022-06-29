@@ -1,0 +1,25 @@
+digraph "event 1" {
+	node [shape=point]
+	-1
+	-2
+	in_0 [style=invis]
+	in_0 -> -1 [label="nu(mu)
+0.29 GeV"]
+	in_1 [style=invis]
+	in_1 -> -1 [label="p
+0.94 GeV"]
+	-1 -> -2 [label="new particle
+0.25 GeV"]
+	out_0 [style=invis]
+	-1 -> out_0 [label="p
+0.97 GeV"]
+	out_1 [style=invis]
+	-2 -> out_1 [label="e+
+0.078 GeV"]
+	out_2 [style=invis]
+	-2 -> out_2 [label="e-
+0.13 GeV"]
+	out_3 [style=invis]
+	-2 -> out_3 [label="new particle
+0.045 GeV"]
+}

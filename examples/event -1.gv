@@ -1,0 +1,3 @@
+digraph "event -1" {
+	node [shape=point]
+}

@@ -24,7 +24,7 @@ def dn_gen():
 
 
     kwargs = vars(parser.parse_args())
-    print(kwargs.keys())
+
     gen_object = GenLauncher(**kwargs)
     gen_object.run(
         loglevel=kwargs.get("loglevel", gen_object.loglevel),
