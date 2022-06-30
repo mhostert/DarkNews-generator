@@ -252,7 +252,7 @@ In the following there are the main rules to specify the parameters:
 * When using mathematical expression, the following rules should be applied:
     * numbers can be specified as usual: `5` is integer, `5.0` is float (but `5.` will result in an error), `5e10` is the float number 5*10^10
     * `+`, `-`, `*`, `/` are the usual mathematical operators;
-    * `^` is used to make powers
+    * `^` is used to make powers (do not use `**`);
     * it is possible to use round brackets `(` and `)`
     * `e` (case-insensitive, isolated: not inside float numbers) is understood as python `math.e = 2.718281828`
     * `pi` (case-insensitive) is understood as `math.pi = 3.1415926535`
