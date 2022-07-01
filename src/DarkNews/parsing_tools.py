@@ -174,7 +174,7 @@ def add_scope_arguments(parser, DEFAULTS):
     parser.add_argument("--noHC", help="do not include helicity conserving events", action="store_true")
     parser.add_argument("--noHF", help="do not include helicity flipping events", action="store_true")
 
-    parser.add_argument('--nu_flavors', type=str.lower, action='store', nargs='+', choices=DEFAULTS._choices['nu_flavors'])
+    parser.add_argument('--nu_flavors', type=list, action='store', nargs='+', choices=DEFAULTS._choices['nu_flavors'])
 
 
 

@@ -25,14 +25,14 @@ def gen_SM_from_script():
 @pytest.fixture(scope='session')
 def light_DP_gen_all_outputs():
 
-    gen = GenLauncher(mzprime=0.03, m4=0.420, neval=1000, exp="miniboone_fhc", loglevel='ERROR',
+    gen = GenLauncher(mzprime=0.03, m4=0.420, neval=1000, exp="miniboone_fhc", loglevel='ERROR', seed=42,
                         parquet=True, numpy=True, hepevt=True, hepevt_legacy=True, hepmc2=True, hepmc3=True, **MODEL_KWARGS)
     return gen.run()
 
 @pytest.fixture(scope='session')
 def light_DP_gen_all_outputs_sparse():
 
-    gen = GenLauncher(mzprime=0.03, m4=0.425, neval=1000, exp="miniboone_fhc", loglevel='ERROR',
+    gen = GenLauncher(mzprime=0.03, m4=0.425, neval=1000, exp="miniboone_fhc", loglevel='ERROR', seed=42,
                         parquet=True, numpy=True, hepevt=True,  hepevt_legacy=True, hepmc2=True, hepmc3=True, sparse=True, print_to_float32=True, **MODEL_KWARGS)
     return gen.run()
 
