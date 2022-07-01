@@ -45,12 +45,16 @@ Required dependencies:
 * [NumPy](http://www.numpy.org/)
 
 The following dependencies (if missing) will be automatically installed during the main installation of the package:
+* [scipy](https://scipy.org/)
 * [pandas](https://pandas.pydata.org/) 1.0 or above
+* [pyarrow](https://arrow.apache.org/docs/python/index.html)
 * [Cython](https://cython.org/)
-<!-- * [Requests](https://docs.python-requests.org/en/master/index.html) -->
 * [vegas](https://pypi.org/project/vegas/) 5.1.1 or above
 * [Particle](https://pypi.org/project/particle/)
+* [pyhepmc-ng](https://github.com/scikit-hep/pyhepmc)
+* [pyparsing](https://github.com/pyparsing/pyparsing/)
 * [dill](https://pypi.org/project/dill/)
+* [matplotlib](https://matplotlib.org/)
 
 ## Installation
 
@@ -92,6 +96,8 @@ where:
 * `<relevant_masses>`: it is a string made of strings of the kind `"<parameter>_<mass>"` separated by underscores, where `<parameter>` is the name of a mass parameter among `mzprime`, `m4`, `m5`, `m6`; while `<mass>` is a the value, formatted as float, of `<parameter>`
 * `<HNLtype>`: is the value of the `HNLtype` argument (or option), default set to `majorana`
 
+**Note:** the directory tree can be overwritten when running the generator in a script with the parameter `overwrite_path`. 
+
 ### Command line functionality
 
 It is possible to run the generator through the script `bin/dn_gen`, passing the parameters as options.
@@ -109,7 +115,7 @@ gen_object = GenLauncher(mzprime=1.25, m4=0.140, neval=1000, HNLtype="dirac")
 gen_object.run(loglevel="INFO")
 ```
 The parameters are passed directly while instantiating the `GenLauncher` object.
-Some parameters (`loglevel`, `verbose`, `logfile`, `path`) related to the run itself can be passed also within the call of the `run()` method.
+Some parameters (`loglevel`, `verbose`, `logfile`, `path`, `overwrite_path`) related to the run itself can be passed also within the call of the `run()` method.
 
 ### List of parameters
 
@@ -196,7 +202,7 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **noHC**       | `bool` | Do not include helicity conserving events | `False` | 
 | **noHF**       | `bool` | Do not include helicity flipping events   | `False` | 
 | **decay_products** | `["e+e-","mu+mu-","photon"]` | Decay process of interest | "e+e-" |
-| **nu_flavors** | `['nu_e','nu_mu','nu_tau','nu_e_bar','nu_mu_bar','nu_tau_bar']` | projectile neutrino | "nu_mu" |
+| **nu_flavors**     | `["nu_e","nu_mu","nu_tau","nu_e_bar","nu_mu_bar","nu_tau_bar"]` | Projectile neutrino | `["nu_mu"]` |
 
 #### Code behavior options
 
@@ -216,21 +222,20 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **nint**         | `int` | Number of adaptive iterations                | 20    | 
 | **neval_warmup** | `int` | Number of evaluations of integrand in warmup | 1000  | 
 | **nint_warmup**  | `int` | Number of adaptive iterations in warmup      | 10    | 
-| **seed**  | `int` | numpy random number generator seed used in vegas      | None    | 
+| **seed**         | `int` | numpy random number generator seed used in vegas      | None    | 
 
 ##### Output formats
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:------------------|:--------:|:-----------------------------------------------------------------------|--------:|
 | **pandas**        | `bool`   | Save `pandas.DataFrame` as `.pckl` file                                | `True`  | 
-| **parquet**        | `bool`   | Save `pandas.DataFrame` as `.parquet` file (engine=pyarrow)                                | `False`  | 
+| **parquet**       | `bool`   | Save `pandas.DataFrame` as `.parquet` file (engine=pyarrow)            | `False`  | 
 | **numpy**         | `bool`   | Save events in `.npy` files                                            | `False` | 
 | **hepevt**        | `bool`   | Save events in HEPEVT-formatted text files                             | `False` | 
 | **hepvt_unweigh** | `bool`   | Unweigh events when printing in HEPEVT format (needs large statistics) | `False` | 
 | **hepvt_events**  | `int`    | Number of events to accept in HEPEVT format                            | 100     | 
 | **path**          | `string` | Path where to save run's outputs                                       | `"./"`  | 
-
-| **sparse**          | `bool` | if True, save only the neutrino energy, charged lepton or photon momenta, and weights. Not supported for HEPevt.                                       | `False`  | 
+| **sparse**        | `bool`   | if True, save only the neutrino energy, charged lepton or photon momenta, and weights. Not supported for HEPevt. | `False`  | 
 
 ### Specify parameters via a file
 
