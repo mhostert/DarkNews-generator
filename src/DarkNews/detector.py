@@ -44,12 +44,10 @@ class Detector():
         "miniboone_fhc": os.path.join(PATH_CONFIG_FILES, "miniboone_fhc.txt"),
         "miniboone_rhc": os.path.join(PATH_CONFIG_FILES, "miniboone_rhc.txt"),
         "minos_le_fhc": os.path.join(PATH_CONFIG_FILES, "minos_le_fhc.txt"),
-        "minos_me_fhc": os.path.join(PATH_CONFIG_FILES, "minos_me_fhc.txt"),
         "nd280_fhc": os.path.join(PATH_CONFIG_FILES, "nd280_fhc.txt"),
         "nova_le_fhc": os.path.join(PATH_CONFIG_FILES, "nova_le_fhc.txt"),
         "fasernu": os.path.join(PATH_CONFIG_FILES, "fasernu.txt"),
         "nutev_fhc": os.path.join(PATH_CONFIG_FILES, "nutev_fhc.txt"),
-        "nutev_rhc": os.path.join(PATH_CONFIG_FILES, "nutev_rhc.txt")
     }
 
     def __init__(self, experiment):
