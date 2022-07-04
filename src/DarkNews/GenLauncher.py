@@ -219,33 +219,40 @@ class GenLauncher:
         self.projectiles = [getattr(lp,nu) for nu in self.nu_flavors]
         
         ####################################################
-        # Set the model to use
+        # Default data path based on model and experimental definitioons
+
+
         # set the path of the experiment name (needed in the case of custom experiment path)
         exp_path_part = os.path.basename(self.exp).rsplit(".", maxsplit=1)[0]
+        
+        _boson_string = ''
+        if self.bsm_model.mzprime is not None:
+            _boson_string += f'mzprime_{self.bsm_model.mzprime:.4g}'
+        if self.bsm_model.mhprime is not None:
+            _boson_string += f'mhprime_{self.bsm_model.mhprime:.4g}'
+
         # 3+1
         if (self.bsm_model.m4 is not None and self.bsm_model.m5 is None and self.bsm_model.m6 is None) :
             self.upscattered_nus = [dn.pdg.neutrino4]
             self.outgoing_nus =[dn.pdg.nulight]
-            self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus1/m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
+            self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus1/m4_{self.bsm_model.m4:.4g}_{_boson_string}_{self.bsm_model.HNLtype}/')
 
         # 3+2
         elif (self.bsm_model.m4 is not None and self.bsm_model.m5 is not None and self.bsm_model.m6 is None):
-            ## FIXING 3+2 process chain to be numu --> N5 --> N4
+            ## FIXING 3+2 process chain to be nualpha --> N5 --> N4
             self.upscattered_nus = [dn.pdg.neutrino5]
             self.outgoing_nus =[dn.pdg.neutrino4]
-            # upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5]
-            # outgoing_nus =[dn.pdg.numu,dn.pdg.neutrino4]
-            self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
+            self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_{_boson_string}_{self.bsm_model.HNLtype}/')
 
         # 3+3
         elif (self.bsm_model.m4 is not None and self.bsm_model.m5 is not None and self.bsm_model.m6 is not None):
             self.upscattered_nus = [dn.pdg.neutrino4,dn.pdg.neutrino5,dn.pdg.neutrino6]
             self.outgoing_nus =[dn.pdg.nulight,dn.pdg.neutrino4,dn.pdg.neutrino5]
-            self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_mzprime_{self.bsm_model.mzprime:.4g}_{self.bsm_model.HNLtype}/')
+            self.data_path = Path(f'{self.path}/data/{exp_path_part}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_{_boson_string}_{self.bsm_model.HNLtype}/')
 
         else:
-            logger.error('ERROR! Mass spectrum not allowed.')
-            raise ValueError 
+            logger.error('Error! Mass spectrum not allowed (m4,m5,m6) = ({self.bsm_model.m4:.4g},{self.bsm_model.m5:.4g},{self.bsm_model.m6:.4g}) GeV.')
+            raise ValueError("Could not find a heavy neutrino spectrum from user input.")
 
         ####################################################
         # Create all MC cases

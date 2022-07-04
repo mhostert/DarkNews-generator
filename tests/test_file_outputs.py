@@ -76,6 +76,13 @@ def test_output(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
                     assert df[wn,""][i] == evtHEPMC3.weights[j], f'weight of type "{wn}" is {df[wn,""][i]} for dataframe and {evtHEPMC3.weights[j]} for HepMC3. They should be the same.'
 
 
+        # check the attributes of the output pandas dataframe:
+        assert 'experiment' in df_std.attrs.keys(), "Could not find attribute 'experiment' in the DataFrame attrs"
+        assert 'model' in df_std.attrs.keys(), "Could not find attribute 'model' in the DataFrame attrs"
+        assert 'data_path' in df_std.attrs.keys(), "Could not find attribute 'data_path' in the DataFrame attrs"
+
+
+
 def close_enough(x,y, tol=1e-3):
     return (x - y)/y < tol
 def test_MB_rates_of_BPs(SM_gen,
