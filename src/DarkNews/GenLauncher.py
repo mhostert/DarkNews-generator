@@ -247,12 +247,6 @@ class GenLauncher:
             logger.error('ERROR! Mass spectrum not allowed.')
             raise ValueError 
 
-        # create directory tree
-        try:
-            os.makedirs(self.data_path)
-        except OSError:
-            logger.warning("Directory tree for this run already exists. Overriding it.")
-
         ####################################################
         # Create all MC cases
         self._create_all_MC_cases()
@@ -424,6 +418,13 @@ class GenLauncher:
         if overwrite_path:
             old_path = self.data_path
             self.data_path = Path(overwrite_path + "/")
+
+        ############
+        # create directory tree
+        try:
+            os.makedirs(self.data_path)
+        except OSError:
+            logger.warning("Directory tree for this run already exists. Overriding it.")
 
         ############
         # superseed original logger configuration 

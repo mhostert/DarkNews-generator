@@ -2,8 +2,8 @@
 # Use the same prescriptions as for the input files (see README.md).
 # You can specify numbers, variables, mathematical operations, strings (with single/double quotes) and lists (enclosed in square brackets).
 # In the following you can read about the parameters you must specify:
-#    name (str): name of the experiment (your are free to use capital letters, when needed);
-#    fluxfile (str): path of the fluxes file with respect to this file directory
+#    name (str): name of the experiment (your are free to use capital letters, when needed)
+#    fluxfile (str): path of the fluxes file with respect to this file directory or the system flux directory
 #    flux_norm (float): flux normalization factor: ALL FLUXES ARE NORMALIZED SO THAT THE UNITS ARE nus/cm^2/GeV/POT
 #    erange (list of float): neutrino energy range [<min>, <max>] in GeV
 #    nuclear_targets (list of string): detector materials in the form of "<element_name><mass_number>" (e.g. "Ar40")
