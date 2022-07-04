@@ -15,12 +15,12 @@ def SM_gen():
     gen = GenLauncher(gD=0.0, Umu4=1e-3, epsilon=0.0, m4=0.01, loglevel='ERROR', neval=1000, seed=42)
     return gen.run()
 
-# use command line and make summary plots
-@pytest.fixture(scope='session')
-def gen_SM_from_script():
-    os.system("dn_gen --gD=0.0 --Umu4=1e-3 --epsilon=0.0 --m4=0.01 --loglevel='ERROR' --neval=1000 --seed=42 --path=./test_generation --make_summary_plots")
-    df_p = pd.read_pickle('test_generation/pandas_df.pckl')
-    return df_p
+# # use command line and make summary plots
+# @pytest.fixture(scope='session')
+# def gen_SM_from_script():
+#     os.system("dn_gen --gD=0.0 --Umu4=1e-3 --epsilon=0.0 --m4=0.01 --loglevel='ERROR' --neval=1000 --seed=42 --path=./test_generation --make_summary_plots")
+#     df_p = pd.read_pickle('test_generation/pandas_df.pckl')
+#     return df_p
 
 @pytest.fixture(scope='session')
 def light_DP_gen_all_outputs():
