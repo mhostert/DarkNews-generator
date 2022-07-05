@@ -27,5 +27,5 @@ jobs:
     - name: Test with tox
       run: tox
 
-notifications:
-  email: false
+    notifications:
+      email: false
