@@ -121,8 +121,8 @@ class Printer:
 			# convert to numeric values
 			# self.df_gen.loc[self.df_gen['helicity']=='conserving', ['helicity']] = '+1'
 			# self.df_gen.loc[self.df_gen['helicity']=='flipping', ['helicity']] = '-1'
-			self.df_gen = self.df_gen.replace(to_replace='conserving', value = +1)
-			self.df_gen = self.df_gen.replace(to_replace='flipping',   value = -1)
+			self.df_gen = self.df_gen.replace(to_replace='conserving', value = '+1')
+			self.df_gen = self.df_gen.replace(to_replace='flipping',   value = '-1')
 			# remove non-numeric entries
 			self.df_for_numpy = self.df_gen.drop(['underlying_process','target','scattering_regime'],axis=1, level=0)
 			cols = [f'{v[0]}_{v[1]}' if v[1] else f'{v[0]}' for v in self.df_for_numpy.columns.values]

@@ -36,14 +36,14 @@ def test_output(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
         nda = np.load(Path(f"{gen_path}/ndarray.npy"))
 
         for df_pandas in [df_std, df_pq]:
+            
             # helicity only present in sparse format
             if 'helicity' in df_pandas.columns.levels[0]:
                 # test that numpy array and dataframe formats save the same information
-                df_pandas = df_pandas.replace(to_replace='conserving', value= +1)
-                df_pandas = df_pandas.replace(to_replace='flipping',   value= -1)
-                # remove non-numeric entries
+                df_pandas = df_pandas.replace(to_replace='conserving', value= '+1')
+                df_pandas = df_pandas.replace(to_replace='flipping',   value= '-1')
             
-            
+            # remove non-numeric entries
             drop_list = ['underlying_process','target','scattering_regime']
             if not set(drop_list).isdisjoint(df_pandas.columns.levels[0]):
                 df_for_numpy = df_pandas.drop([col for col in drop_list if col in df_pandas.columns.levels[0]], axis=1, level=0).to_numpy(dtype=np.float64) 
