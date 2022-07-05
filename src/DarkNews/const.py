@@ -16,6 +16,8 @@ from scipy import interpolate
 from DarkNews import logger
 from DarkNews import local_dir
 
+from DarkNews import Cfourvec as Cfv
+
 ################################################
 # constants of light cm/s
 c_LIGHT = 29_979_245_800
@@ -278,8 +280,7 @@ DIRAC    = 'dirac'
 #### shorthands used in MATHEMATICA copy-paste
 MZBOSON = m_Z
 MW = m_W
-def Power(x,n):
-    return x**n
-def Sqrt(x):
-    return sqrt(x)
+
+Power = lambda x,n: x**n
+Sqrt = lambda x: sqrt(x)
 Pi = np.pi

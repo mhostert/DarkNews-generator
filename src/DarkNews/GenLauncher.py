@@ -119,7 +119,6 @@ class GenLauncher:
         self.mu_tr_55 = 0.0
         self.mu_tr_56 = 0.0
         self.mu_tr_66 = 0.0
-        self.theta = 0.0
         self.s_e4 = 0.0
         self.s_e5 = 0.0
         self.s_e6 = 0.0
@@ -277,7 +276,8 @@ class GenLauncher:
             except KeyError:
                 continue
             # check the value within the choices
-            if parameter in self._choices.keys() and value not in self._choices[parameter]:
+            # if parameter in self._choices.keys() and value not in self._choices[parameter]:
+            if parameter in self._choices.keys() and [*parameter,*self._choices[parameter]] == set([*parameter,*self._choices[parameter]]):
                 raise ValueError(f"Parameter '{parameter}', invalid choice: {value}, (choose among " + ", ".join([f"{el}" for el in self._choices[parameter]]) + ")")
             # set the parameter
             setattr(self, parameter, value)
@@ -595,6 +595,8 @@ def initialize_threeportal_launcher(self, param_file=None, **kwargs):
     self.UD5 = 1.0
     self.UD6 = 1.0
 
+    self.theta = 0.0
+    
     self._model_creator = dn.model.create_3portal_HNL_model
 
 def initialize_generic_launcher(self):

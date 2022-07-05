@@ -51,6 +51,7 @@ class HNLModel:
         self.m4			= None
         self.m5			= None
         self.m6			= None
+        self.HNLtype    = None
         
         self.mzprime    = None
         self.mhprime    = None
@@ -589,12 +590,15 @@ class ThreePortalModel(HNLModel):
         self.fN_higgs = 2/9 + 7/9* ( self.fu + self.fd + self.fs )
         self.c_nucleon_higgs = self.fN_higgs * const.m_avg/const.vev_EW
         
-        self.cSnucleon = self.sintheta*self.c_nucleon_higgs
+        self.cnucleonS = self.sintheta*self.c_nucleon_higgs
         # isospin
-        self.dprotonS  = self.cSnucleon
-        self.dneutronS = self.cSnucleon
+        self.dprotonS  = self.cnucleonS
+        self.dneutronS = self.cnucleonS
         self.ceS = self.costheta*const.m_e/const.vev_EW/np.sqrt(2)
         self.deS = self.sintheta*const.m_e/const.vev_EW/np.sqrt(2)
+        
+        # no pseudo-scalar coupling
+        self.deP = 0.0
 
         self._update_spectrum()
 

@@ -49,8 +49,8 @@ class UpscatteringProcess:
         self.helicity = helicity
 
         self.MA = self.target.mass
-        self.mzprime = TheoryModel.mzprime
-        self.mhprime = TheoryModel.mhprime
+        self.mzprime = TheoryModel.mzprime if TheoryModel.mzprime is not None else 1e10
+        self.mhprime = TheoryModel.mhprime if TheoryModel.mhprime is not None else 1e10
         self.m_ups = self.nu_upscattered.mass
 
         if self.helicity == 'conserving':
@@ -164,11 +164,12 @@ class FermionDileptonDecay:
         self.h_parent = h_parent
         
         # particle masses
-        self.mzprime = TheoryModel.mzprime
-        self.mhprime = TheoryModel.mhprime
+        self.mzprime = TheoryModel.mzprime if TheoryModel.mzprime is not None else 1e10
+        self.mhprime = TheoryModel.mhprime if TheoryModel.mhprime is not None else 1e10
         self.mm = final_lepton1.mass*const.MeV_to_GeV 
         self.mp = final_lepton2.mass*const.MeV_to_GeV 
 
+        # Neutral lepton vertices
         if nu_daughter == pdg.nulight:
             self.Cih = np.sqrt(np.sum(np.abs(TheoryModel.c_aj[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
             self.Dih = np.sqrt(np.sum(np.abs(TheoryModel.d_aj[const.inds_active,pdg.get_HNL_index(nu_parent)])**2))
@@ -180,6 +181,13 @@ class FermionDileptonDecay:
             self.Sih = TheoryModel.s_aj[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
             self.Tih = TheoryModel.t_aj[pdg.get_HNL_index(nu_daughter),pdg.get_HNL_index(nu_parent)]
 
+        # Charged lepton vertices
+        self.Cv = TheoryModel.ceV
+        self.Ca = TheoryModel.ceA
+        self.Dv = TheoryModel.deV
+        self.Da = TheoryModel.deA
+        self.Ds = TheoryModel.deS
+        self.Dp = TheoryModel.deP
 
         if nu_parent == pdg.neutrino4:
             self.m_parent = TheoryModel.m4

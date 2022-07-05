@@ -174,7 +174,11 @@ def add_scope_arguments(parser, DEFAULTS):
     parser.add_argument("--noHC", help="do not include helicity conserving events", action="store_true")
     parser.add_argument("--noHF", help="do not include helicity flipping events", action="store_true")
 
-    parser.add_argument('--nu_flavors', type=list, action='store', nargs='+', choices=DEFAULTS._choices['nu_flavors'])
+    # projectile neutrino flavors
+    parser.add_argument('--nu_flavors', type=str.lower, action='store', nargs='+', choices=DEFAULTS._choices['nu_flavors'])
+
+    # enforce the parent HNL decay to be prompt
+    parser.add_argument("--enforce_prompt", help="forces the particles to decay promptly", action="store_true")
 
 
 
@@ -205,7 +209,6 @@ def add_mc_arguments(parser, DEFAULTS):
     parser.add_argument("--sparse", help="drop all information in the event except for visible particle momenta, neutrino energy, and weights.", action="store_true")
     parser.add_argument("--print_to_float32", help="Use float32 instead of default float64 when printing output to save storage space.", action="store_true")
 
-    parser.add_argument("--enforce_prompt", help="forces the particles to decay promptly", action="store_true")
     parser.add_argument("--make_summary_plots", help="generate summary plots of kinematics", action="store_true")
     parser.add_argument("--path", type=str, help="path where to save run's outputs")
     parser.add_argument("--seed", type=int, help="numpy seed to be used by vegas.")

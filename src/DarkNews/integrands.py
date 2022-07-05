@@ -255,9 +255,6 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 
 				dgamma = dr.diff_gamma_Ni_to_Nj_ell_ell([t,u,v,c3,phi34], decay_case)
 
-				# integrating in phi34 and c3 explicitly
-				dgamma /= 2*np.pi*2.0
-
 				# hypercube jacobian (vegas hypercube --> physical limits) transformation
 				dgamma *= (tmax - tmin)
 				dgamma *= (umax - umin)

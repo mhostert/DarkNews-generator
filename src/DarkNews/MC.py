@@ -306,6 +306,19 @@ class MC_events:
         df_gen.insert(loc=len(df_gen.columns), column='underlying_process', value=np.full(tot_nevents, self.underl_process_name))
         df_gen['underlying_process'] = df_gen['underlying_process'].astype("string")
 
+        # Helicity of incoming neutrino
+        if self.nu_projectile.pdgid < 0:
+            df_gen.insert(loc=len(df_gen.columns), column='h_projectile', value=np.full(tot_nevents, +1))
+        elif self.nu_projectile.pdgid > 0:
+            df_gen.insert(loc=len(df_gen.columns), column='h_projectile', value=np.full(tot_nevents, -1))
+        
+        # Helicity of outgoing HNL
+        if self.helicity == 'conserving':
+            df_gen['h_parent',''] = df_gen['h_projectile']
+        elif self.helicity == 'flipping':
+            df_gen['h_parent',''] = - df_gen['h_projectile']
+
+
         # saving the experiment class
         df_gen.attrs['experiment'] = self.experiment
 
