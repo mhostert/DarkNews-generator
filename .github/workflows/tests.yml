@@ -13,8 +13,7 @@ jobs:
         # os: [macos-latest, ubuntu-latest]
         os: [macos-latest]
         python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
-      notifications:
-        email: false
+
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -27,5 +26,3 @@ jobs:
         pip install tox tox-gh-actions
     - name: Test with tox
       run: tox
-
-    
