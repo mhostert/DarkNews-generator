@@ -311,7 +311,6 @@ class MC_events:
 
         # saving the bsm_model class
         df_gen.attrs['model'] = self.bsm_model
-
         ##########################################################################
         # PROPAGATE PARENT PARTICLE
         
@@ -345,6 +344,12 @@ def get_merged_MC_output(df1,df2):
     logger.debug(f"Appending {df2.underlying_process[0]}")
     df = pd.concat([df1, df2], axis = 0).reset_index(drop=True)    
     
+    # for older versions of pandas, concat does not keep the attributes 
+    #  -- if they disappear, force first dataframe.
+    if not df.attrs:
+        logger.debug(f"DEBUG: Forcing the storage of the df.attrs using the first dataframe. This is done automatically for newer versions of pandas.")
+        df.attrs = df1.attrs
+
     return df
 
 

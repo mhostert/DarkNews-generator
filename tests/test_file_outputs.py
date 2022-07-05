@@ -14,6 +14,12 @@ def test_output(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
     """Test all output formats of DarkNews"""
 
     for df in [light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse]:
+        
+        # check the attributes of the output pandas dataframe:
+        assert 'experiment' in df.attrs.keys(), "Could not find attribute 'experiment' in the DataFrame attrs"
+        assert 'model' in df.attrs.keys(), "Could not find attribute 'model' in the DataFrame attrs"
+        assert 'data_path' in df.attrs.keys(), "Could not find attribute 'data_path' in the DataFrame attrs"
+
         # check filename exists
         gen_path = df.attrs['data_path']
 
@@ -33,14 +39,17 @@ def test_output(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
             # helicity only present in sparse format
             if 'helicity' in df_pandas.columns.levels[0]:
                 # test that numpy array and dataframe formats save the same information
-                df_pandas.loc[df_pandas['helicity','']=='conserving', 'helicity'] = '+1'
-                df_pandas.loc[df_pandas['helicity','']=='flipping', 'helicity'] = '-1'
+                df_pandas = df_pandas.replace(to_replace='conserving', value= +1)
+                df_pandas = df_pandas.replace(to_replace='flipping',   value= -1)
                 # remove non-numeric entries
             
+            
             drop_list = ['underlying_process','target','scattering_regime']
-            df_for_numpy = df_pandas.drop([col for col in drop_list if col in df_pandas.columns.levels[0]], axis=1, level=0) 
-
-            assert (df_for_numpy.to_numpy(dtype=np.float64)[nda!=0]/nda[nda!=0]!=1).sum() == 0, 'pandas dataframe and numpy array seem to contain different data.'
+            if not set(drop_list).isdisjoint(df_pandas.columns.levels[0]):
+                df_for_numpy = df_pandas.drop([col for col in drop_list if col in df_pandas.columns.levels[0]], axis=1, level=0).to_numpy(dtype=np.float64) 
+            else:
+                df_for_numpy = df_pandas.to_numpy(dtype=np.float64)  
+            assert (df_for_numpy[nda!=0]/nda[nda!=0]!=1).sum() == 0, 'pandas dataframe and numpy array seem to contain different data.'
     
 
         oss_hepevt = Path(f"{gen_path}/HEPevt.dat").__str__()
@@ -72,14 +81,7 @@ def test_output(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
 
                 for j in range(len(evtHEPMC3.weight_names)):
                     wn = evtHEPMC3.weight_names[j]
-                    print(wn, j )
                     assert df[wn,""][i] == evtHEPMC3.weights[j], f'weight of type "{wn}" is {df[wn,""][i]} for dataframe and {evtHEPMC3.weights[j]} for HepMC3. They should be the same.'
-
-
-        # check the attributes of the output pandas dataframe:
-        assert 'experiment' in df_std.attrs.keys(), "Could not find attribute 'experiment' in the DataFrame attrs"
-        assert 'model' in df_std.attrs.keys(), "Could not find attribute 'model' in the DataFrame attrs"
-        assert 'data_path' in df_std.attrs.keys(), "Could not find attribute 'data_path' in the DataFrame attrs"
 
 
 
