@@ -1,5 +1,6 @@
 import os
 import pytest
+import random
 import numpy as np
 import pandas as pd
 from particle import literals as lp
@@ -8,6 +9,12 @@ from DarkNews.GenLauncher import GenLauncher
 
 MODEL_KWARGS = {'HNLtype': 'dirac', 'UD4': 1.0, 'alphaD': 0.25, 'Umu4': np.sqrt(9e-7), 'epsilon': np.sqrt(2e-10/const.alphaQED)}
 
+
+@pytest.fixture(scope='session')
+def set_seeds():
+    seed = 42
+    random.seed(seed)
+    # os.environ('PYTHONHASHSEED') = str(seed)
 
 # generate a specific set of events to be tested in a session
 @pytest.fixture(scope='session')
