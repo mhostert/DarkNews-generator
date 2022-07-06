@@ -324,6 +324,7 @@ class MC_events:
 
         # saving the bsm_model class
         df_gen.attrs['model'] = self.bsm_model
+
         ##########################################################################
         # PROPAGATE PARENT PARTICLE
         
@@ -362,6 +363,11 @@ def get_merged_MC_output(df1,df2):
     if not df.attrs:
         logger.debug(f"DEBUG: Forcing the storage of the df.attrs using the first dataframe. This is done automatically for newer versions of pandas.")
         df.attrs = df1.attrs
+
+    if df.attrs:
+        logger.debug(f"DEBUG: Forcing the storage of the df.attrs using the first dataframe. This is done automatically for newer versions of pandas.")
+        df.attrs = df1.attrs
+
 
     return df
 
