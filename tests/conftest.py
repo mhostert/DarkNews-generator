@@ -33,7 +33,7 @@ def SM_gen():
 def light_DP_gen_all_outputs():
 
     gen = GenLauncher(mzprime=0.03, m4=0.420, neval=1000, exp="miniboone_fhc", loglevel='ERROR', seed=42,
-                        parquet=True, numpy=True, hepevt=True, hepevt_legacy=True, hepmc2=True, hepmc3=True, **MODEL_KWARGS)
+        parquet=True, numpy=True, hepevt=True, hepevt_legacy=True, hepmc2=True, hepmc3=True, **MODEL_KWARGS)
     return gen.run()
 
 @pytest.fixture(scope='session')
