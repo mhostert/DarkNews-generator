@@ -21,9 +21,6 @@ def L_GeV_to_cm(decay_rate):
 
 ##################################################
 # Special functions for phase space integrals
-def lam(a,b,c):
-    return a**2 + b**2 + c**2 -2*a*b - 2*b*c - 2*a*c
-
 def I1_2body(x,y):
     return ((1+x-y)*(1+x) - 4*x)*np.sqrt(lam(1.0,x,y))
 

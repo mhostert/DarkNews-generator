@@ -30,6 +30,7 @@ DarkNews is an event generator for new physics processes at accelerator neutrino
     - [The experiments](#the-experiments)
     - [Generated events dataframe](#generated-events-dataframe)
 
+---
 ## Introduction
 
 DarkNews uses Vegas to generate weighted Monte Carlo samples of scattering and decay processes. Differential observables are implemented using analytical expressions with arbitrary interaction vertices, which are then specified at run-time based on the available models and the user's parameter choices. Processes involving heavy neutrinos N are calculated including contributions from the Standard Model Z and W bosons, as well as from a kinetically-mixed dark photon (Z'), and neutrino-N transition magnetic moments. DarkNews also computes the partial decay widths of heavy neutrinos for models with up to 3 heavy neutrinos. 
@@ -56,6 +57,7 @@ The following dependencies (if missing) will be automatically installed during t
 * [dill](https://pypi.org/project/dill/)
 * [matplotlib](https://matplotlib.org/)
 
+---
 ## Installation
 
 *Currently set for local `pip` installation*  
@@ -79,6 +81,7 @@ python3 setup.py develop
 ```
 to install it in developer mode (similar to editable mode above).
 
+---
 ## Usage
 
 The main usage of DarkNews is covered in depth in the notebook `Example_0_start_here.ipynb` in the `examples` folder.
@@ -116,6 +119,62 @@ gen_object.run(loglevel="INFO")
 ```
 The parameters are passed directly while instantiating the `GenLauncher` object.
 Some parameters (`loglevel`, `verbose`, `logfile`, `path`, `overwrite_path`) related to the run itself can be passed also within the call of the `run()` method.
+
+---
+## Output 
+### Generated events dataframe
+
+If the argument `pandas = True` (as it is by default), a dataframe containing the generated events is saved in the directory tree.
+
+The dataframe is multi-indexed, where the second column is empty, then there is only the first index.  
+The process described is:
+
+neutrino (P\_projectile) + Nucleus (P\_target) &#8594; HNL\_parent (P\_decay\_N\_parent) + Recoiled Nucleus (P\_recoil)
+
+Followed by:
+
+HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughter) + e<sup>-</sup> (P\_decay\_ell\_plus) + e<sup>-</sup> (P\_decay\_ell\_minus)
+
+| **Column**            | **Subcolumn** |**type**  | **description**|
+|:--------------------------|:--------:|:--------:|:-----------------------------------|
+| **P\_projectile**         | 0, 1, 2, 3  | `float`  | 4-momenta of beam neutrino |
+| **P\_decay\_N\_parent**   | 0, 1, 2, 3  | `float`  | 4-momenta of HNL\_parent |
+| **P\_target**             | 0, 1, 2, 3  | `float`  | 4-momenta of nucleus |
+| **P\_recoil**             | 0, 1, 2, 3  | `float`  | 4-momenta of recoiled nucleus |
+| **P\_decay\_photon**      | 0, 1, 2, 3  | `float`  | 4-momenta of photon (if it exists)|
+| **P\_decay\_ell\_minus**  | 0, 1, 2, 3  | `float`  | 4-momenta of e- (if it exists)|
+| **P\_decay\_ell\_plus**   | 0, 1, 2, 3  | `float`  | 4-momenta of e+ (if it exists)|
+| **P\_decay\_N\_daughter** | 0, 1, 2, 3  | `float`  | 4-momenta of HNL\_daughter / nu\_daughter |
+| **pos_scatt**             | 0, 1, 2, 3  | `float`  | upscattering position|
+| **pos_decay**             | 0, 1, 2, 3  | `float`  | decay position of primary particle (N\_parent) -- no secondary decay position is saved. |
+| **w\_decay\_rate\_0**     | <!-- --> | `float`  | Weight of the decay rate of primary unstable particle: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>N</sub> |
+| **w\_decay\_rate\_1**     | <!-- --> | `float`  | Weight of the decay rate of secondary unstable particle: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>X</sub> |
+| **w\_event\_rate**        | <!-- --> | `float`  | Weight for the event rate: &Sigma;<sub>i</sub> w<sub>i</sub> = event rate |
+| **w\_flux\_avg\_xsec**    | <!-- --> | `float`  | Weight of the flux averaged cross section: &Sigma;<sub>i</sub> w<sub>i</sub> = int(sigma &sdot; flux) &sdot; exposure |
+| **target**                | <!-- --> | *string* | Name of the target object, it will typically be a nucleus |
+| **target\_pdgid**         | <!-- --> | `int`    | PDG id of the target |
+| **scattering\_regime**    | <!-- --> | *string* | Regime can be coherent or p-elastic |
+| **helicity**              | <!-- --> | *string* | Helicity process: can be flipping or conserving; flipping is suppressed |
+| **underlying\_process**   | <!-- --> | *string* | String of the underlying process, e.g, "nu(mu) + proton_in_C12 -> N4 +  proton_in_C12 -> nu(mu) + e+ + e- + proton_in_C12" |
+
+#### Additional Attributes
+
+The pandas DataFrame also contains several useful information in `attrs`. They can be accessed via
+```python
+df.attrs['foo']
+```
+and are specific to the generation run. The attributes are detailed below:
+
+| **Attrs**            | **type**  | **description**|
+|:--------------------------|:--------:|:--------:|:-----------------------------------|
+| **experiment**         | DarkNews.detector.Detector()  | The experiment class of DarkNews containing all information on the experimental setup, including neutrino fluxes, targets, exposure, and geometry (if implemented). |
+| **model**   | DarkNews.model.HNLModel()  | The model class of DarkNews with all the couplings and vertices calculated from the user input. |
+| **data_path**   | *string*  | The path used to save the generation outputs. |
+| **N{i}_ctau0**   | 'float'  | The proper decay length of the i-th HNL in *centimeters* used in the generation of events, with i={4,5,6}. |
+
+
+---
+## Input
 
 ### List of parameters
 
@@ -271,7 +330,7 @@ In the following there are the main rules to specify the parameters:
     * any other string is intended as a variable which must have been previously defined (the file is scanned from top to bottom)
     * in general it is possible to define any kind of variable, independently on those that will be actually used by the program, following the usual conventions for the variable name (use only letters, digits and underscores). Moreover, it's not possible to name variables after program-defined names, as for example the name of the functions.
 
-#### Example 1
+##### Example 1
 The following lines
 ```rst
 hbar = 6.582119569e-25 # GeV s
@@ -279,28 +338,28 @@ c = 299792458.0 # m s^-1
 ```
 will define two variables, named `hbar` and `c` with their values.
 
-#### Example 2
+##### Example 2
 It is possible to write
 ```rst
 a_certain_constant = hbar * c
 ```
 to define a variable named `a_certain_constant` with the value of the product between the pre-defined `hbar` and `c` variables from the example above.
 
-#### Example 3
+##### Example 3
 It is possible to write any kind of possible expression, for example
 ```rst
 a_variable = c^2 * 3.2e-4 / sin(PI/7) + 12 * exp( -2 * abs(hbar) )
 ```
 obtaining a new variable `a_variable` with the value of 66285419633555.3
 
-#### Example 4
+##### Example 4
 The line
 ```rst
 path = "my_directory/projects/this_project"
 ```
 defines the `path` variable, stored as the string `"my_directory/projects/this_project"`.
 
-#### Example 5
+##### Example 5
 The following lines are defining booleans (they are case insensitive), used to set the various switches:
 ```rst
 pandas = True
@@ -337,81 +396,13 @@ The following parameters must be present (in general it is possible to specify a
 | **fiducial_mass_per_target** | list of `float`   | Fiducial mass for each target in the same order as the `nuclear_targets` parameter                         |
 | **POTs**                     | `float`           | Protons on target                                                                                          |
 
-### Generated events dataframe
-
-If the argument `pandas = True` (as it is by default), a dataframe containing the generated events is saved in the directory tree.
-
-The dataframe is multi-indexed, where the second column is empty, then there is only the first index.  
-The process described is:
-
-neutrino (P\_projectile) + Nucleus (P\_target) &#8594; HNL\_parent (P\_decay\_N\_parent) + Recoiled Nucleus (P\_recoil)
-
-Followed by:
-
-HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughter) + e<sup>-</sup> (P\_decay\_ell\_plus) + e<sup>-</sup> (P\_decay\_ell\_minus)
-
-| **Column**            | **Subcolumn** |**type**  | **description**|
-|:--------------------------|:--------:|:--------:|:-----------------------------------|
-| **P\_projectile**         | **0**    | `float`  | 4-momenta of beam neutrino |
-| <!-- -->                  | **1**    | `float`  | <!-- --> |
-| <!-- -->                  | **2**    | `float`  | <!-- --> |
-| <!-- -->                  | **3**    | `float`  | <!-- --> |
-| **P\_decay\_N\_parent**   | **0**    | `float`  | 4-momenta of HNL\_parent |
-| <!-- -->                  | **1**    | `float`  | <!-- --> |
-| <!-- -->                  | **2**    | `float`  | <!-- --> |
-| <!-- -->                  | **3**    | `float`  | <!-- --> |
-| **P\_target**             | **0**    | `float`  | 4-momenta of nucleus |
-| <!-- -->                  | **1**    | `float`  | <!-- --> |
-| <!-- -->                  | **2**    | `float`  | <!-- --> |
-| <!-- -->                  | **3**    | `float`  | <!-- --> |
-| **P\_recoil**             | **0**    | `float`  | 4-momenta of recoiled nucleus |
-| <!-- -->                  | **1**    | `float`  | <!-- --> |
-| <!-- -->                  | **2**    | `float`  | <!-- --> |
-| <!-- -->                  | **3**    | `float`  | <!-- --> |
-| **P\_decay\_photon**      | **0**    | `float`  | 4-momenta of photon (if it exists)|
-| <!-- -->                  | **1**    | `float`  | <!-- --> |
-| <!-- -->                  | **2**    | `float`  | <!-- --> |
-| <!-- -->                  | **3**    | `float`  | <!-- --> |
-| **P\_decay\_ell\_minus**  | **0**    | `float`  | 4-momenta of e- (if it exists)|
-| <!-- -->                  | **1**    | `float`  | <!-- --> |
-| <!-- -->                  | **2**    | `float`  | <!-- --> |
-| <!-- -->                  | **3**    | `float`  | <!-- --> |
-| **P\_decay\_ell\_plus**   | **0**    | `float`  | 4-momenta of e+ (if it exists)|
-| <!-- -->                  | **1**    | `float`  | <!-- --> |
-| <!-- -->                  | **2**    | `float`  | <!-- --> |
-| <!-- -->                  | **3**    | `float`  | <!-- --> |
-| **P\_decay\_N\_daughter** | **0**    | `float`  | 4-momenta of HNL\_daughter / nu\_daughter |
-| <!-- -->                  | **1**    | `float`  | <!-- --> |
-| <!-- -->                  | **2**    | `float`  | <!-- --> |
-| <!-- -->                  | **3**    | `float`  | <!-- --> |
-| **pos_scatt**             | **0**    | `float`  | upscattering position|
-| <!-- -->                  | **1**    | `float`  | <!-- --> |
-| <!-- -->                  | **2**    | `float`  | <!-- --> |
-| <!-- -->                  | **3**    | `float`  | <!-- --> |
-| **pos_decay**             | **0**    | `float`  | decay position of primary particle (N\_parent) -- no secondary decay position is saved. |
-| <!-- -->                  | **1**    | `float`  | <!-- --> |
-| <!-- -->                  | **2**    | `float`  | <!-- --> |
-| <!-- -->                  | **3**    | `float`  | <!-- --> |
-| **w\_decay\_rate\_0**     | <!-- --> | `float`  | Weight of the decay rate of primary unstable particle: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>N</sub> |
-| **w\_decay\_rate\_1**     | <!-- --> | `float`  | Weight of the decay rate of secondary unstable particle: &Sigma;<sub>i</sub> w<sub>i</sub> = &Gamma;<sub>X</sub> |
-| **w\_event\_rate**        | <!-- --> | `float`  | Weight for the event rate: &Sigma;<sub>i</sub> w<sub>i</sub> = event rate |
-| **w\_flux\_avg\_xsec**    | <!-- --> | `float`  | Weight of the flux averaged cross section: &Sigma;<sub>i</sub> w<sub>i</sub> = int(sigma &sdot; flux) &sdot; exposure |
-| **target**                | <!-- --> | *string* | Name of the target object, it will typically be a nucleus |
-| **target\_pdgid**         | <!-- --> | `int`    | PDG id of the target |
-| **scattering\_regime**    | <!-- --> | *string* | Regime can be coherent or p-elastic |
-| **helicity**              | <!-- --> | *string* | Helicity process: can be flipping or conserving; flipping is suppressed |
-| **underlying\_process**   | <!-- --> | *string* | String of the underlying process, e.g, "nu(mu) + proton_in_C12 -> N4 +  proton_in_C12 -> nu(mu) + e+ + e- + proton_in_C12" |
-
-#### Additional Attributes
-
-We also make use of the `attrs` property of the pandas dataframe to save the respective HNLModel() and Detector() classes used in the generation. 
-
 
 ### The event generator engine
 
 DarkNews relies on vegas to integrate and sample differential cross sections and decay rates. 
-The main point of contact with vegas is through the Integrator class, which will receive the DarkNews integrands
-containing the differential rates.
+The main point of contact with vegas is through the ```vegas.Integrator``` class, which will receive the DarkNews integrands (e.g. ```DarkNews.integrands.UpscatteringHNLDecay()```), whose ```__call__()``` method will compute the differential rates.
 
-By default, Vegas uses numpy's random number generator, which in turn uses the Mersenne Twister pseudo-random number generator. It is possible to set a seed for numpy's random number generator using numpy.seed().
-The reproducibility of the Vegas samples and integral are only guaranteed for the same series and number of calls to numpy.random, which effectively means, the same number of neval, nint, as well as neval_warmup, nint_warmup.
+It is possible to set a seed for numpy's random number with the ```--seed``` argument, which accepts integer values. This integer seed is then passed to numpy.seed().
+By default, vegas uses numpy's random number generator, which is based on the Mersenne Twister pseudo-random number generator method. 
+
+The reproducibility of the generator output (i.e., same vegas samples) is only guaranteed for the same parameters and number of integrand evaluations, which effectively means that the user has to specify the same scope, model parameters, as well as the same number of neval, nint, neval_warmup and nint_warmup.

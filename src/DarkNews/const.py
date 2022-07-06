@@ -281,6 +281,10 @@ DIRAC    = 'dirac'
 MZBOSON = m_Z
 MW = m_W
 
+# from CForm to pythonic syntax
 Power = lambda x,n: x**n
 Sqrt = lambda x: sqrt(x)
 Pi = np.pi
+
+# Kallen function
+lam = lambda a,b,c: a**2 + b**2 + c**2 -2*a*b - 2*b*c - 2*a*c

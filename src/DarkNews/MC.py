@@ -191,7 +191,6 @@ class MC_events:
         logger.info(f"Helicity {self.helicity} upscattering.")
         #########################################3
         # Some experimental definitions
-        #self.exp = experiment  # NO NEED TO STORE THIS
         self.flux = self.experiment.neutrino_flux(self.nu_projectile)
         self.EMIN = max(self.experiment.ERANGE[0], 1.05 * self.ups_case.Ethreshold)
         self.EMAX = self.experiment.ERANGE[1]
@@ -325,19 +324,22 @@ class MC_events:
         # saving the bsm_model class
         df_gen.attrs['model'] = self.bsm_model
 
+        # saving the lifetime of the parent (upscattered) HNL
+        df_gen.attrs[f'{self.nu_upscattered.name}_ctau0'] = const.get_decay_rate_in_cm(df_gen[f'w_decay_rate_0'].sum())
+
         ##########################################################################
         # PROPAGATE PARENT PARTICLE
-        
+
         self.experiment.set_geometry()
         self.experiment.place_scatters(df_gen)
+
 
         if self.scope['enforce_prompt']:
             geom.place_decay(df_gen, 'P_decay_N_parent', l_decay_proper_cm=0.0, label='pos_decay')
         else:
             # decay only the first mother (typically the HNL produced)
-            l_decay_proper_cm = const.get_decay_rate_in_cm(df_gen[f'w_decay_rate_0'].sum())
-            logger.info(f"Parent {self.ups_case.nu_upscattered.name} proper decay length: {l_decay_proper_cm:.3E} cm.\n")
-            geom.place_decay(df_gen, 'P_decay_N_parent', l_decay_proper_cm=l_decay_proper_cm, label='pos_decay')
+            logger.info(f"Parent {self.ups_case.nu_upscattered.name} proper decay length: {df_gen.attrs[f'{self.nu_upscattered.name}_ctau0']:.3E} cm.\n")
+            geom.place_decay(df_gen, 'P_decay_N_parent', l_decay_proper_cm=df_gen.attrs[f'{self.nu_upscattered.name}_ctau0'], label='pos_decay')
 
         ##########################################################################
 
@@ -364,10 +366,12 @@ def get_merged_MC_output(df1,df2):
         logger.debug(f"DEBUG: Forcing the storage of the df.attrs using the first dataframe. This is done automatically for newer versions of pandas.")
         df.attrs = df1.attrs
 
-    if df.attrs:
-        logger.debug(f"DEBUG: Forcing the storage of the df.attrs using the first dataframe. This is done automatically for newer versions of pandas.")
-        df.attrs = df1.attrs
-
+    # Now we merge lifetimes
+    for i in range(4,7):
+        this_ctau0 = f'N{i}_ctau0'
+        if this_ctau0 in df1.attrs.keys() and this_ctau0 in df2.attrs.keys():
+            # take the average
+            df.attrs[this_ctau0] = 0.5*(df1.attrs[this_ctau0] + df2.attrs[this_ctau0])
 
     return df
 

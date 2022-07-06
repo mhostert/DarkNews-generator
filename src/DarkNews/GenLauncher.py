@@ -11,11 +11,11 @@ from DarkNews import logger, prettyprinter
 from DarkNews.AssignmentParser import AssignmentParser
 
 COMMON_ARGS = [
-        "m4", "m5", "m6", "mzprime", "HNLtype", 
+        "m4", "m5", "m6", "mzprime", "mhprime", "HNLtype", 
         "mu_tr_e4", "mu_tr_e5", "mu_tr_e6", "mu_tr_mu4", "mu_tr_mu5", "mu_tr_mu6", 
         "mu_tr_tau4", "mu_tr_tau5", "mu_tr_tau6", "mu_tr_44", "mu_tr_45", "mu_tr_46", "mu_tr_55", "mu_tr_56",  
         "s_e4", "s_e5", "s_e6", "s_mu4", "s_mu5", "s_mu6", "s_tau4", "s_tau5", "s_tau6", 
-        "s_44", "s_45", "s_46", "s_55", "s_56", "s_66", "mhprime","theta",
+        "s_44", "s_45", "s_46", "s_55", "s_56", "s_66",
         "decay_product", "exp", "nopelastic", "nocoh", "noHC", "noHF", "nu_flavors",
         "loglevel", "verbose", "logfile", "neval", "nint", "neval_warmup", "nint_warmup", 
         "pandas", "parquet", "numpy", "hepevt", "hepevt_legacy", "hepmc2", "hepmc3", 
@@ -24,7 +24,7 @@ COMMON_ARGS = [
     ]
 
 THREE_PORTAL_ARGS = [
-        "gD", "epsilon","alphaD","epsilon2","chi","alpha_epsilon2",
+        "gD", "epsilon","alphaD","epsilon2","chi","alpha_epsilon2","theta",
         "Ue4", "Ue5", "Ue6", "Umu4", "Umu5", "Umu6", "Utau4", "Utau5", "Utau6", "UD4", "UD5", "UD6"
             ]
 
