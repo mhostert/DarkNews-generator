@@ -34,9 +34,7 @@ class Chisel:
 
         # initialize the ivory box
         if (box[:, 1] - box[:, 0] < 0).any():
-            raise ValueError(
-                f"Box axis reversed, x_0 > x_1 for dimensions: {[i for i, x in enumerate(box[:,1] - box[:,0]) if x < 0 ]}."
-            )
+            raise ValueError(f"Box axis reversed, x_0 > x_1 for dimensions: {[i for i, x in enumerate(box[:,1] - box[:,0]) if x < 0 ]}.")
         self.x = (box[0, 1] - box[0, 0]) * np.random.rand(nsamples) + box[0, 0]
         self.y = (box[1, 1] - box[1, 0]) * np.random.rand(nsamples) + box[1, 0]
         self.z = (box[2, 1] - box[2, 0]) * np.random.rand(nsamples) + box[2, 0]
@@ -55,24 +53,20 @@ class Chisel:
     # simple geometrical objects
     def rectangle(self, dx, dy, dz, origin=np.zeros((3, 1))):
         x, y, z = self.translate(origin, self.events)
-        return (
-            (-dx / 2 < x & x < dx / 2)
-            & (-dy / 2 < y & y < dy / 2)
-            & (-dz / 2 < z & z < dz / 2)
-        )
+        return (-dx / 2 < x & x < dx / 2) & (-dy / 2 < y & y < dy / 2) & (-dz / 2 < z & z < dz / 2)
 
     def sphere(self, radius, origin=np.zeros((3, 1))):
         x, y, z = self.translate(origin, self.events)
-        return x**2 + y**2 + z**2 < radius**2
+        return x ** 2 + y ** 2 + z ** 2 < radius ** 2
 
     def cylinder(self, radius, height, origin=np.zeros((3, 1))):
         x, y, z = self.translate(origin, self.events)
-        return (x**2 + y**2 < radius**2) & (-height / 2 < z) & (z < height / 2)
+        return (x ** 2 + y ** 2 < radius ** 2) & (-height / 2 < z) & (z < height / 2)
 
     def spherical_cap(self, radius, zenith_max, origin=np.zeros((3, 1))):
         x, y, z = self.translate(origin, self.events)
-        rpolar = np.sqrt(x**2 + y**2)
-        r = np.sqrt(rpolar**2 + z**2)
+        rpolar = np.sqrt(x ** 2 + y ** 2)
+        r = np.sqrt(rpolar ** 2 + z ** 2)
         zenith = np.arctan2(z, rpolar)
         h = radius * (1 - np.cos(zenith_max))
         return (r < radius) | (zenith < zenith_max) | (z < -radius + h)
@@ -118,12 +112,12 @@ class Chisel:
         z = self.z
 
         # accept in tube
-        r_polar = np.sqrt(x**2 + y**2)
+        r_polar = np.sqrt(x ** 2 + y ** 2)
         mask_tube = (-z_t / 2 < z) & (z < z_t / 2) & (r_polar < r_t)
 
         # coordinates in sphere 1
         z1 = z - (-z_t / 2 - cap_gap + r_c * ctheta_c)
-        r1 = np.sqrt(r_polar**2 + z1**2)
+        r1 = np.sqrt(r_polar ** 2 + z1 ** 2)
         inc1 = np.arctan2(z1, r_polar)  # inclination angle
 
         # accept in front cap
@@ -131,7 +125,7 @@ class Chisel:
 
         # coordinates in sphere 2
         z2 = z + (-z_t / 2 - cap_gap - h + r_c)
-        r2 = np.sqrt(r_polar**2 + z2**2)
+        r2 = np.sqrt(r_polar ** 2 + z2 ** 2)
         inc2 = np.arctan2(-z2, r_polar)  # inclination angle
 
         # accept in back cap
@@ -194,9 +188,7 @@ def miniboone_geometry(df):
         npoints += np.shape(new_events)[1]
         tries += nsamples
         if tries > 1e3 * nsamples:
-            raise ValueError(
-                f"Geometry sampled too inefficiently, tries = {tries} and npoints = {npoints}. Wrong setup?"
-            )
+            raise ValueError(f"Geometry sampled too inefficiently, tries = {tries} and npoints = {npoints}. Wrong setup?")
 
     # guarantee that array has number of samples asked (nsamples)
     df["pos_scatt", "0"] = np.zeros((nsamples,))
@@ -230,9 +222,9 @@ def place_decay(df, df_column, l_decay_proper_cm, label="decay_pos"):
     # parent mass
     M = np.sqrt(Cfv.dot4(p, p))
     # momentum
-    pvec = np.sqrt(p[:, 0] ** 2 - M**2)
+    pvec = np.sqrt(p[:, 0] ** 2 - M ** 2)
     beta = pvec / p[:, 0]
-    gamma = 1 / np.sqrt(1 - beta**2)
+    gamma = 1 / np.sqrt(1 - beta ** 2)
     gammabeta = gamma * beta
 
     ######################

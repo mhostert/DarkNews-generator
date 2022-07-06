@@ -2,29 +2,13 @@ import numpy as np
 import vegas as vg
 from collections import OrderedDict
 
-import logging
+from DarkNews import logger, prettyprinter
 
-mylogger = logging.getLogger(__name__)
-
-
-from . import Cfourvec as Cfv
-from . import const
-from .const import *
-from . import phase_space
-from . import decay_rates as dr
-from . import amplitudes as amps
-
-
-def Power(x, n):
-    return x**n
-
-
-def lam(a, b, c):
-    return a**2 + b**2 + c**2 - 2 * a * b - 2 * b * c - 2 * a * c
-
-
-def Sqrt(x):
-    return np.sqrt(x)
+from DarkNews import Cfourvec as Cfv
+from DarkNews import const
+from DarkNews import phase_space
+from DarkNews import decay_rates as dr
+from DarkNews import amplitudes as amps
 
 
 class UpscatteringXsec(vg.BatchIntegrand):
@@ -46,9 +30,7 @@ class UpscatteringXsec(vg.BatchIntegrand):
         self.ups_case = ups_case
         self.diagram = diagram
         if not isinstance(self.diagram, str):
-            logger.error(
-                f"ERROR. Cannot calculate total cross section for more than one diagram at a time. Passed diagram={self.diagram}."
-            )
+            logger.error(f"ERROR. Cannot calculate total cross section for more than one diagram at a time. Passed diagram={self.diagram}.")
             raise ValueError
 
         # Enforce Q2 range
@@ -69,14 +51,12 @@ class UpscatteringXsec(vg.BatchIntegrand):
         self.norm = {}
         self.norm["diff_xsec"] = 1
         # normalize integrand with an initial throw
-        _throw = self.__call__(
-            np.random.rand(self.dim, 20000), np.ones((self.dim, 20000))
-        )
+        _throw = self.__call__(np.random.rand(self.dim, 20000), np.ones((self.dim, 20000)))
         for key, val in _throw.items():
             self.norm[key] = np.mean(val)
             # cannot normalize zero integrand
             if self.norm[key] == 0.0:
-                logger.warning(f"Warning: mean of integrand is zero. Vegas may break.")
+                logger.warning("Warning: mean of integrand is zero. Vegas may break.")
                 self.norm[key] = 1
 
     def __call__(self, x, jac):
@@ -89,24 +69,18 @@ class UpscatteringXsec(vg.BatchIntegrand):
         M = ups_case.target.mass
 
         Q2lmin = np.log(phase_space.upscattering_Q2min(Enu, ups_case.m_ups, M))
-        Q2lmax = np.log(
-            np.minimum(
-                phase_space.upscattering_Q2max(Enu, ups_case.m_ups, M), self.QMAX**2
-            )
-        )
+        Q2lmax = np.log(np.minimum(phase_space.upscattering_Q2max(Enu, ups_case.m_ups, M), self.QMAX ** 2))
 
         Q2l = (Q2lmax - Q2lmin) * x[:, 0] + Q2lmin
         Q2 = np.exp(Q2l)
 
-        s = M**2 + 2 * Enu * M  # massless projectile
+        s = M ** 2 + 2 * Enu * M  # massless projectile
         t = -Q2
-        u = 2 * M**2 + ups_case.m_ups**2 - s - t  # massless projectile
+        u = 2 * M ** 2 + ups_case.m_ups ** 2 - s - t  # massless projectile
 
         ##############################################
         # Upscattering amplitude squared (spin summed -- not averaged)
-        diff_xsec = amps.upscattering_dxsec_dQ2(
-            [s, t, u], self.ups_case, diagrams=[self.diagram]
-        )
+        diff_xsec = amps.upscattering_dxsec_dQ2([s, t, u], self.ups_case, diagrams=[self.diagram])
         if type(diff_xsec) is dict:
             diff_xsec = np.sum([diff_xsec[diagram] for diagram in diff_xsec.keys()])
         # hypercube jacobian (vegas hypercube --> physical limits) transformation
@@ -160,12 +134,8 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
             raise ValueError
 
         # normalize integrand with an initial throw
-        logger.debug(
-            "Throwing an initial 10000 random points to find the normalization"
-        )
-        _throw = self.__call__(
-            np.random.rand(self.dim, 10_000), np.ones((self.dim, 10_000))
-        )
+        logger.debug("Throwing an initial 10000 random points to find the normalization")
+        _throw = self.__call__(np.random.rand(self.dim, 10_000), np.ones((self.dim, 10_000)))
         logger.debug("Throwing successful")
         for key, val in _throw.items():
             self.norm[key] = np.mean(val)
@@ -200,9 +170,9 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
         i_var += 1
 
         Q2 = np.exp(Q2l)
-        s_scatt = M**2 + 2 * Enu * M  # massless projectile
+        s_scatt = M ** 2 + 2 * Enu * M  # massless projectile
         t_scatt = -Q2
-        u_scatt = 2 * M**2 + m_parent**2 - s_scatt + Q2  # massless projectile
+        u_scatt = 2 * M ** 2 + m_parent ** 2 - s_scatt + Q2  # massless projectile
 
         diff_xsec = amps.upscattering_dxsec_dQ2([s_scatt, t_scatt, u_scatt], ups_case)
 
@@ -226,21 +196,15 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 
                 # params.UD4**2 * (params.Ue4**2 + params.Umu4**2 + params.Utau4**2)*params.gD**2
                 self.int_dic["diff_decay_rate_0"] = dr.diff_gamma_Ni_to_Nj_V(
-                    cost=cost,
-                    vertex_ij=np.sqrt(decay_case.Dih),
-                    mi=m_parent,
-                    mj=m_daughter,
-                    mV=mzprime,
-                    HNLtype=decay_case.HNLtype,
-                    h=decay_case.h_parent,
+                    cost=cost, vertex_ij=np.sqrt(decay_case.Dih), mi=m_parent, mj=m_daughter, mV=mzprime, HNLtype=decay_case.HNLtype, h=decay_case.h_parent,
                 )
                 self.int_dic["diff_decay_rate_0"] *= 2  # hypercube jacobian
 
                 ##############################################
                 # mediator decay M --> ell+ ell-
-                self.int_dic["diff_decay_rate_1"] = dr.gamma_V_to_ell_ell(
-                    vertex=decay_case.TheoryModel.deV, mV=mzprime, m_ell=decay_case.mm
-                ) * np.full_like(self.int_dic["diff_decay_rate_0"], 1.0)
+                self.int_dic["diff_decay_rate_1"] = dr.gamma_V_to_ell_ell(vertex=decay_case.TheoryModel.deV, mV=mzprime, m_ell=decay_case.mm) * np.full_like(
+                    self.int_dic["diff_decay_rate_0"], 1.0
+                )
 
             elif decay_case.off_shell:
                 ##############################################
@@ -263,16 +227,14 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
                 u = (umax - umin) * x[:, i_var] + umin
                 i_var += 1
 
-                v = np.sum(masses**2) - u - t
+                v = np.sum(masses ** 2) - u - t
 
                 c3 = (2.0) * x[:, i_var] - 1.0
                 i_var += 1
                 phi34 = (2.0 * np.pi) * x[:, i_var]
                 i_var += 1
 
-                dgamma = dr.diff_gamma_Ni_to_Nj_ell_ell(
-                    [t, u, v, c3, phi34], decay_case
-                )
+                dgamma = dr.diff_gamma_Ni_to_Nj_ell_ell([t, u, v, c3, phi34], decay_case)
 
                 # hypercube jacobian (vegas hypercube --> physical limits) transformation
                 dgamma *= tmax - tmin
@@ -290,12 +252,7 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
             i_var += 1
 
             self.int_dic["diff_decay_rate_0"] = dr.diff_gamma_Ni_to_Nj_gamma(
-                cost=cost,
-                vertex_ij=decay_case.Tih,
-                mi=m_parent,
-                mj=m_daughter,
-                HNLtype=decay_case.HNLtype,
-                h=decay_case.h_parent,
+                cost=cost, vertex_ij=decay_case.Tih, mi=m_parent, mj=m_daughter, HNLtype=decay_case.HNLtype, h=decay_case.h_parent,
             )
 
             # hypercube jacobian (vegas hypercube --> physical limits) transformation
@@ -365,9 +322,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
         "m4": MA,  # final target
     }
 
-    P1LAB, P2LAB, P3LAB, P4LAB = phase_space.two_to_two_scatter(
-        scatter_samples, **masses_scatter
-    )
+    P1LAB, P2LAB, P3LAB, P4LAB = phase_space.two_to_two_scatter(scatter_samples, **masses_scatter)
 
     # N boost parameters
     boost_scattered_N = {
@@ -402,9 +357,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
                 "m3": mzprime,  # Z'
             }
             # Phnl, Phnl_daughter, Pz'
-            P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(
-                N_decay_samples, boost=boost_scattered_N, **masses_decay
-            )
+            P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
 
             # Z' boost parameters
             boost_Z = {
@@ -423,9 +376,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
                 "m3": mm,  # \ell-
             }
             # PZ', pe-, pe+
-            P1LAB_decayZ, P2LAB_decayZ, P3LAB_decayZ = phase_space.two_body_decay(
-                Z_decay_samples, boost=boost_Z, **masses_decay
-            )
+            P1LAB_decayZ, P2LAB_decayZ, P3LAB_decayZ = phase_space.two_body_decay(Z_decay_samples, boost=boost_Z, **masses_decay)
 
             four_momenta["P_decay_N_parent"] = P1LAB_decay
             four_momenta["P_decay_N_daughter"] = P2LAB_decay
@@ -451,14 +402,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
                 "m4": mf,
             }  # Nj
             # Phnl, pe-, pe+, pnu
-            (
-                P1LAB_decay,
-                P2LAB_decay,
-                P3LAB_decay,
-                P4LAB_decay,
-            ) = phase_space.three_body_decay(
-                N_decay_samples, boost=boost_scattered_N, **masses_decay
-            )
+            (P1LAB_decay, P2LAB_decay, P3LAB_decay, P4LAB_decay,) = phase_space.three_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
 
             four_momenta["P_decay_N_parent"] = P1LAB_decay
             four_momenta["P_decay_ell_minus"] = P2LAB_decay
@@ -479,9 +423,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
             "m3": 0.0,  # gamma
         }
         # Phnl, Phnl', Pgamma
-        P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(
-            N_decay_samples, boost=boost_scattered_N, **masses_decay
-        )
+        P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
 
         four_momenta["P_decay_N_parent"] = P1LAB_decay
         four_momenta["P_decay_N_daughter"] = P2LAB_decay

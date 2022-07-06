@@ -1,18 +1,20 @@
-__version__ = '0.0.1'
+__version__ = "0.0.1"
 
-import sys 
+import sys
 from pathlib import Path
+
 local_dir = Path(__file__).parent
 
-'''
+"""
     Initializing loggers
-'''
+"""
 import logging
+
 # for debug and error handling
-logger = logging.getLogger(__name__+'.logger')
+logger = logging.getLogger(__name__ + ".logger")
 
 # for pretty printing
-prettyprinter = logging.getLogger(__name__+'.pretty_printer')
+prettyprinter = logging.getLogger(__name__ + ".pretty_printer")
 prettyprinter.setLevel(logging.INFO)
 handler = logging.StreamHandler(stream=sys.stdout)
 handler.setLevel(logging.INFO)
@@ -22,10 +24,10 @@ logger.propagate = False
 prettyprinter.propagate = False
 
 
-'''
+"""
     These definition modules make import of main DarkNews classes easier.
     Essentially, it allows DarkNews.XXXX instead of DarkNews.YYYY.XXXX
-'''
+"""
 # Definition modules
 from DarkNews.GenLauncher import GenLauncher
 
@@ -44,14 +46,14 @@ from DarkNews import decay_rates
 from DarkNews import processes
 from DarkNews import model
 
-from DarkNews.processes import UpscatteringProcess 
-from DarkNews.processes import FermionDileptonDecay 
-from DarkNews.processes import FermionSinglePhotonDecay 
+from DarkNews.processes import UpscatteringProcess
+from DarkNews.processes import FermionDileptonDecay
+from DarkNews.processes import FermionSinglePhotonDecay
 
 # Monte Carlo modules
 from DarkNews import MC
 
-# for output of MC 
+# for output of MC
 from DarkNews import printer
 from DarkNews import geom
 

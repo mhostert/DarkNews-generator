@@ -74,9 +74,7 @@ class Detector:
             self.ERANGE = params["erange"]
 
             # Detector targets
-            self.NUCLEAR_TARGETS = [
-                NuclearTarget(target) for target in params["nuclear_targets"]
-            ]
+            self.NUCLEAR_TARGETS = [NuclearTarget(target) for target in params["nuclear_targets"]]
             self.POTS = params["POTs"]
             self.FIDUCIAL_MASS_PER_TARGET = params["fiducial_mass_per_target"]
 
@@ -91,42 +89,26 @@ class Detector:
                 "POTs",
             ]:
                 # check that the error comes from reading the file and not elsewhere
-                raise KeyError(
-                    f"No field '{err.args[0]}' specified in the the experiment configuration file '{experiment}'.".format(
-                        err.args[0], experiment
-                    )
-                )
+                raise KeyError(f"No field '{err.args[0]}' specified in the the experiment configuration file '{experiment}'.".format(err.args[0], experiment))
             raise err
 
         # total number of targets
         self.NUMBER_OF_TARGETS = {}
-        for fid_mass, target in zip(
-            self.FIDUCIAL_MASS_PER_TARGET, self.NUCLEAR_TARGETS
-        ):
-            self.NUMBER_OF_TARGETS[f"{target.name}"] = (
-                fid_mass * const.t_to_GeV / (target.mass)
-            )
+        for fid_mass, target in zip(self.FIDUCIAL_MASS_PER_TARGET, self.NUCLEAR_TARGETS):
+            self.NUMBER_OF_TARGETS[f"{target.name}"] = fid_mass * const.t_to_GeV / (target.mass)
 
         # load neutrino fluxes: first try with path relative to experiment file, if error try with path from original config files
         exp_dir = os.path.dirname(experiment_file)
         try:
-            _enu, *_fluxes = np.genfromtxt(
-                Path(f"{exp_dir}/{self.FLUXFILE}"), unpack=True
-            )
+            _enu, *_fluxes = np.genfromtxt(Path(f"{exp_dir}/{self.FLUXFILE}"), unpack=True)
         except FileNotFoundError:
             try:
-                _enu, *_fluxes = np.genfromtxt(
-                    Path(f"{self.PATH_CONFIG_FILES}/{self.FLUXFILE}"), unpack=True
-                )
+                _enu, *_fluxes = np.genfromtxt(Path(f"{self.PATH_CONFIG_FILES}/{self.FLUXFILE}"), unpack=True)
             except FileNotFoundError:
-                raise FileNotFoundError(
-                    f"Fluxes file {self.FLUXFILE} not found neither in current experiment file path nor in config file path."
-                )
+                raise FileNotFoundError(f"Fluxes file {self.FLUXFILE} not found neither in current experiment file path nor in config file path.")
         self.FLUX_FUNCTIONS = 6 * [[]]
         for i in range(len(_fluxes)):
-            self.FLUX_FUNCTIONS[i] = interpolate.interp1d(
-                _enu, _fluxes[i] * self.FLUX_NORM, fill_value=0.0, bounds_error=False
-            )
+            self.FLUX_FUNCTIONS[i] = interpolate.interp1d(_enu, _fluxes[i] * self.FLUX_NORM, fill_value=0.0, bounds_error=False)
 
         prettyprinter.info(
             f"""Experiment:

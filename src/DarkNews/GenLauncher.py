@@ -177,14 +177,7 @@ class GenLauncher:
     _choices = {
         "HNLtype": ["dirac", "majorana"],
         "decay_product": ["e+e-", "mu+mu-", "photon"],
-        "nu_flavors": [
-            "nu_e",
-            "nu_mu",
-            "nu_tau",
-            "nu_e_bar",
-            "nu_mu_bar",
-            "nu_tau_bar",
-        ],
+        "nu_flavors": ["nu_e", "nu_mu", "nu_tau", "nu_e_bar", "nu_mu_bar", "nu_tau_bar",],
     }
     # parameters names list
     _common_parameters = COMMON_ARGS
@@ -224,13 +217,9 @@ class GenLauncher:
             logger.error(
                 f"Generic Model paramters {generic_args} set at the same time as {three_portal_args}. Cannot mix generic and three-portal model arguments together."
             )
-            raise ValueError(
-                "Two types of parameters were found. You cannot mix Generic Model paramters with Three Portal Model parameters."
-            )
+            raise ValueError("Two types of parameters were found. You cannot mix Generic Model paramters with Three Portal Model parameters.")
         else:
-            raise ValueError(
-                f"Could not determine what model type to use with kwargs.keys = {kwargs.keys()}"
-            )
+            raise ValueError(f"Could not determine what model type to use with kwargs.keys = {kwargs.keys()}")
 
         # DEFAULTS
         self.m4 = 0.150
@@ -318,11 +307,7 @@ class GenLauncher:
         # Set up loggers
         self.prettyprinter = prettyprinter
         self.configure_logger(
-            logger=logger,
-            loglevel=self.loglevel,
-            prettyprinter=self.prettyprinter,
-            verbose=self.verbose,
-            logfile=self.logfile,
+            logger=logger, loglevel=self.loglevel, prettyprinter=self.prettyprinter, verbose=self.verbose, logfile=self.logfile,
         )
 
         prettyprinter.info(self.banner)
@@ -337,9 +322,7 @@ class GenLauncher:
         if self._model_creator:
             self.bsm_model = self._model_creator(**args_dict)
         else:
-            logger.warning(
-                f"Could not find a model creator -- using three portal model."
-            )
+            logger.warning(f"Could not find a model creator -- using three portal model.")
             self.bsm_model = dn.model.create_3portal_HNL_model(**args_dict)
 
         ####################################################
@@ -369,23 +352,13 @@ class GenLauncher:
             _boson_string += f"mhprime_{self.bsm_model.mhprime:.4g}"
 
         # 3+1
-        if (
-            self.bsm_model.m4 is not None
-            and self.bsm_model.m5 is None
-            and self.bsm_model.m6 is None
-        ):
+        if self.bsm_model.m4 is not None and self.bsm_model.m5 is None and self.bsm_model.m6 is None:
             self.upscattered_nus = [dn.pdg.neutrino4]
             self.outgoing_nus = [dn.pdg.nulight]
-            self.data_path = Path(
-                f"{self.path}/data/{exp_path_part}/3plus1/m4_{self.bsm_model.m4:.4g}_{_boson_string}_{self.bsm_model.HNLtype}/"
-            )
+            self.data_path = Path(f"{self.path}/data/{exp_path_part}/3plus1/m4_{self.bsm_model.m4:.4g}_{_boson_string}_{self.bsm_model.HNLtype}/")
 
         # 3+2
-        elif (
-            self.bsm_model.m4 is not None
-            and self.bsm_model.m5 is not None
-            and self.bsm_model.m6 is None
-        ):
+        elif self.bsm_model.m4 is not None and self.bsm_model.m5 is not None and self.bsm_model.m6 is None:
             ## FIXING 3+2 process chain to be nualpha --> N5 --> N4
             self.upscattered_nus = [dn.pdg.neutrino5]
             self.outgoing_nus = [dn.pdg.neutrino4]
@@ -394,11 +367,7 @@ class GenLauncher:
             )
 
         # 3+3
-        elif (
-            self.bsm_model.m4 is not None
-            and self.bsm_model.m5 is not None
-            and self.bsm_model.m6 is not None
-        ):
+        elif self.bsm_model.m4 is not None and self.bsm_model.m5 is not None and self.bsm_model.m6 is not None:
             self.upscattered_nus = [
                 dn.pdg.neutrino4,
                 dn.pdg.neutrino5,
@@ -410,12 +379,8 @@ class GenLauncher:
             )
 
         else:
-            logger.error(
-                "Error! Mass spectrum not allowed (m4,m5,m6) = ({self.bsm_model.m4:.4g},{self.bsm_model.m5:.4g},{self.bsm_model.m6:.4g}) GeV."
-            )
-            raise ValueError(
-                "Could not find a heavy neutrino spectrum from user input."
-            )
+            logger.error("Error! Mass spectrum not allowed (m4,m5,m6) = ({self.bsm_model.m4:.4g},{self.bsm_model.m5:.4g},{self.bsm_model.m6:.4g}) GeV.")
+            raise ValueError("Could not find a heavy neutrino spectrum from user input.")
 
         ####################################################
         # Create all MC cases
@@ -441,29 +406,18 @@ class GenLauncher:
                 continue
             # check the value within the choices
             # if parameter in self._choices.keys() and value not in self._choices[parameter]:
-            if parameter in self._choices.keys() and [
-                *parameter,
-                *self._choices[parameter],
-            ] == set([*parameter, *self._choices[parameter]]):
+            if parameter in self._choices.keys() and [*parameter, *self._choices[parameter],] == set([*parameter, *self._choices[parameter]]):
                 raise ValueError(
-                    f"Parameter '{parameter}', invalid choice: {value}, (choose among "
-                    + ", ".join([f"{el}" for el in self._choices[parameter]])
-                    + ")"
+                    f"Parameter '{parameter}', invalid choice: {value}, (choose among " + ", ".join([f"{el}" for el in self._choices[parameter]]) + ")"
                 )
             # set the parameter
             setattr(self, parameter, value)
         # at the end, if kwargs is not empty, that would mean some parameters were unused, i.e. they are spelled wrong or do not exist: raise AttributeError
         if len(kwargs) != 0:
             if raise_errors:
-                raise AttributeError(
-                    "Parameters "
-                    + ", ".join(kwargs.keys())
-                    + " were unused. Either not supported or misspelled."
-                )
+                raise AttributeError("Parameters " + ", ".join(kwargs.keys()) + " were unused. Either not supported or misspelled.")
             else:
-                logger.warning(
-                    "Parameters " + ", ".join(kwargs.keys()) + " will not be used."
-                )
+                logger.warning("Parameters " + ", ".join(kwargs.keys()) + " will not be used.")
 
     def _create_all_MC_cases(self, **kwargs):
         """Create MC_events objects and run the MC computations
@@ -502,19 +456,13 @@ class GenLauncher:
             logger.error("No scattering regime found -- please specify at least one.")
             raise ValueError
         if not scope["DECAY_PRODUCTS"]:
-            logger.error(
-                "No visible decay products found -- please specify at least one final state (e+e-, mu+mu- or photon)."
-            )
+            logger.error("No visible decay products found -- please specify at least one final state (e+e-, mu+mu- or photon).")
             raise ValueError
         if not scope["INCLUDE_HC"] and not scope["INCLUDE_HF"]:
-            logger.error(
-                "No helicity structure was allowed -- please allow at least one type: HC or HF."
-            )
+            logger.error("No helicity structure was allowed -- please allow at least one type: HC or HF.")
             raise ValueError
         if not scope["FLAVORS"]:
-            logger.error(
-                "No projectile neutrino flavors specified -- please specify at least one."
-            )
+            logger.error("No projectile neutrino flavors specified -- please specify at least one.")
             raise ValueError
 
         # create instances of all MC cases of interest
@@ -536,27 +484,15 @@ class GenLauncher:
                             # scattering regime to use
                             for scattering_regime in scope["SCATTERING_REGIMES"]:
                                 # skip disallowed regimes
-                                if (
-                                    (scattering_regime in ["n-el"])
-                                    and (nuclear_target.N < 1)
-                                ) or (  # no neutrons
-                                    (scattering_regime in ["coherent"])
-                                    and (not nuclear_target.is_nucleus)
+                                if ((scattering_regime in ["n-el"]) and (nuclear_target.N < 1)) or (  # no neutrons
+                                    (scattering_regime in ["coherent"]) and (not nuclear_target.is_nucleus)
                                 ):  # coherent = p-el for hydrogen
                                     continue
                                 elif (
-                                    (
-                                        scattering_regime in ["coherent"]
-                                        and scope["NO_COH"]
-                                    )
-                                    or (
-                                        scattering_regime in ["p-el"]
-                                        and scope["NO_PELASTIC"]
-                                    )
+                                    (scattering_regime in ["coherent"] and scope["NO_COH"])
+                                    or (scattering_regime in ["p-el"] and scope["NO_PELASTIC"])
                                     or (scattering_regime in ["n-el"])
-                                    and (
-                                        not scope["INCLUDE_NELASTIC"]
-                                    )  # do not include n-el
+                                    and (not scope["INCLUDE_NELASTIC"])  # do not include n-el
                                 ):
                                     continue
                                 else:
@@ -571,33 +507,13 @@ class GenLauncher:
                                         "enforce_prompt": self.enforce_prompt,
                                     }
 
-                                    if scope[
-                                        "INCLUDE_HC"
-                                    ]:  # helicity conserving scattering
-                                        self.gen_cases.append(
-                                            dn.MC.MC_events(
-                                                self.experiment,
-                                                bsm_model=self.bsm_model,
-                                                **args,
-                                                helicity="conserving",
-                                            )
-                                        )
+                                    if scope["INCLUDE_HC"]:  # helicity conserving scattering
+                                        self.gen_cases.append(dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, **args, helicity="conserving",))
 
-                                    if scope[
-                                        "INCLUDE_HF"
-                                    ]:  # helicity flipping scattering
-                                        self.gen_cases.append(
-                                            dn.MC.MC_events(
-                                                self.experiment,
-                                                bsm_model=self.bsm_model,
-                                                **args,
-                                                helicity="flipping",
-                                            )
-                                        )
+                                    if scope["INCLUDE_HF"]:  # helicity flipping scattering
+                                        self.gen_cases.append(dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, **args, helicity="flipping",))
 
-                                    logger.debug(
-                                        f"Created an MC instance of {self.gen_cases[-1].underl_process_name}."
-                                    )
+                                    logger.debug(f"Created an MC instance of {self.gen_cases[-1].underl_process_name}.")
 
         return self.gen_cases
 
@@ -651,11 +567,7 @@ class GenLauncher:
         ############
         # superseed original logger configuration
         self.configure_logger(
-            logger=logger,
-            prettyprinter=self.prettyprinter,
-            loglevel=self.loglevel,
-            verbose=self.verbose,
-            logfile=self.logfile,
+            logger=logger, prettyprinter=self.prettyprinter, loglevel=self.loglevel, verbose=self.verbose, logfile=self.logfile,
         )
 
         ######################################
@@ -663,9 +575,7 @@ class GenLauncher:
         logger.debug(f"Now running the generator for each instance.")
         # Set theory params and run generation of events
 
-        prettyprinter.info(
-            f"Generating Events using the neutrino-nucleus upscattering engine"
-        )
+        prettyprinter.info(f"Generating Events using the neutrino-nucleus upscattering engine")
         # numpy set used by vegas
         if self.seed:
             np.random.seed(self.seed)
@@ -689,12 +599,7 @@ class GenLauncher:
 
         ############################################################################
         # Print events to file
-        self.dn_printer = dn.printer.Printer(
-            self.df,
-            sparse=self.sparse,
-            print_to_float32=self.print_to_float32,
-            decay_product=self.decay_product,
-        )
+        self.dn_printer = dn.printer.Printer(self.df, sparse=self.sparse, print_to_float32=self.print_to_float32, decay_product=self.decay_product,)
         if self.pandas:
             self.dn_printer.print_events_to_pandas()
         if self.parquet:
@@ -702,21 +607,13 @@ class GenLauncher:
         if self.numpy:
             self.dn_printer.print_events_to_ndarray()
         if self.hepevt_legacy:
-            self.dn_printer.print_events_to_hepevt_legacy(
-                unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events
-            )
+            self.dn_printer.print_events_to_hepevt_legacy(unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events)
         if self.hepmc2:
-            self.dn_printer.print_events_to_hepmc2(
-                unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events
-            )
+            self.dn_printer.print_events_to_hepmc2(unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events)
         if self.hepmc3:
-            self.dn_printer.print_events_to_hepmc3(
-                unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events
-            )
+            self.dn_printer.print_events_to_hepmc3(unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events)
         if self.hepevt:
-            self.dn_printer.print_events_to_hepevt(
-                unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events
-            )
+            self.dn_printer.print_events_to_hepevt(unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events)
 
         #############################################################################
         # Make summary plots?
@@ -725,14 +622,10 @@ class GenLauncher:
             try:
                 import matplotlib
             except ImportError as e:
-                logger.warning(
-                    "Warning! Could not find matplotlib -- stopping the making of summary plots."
-                )
+                logger.warning("Warning! Could not find matplotlib -- stopping the making of summary plots.")
             else:
                 self.path_to_summary_plots = Path(self.data_path) / "summary_plots/"
-                dn.plot_tools.batch_plot(
-                    self.df, self.path_to_summary_plots, title="DarkNews"
-                )
+                dn.plot_tools.batch_plot(self.df, self.path_to_summary_plots, title="DarkNews")
             logger.info(f"Plots saved in {self.path_to_summary_plots}.")
 
         # restore overwritten path
@@ -742,12 +635,7 @@ class GenLauncher:
         return self.df
 
     def configure_logger(
-        self,
-        logger,
-        loglevel=logging.INFO,
-        prettyprinter=None,
-        logfile=None,
-        verbose=False,
+        self, logger, loglevel=logging.INFO, prettyprinter=None, logfile=None, verbose=False,
     ):
         """
         Configure the DarkNews logger
@@ -783,9 +671,7 @@ class GenLauncher:
 
         if logfile:
             # log to files with max 1 MB with up to 4 files of backup
-            handler = logging.handlers.RotatingFileHandler(
-                f"{logfile}", maxBytes=1000000, backupCount=4
-            )
+            handler = logging.handlers.RotatingFileHandler(f"{logfile}", maxBytes=1000000, backupCount=4)
 
         else:
             # stdout only
@@ -794,9 +680,7 @@ class GenLauncher:
                 pretty_handler = logging.StreamHandler(stream=sys.stdout)
                 pretty_handler.setLevel(loglevel)
                 delimiter = "---------------------------------------------------------"
-                pretty_handler.setFormatter(
-                    logging.Formatter(delimiter + "\n%(message)s\n")
-                )
+                pretty_handler.setFormatter(logging.Formatter(delimiter + "\n%(message)s\n"))
                 # update pretty printer
                 if prettyprinter.hasHandlers():
                     prettyprinter.handlers.clear()
@@ -804,12 +688,7 @@ class GenLauncher:
 
         handler.setLevel(loglevel)
         if verbose:
-            handler.setFormatter(
-                logging.Formatter(
-                    "%(asctime)s - %(levelname)s - %(name)s:\n\t%(message)s\n",
-                    datefmt="%H:%M:%S",
-                )
-            )
+            handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(name)s:\n\t%(message)s\n", datefmt="%H:%M:%S",))
         else:
             handler.setFormatter(logging.Formatter("%(message)s"))
 
