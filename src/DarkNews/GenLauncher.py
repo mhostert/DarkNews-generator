@@ -10,7 +10,44 @@ import DarkNews as dn
 from DarkNews import logger, prettyprinter
 from DarkNews.AssignmentParser import AssignmentParser
 
-COMMON_ARGS = [
+GENERATOR_ARGS = [
+    # scope
+    "name",
+    "decay_product",
+    "exp",
+    "nopelastic",
+    "nocoh",
+    "noHC",
+    "noHF",
+    "nu_flavors",
+    "sample_geometry",
+    "make_summary_plots",
+    "enforce_prompt",
+    # generator
+    "loglevel",
+    "verbose",
+    "logfile",
+    "neval",
+    "nint",
+    "neval_warmup",
+    "nint_warmup",
+    "seed",
+    # output
+    "pandas",
+    "parquet",
+    "numpy",
+    "hepevt",
+    "hepevt_legacy",
+    "hepmc2",
+    "hepmc3",
+    "hep_unweigh",
+    "unweighed_hep_events",
+    "sparse",
+    "print_to_float32",
+    "path",
+]
+
+COMMON_MODEL_ARGS = [
     "m4",
     "m5",
     "m6",
@@ -46,36 +83,6 @@ COMMON_ARGS = [
     "s_55",
     "s_56",
     "s_66",
-    "decay_product",
-    "exp",
-    "nopelastic",
-    "nocoh",
-    "noHC",
-    "noHF",
-    "nu_flavors",
-    "loglevel",
-    "verbose",
-    "logfile",
-    "neval",
-    "nint",
-    "neval_warmup",
-    "nint_warmup",
-    "pandas",
-    "parquet",
-    "numpy",
-    "hepevt",
-    "hepevt_legacy",
-    "hepmc2",
-    "hepmc3",
-    "hep_unweigh",
-    "unweighed_hep_events",
-    "sparse",
-    "print_to_float32",
-    "sample_geometry",
-    "make_summary_plots",
-    "path",
-    "seed",
-    "enforce_prompt",
 ]
 
 THREE_PORTAL_ARGS = [
@@ -180,7 +187,7 @@ class GenLauncher:
         "nu_flavors": ["nu_e", "nu_mu", "nu_tau", "nu_e_bar", "nu_mu_bar", "nu_tau_bar",],
     }
     # parameters names list
-    _common_parameters = COMMON_ARGS
+    _common_parameters = GENERATOR_ARGS + COMMON_MODEL_ARGS
     _model_creator = None
 
     def __init__(self, param_file=None, **kwargs):
@@ -258,8 +265,9 @@ class GenLauncher:
         self.s_55 = 0.0
         self.s_56 = 0.0
         self.s_66 = 0.0
+        
+        self.name = None
         self.nu_flavors = ["nu_mu"]
-
         self.decay_product = "e+e-"
         self.exp = "miniboone_fhc"
         self.nopelastic = False
@@ -267,6 +275,10 @@ class GenLauncher:
         self.nocoh = False
         self.noHC = False
         self.noHF = False
+        self.sample_geometry = False
+        self.make_summary_plots = False
+        self.enforce_prompt = False
+
         self.loglevel = "INFO"
         self.verbose = False
         self.logfile = None
@@ -274,6 +286,8 @@ class GenLauncher:
         self.nint = 20
         self.neval_warmup = int(1e3)
         self.nint_warmup = 10
+        self.seed = None
+
         self.pandas = True
         self.parquet = False
         self.numpy = False
@@ -285,11 +299,7 @@ class GenLauncher:
         self.unweighed_hep_events = 100
         self.sparse = False
         self.print_to_float32 = False
-        self.sample_geometry = False
-        self.make_summary_plots = False
         self.path = "."
-        self.seed = None
-        self.enforce_prompt = False
 
         # load file if not None
         if param_file is not None:
@@ -322,7 +332,7 @@ class GenLauncher:
         if self._model_creator:
             self.bsm_model = self._model_creator(**args_dict)
         else:
-            logger.warning(f"Could not find a model creator -- using three portal model.")
+            logger.warning("Could not find a model creator -- using three portal model.")
             self.bsm_model = dn.model.create_3portal_HNL_model(**args_dict)
 
         ####################################################
@@ -466,7 +476,7 @@ class GenLauncher:
             raise ValueError
 
         # create instances of all MC cases of interest
-        logger.debug(f"Creating instances of MC cases:")
+        logger.debug("Creating instances of MC cases:")
         self.gen_cases = []
         # neutrino flavor initiating scattering
         for flavor in scope["FLAVORS"]:
@@ -489,9 +499,9 @@ class GenLauncher:
                                 ):  # coherent = p-el for hydrogen
                                     continue
                                 elif (
-                                    (scattering_regime in ["coherent"] and scope["NO_COH"])
-                                    or (scattering_regime in ["p-el"] and scope["NO_PELASTIC"])
-                                    or (scattering_regime in ["n-el"])
+                                    (scattering_regime in ["coherent"] and scope["NO_COH"])\
+                                    or (scattering_regime in ["p-el"] and scope["NO_PELASTIC"])\
+                                    or (scattering_regime in ["n-el"])\
                                     and (not scope["INCLUDE_NELASTIC"])  # do not include n-el
                                 ):
                                     continue
@@ -572,10 +582,10 @@ class GenLauncher:
 
         ######################################
         # run generator
-        logger.debug(f"Now running the generator for each instance.")
+        logger.debug("Now running the generator for each instance.")
         # Set theory params and run generation of events
 
-        prettyprinter.info(f"Generating Events using the neutrino-nucleus upscattering engine")
+        prettyprinter.info("Generating Events using the neutrino-nucleus upscattering engine")
         # numpy set used by vegas
         if self.seed:
             np.random.seed(self.seed)
@@ -700,7 +710,7 @@ class GenLauncher:
 # Three portal model
 def initialize_threeportal_launcher(self, param_file=None, **kwargs):
     # parameters names list
-    self._parameters = COMMON_ARGS + THREE_PORTAL_ARGS
+    self._parameters = GENERATOR_ARGS + COMMON_MODEL_ARGS + THREE_PORTAL_ARGS
     # set defaults
     self.gD = 1.0
     self.alphaD = None
@@ -728,7 +738,7 @@ def initialize_threeportal_launcher(self, param_file=None, **kwargs):
 
 def initialize_generic_launcher(self):
     # parameters names list
-    self._parameters = COMMON_ARGS + GENERIC_MODEL_ARGS
+    self._parameters = GENERATOR_ARGS + COMMON_MODEL_ARGS + GENERIC_MODEL_ARGS
 
     # set defaults
     self.c_e4 = 0.0

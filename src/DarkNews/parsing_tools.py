@@ -180,6 +180,7 @@ def add_scope_arguments(parser, DEFAULTS):
 
     # enforce the parent HNL decay to be prompt
     parser.add_argument("--enforce_prompt", help="forces the particles to decay promptly", action="store_true")
+    parser.add_argument("--make_summary_plots", help="generate summary plots of kinematics", action="store_true")
 
 
 def add_mc_arguments(parser, DEFAULTS):
@@ -200,25 +201,20 @@ def add_mc_arguments(parser, DEFAULTS):
     parser.add_argument("--parquet", help="If true, prints pandas dataframe to .parquet files. Loses metadata in attrs.", action="store_true")
     parser.add_argument("--numpy", help="If true, prints events as ndarrays in a .npy file", action="store_true")
     parser.add_argument("--hepevt", help="If true, print events to HEPEVT-formatted text files (does not save event weights)", action="store_true")
-    parser.add_argument(
-        "--hepevt_legacy",
+    parser.add_argument("--hepevt_legacy",
         help="If true, print events to a legacy HEPEVT format (saving weights next to the number of particle in the event and without linebreaks in particle entries)",
         action="store_true",
     )
     parser.add_argument("--hepmc2", help="If true, prints events to HepMC2 format.", action="store_true")
     parser.add_argument("--hepmc3", help="If true, prints events to HepMC3 format.", action="store_true")
     parser.add_argument("--hep_unweigh", help="unweigh events when printing in standard HEP formats (needs large neval)", action="store_true")
-    parser.add_argument(
-        "--unweighed_hep_events",
-        type=int,
+    parser.add_argument("--unweighed_hep_events",type=int,
         help="number of unweighed events to accept in any of the standard HEP formats. Has to be much smaller than neval for unweigh procedure to work.",
     )
 
-    parser.add_argument(
-        "--sparse", help="drop all information in the event except for visible particle momenta, neutrino energy, and weights.", action="store_true"
+    parser.add_argument("--sparse", help="drop all information in the event except for visible particle momenta, neutrino energy, and weights.", action="store_true"
     )
     parser.add_argument("--print_to_float32", help="Use float32 instead of default float64 when printing output to save storage space.", action="store_true")
 
-    parser.add_argument("--make_summary_plots", help="generate summary plots of kinematics", action="store_true")
     parser.add_argument("--path", type=str, help="path where to save run's outputs")
     parser.add_argument("--seed", type=int, help="numpy seed to be used by vegas.")

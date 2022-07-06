@@ -27,13 +27,13 @@ class Printer:
 
 		Args:
 			df_gen (pd.DataFrame): dataframe with the generated events.
-			
+
 			data_path (str, optional): path to be used to save the event files. Defaults to the "data_path" attribute of df_gen
 
 			sparse (bool, optional): if True, save only the neutrino energy, charged lepton or photon momenta, and weights to save storage space.
 									Not supported for HEPevt.
 									Defaults to False.
-			
+
 			print_to_float32 (bool, optional): If true downgrade floats to float32 to save storage space. Only relevant when sparse is True.
 												Defaults to False.
 
@@ -320,8 +320,8 @@ class Printer:
         if not unweigh:
             logger.warning(
                 "WARNING: HEPevt is not a lossless format -- you will lose the event weights. \
-			If you want to force-print weights, use the hepevt_legacy format instead. \
-			Otherwise, please set unweigh=True and set the desired number of unweighted events."
+If you want to force-print weights, use the hepevt_legacy format instead. \
+Otherwise, please set unweigh=True and set the desired number of unweighted events."
             )
         # HEPevt file name
         if filename:
@@ -347,7 +347,7 @@ class Printer:
         self._pyhepmc_printer(hep.WriterAscii(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
 
     def _pyhepmc_printer(self, hep_writer, unweigh=False, unweighed_hep_events=100):
-        """ Use pyhepmc to print events to standard HEP formats. 
+        """ Use pyhepmc to print events to standard HEP formats.
 
 		Args:
 			hep_writer (an instance of a hep writer bindings): of one of the following types: WriterHEPEVT, WriterAsciiHepMC2, WriterAscii

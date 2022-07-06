@@ -1,7 +1,7 @@
 import numpy as np
 
 from DarkNews import const
-from DarkNews.const import Sqrt, MZBOSON
+from DarkNews.const import Sqrt, MZBOSON, eQED
 
 from DarkNews import logger
 
