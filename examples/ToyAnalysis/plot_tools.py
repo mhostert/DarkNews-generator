@@ -6,11 +6,11 @@ from pathlib import Path
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import rc, rcParams
-from matplotlib.pyplot import *
 from matplotlib.pyplot import cm
 import matplotlib.patches as mpatches
 
-from DarkNews import *
+from DarkNews import const
+
 from ToyAnalysis import analysis
 from ToyAnalysis import fourvec as fv
 from ToyAnalysis import toy_logger

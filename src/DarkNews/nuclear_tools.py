@@ -7,7 +7,7 @@ from DarkNews import logger
 from DarkNews import local_dir
 
 from DarkNews.const_dics import fourier_bessel_dic
-from DarkNews.const import *
+from DarkNews import const
 
 
 class NuclearTarget:
@@ -17,17 +17,17 @@ class NuclearTarget:
 
         It contains target properties like number of protons, neutrons, informations on the mass, as well 
         as all the Nuclear Data Table information on:
-            nuclear_Eb, 
-            atomic_Eb, 
-            atomic_mass, 
-            excess_mass, 
-            nuclear_mass, 
+            nuclear_Eb,
+            atomic_Eb,
+            atomic_mass,
+            excess_mass,
+            nuclear_mass,
             beta_decay_energy.
 
         It also provides the nuclear form factors as functions to
-        
+
         Its daughter class, BoundNucleon(), handles the nucleons inside the nucleus.
-            
+
         Args:
             name (str): name of the target. Can be either "electron" or the name of the element
             following the Nuclear Data Table format (e.g. C12, Pb208).
@@ -45,7 +45,7 @@ class NuclearTarget:
             self.is_neutron = False
             self.is_free_nucleon = False
 
-            self.mass = m_e
+            self.mass = const.m_e
             self.charge = 1
             self.Z = 0
             self.N = 0
@@ -94,13 +94,9 @@ class NuclearTarget:
     def get_constituent_nucleon(self, name):
         return self.BoundNucleon(self, name)
 
-    # *constituent quarks* for DIS
-    def get_constituent_nucleon(self, name):
-        return self.BoundNucleon(self, name)
-
     class BoundNucleon:
-        """ for scattering on bound nucleon in the nuclear target 
-        
+        """ for scattering on bound nucleon in the nuclear target
+
         Inner Class
 
         Args:
@@ -115,7 +111,7 @@ class NuclearTarget:
             self.Z = int(name == "proton")
             self.N = int(name == "neutron")
             self.charge = self.Z
-            self.mass = m_proton
+            self.mass = const.m_proton
             self.name = f"{name}_in_{nucleus.name}"
 
             self.is_hadron = True
@@ -152,9 +148,9 @@ def assign_form_factors(target):
                 Chinese Physics C45, 030003, March 2021.
 
         Element properties are stored in elements_dic.To access individual elements we use the format:
-            
+
             key = 'name+A', e.g. key = 'Pb208' or 'C12'.
-        
+
         All units in GeV, except otherwise specified.
 
         Args:
@@ -260,7 +256,7 @@ def fourier_bessel_integral_terms(R, n):
 
 # Q2 in GeV^2 and other units in fm
 def nuclear_F1_fourier_bessel_EM(Q2, array_coeff):
-    q = np.sqrt(Q2) * fm_to_GeV
+    q = np.sqrt(Q2) * const.fm_to_GeV
     R = array_coeff[-1]
     ai = np.array(array_coeff[:-1])
     nonzero_terms = np.nonzero(ai)[0]
@@ -310,7 +306,7 @@ with open(mass_file, "r") as ame:
             elements_dic[name]["excess_mass"] = float(line[30:35] + "." + line[36:42]) * 1e-6
 
             # nuclear mass corrected for electron mass and electron binding energy (note that Eb_e << MeV)
-            elements_dic[name]["nuclear_mass"] = elements_dic[name]["atomic_mass"] - Z * m_e + elements_dic[name]["atomic_Eb"]
+            elements_dic[name]["nuclear_mass"] = elements_dic[name]["atomic_mass"] - Z * const.m_e + elements_dic[name]["atomic_Eb"]
 
             decay = line[82:88] + "." + line[89:94]
             if "*" in decay:
@@ -332,26 +328,26 @@ def D(Q2):
 def nucleon_F1_EM(Q2, tau3):
     # pick nucleon mag moment
     MAG = (MAG_P + MAG_N + tau3 * (MAG_P - MAG_N)) / 2.0
-    tau = -Q2 / 4.0 / m_proton ** 2
+    tau = -Q2 / 4.0 / const.m_proton ** 2
     return (D(Q2) - tau * MAG * D(Q2)) / (1 - tau)
 
 
 def nucleon_F2_EM(Q2, tau3):
     # pick nucleon mag moment
     MAG = (MAG_P + MAG_N + tau3 * (MAG_P - MAG_N)) / 2.0
-    tau = -Q2 / 4.0 / m_proton ** 2
+    tau = -Q2 / 4.0 / const.m_proton ** 2
     return (MAG * D(Q2) - D(Q2)) / (1 - tau)
 
 
 def nucleon_F1_NC(Q2, tau3):
-    tau = -Q2 / 4.0 / m_proton ** 2
-    f = (0.5 - s2w) * (tau3) * (1 - tau * (1 + MAG_P - MAG_N)) / (1 - tau) - s2w * (1 - tau * (1 + MAG_P + MAG_N)) / (1 - tau)
+    tau = -Q2 / 4.0 / const.m_proton ** 2
+    f = (0.5 - const.s2w) * (tau3) * (1 - tau * (1 + MAG_P - MAG_N)) / (1 - tau) - const.s2w * (1 - tau * (1 + MAG_P + MAG_N)) / (1 - tau)
     return f * D(Q2)
 
 
 def nucleon_F2_NC(Q2, tau3):
-    tau = -Q2 / 4.0 / m_proton ** 2
-    f = (0.5 - s2w) * (tau3) * (MAG_P - MAG_N) / (1 - tau) - s2w * (MAG_P + MAG_N) / (1 - tau)
+    tau = -Q2 / 4.0 / const.m_proton ** 2
+    f = (0.5 - const.s2w) * (tau3) * (MAG_P - MAG_N) / (1 - tau) - const.s2w * (MAG_P + MAG_N) / (1 - tau)
     return f * D(Q2)
 
 
@@ -365,16 +361,13 @@ def nucleon_F3_NC(Q2, tau3):
 ## symmetrized fermi nuclear
 def nuclear_F1_Fsym_EM(Q2, A):
     Q = np.sqrt(Q2)
-    a = 0.523 * fm_to_GeV  # GeV^-1
-    r0 = 1.03 * (A ** (1.0 / 3.0)) * fm_to_GeV  # GeV^-1
+    a = 0.523 * const.fm_to_GeV  # GeV^-1
+    r0 = 1.03 * (A ** (1.0 / 3.0)) * const.fm_to_GeV  # GeV^-1
     tolerance = Q > 0.0
     clean_FF = ma.masked_array(
-        data=3.0
-        * np.pi
-        * a
-        / (r0 ** 2 + np.pi ** 2 * a ** 2)
-        * (np.pi * a * (1.0 / np.tanh(np.pi * a * Q)) * np.sin(Q * r0) - r0 * np.cos(Q * r0))
-        / (Q * r0 * np.sinh(np.pi * Q * a)),
+        data=3.0 * np.pi * a / (r0 ** 2 + np.pi ** 2 * a ** 2) * 
+            (np.pi * a * (1.0 / np.tanh(np.pi * a * Q)) * np.sin(Q * r0) - r0 * np.cos(Q * r0)) /
+            (Q * r0 * np.sinh(np.pi * Q * a)),
         mask=~tolerance,
         fill_value=1.0,
     )
@@ -390,7 +383,7 @@ def j1(z):
 
 def nuclear_F1_FHelmz_NC(Q2, A):
     Q = np.sqrt(Q2)
-    a = 0.523 * fm_to_GeV  # GeV^-1
-    s = 0.9 * fm_to_GeV  # fm to GeV^-1
-    R = 3.9 * fm_to_GeV * (A / 40.0) ** (1.0 / 3.0)  # fm to GeV^-1
+    a = 0.523 * const.fm_to_GeV  # GeV^-1
+    s = 0.9 * const.fm_to_GeV  # fm to GeV^-1
+    R = 3.9 * const.fm_to_GeV * (A / 40.0) ** (1.0 / 3.0)  # fm to GeV^-1
     return (3 * np.abs(j1(Q * R) / Q / R)) * np.exp(-Q * Q * s * s / 2)
