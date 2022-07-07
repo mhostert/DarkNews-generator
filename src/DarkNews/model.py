@@ -10,86 +10,57 @@ from DarkNews import pdg
 from DarkNews import decay_rates as dr
 
 
-def create_3portal_HNL_model(**kwargs):
-
-    bsm_model = ThreePortalModel()
-
-    # update the attributes of the model with user-defined parameters
-    bsm_model.__dict__.update(kwargs)
-
-    # lock-in parameters and compute interaction vertices
-    bsm_model.set_vertices()
-
-    return bsm_model
-
-
-def create_generic_HNL_model(**kwargs):
-
-    bsm_model = GenericHNLModel()
-
-    # update the attributes of the model with user-defined parameters
-    bsm_model.__dict__.update(kwargs)
-
-    # lock-in parameters and compute interaction vertices
-    bsm_model.set_vertices()
-
-    return bsm_model
-
-
 class HNLModel:
-    def __init__(self, model_file=None, name="my_model"):
-        """Parent HNL model class for models with HNLs + additional new physics
+    def __init__(self, model_file=None, **model_params):
+        """ HNL model class for models with HNLs + additional new physics
 
         Args:
             model_file (string, optional): The filename of the model file to load model parameters. Defaults to None.
-            name (str, optional): the desired name of the model. Defaults to 'my_model'.
+
         """
         self.model_file = model_file
-        self.name = name
+        self.name = "my_model"
 
-        # Particle Masses
-        self.m4 = None
+        # DEFAULTS
+        self.m4 = 0.150
         self.m5 = None
         self.m6 = None
-        self.HNLtype = None
+        self.HNLtype = "dirac"
 
-        self.mzprime = None
+        self.mzprime = 1.25
         self.mhprime = None
+        
+        self.mu_tr_e4 = 0.0
+        self.mu_tr_e5 = 0.0
+        self.mu_tr_e6 = 0.0
+        self.mu_tr_mu4 = 0.0
+        self.mu_tr_mu5 = 0.0
+        self.mu_tr_mu6 = 0.0
+        self.mu_tr_tau4 = 0.0
+        self.mu_tr_tau5 = 0.0
+        self.mu_tr_tau6 = 0.0
+        self.mu_tr_44 = 0.0
+        self.mu_tr_45 = 0.0
+        self.mu_tr_46 = 0.0
+        self.mu_tr_55 = 0.0
+        self.mu_tr_56 = 0.0
+        self.mu_tr_66 = 0.0
 
-        # scalar couplings
-        self.s_e4 = None
-        self.s_e5 = None
-        self.s_e6 = None
-        self.s_mu4 = None
-        self.s_mu5 = None
-        self.s_mu6 = None
-        self.s_tau4 = None
-        self.s_tau5 = None
-        self.s_tau6 = None
-        self.s_44 = None
-        self.s_45 = None
-        self.s_46 = None
-        self.s_55 = None
-        self.s_56 = None
-        self.s_66 = None
-
-        # TMM is always set in a "model-independent" way
-        # TMM in GeV^-1
-        self.mu_tr_e4 = None
-        self.mu_tr_e5 = None
-        self.mu_tr_e6 = None
-        self.mu_tr_mu4 = None
-        self.mu_tr_mu5 = None
-        self.mu_tr_mu6 = None
-        self.mu_tr_tau4 = None
-        self.mu_tr_tau5 = None
-        self.mu_tr_tau6 = None
-        self.mu_tr_44 = None
-        self.mu_tr_45 = None
-        self.mu_tr_46 = None
-        self.mu_tr_55 = None
-        self.mu_tr_56 = None
-        self.mu_tr_66 = None
+        self.s_e4 = 0.0
+        self.s_e5 = 0.0
+        self.s_e6 = 0.0
+        self.s_mu4 = 0.0
+        self.s_mu5 = 0.0
+        self.s_mu6 = 0.0
+        self.s_tau4 = 0.0
+        self.s_tau5 = 0.0
+        self.s_tau6 = 0.0
+        self.s_44 = 0.0
+        self.s_45 = 0.0
+        self.s_46 = 0.0
+        self.s_55 = 0.0
+        self.s_56 = 0.0
+        self.s_66 = 0.0
 
         # Initilize nucleon couplings. These will be filled with the quark combination, which is what is actually set by the user
         self.cprotonV = None
@@ -104,6 +75,9 @@ class HNLModel:
         self.dSneutron = None
         self.dPproton = None
         self.dPneutron = None
+
+        # Now assign parameters based on user input
+        self.__dict__.update(model_params)
 
     def _initialize_spectrum(self):
 
@@ -167,71 +141,86 @@ class HNLModel:
 
 
 class GenericHNLModel(HNLModel):
-    def __init__(self, model_file=None, name="my_model"):
-        super().__init__(model_file, name)
+    def __init__(self, model_file=None, **model_params):
+        super().__init__(model_file, model_params=model_params)
 
-        # Z boson couplings
-        self.c_e4 = None
-        self.c_e5 = None
-        self.c_e6 = None
-        self.c_mu4 = None
-        self.c_mu5 = None
-        self.c_mu6 = None
-        self.c_tau4 = None
-        self.c_tau5 = None
-        self.c_tau6 = None
-        self.c_44 = None
-        self.c_45 = None
-        self.c_46 = None
-        self.c_55 = None
-        self.c_56 = None
-        self.c_66 = None
+        # set defaults
+        self.c_e4 = 0.0
+        self.c_e5 = 0.0
+        self.c_e6 = 0.0
+        self.c_mu4 = 0.0
+        self.c_mu5 = 0.0
+        self.c_mu6 = 0.0
+        self.c_tau4 = 0.0
+        self.c_tau5 = 0.0
+        self.c_tau6 = 0.0
+        self.c_44 = 0.0
+        self.c_45 = 0.0
+        self.c_46 = 0.0
+        self.c_55 = 0.0
+        self.c_56 = 0.0
+        self.c_66 = 0.0
 
-        # vector couplings
-        self.d_e4 = None
-        self.d_e5 = None
-        self.d_e6 = None
-        self.d_mu4 = None
-        self.d_mu5 = None
-        self.d_mu6 = None
-        self.d_tau4 = None
-        self.d_tau5 = None
-        self.d_tau6 = None
-        self.d_44 = None
-        self.d_45 = None
-        self.d_46 = None
-        self.d_55 = None
-        self.d_56 = None
-        self.d_66 = None
+        self.d_e4 = 0.0
+        self.d_e5 = 0.0
+        self.d_e6 = 0.0
+        self.d_mu4 = 0.0
+        self.d_mu5 = 0.0
+        self.d_mu6 = 0.0
+        self.d_tau4 = 0.0
+        self.d_tau5 = 0.0
+        self.d_tau6 = 0.0
+        self.d_44 = 0.0
+        self.d_45 = 0.0
+        self.d_46 = 0.0
+        self.d_55 = 0.0
+        self.d_56 = 0.0
+        self.d_66 = 0.0
 
-        ########################
-        # Charge particle couplings
+        self.ceV = 0.0
+        self.ceA = 0.0
+        self.cuV = 0.0
+        self.cuA = 0.0
+        self.cdV = 0.0
+        self.cdA = 0.0
 
-        self.ceV = None
-        self.ceA = None
-        self.cuV = None
-        self.cuA = None
-        self.cdV = None
-        self.cdA = None
+        self.deV = 0.0
+        self.deA = 0.0
+        self.duV = 0.0
+        self.duA = 0.0
+        self.ddV = 0.0
+        self.ddA = 0.0
+        
+        self.deS = 0.0
+        self.deP = 0.0
+        self.duS = 0.0
+        self.duP = 0.0
+        self.ddS = 0.0
+        self.ddP = 0.0
 
-        self.deV = None
-        self.deA = None
-        self.duV = None
-        self.duA = None
-        self.ddV = None
-        self.ddA = None
+        self.cprotonV = None
+        self.cneutronV = None
+        self.cprotonA = None
+        self.cneutronA = None
+        self.dprotonV = None
+        self.dneutronV = None
+        self.dprotonA = None
+        self.dneutronA = None
+        self.dprotonS = None
+        self.dneutronS = None
+        self.dprotonP = None
+        self.dneutronP = None
 
-        self.deS = None
-        self.deP = None
-        self.duS = None
-        self.duP = None
-        self.ddS = None
-        self.ddP = None
-
-    def set_vertices(self):
+        # Now assign parameters based on user input
+        self.__dict__.update(model_params)
 
         # initialize spectrum of HNLs
         self._initialize_spectrum()
+
+        # and set vertices
+        self.set_vertices()
+
+    def set_vertices(self):
 
         ####################################################
         # SM Z boson couplings
@@ -323,35 +312,47 @@ class GenericHNLModel(HNLModel):
 
 
 class ThreePortalModel(HNLModel):
-    def __init__(self, model_file=None):
+    def __init__(self, model_file=None, **model_params):
 
-        super().__init__(model_file)
+        super().__init__(model_file, model_params=model_params)
 
-        self.name = "Untitled"
+        # set defaults
+        self.gD = 1.0
+        self.alphaD = None
+
+        self.epsilon = 1e-3
+        self.epsilon2 = None
+        self.chi = None
+        self.alpha_epsilon2 = None
+
+        self.epsilonZ = 0.0  # Z-Z' mass mixing
+
+        self.theta = 0.0 # scalar mixing
 
         self.Ue4 = 0.0
-        self.Umu4 = 0.0
-        self.Utau4 = 0.0
-
         self.Ue5 = 0.0
-        self.Umu5 = 0.0
-        self.Utau5 = 0.0
-
         self.Ue6 = 0.0
+        self.Umu4 = 1e-4
+        self.Umu5 = 0.0
         self.Umu6 = 0.0
+        self.Utau4 = 0.0
+        self.Utau5 = 0.0
         self.Utau6 = 0.0
-
         self.UD4 = 1.0
         self.UD5 = 1.0
         self.UD6 = 1.0
 
-        # Z'
-        self.gD = None
-        self.epsilon = None  # kinetic mixing
-        self.epsilonZ = 0.0  # mass mixing
+        # Now assign parameters based on user input
+        self.__dict__.update(model_params)
 
-        # h'
-        self.theta = 0.0  # higgs mixing
+        # Now assign parameters based on user input
+        self.__dict__.update(model_params)
+
+        # initialize spectrum of HNLs
+        self._initialize_spectrum()
+
+        # and set vertices
+        self.set_vertices()
 
     def set_vertices(self):
         """
@@ -389,8 +390,6 @@ class ThreePortalModel(HNLModel):
         prettyprinter.info(f"Model:{self._spectrum}")
 
         # Assign the correct value of kinetic mixing and gD given user input
-
-        # Kinetic mixing
         if self.chi is not None:
             self.epsilon = self.epsilon * const.cw
         elif self.epsilon2 is not None:

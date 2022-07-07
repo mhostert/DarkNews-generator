@@ -12,7 +12,6 @@ from DarkNews.AssignmentParser import AssignmentParser
 
 GENERATOR_ARGS = [
     # scope
-    "name",
     "decay_product",
     "exp",
     "nopelastic",
@@ -23,6 +22,7 @@ GENERATOR_ARGS = [
     "sample_geometry",
     "make_summary_plots",
     "enforce_prompt",
+    #
     # generator
     "loglevel",
     "verbose",
@@ -32,6 +32,7 @@ GENERATOR_ARGS = [
     "neval_warmup",
     "nint_warmup",
     "seed",
+    #
     # output
     "pandas",
     "parquet",
@@ -48,6 +49,7 @@ GENERATOR_ARGS = [
 ]
 
 COMMON_MODEL_ARGS = [
+    "name",
     "m4",
     "m5",
     "m6",
@@ -186,9 +188,7 @@ class GenLauncher:
         "decay_product": ["e+e-", "mu+mu-", "photon"],
         "nu_flavors": ["nu_e", "nu_mu", "nu_tau", "nu_e_bar", "nu_mu_bar", "nu_tau_bar",],
     }
-    # parameters names list
-    _common_parameters = GENERATOR_ARGS + COMMON_MODEL_ARGS
-    _model_creator = None
+
 
     def __init__(self, param_file=None, **kwargs):
         """GenLauncher launches the generator with user-defined model parameters, experimental configs, and generation settings.
@@ -212,60 +212,27 @@ class GenLauncher:
         """
 
         # Choose what model to initialize
-        three_portal_args = set(THREE_PORTAL_ARGS).intersection(kwargs.keys())
-        generic_args = set(GENERIC_MODEL_ARGS).intersection(kwargs.keys())
-        if len(three_portal_args) >= 0 and len(generic_args) == 0:
+        captured_3portal_args = set(THREE_PORTAL_ARGS).intersection(kwargs.keys())
+        captured_generic_args = set(GENERIC_MODEL_ARGS).intersection(kwargs.keys())
+        if len(captured_3portal_args) >= 0 and len(captured_generic_args) == 0:
             logger.info("Initializing the three-portal model.")
-            initialize_threeportal_launcher(self)
-        elif len(three_portal_args) == 0 and len(generic_args) > 0:
+            self._model_parameters = COMMON_MODEL_ARGS + THREE_PORTAL_ARGS
+            self._model_class = dn.model.ThreePortalModel
+        elif len(captured_3portal_args) == 0 and len(captured_generic_args) > 0:
             logger.info("Initializing a generic model.")
-            initialize_generic_launcher(self)
-        elif len(three_portal_args) > 0 and len(generic_args) > 0:
+            self._model_parameters = COMMON_MODEL_ARGS + GENERIC_MODEL_ARGS
+            self._model_class = dn.model.GenericHNLModel
+        elif len(captured_3portal_args) > 0 and len(captured_generic_args) > 0:
             logger.error(
-                f"Generic Model paramters {generic_args} set at the same time as {three_portal_args}. Cannot mix generic and three-portal model arguments together."
+                f"Generic Model parameters {captured_generic_args} set at the same time as {captured_3portal_args}. Cannot mix generic and three-portal model arguments together."
             )
-            raise ValueError("Two types of parameters were found. You cannot mix Generic Model paramters with Three Portal Model parameters.")
+            raise ValueError("Two types of parameters were found. You cannot mix Generic Model parameters with three-portal Model parameters.")
         else:
             raise ValueError(f"Could not determine what model type to use with kwargs.keys = {kwargs.keys()}")
 
-        # DEFAULTS
-        self.m4 = 0.150
-        self.m5 = None
-        self.m6 = None
-        self.mzprime = 1.25
-        self.mhprime = None
-        self.HNLtype = "dirac"
-        self.mu_tr_e4 = 0.0
-        self.mu_tr_e5 = 0.0
-        self.mu_tr_e6 = 0.0
-        self.mu_tr_mu4 = 0.0
-        self.mu_tr_mu5 = 0.0
-        self.mu_tr_mu6 = 0.0
-        self.mu_tr_tau4 = 0.0
-        self.mu_tr_tau5 = 0.0
-        self.mu_tr_tau6 = 0.0
-        self.mu_tr_44 = 0.0
-        self.mu_tr_45 = 0.0
-        self.mu_tr_46 = 0.0
-        self.mu_tr_55 = 0.0
-        self.mu_tr_56 = 0.0
-        self.mu_tr_66 = 0.0
-        self.s_e4 = 0.0
-        self.s_e5 = 0.0
-        self.s_e6 = 0.0
-        self.s_mu4 = 0.0
-        self.s_mu5 = 0.0
-        self.s_mu6 = 0.0
-        self.s_tau4 = 0.0
-        self.s_tau5 = 0.0
-        self.s_tau6 = 0.0
-        self.s_44 = 0.0
-        self.s_45 = 0.0
-        self.s_46 = 0.0
-        self.s_55 = 0.0
-        self.s_56 = 0.0
-        self.s_66 = 0.0
-        
+        self._parameters = GENERATOR_ARGS + self._model_parameters
+
+        # Scope parameters
         self.name = None
         self.nu_flavors = ["nu_mu"]
         self.decay_product = "e+e-"
@@ -278,7 +245,8 @@ class GenLauncher:
         self.sample_geometry = False
         self.make_summary_plots = False
         self.enforce_prompt = False
-
+        
+        # Generator parameters
         self.loglevel = "INFO"
         self.verbose = False
         self.logfile = None
@@ -287,7 +255,8 @@ class GenLauncher:
         self.neval_warmup = int(1e3)
         self.nint_warmup = 10
         self.seed = None
-
+        
+        # Output parameters
         self.pandas = True
         self.parquet = False
         self.numpy = False
@@ -301,45 +270,36 @@ class GenLauncher:
         self.print_to_float32 = False
         self.path = "."
 
+        ####################################################
+        # Loading parameters
+
+       # the argument dictionaries (will contain valid arguments extracted from **kwargs)
+        self.model_args_dict = {}
+
         # load file if not None
         if param_file is not None:
             self._load_file(param_file)
 
-        # load constructor parameters
+         # load constructor parameters
         self._load_parameters(raise_errors=True, **kwargs)
 
-        # build args_dict to pass to various methods
-        args_dict = {}
-        for parameter in self._parameters:
-            args_dict[parameter] = getattr(self, parameter)
-
-        #########################
+        ####################################################
         # Set up loggers
         self.prettyprinter = prettyprinter
         self.configure_logger(
             logger=logger, loglevel=self.loglevel, prettyprinter=self.prettyprinter, verbose=self.verbose, logfile=self.logfile,
         )
-
         prettyprinter.info(self.banner)
 
-        if self.hep_unweigh:
-            logger.warning(
-                f"Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hep-formatted events. Currently: n_unweighed/n_eval = {self.unweighed_hep_events/self.neval*100}%."
-            )
-
-        #########################
-        # Set BSM parameters
-        if self._model_creator:
-            self.bsm_model = self._model_creator(**args_dict)
-        else:
-            logger.warning("Could not find a model creator -- using three portal model.")
-            self.bsm_model = dn.model.create_3portal_HNL_model(**args_dict)
+        ####################################################
+        # Choose the model to be used in this generation
+        self.bsm_model = self._model_class(**self.model_args_dict)
 
         ####################################################
         # Choose experiment and scope of simulation
         self.experiment = dn.detector.Detector(self.exp)
 
-        ##########################
+        ####################################################
         # MC evaluations and iterations
         dn.MC.NEVAL_warmup = self.neval_warmup
         dn.MC.NINT_warmup = self.nint_warmup
@@ -393,6 +353,14 @@ class GenLauncher:
             raise ValueError("Could not find a heavy neutrino spectrum from user input.")
 
         ####################################################
+        # Miscellaneous checks 
+        if self.hep_unweigh:
+            logger.warning(
+                f"Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hep-formatted events. Currently: n_unweighed/n_eval = {self.unweighed_hep_events/self.neval*100}%."
+            )
+        
+
+        ####################################################
         # Create all MC cases
         self._create_all_MC_cases()
 
@@ -414,20 +382,28 @@ class GenLauncher:
                 value = kwargs.pop(parameter)
             except KeyError:
                 continue
+            
             # check the value within the choices
             # if parameter in self._choices.keys() and value not in self._choices[parameter]:
             if parameter in self._choices.keys() and [*parameter, *self._choices[parameter],] == set([*parameter, *self._choices[parameter]]):
                 raise ValueError(
                     f"Parameter '{parameter}', invalid choice: {value}, (choose among " + ", ".join([f"{el}" for el in self._choices[parameter]]) + ")"
                 )
+
             # set the parameter
             setattr(self, parameter, value)
+
+            # save the parameters that pertain to the model classes in a dict
+            if parameter in self._model_parameters:
+                self.model_args_dict[parameter] = value
+
         # at the end, if kwargs is not empty, that would mean some parameters were unused, i.e. they are spelled wrong or do not exist: raise AttributeError
         if len(kwargs) != 0:
             if raise_errors:
                 raise AttributeError("Parameters " + ", ".join(kwargs.keys()) + " were unused. Either not supported or misspelled.")
             else:
                 logger.warning("Parameters " + ", ".join(kwargs.keys()) + " will not be used.")
+
 
     def _create_all_MC_cases(self, **kwargs):
         """Create MC_events objects and run the MC computations
@@ -706,101 +682,3 @@ class GenLauncher:
             logger.handlers.clear()
         logger.addHandler(handler)
 
-
-# Three portal model
-def initialize_threeportal_launcher(self, param_file=None, **kwargs):
-    # parameters names list
-    self._parameters = GENERATOR_ARGS + COMMON_MODEL_ARGS + THREE_PORTAL_ARGS
-    # set defaults
-    self.gD = 1.0
-    self.alphaD = None
-    self.epsilon = 1e-3
-    self.epsilon2 = None
-    self.chi = None
-    self.alpha_epsilon2 = None
-    self.Ue4 = 0.0
-    self.Ue5 = 0.0
-    self.Ue6 = 0.0
-    self.Umu4 = 1e-4
-    self.Umu5 = 0.0
-    self.Umu6 = 0.0
-    self.Utau4 = 0.0
-    self.Utau5 = 0.0
-    self.Utau6 = 0.0
-    self.UD4 = 1.0
-    self.UD5 = 1.0
-    self.UD6 = 1.0
-
-    self.theta = 0.0
-
-    self._model_creator = dn.model.create_3portal_HNL_model
-
-
-def initialize_generic_launcher(self):
-    # parameters names list
-    self._parameters = GENERATOR_ARGS + COMMON_MODEL_ARGS + GENERIC_MODEL_ARGS
-
-    # set defaults
-    self.c_e4 = 0.0
-    self.c_e5 = 0.0
-    self.c_e6 = 0.0
-    self.c_mu4 = 0.0
-    self.c_mu5 = 0.0
-    self.c_mu6 = 0.0
-    self.c_tau4 = 0.0
-    self.c_tau5 = 0.0
-    self.c_tau6 = 0.0
-    self.c_44 = 0.0
-    self.c_45 = 0.0
-    self.c_46 = 0.0
-    self.c_55 = 0.0
-    self.c_56 = 0.0
-    self.c_66 = 0.0
-    self.d_e4 = 0.0
-    self.d_e5 = 0.0
-    self.d_e6 = 0.0
-    self.d_mu4 = 0.0
-    self.d_mu5 = 0.0
-    self.d_mu6 = 0.0
-    self.d_tau4 = 0.0
-    self.d_tau5 = 0.0
-    self.d_tau6 = 0.0
-    self.d_44 = 0.0
-    self.d_45 = 0.0
-    self.d_46 = 0.0
-    self.d_55 = 0.0
-    self.d_56 = 0.0
-    self.d_66 = 0.0
-    self.ceV = 0.0
-    self.ceA = 0.0
-    self.cuV = 0.0
-    self.cuA = 0.0
-    self.cdV = 0.0
-    self.cdA = 0.0
-    self.deV = 0.0
-    self.deA = 0.0
-    self.duV = 0.0
-    self.duA = 0.0
-    self.ddV = 0.0
-    self.ddA = 0.0
-    self.deS = 0.0
-    self.deP = 0.0
-    self.duS = 0.0
-    self.duP = 0.0
-    self.ddS = 0.0
-    self.ddP = 0.0
-
-    self.cprotonV = None
-    self.cneutronV = None
-    self.cprotonA = None
-    self.cneutronA = None
-    self.dprotonV = None
-    self.dneutronV = None
-    self.dprotonA = None
-    self.dneutronA = None
-    self.dprotonS = None
-    self.dneutronS = None
-    self.dprotonP = None
-    self.dneutronP = None
-
-    self._model_creator = dn.model.create_generic_HNL_model

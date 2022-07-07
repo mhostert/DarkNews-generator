@@ -3,6 +3,9 @@ import argparse
 
 def add_common_bsm_arguments(parser, DEFAULTS):
 
+    #### name of the generation and model
+    parser.add_argument("--name", type=str, help="name of the generation and model")
+
     ##### file containing the parameters
     parser.add_argument("--param-file", type=str, help="file containing parameters definitions")
 

@@ -204,7 +204,7 @@ class MC_events:
                 logger.info(f"{self.nu_upscattered.name} decays via on-shell Z'.")
             elif self.decay_case.off_shell:
                 DIM = 6
-                logger.info(f"{self.nu_upscattered.name} decays via off-shell Z'.")
+                logger.info(f"{self.nu_upscattered.name} three-body decays.")
         elif self.decays_to_singlephoton:
             DIM = 3
             logger.info(f"{self.nu_upscattered.name} decays via TMM.")
