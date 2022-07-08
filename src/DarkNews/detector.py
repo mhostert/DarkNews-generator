@@ -4,6 +4,7 @@ from particle import literals as lp
 from pathlib import Path
 import os.path
 import os
+
 local_dir = Path(__file__).parent
 
 from . import logger, prettyprinter
@@ -14,11 +15,11 @@ from .nuclear_tools import NuclearTarget
 from .AssignmentParser import AssignmentParser
 
 
-class Detector():
+class Detector:
     """
     Detector is a collection of necessary variables for cross-section and event rate
     calculations, e.g., energy range, target type, weight, and POTs for exposure.
-    
+
     It provides the `get_flux_func` which creates a spline interpolation of the
     input neutrino flux.
 
@@ -31,8 +32,9 @@ class Detector():
     Raises:
         FileNotFoundError: if no detector file was found
         KeyError: if a required field is not specified in the detector file
-        
+
     """
+
     PATH_CONFIG_FILES = os.path.join(local_dir, Path("include/detectors"))
     KEYWORDS = {
         "dune_nd_fhc": os.path.join(PATH_CONFIG_FILES, "dune_nd_fhc.txt"),
@@ -63,58 +65,68 @@ class Detector():
                 parser.parse_file(file=experiment_file, comments="#")
             else:
                 raise err
-        
+
         params = parser.parameters
         try:
-            self.NAME      = params['name']
-            self.FLUXFILE  = params['fluxfile']
-            self.FLUX_NORM = params['flux_norm']
-            self.ERANGE    = params['erange']
+            self.NAME = params["name"]
+            self.FLUXFILE = params["fluxfile"]
+            self.FLUX_NORM = params["flux_norm"]
+            self.ERANGE = params["erange"]
 
             # Detector targets
-            self.NUCLEAR_TARGETS          = [NuclearTarget(target) for target in params['nuclear_targets']]
-            self.POTS                     = params['POTs']
-            self.FIDUCIAL_MASS_PER_TARGET = params['fiducial_mass_per_target']
+            self.NUCLEAR_TARGETS = [NuclearTarget(target) for target in params["nuclear_targets"]]
+            self.POTS = params["POTs"]
+            self.FIDUCIAL_MASS_PER_TARGET = params["fiducial_mass_per_target"]
 
         except KeyError as err:
-            if err.args[0] in ["name", "fluxfile", "flux_norm", "erange", "nuclear_targets", "fiducial_mass_per_target", "POTs"]:
+            if err.args[0] in [
+                "name",
+                "fluxfile",
+                "flux_norm",
+                "erange",
+                "nuclear_targets",
+                "fiducial_mass_per_target",
+                "POTs",
+            ]:
                 # check that the error comes from reading the file and not elsewhere
                 raise KeyError(f"No field '{err.args[0]}' specified in the the experiment configuration file '{experiment}'.".format(err.args[0], experiment))
             raise err
-        
+
         # total number of targets
         self.NUMBER_OF_TARGETS = {}
         for fid_mass, target in zip(self.FIDUCIAL_MASS_PER_TARGET, self.NUCLEAR_TARGETS):
-            self.NUMBER_OF_TARGETS[f'{target.name}'] = fid_mass*const.t_to_GeV/(target.mass)
-        
+            self.NUMBER_OF_TARGETS[f"{target.name}"] = fid_mass * const.t_to_GeV / (target.mass)
+
         # load neutrino fluxes: first try with path relative to experiment file, if error try with path from original config files
         exp_dir = os.path.dirname(experiment_file)
         try:
-            _enu, *_fluxes = np.genfromtxt(Path(f'{exp_dir}/{self.FLUXFILE}'), unpack=True)
+            _enu, *_fluxes = np.genfromtxt(Path(f"{exp_dir}/{self.FLUXFILE}"), unpack=True)
         except FileNotFoundError:
             try:
-                _enu, *_fluxes = np.genfromtxt(Path(f'{self.PATH_CONFIG_FILES}/{self.FLUXFILE}'), unpack=True)
+                _enu, *_fluxes = np.genfromtxt(Path(f"{self.PATH_CONFIG_FILES}/{self.FLUXFILE}"), unpack=True)
             except FileNotFoundError:
                 raise FileNotFoundError(f"Fluxes file {self.FLUXFILE} not found neither in current experiment file path nor in config file path.")
-        self.FLUX_FUNCTIONS = 6*[[]]
+        self.FLUX_FUNCTIONS = 6 * [[]]
         for i in range(len(_fluxes)):
-            self.FLUX_FUNCTIONS[i] = interpolate.interp1d(_enu, _fluxes[i]*self.FLUX_NORM, fill_value=0.0, bounds_error=False)
+            self.FLUX_FUNCTIONS[i] = interpolate.interp1d(_enu, _fluxes[i] * self.FLUX_NORM, fill_value=0.0, bounds_error=False)
 
-        prettyprinter.info(f'''Experiment:
+        prettyprinter.info(
+            f"""Experiment:
 \t{self.NAME}
 \tfluxfile loaded: {self.FLUXFILE}
 \tPOT: {self.POTS}
 \tnuclear targets: {[n.name for n in self.NUCLEAR_TARGETS]}
-\tfiducial mass: {self.FIDUCIAL_MASS_PER_TARGET} tonnes''')
+\tfiducial mass: {self.FIDUCIAL_MASS_PER_TARGET} tonnes"""
+        )
 
     def neutrino_flux(self, projectile):
-        _flux_index = pdg.get_doublet(projectile) + 3*pdg.is_antiparticle(projectile)
+        _flux_index = pdg.get_doublet(projectile) + 3 * pdg.is_antiparticle(projectile)
         return self.FLUX_FUNCTIONS[_flux_index]
 
     def set_geometry(self):
-        if 'microboone' in self.NAME.lower():
+        if "microboone" in self.NAME.lower():
             self.place_scatters = geom.microboone_geometry
-        elif 'miniboone' in self.NAME.lower():
+        elif "miniboone" in self.NAME.lower():
             self.place_scatters = geom.miniboone_geometry
         else:
             self.place_scatters = geom.point_geometry

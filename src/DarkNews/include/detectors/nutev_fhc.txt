@@ -3,8 +3,8 @@ name = "NUTEV_FHC"
 fluxfile = "../fluxes/NuTeV_FHC.dat"
 flux_norm = 1
 erange = [
-    1,
-    400
+    1.1,
+    399
 ]
 nuclear_targets = [
     'C12',

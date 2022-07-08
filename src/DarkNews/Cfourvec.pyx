@@ -10,7 +10,7 @@ from numpy cimport ndarray
 
 #######################################
 # C functions to be used
-from libc.math cimport sqrt, abs, log, cos, sin, acos
+from libc.math cimport sqrt, abs, log, cos, sin, acos, pow
 
 #######################################
 # C implementation of RANDOM

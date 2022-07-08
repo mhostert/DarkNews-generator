@@ -3,7 +3,8 @@
 # proceed as usual
 from setuptools import setup, find_packages, Extension
 import numpy as np
-import os 
+import os
+
 try:
     from Cython.Build import cythonize
 except ImportError:
@@ -36,8 +37,6 @@ if CYTHONIZE:
     extensions = cythonize(extensions, compiler_directives=compiler_directives)
 else:
     extensions = no_cythonize(extensions)
-
-
 
 
 setup_args = dict(

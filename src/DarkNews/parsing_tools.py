@@ -1,7 +1,11 @@
 import argparse
 
+
 def add_common_bsm_arguments(parser, DEFAULTS):
-    
+
+    #### name of the generation and model
+    parser.add_argument("--name", type=str, help="name of the generation and model")
+
     ##### file containing the parameters
     parser.add_argument("--param-file", type=str, help="file containing parameters definitions")
 
@@ -12,7 +16,7 @@ def add_common_bsm_arguments(parser, DEFAULTS):
     parser.add_argument("--m5", type=float, help="mass of the fifth neutrino")
     parser.add_argument("--m6", type=float, help="mass of the sixth neutrino")
 
-    parser.add_argument("--HNLtype", type=str.lower, help="HNLtype: dirac or majorana", choices=DEFAULTS._choices['HNLtype'])
+    parser.add_argument("--HNLtype", type=str.lower, help="HNLtype: dirac or majorana", choices=DEFAULTS._choices["HNLtype"])
 
     ##### TMM in GeV^-1
     parser.add_argument("--mu_tr_e4", type=float, help="TMM mu_tr_e4")
@@ -90,7 +94,6 @@ def add_three_portal_arguments(parser, DEFAULTS):
     parser.add_argument("--theta", type=float, help="Scalar mixing angle between h-h'")
 
 
-
 def add_generic_bsm_arguments(parser, DEFAULTS):
 
     ##### Z boson couplings
@@ -141,7 +144,7 @@ def add_generic_bsm_arguments(parser, DEFAULTS):
     parser.add_argument("--duA", type=float, help="Z' axial vertex to up quark duA")
     parser.add_argument("--ddV", type=float, help="Z' vector vertex to down quark ddV")
     parser.add_argument("--ddA", type=float, help="Z' axial vertex to down quark ddA")
-    
+
     parser.add_argument("--deS", type=float, help="h' scalar vertex to charged leptons deS")
     parser.add_argument("--deP", type=float, help="h' pseudoscalar vertex to charged leptons deP")
     parser.add_argument("--duS", type=float, help="h' scalar vertex to up quark duS")
@@ -158,14 +161,15 @@ def add_generic_bsm_arguments(parser, DEFAULTS):
     parser.add_argument("--dprotonS", type=float, help="h' scalar vertex to charged leptons dSe")
     parser.add_argument("--dneutronP", type=float, help="h' pseudoscalar vertex to charged leptons dPe")
 
-def add_scope_arguments(parser, DEFAULTS):
-    
-    ##### visible final states in HNL decay
-    parser.add_argument("--decay_product", type=str.lower, help="decay process of interest", choices=DEFAULTS._choices['decay_product'])
 
-    ##### experiments    
+def add_scope_arguments(parser, DEFAULTS):
+
+    ##### visible final states in HNL decay
+    parser.add_argument("--decay_product", type=str.lower, help="decay process of interest", choices=DEFAULTS._choices["decay_product"])
+
+    ##### experiments
     parser.add_argument("--exp", type=str.lower, help="experiment file path or keyword")
-                                                                    
+
     ##### scattering types
     parser.add_argument("--nopelastic", help="do not generate proton elastic events", action="store_true")
     parser.add_argument("--nocoh", help="do not generate coherent events", action="store_true")
@@ -174,8 +178,12 @@ def add_scope_arguments(parser, DEFAULTS):
     parser.add_argument("--noHC", help="do not include helicity conserving events", action="store_true")
     parser.add_argument("--noHF", help="do not include helicity flipping events", action="store_true")
 
-    parser.add_argument('--nu_flavors', type=str.lower, action='store', nargs='+', choices=DEFAULTS._choices['nu_flavors'])
+    # projectile neutrino flavors
+    parser.add_argument("--nu_flavors", type=str.lower, action="store", nargs="+", choices=DEFAULTS._choices["nu_flavors"])
 
+    # enforce the parent HNL decay to be prompt
+    parser.add_argument("--enforce_prompt", help="forces the particles to decay promptly", action="store_true")
+    parser.add_argument("--make_summary_plots", help="generate summary plots of kinematics", action="store_true")
 
 
 def add_mc_arguments(parser, DEFAULTS):
@@ -185,7 +193,7 @@ def add_mc_arguments(parser, DEFAULTS):
     parser.add_argument("--verbose", help="Verbose for logging", action="store_true")
     parser.add_argument("--logfile", type=str, help="Path to logfile. If not set, use std output.")
 
-    ##### Vegas parameters 
+    ##### Vegas parameters
     parser.add_argument("--neval", type=int, help="number of evaluations of integrand")
     parser.add_argument("--nint", type=int, help="number of adaptive iterations")
     parser.add_argument("--neval_warmup", type=int, help="number of evaluations of integrand in warmup")
@@ -196,16 +204,20 @@ def add_mc_arguments(parser, DEFAULTS):
     parser.add_argument("--parquet", help="If true, prints pandas dataframe to .parquet files. Loses metadata in attrs.", action="store_true")
     parser.add_argument("--numpy", help="If true, prints events as ndarrays in a .npy file", action="store_true")
     parser.add_argument("--hepevt", help="If true, print events to HEPEVT-formatted text files (does not save event weights)", action="store_true")
-    parser.add_argument("--hepevt_legacy", help="If true, print events to a legacy HEPEVT format (saving weights next to the number of particle in the event and without linebreaks in particle entries)", action="store_true")
+    parser.add_argument("--hepevt_legacy",
+        help="If true, print events to a legacy HEPEVT format (saving weights next to the number of particle in the event and without linebreaks in particle entries)",
+        action="store_true",
+    )
     parser.add_argument("--hepmc2", help="If true, prints events to HepMC2 format.", action="store_true")
     parser.add_argument("--hepmc3", help="If true, prints events to HepMC3 format.", action="store_true")
     parser.add_argument("--hep_unweigh", help="unweigh events when printing in standard HEP formats (needs large neval)", action="store_true")
-    parser.add_argument("--unweighed_hep_events", type=int, help="number of unweighed events to accept in any of the standard HEP formats. Has to be much smaller than neval for unweigh procedure to work.")
+    parser.add_argument("--unweighed_hep_events",type=int,
+        help="number of unweighed events to accept in any of the standard HEP formats. Has to be much smaller than neval for unweigh procedure to work.",
+    )
 
-    parser.add_argument("--sparse", help="drop all information in the event except for visible particle momenta, neutrino energy, and weights.", action="store_true")
+    parser.add_argument("--sparse", help="drop all information in the event except for visible particle momenta, neutrino energy, and weights.", action="store_true"
+    )
     parser.add_argument("--print_to_float32", help="Use float32 instead of default float64 when printing output to save storage space.", action="store_true")
 
-    parser.add_argument("--enforce_prompt", help="forces the particles to decay promptly", action="store_true")
-    parser.add_argument("--make_summary_plots", help="generate summary plots of kinematics", action="store_true")
     parser.add_argument("--path", type=str, help="path where to save run's outputs")
     parser.add_argument("--seed", type=int, help="numpy seed to be used by vegas.")

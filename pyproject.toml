@@ -12,3 +12,6 @@ addopts = "--cov=DarkNews"
 testpaths = [
     "tests",
 ]
+
+[tool.black]
+line-length = 160
