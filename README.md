@@ -166,11 +166,11 @@ df.attrs['foo']
 and are specific to the generation run. The attributes are detailed below:
 
 | **Attrs**            | **type**  | **description**|
-|:--------------------------|:--------:|:--------:|:-----------------------------------|
-| **experiment**         | DarkNews.detector.Detector()  | The experiment class of DarkNews containing all information on the experimental setup, including neutrino fluxes, targets, exposure, and geometry (if implemented). |
-| **model**   | DarkNews.model.HNLModel()  | The model class of DarkNews with all the couplings and vertices calculated from the user input. |
+|:--------------------------|:--------:|:-----------------------------------|
+| **experiment**         | `DarkNews.detector.Detector()`  | The experiment class of DarkNews containing all information on the experimental setup, including neutrino fluxes, targets, exposure, and geometry (if implemented). |
+| **model**   | `DarkNews.model.HNLModel()`  | The model class of DarkNews with all the couplings and vertices calculated from the user input. |
 | **data_path**   | *string*  | The path used to save the generation outputs. |
-| **N{i}_ctau0**   | 'float'  | The proper decay length of the i-th HNL in *centimeters* used in the generation of events, with i={4,5,6}. |
+| **N{i}_ctau0**   | *float*  | The proper decay length of the i-th HNL in *centimeters* used in the generation of events, with `i`={4,5,6}. |
 
 
 ---
