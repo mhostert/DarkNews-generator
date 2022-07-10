@@ -1,7 +1,7 @@
 <h1 align="center"> DarkNews </h1> <br>
 
 <!-- <img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="180" title="DarkNews-logo"> -->
-<img align="left" src="assets/logo_2.svg" width="180" title="DarkNews-logo">
+<img align="left" src="assets/logo.svg" width="180" title="DarkNews-logo">
 DarkNews is an event generator for new physics processes at accelerator neutrino experiments based on Vegas. It simulates neutrino upscattering to heavy neutrinos as well as heavy neutrino decays to dileptons via neutrino, vector, and transition magnetic moment portals.
 
 
@@ -166,11 +166,11 @@ df.attrs['foo']
 and are specific to the generation run. The attributes are detailed below:
 
 | **Attrs**            | **type**  | **description**|
-|:--------------------------|:--------:|:--------:|:-----------------------------------|
-| **experiment**         | DarkNews.detector.Detector()  | The experiment class of DarkNews containing all information on the experimental setup, including neutrino fluxes, targets, exposure, and geometry (if implemented). |
-| **model**   | DarkNews.model.HNLModel()  | The model class of DarkNews with all the couplings and vertices calculated from the user input. |
+|:--------------------------|:--------:|:-----------------------------------|
+| **experiment**         | `DarkNews.detector.Detector()`  | The experiment class of DarkNews containing all information on the experimental setup, including neutrino fluxes, targets, exposure, and geometry (if implemented). |
+| **model**   | `DarkNews.model.HNLModel()`  | The model class of DarkNews with all the couplings and vertices calculated from the user input. |
 | **data_path**   | *string*  | The path used to save the generation outputs. |
-| **N{i}_ctau0**   | 'float'  | The proper decay length of the i-th HNL in *centimeters* used in the generation of events, with i={4,5,6}. |
+| **N{i}_ctau0**   | *float*  | The proper decay length of the i-th HNL in *centimeters* used in the generation of events, with `i`={4,5,6}. |
 
 
 ---

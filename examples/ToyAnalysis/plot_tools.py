@@ -3,9 +3,7 @@ import numpy as np
 from scipy.interpolate import splprep, splev
 from pathlib import Path
 
-import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib import rc, rcParams
 from matplotlib.pyplot import cm
 import matplotlib.patches as mpatches
 
