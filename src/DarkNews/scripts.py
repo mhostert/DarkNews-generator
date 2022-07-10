@@ -35,5 +35,20 @@ def dn_gen():
     )
 
 
+def dn_download_examples():
+    import subprocess
+    
+    user = "jckantor"
+    repo = "cbe-virtual-laboratory"
+    src_dir = "src"
+    pyfile = "hello_world.py"
+
+    url = f"https://raw.githubusercontent.com/{user}/{repo}/main/{src_dir}/{pyfile}"
+
+    result = subprocess.run(["wget", "--no-cache", "--backups=1", url], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    print(result.stderr.decode("utf-8"))
+
+
+
 if __name__ == "__main__":
     dn_gen()
