@@ -3,7 +3,10 @@
 import argparse
 from DarkNews.GenLauncher import GenLauncher
 import DarkNews.parsing_tools as pt
-
+import os
+import subprocess
+import shutil
+from pathlib import Path
 
 def dn_gen():
     DEFAULTS = GenLauncher(loglevel="error")
@@ -35,19 +38,35 @@ def dn_gen():
     )
 
 
-def dn_download_examples():
-    import subprocess
+def dn_get_examples():
     
-    user = "jckantor"
-    repo = "cbe-virtual-laboratory"
-    src_dir = "src"
-    pyfile = "hello_world.py"
+    REPO_NAME = "DarkNews-generator"
+    REPO_URL = f"https://github.com/mhostert/{REPO_NAME}.git"
+    EXAMPLES_FOLDER = Path("examples")
+    DESTINATION_FOLDER = Path("../DarkNews-examples")
 
-    url = f"https://raw.githubusercontent.com/{user}/{repo}/main/{src_dir}/{pyfile}"
+    download_repo_cmd = f"git clone --depth 1 --filter=blob:none --sparse {REPO_URL}"
+    checkout_cmd = f"git sparse-checkout set {EXAMPLES_FOLDER}"
 
-    result = subprocess.run(["wget", "--no-cache", "--backups=1", url], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    print(result.stderr.decode("utf-8"))
+    print("Using git clone method...")
+    with subprocess.Popen([download_repo_cmd], stdout=subprocess.PIPE, shell=True) as proc:
+        print(download_repo_cmd)
+        print(proc.stdout.read())
+    print("git clone successful...")
 
+    os.chdir(f"{Path(REPO_NAME)}")
+    
+    with subprocess.Popen([checkout_cmd], stdout=subprocess.PIPE, shell=True) as proc:
+        print(checkout_cmd)
+        print(proc.stdout.read())
+    print("git sparse-checkout successful...")
+
+    os.rename(f"./{EXAMPLES_FOLDER}", DESTINATION_FOLDER)
+
+    os.chdir(Path("../"))
+    shutil.rmtree(REPO_NAME)
+
+    print(f"Successfully downloaded examples folder in current directory: {DESTINATION_FOLDER}")
 
 
 if __name__ == "__main__":
