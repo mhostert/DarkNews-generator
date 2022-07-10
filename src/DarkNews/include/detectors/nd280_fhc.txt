@@ -1,6 +1,6 @@
 # fluxes from data release https://t2k-experiment.org/result_category/flux/
 name = "ND280_FHC"
-fluxfile = "../fluxes/ND280_FHC.dat"
+fluxfile = "ND280_FHC.dat"
 flux_norm = 1
 erange = [
     0.05, 

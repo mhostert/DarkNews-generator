@@ -13,7 +13,11 @@ from numpy import sqrt
 import math
 from scipy import interpolate
 
-from DarkNews import local_dir
+try:
+    import importlib.resources as resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as resources
 
 ################################################
 # constants of light cm/s
@@ -115,7 +119,8 @@ alphaQED = 1.0 / 137.03599908421  # Fine structure constant at q2 -> 0
 eQED = np.sqrt((4 * np.pi) * alphaQED)
 
 # get running alphaQED
-Q, inv_alphaQED = np.genfromtxt(f"{local_dir}/include/aux_data/alpha_QED_running_posQ2.dat", unpack=True)
+Q, inv_alphaQED = np.genfromtxt(resources.open_text("DarkNews.include.aux_data","alpha_QED_running_posQ2.dat"),
+                                 unpack=True)
 runningAlphaQED = interpolate.interp1d(Q, 1.0 / inv_alphaQED)
 
 ################################################

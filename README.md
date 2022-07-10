@@ -261,7 +261,9 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **noHC**       | `bool` | Do not include helicity conserving events | `False` | 
 | **noHF**       | `bool` | Do not include helicity flipping events   | `False` | 
 | **decay_products** | `["e+e-","mu+mu-","photon"]` | Decay process of interest | "e+e-" |
+| **enforce_prompt** | `bool` | Force particles to decay promptly | `False` |
 | **nu_flavors**     | `["nu_e","nu_mu","nu_tau","nu_e_bar","nu_mu_bar","nu_tau_bar"]` | Projectile neutrino | `["nu_mu"]` |
+| **sample_geometry**     | `sample_geometry` | Whether to sample the detector geometry using DarkNews. If False or a geometry function is not found, the upscattering position is assumed to be (0,0,0,0). | `True` |
 
 #### Code behavior options
 
@@ -290,11 +292,16 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **pandas**        | `bool`   | Save `pandas.DataFrame` as `.pckl` file                                | `True`  | 
 | **parquet**       | `bool`   | Save `pandas.DataFrame` as `.parquet` file (engine=pyarrow)            | `False`  | 
 | **numpy**         | `bool`   | Save events in `.npy` files                                            | `False` | 
-| **hepevt**        | `bool`   | Save events in HEPEVT-formatted text files                             | `False` | 
-| **hepvt_unweigh** | `bool`   | Unweigh events when printing in HEPEVT format (needs large statistics) | `False` | 
-| **hepvt_events**  | `int`    | Number of events to accept in HEPEVT format                            | 100     | 
-| **path**          | `string` | Path where to save run's outputs                                       | `"./"`  | 
+| **hepevt**        | `bool`   | If true, print events to HEPEVT-formatted text files (does not save event weights) | `False` | 
+| **hepevt_legacy**        | `bool`   | If true, print events to a legacy HEPEVT format (saving weights next to the number of particle in the event and without linebreaks in particle entries) | `False` | 
+| **hepmc2** | `bool`   | If true, prints events to HepMC2 format. | `False` | 
+| **hepmc3** | `bool`   | If true, prints events to HepMC3 format. | `False` | 
+| **hep_unweight** | `bool`   | Unweigh events when printing in HEPEVT format (needs large statistics) | `False` | 
+| **unweighted_hep_events** | `int`   | number of unweighted events to accept in any of the standard HEP formats. Has to be much smaller than neval for unweight procedure to work. | 100 | 
 | **sparse**        | `bool`   | if True, save only the neutrino energy, charged lepton or photon momenta, and weights. Not supported for HEPevt. | `False`  | 
+| **path**          | `string` | Path where to save run's outputs                                       | `"./"`  | 
+| **make_summary_plots** | `bool` | if True, generates summary plots of kinematics in the `path` | `False`  | 
+
 
 ### Specify parameters via a file
 

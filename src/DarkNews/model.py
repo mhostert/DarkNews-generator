@@ -332,7 +332,7 @@ class ThreePortalModel(HNLModel):
         self.Ue4 = 0.0
         self.Ue5 = 0.0
         self.Ue6 = 0.0
-        self.Umu4 = 1e-4
+        self.Umu4 = 1e-3
         self.Umu5 = 0.0
         self.Umu6 = 0.0
         self.Utau4 = 0.0

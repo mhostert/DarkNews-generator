@@ -4,7 +4,12 @@ import os
 from itertools import islice
 from particle import literals as lp
 from DarkNews import logger
-from DarkNews import local_dir
+try:
+    import importlib.resources as resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as resources
+
 
 from DarkNews.const_dics import fourier_bessel_dic
 from DarkNews import const
@@ -279,8 +284,7 @@ def electron_binding_energy(Z):
 elements_dic = {}
 hydrogen_Eb = 13.5981e-9  # GeV
 atomic_unit = 0.9314941024228  # mass of Carbon12 in GeV / 12
-mass_file = os.path.join(local_dir, "include/aux_data/mass20_1.txt")
-with open(mass_file, "r") as ame:
+with resources.open_text("DarkNews.include.aux_data", "mass20_1.txt") as ame:
     # Read lines in file starting at line 36
     for line in islice(ame, 36, None):
 

@@ -3,8 +3,6 @@ __version__ = "0.0.1"
 import sys
 from pathlib import Path
 
-local_dir = Path(__file__).parent
-
 """
     Initializing loggers
 """

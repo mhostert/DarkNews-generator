@@ -1,11 +1,14 @@
 import numpy as np
 from scipy import interpolate
-from particle import literals as lp
 from pathlib import Path
 import os.path
 import os
+try:
+    import importlib.resources as resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as resources
 
-local_dir = Path(__file__).parent
 
 from . import logger, prettyprinter
 from . import pdg
@@ -34,26 +37,26 @@ class Detector:
         KeyError: if a required field is not specified in the detector file
 
     """
-
-    PATH_CONFIG_FILES = os.path.join(local_dir, Path("include/detectors"))
     KEYWORDS = {
-        "dune_nd_fhc": os.path.join(PATH_CONFIG_FILES, "dune_nd_fhc.txt"),
-        "dune_nd_rhc": os.path.join(PATH_CONFIG_FILES, "dune_nd_rhc.txt"),
-        "microboone": os.path.join(PATH_CONFIG_FILES, "microboone.txt"),
-        "minerva_le_fhc": os.path.join(PATH_CONFIG_FILES, "minerva_le_fhc.txt"),
-        "minerva_me_fhc": os.path.join(PATH_CONFIG_FILES, "minerva_me_fhc.txt"),
-        "minerva_me_rhc": os.path.join(PATH_CONFIG_FILES, "minerva_me_fhc.txt"),
-        "miniboone_fhc": os.path.join(PATH_CONFIG_FILES, "miniboone_fhc.txt"),
-        "miniboone_rhc": os.path.join(PATH_CONFIG_FILES, "miniboone_rhc.txt"),
-        "minos_le_fhc": os.path.join(PATH_CONFIG_FILES, "minos_le_fhc.txt"),
-        "nd280_fhc": os.path.join(PATH_CONFIG_FILES, "nd280_fhc.txt"),
-        "nova_le_fhc": os.path.join(PATH_CONFIG_FILES, "nova_le_fhc.txt"),
-        "fasernu": os.path.join(PATH_CONFIG_FILES, "fasernu.txt"),
-        "nutev_fhc": os.path.join(PATH_CONFIG_FILES, "nutev_fhc.txt"),
+        "dune_nd_fhc": "dune_nd_fhc.txt",
+        "dune_nd_rhc": "dune_nd_rhc.txt",
+        "microboone": "microboone.txt",
+        "minerva_le_fhc": "minerva_le_fhc.txt",
+        "minerva_me_fhc": "minerva_me_fhc.txt",
+        "minerva_me_rhc": "minerva_me_fhc.txt",
+        "miniboone_fhc": "miniboone_fhc.txt",
+        "miniboone_rhc": "miniboone_rhc.txt",
+        "minos_le_fhc": "minos_le_fhc.txt",
+        "nd280_fhc": "nd280_fhc.txt",
+        "nova_le_fhc": "nova_le_fhc.txt",
+        "fasernu": "fasernu.txt",
+        "nutev_fhc": "nutev_fhc.txt",
     }
 
     def __init__(self, experiment):
         parser = AssignmentParser({})
+        DET_MODULE = "DarkNews.include.detectors"
+        kwargs = {"encoding": "utf8"}
         try:
             # experiment is initially interpreted as a path to a local file
             experiment_file = experiment
@@ -61,8 +64,8 @@ class Detector:
         except (OSError, IOError, FileNotFoundError) as err:
             # if no file is found, then it is interpreted as a keyword for a pre-defined experiment
             if experiment in self.KEYWORDS:
-                experiment_file = self.KEYWORDS[experiment]
-                parser.parse_file(file=experiment_file, comments="#")
+                with resources.open_text(DET_MODULE, self.KEYWORDS[experiment], **kwargs) as f:
+                    parser.parse_file(file=f, comments="#")
             else:
                 raise err
 
@@ -98,14 +101,16 @@ class Detector:
             self.NUMBER_OF_TARGETS[f"{target.name}"] = fid_mass * const.t_to_GeV / (target.mass)
 
         # load neutrino fluxes: first try with path relative to experiment file, if error try with path from original config files
-        exp_dir = os.path.dirname(experiment_file)
         try:
-            _enu, *_fluxes = np.genfromtxt(Path(f"{exp_dir}/{self.FLUXFILE}"), unpack=True)
-        except FileNotFoundError:
+            exp_dir = os.path.dirname(experiment_file)
+            _enu, *_fluxes = np.genfromtxt(f"{exp_dir}/{self.FLUXFILE}", unpack=True)
+        except (FileNotFoundError, TypeError):
             try:
-                _enu, *_fluxes = np.genfromtxt(Path(f"{self.PATH_CONFIG_FILES}/{self.FLUXFILE}"), unpack=True)
+                file = resources.open_text("DarkNews.include.fluxes", self.FLUXFILE)
+                _enu, *_fluxes = np.genfromtxt(file, unpack=True)
             except FileNotFoundError:
-                raise FileNotFoundError(f"Fluxes file {self.FLUXFILE} not found neither in current experiment file path nor in config file path.")
+                raise FileNotFoundError(f"Fluxes file {self.FLUXFILE} not found in current experiment file path nor in config file path.")
+            
         self.FLUX_FUNCTIONS = 6 * [[]]
         for i in range(len(_fluxes)):
             self.FLUX_FUNCTIONS[i] = interpolate.interp1d(_enu, _fluxes[i] * self.FLUX_NORM, fill_value=0.0, bounds_error=False)

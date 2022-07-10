@@ -152,14 +152,29 @@ def add_generic_bsm_arguments(parser, DEFAULTS):
     parser.add_argument("--ddS", type=float, help="h' scalar vertex to down quark ddS")
     parser.add_argument("--ddP", type=float, help="h' pseudoscalar vertex to down quark ddP")
 
-    parser.add_argument("--cprotonV", type=float, help="SM Z boson vector vertex to charged leptons ceV")
-    parser.add_argument("--cneutronA", type=float, help="SM Z boson axial vertex to charged leptons ceA")
+    parser.add_argument("--cprotonV", type=float, help="SM Z boson vector vertex to protons cpV")
+    parser.add_argument("--cneutronV", type=float, help="SM Z boson axial vertex to neutrons cnV")
 
-    parser.add_argument("--dprotonV", type=float, help="Z' vector vertex to charged leptons deV")
-    parser.add_argument("--dneutronA", type=float, help="Z' axial vertex to charged leptons deA")
+    parser.add_argument("--cprotonA", type=float, help="SM Z boson vector vertex to protons cpA")
+    parser.add_argument("--cneutronA", type=float, help="SM Z boson axial vertex to neutrons cnA")
 
-    parser.add_argument("--dprotonS", type=float, help="h' scalar vertex to charged leptons dSe")
-    parser.add_argument("--dneutronP", type=float, help="h' pseudoscalar vertex to charged leptons dPe")
+    parser.add_argument("--dprotonV", type=float, help="SM Z boson vector vertex to protons dpV")
+    parser.add_argument("--dneutronV", type=float, help="SM Z boson axial vertex to neutrons dnV")
+
+    parser.add_argument("--dprotonA", type=float, help="SM Z boson vector vertex to protons dpA")
+    parser.add_argument("--dneutronA", type=float, help="SM Z boson axial vertex to neutrons dnA")
+
+    parser.add_argument("--dprotonS", type=float, help="SM Z boson vector vertex to protons dpS")
+    parser.add_argument("--dneutronS", type=float, help="SM Z boson axial vertex to neutrons dnS")
+
+    parser.add_argument("--dprotonP", type=float, help="SM Z boson vector vertex to protons dpP")
+    parser.add_argument("--dneutronP", type=float, help="SM Z boson axial vertex to neutrons dnP")
+
+    # parser.add_argument("--dprotonV", type=float, help="Z' vector vertex to charged leptons deV")
+    # parser.add_argument("--dneutronA", type=float, help="Z' axial vertex to charged leptons deA")
+
+    # parser.add_argument("--dprotonS", type=float, help="h' scalar vertex to charged leptons dSe")
+    # parser.add_argument("--dneutronP", type=float, help="h' pseudoscalar vertex to charged leptons dPe")
 
 
 def add_scope_arguments(parser, DEFAULTS):
@@ -210,9 +225,9 @@ def add_mc_arguments(parser, DEFAULTS):
     )
     parser.add_argument("--hepmc2", help="If true, prints events to HepMC2 format.", action="store_true")
     parser.add_argument("--hepmc3", help="If true, prints events to HepMC3 format.", action="store_true")
-    parser.add_argument("--hep_unweigh", help="unweigh events when printing in standard HEP formats (needs large neval)", action="store_true")
-    parser.add_argument("--unweighed_hep_events",type=int,
-        help="number of unweighed events to accept in any of the standard HEP formats. Has to be much smaller than neval for unweigh procedure to work.",
+    parser.add_argument("--hep_unweight", help="unweight events when printing in standard HEP formats (needs large neval)", action="store_true")
+    parser.add_argument("--unweighted_hep_events",type=int,
+        help="number of unweighted events to accept in any of the standard HEP formats. Has to be much smaller than neval for unweight procedure to work.",
     )
 
     parser.add_argument("--sparse", help="drop all information in the event except for visible particle momenta, neutrino energy, and weights.", action="store_true"
