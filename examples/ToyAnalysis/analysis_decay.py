@@ -4,9 +4,24 @@ from scipy.stats import expon
 
 from DarkNews import const
 
+#precision
+precision = 1e-10
 
 # radius of MB
 radius_MB = 610 #cm
+
+# geometry of cylinder_MB for dirt
+radius_MB_outer = 13.7 / 2.
+radius_cyl_MB = 1.5 * radius_MB_outer
+l_cyl_MB = 47400.
+end_point_cyl_MB = -1320.
+start_point_cyl_MB = end_point_cyl_MB - l_cyl_MB
+
+# geometry of steal for MB
+x_steal_MB = 100.
+y_steal_MB = 100.
+z_steal_MB = 380.
+start_point_steal_MB = start_point_cyl_MB - z_steal_MB
 
 # geometry of muBoone
 	#cryostat vessel
@@ -73,7 +88,37 @@ def random_cut_sphere(num=100,seed=0,radius=1,up=True):
     
     return output
 
+def get_distances_in_muB(p0,phat):
+    n = len(p0.T)
     
+    #positions of the 6 planes of the active detector in order (2 for X, 2 for Y, 2 for Z)
+    planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,dif_z/2,z_muB + dif_z/2])
+
+    #suitable forms for parameters
+    p0_6 = np.array([p0[0],p0[0],p0[1],p0[1],p0[2],p0[2]]).T
+    phat_6 = np.array([phat[0],phat[0],phat[1],phat[1],phat[2],phat[2]]).T
+
+    #find solutions and intersections of P0 + phat*t = planes, for parameter t
+    solutions = (planes - p0_6) / phat_6
+    intersections = [[p0[:,i] + solutions[i,j] * phat[:,i] for j in range(6)] for i in range(n)]
+    
+    #create a mask with invalid intersections
+    mask_inter = np.array([[(planes[0] - precision <= intersections[i][j][0] <= planes[1] + precision) & (planes[2] - precision <= intersections[i][j][1] <= planes[3] + precision) & (planes[4] - precision <= intersections[i][j][2] <= planes[5] + precision) & (solutions[i,j] > -precision) for j in range(6)] for i in range(n)])
+    
+    #compute the distances from the previous calculations
+    distances = np.zeros((n,2))
+    for i in range(n):
+        dist_temp = solutions[i][mask_inter[i]]
+        if len(dist_temp) == 2:
+            distances[i] = dist_temp
+        elif len(dist_temp) == 1:
+            distances[i] = [0,dist_temp[0]]
+        else:
+            distances[i] = [0,0]
+    
+    # return the distances
+    return distances
+
 
 def get_angle(p1,p2):
     x1,y1,z1 = p1
@@ -182,6 +227,88 @@ def select_MB_decay_expo_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0)
     return df
 
 
+# This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
+def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
+    df = df.copy(deep=True)
+
+    # get momenta and decay length for decay_N
+    pN = df.P_decay_N_parent.values
+    if not(l_decay_proper_cm):
+        l_decay_proper_cm = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0)) / coupling_factor**2
+    else:
+        l_decay_proper_cm /= coupling_factor**2
+
+    # compute the position of decay
+    x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)[1:]
+    decay_rate_lab = np.sqrt(x*x + y*y + z*z)
+    x_norm, y_norm, z_norm = x/decay_rate_lab, y/decay_rate_lab, z/decay_rate_lab
+    length_events = len(x)
+
+    # generate a random position for scattering position
+    if seed:
+        np.random.seed(seed)
+    u0 = np.random.random(length_events)
+    phi0 = np.random.random(length_events) * 2. * np.pi
+    r0 = radius_cyl_MB * u0**(1./2.)
+    x0, y0  = r0 * np.cos(phi0), r0 * np.sin(phi0)
+    z0 = np.random.random(length_events) * l_cyl_MB + start_point_cyl_MB
+
+    # compute the distance to the point of exit from the detector
+    x0_dot_p = x_norm * x0 + y_norm * y0 + z_norm * z0
+    x0_square = r0*r0 + z0*z0
+    discriminant = (x0_dot_p * x0_dot_p) - (x0_square - radius_MB**2)
+    mask_in_detector = ((discriminant > 0) & (z_norm > 0))
+    df = df[mask_in_detector]
+    distance_traveled_1 = - x0_dot_p - np.sqrt(discriminant)
+    distance_traveled_2 = - x0_dot_p + np.sqrt(discriminant)
+    probabilities = expon.cdf(distance_traveled_2,0,decay_rate_lab) - expon.cdf(distance_traveled_1,0,decay_rate_lab)
+
+    # new reconstructed weights
+    df['reco_w_pre_decay'] = df.reco_w.values
+    df.loc[:,'reco_w'] = df.reco_w.values * probabilities
+
+    return df
+
+
+# This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
+def select_MB_decay_steal(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
+    df = df.copy(deep=True)
+
+    # get momenta and decay length for decay_N
+    pN = df.P_decay_N_parent.values
+    if not(l_decay_proper_cm):
+        l_decay_proper_cm = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0)) / coupling_factor**2
+    else:
+        l_decay_proper_cm /= coupling_factor**2
+
+    # compute the position of decay
+    x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)[1:]
+    decay_rate_lab = np.sqrt(x*x + y*y + z*z)
+    x_norm, y_norm, z_norm = x/decay_rate_lab, y/decay_rate_lab, z/decay_rate_lab
+    length_events = len(x)
+
+    # generate a random position for scattering position
+    if seed:
+        np.random.seed(seed)
+    x0, y0, z0  = np.random.random(length_events) * x_steal_MB - x_steal_MB/2., np.random.random(length_events) * y_steal_MB - y_steal_MB/2., np.random.random(length_events) * z_steal_MB + start_point_steal_MB
+    
+    # compute the distance to the point of exit from the detector
+    x0_dot_p = x_norm * x0 + y_norm * y0 + z_norm * z0
+    x0_square = x0*x0 + y0*y0 + z0*z0
+    discriminant = (x0_dot_p * x0_dot_p) - (x0_square - radius_MB**2)
+    mask_in_detector = ((discriminant > 0) & (z_norm > 0))
+    df = df[mask_in_detector]
+    distance_traveled_1 = - x0_dot_p - np.sqrt(discriminant)
+    distance_traveled_2 = - x0_dot_p + np.sqrt(discriminant)
+    probabilities = expon.cdf(distance_traveled_2,0,decay_rate_lab) - expon.cdf(distance_traveled_1,0,decay_rate_lab)
+
+    # new reconstructed weights
+    df['reco_w_pre_decay'] = df.reco_w.values
+    df.loc[:,'reco_w'] = df.reco_w.values * probabilities
+
+    return df
+
+
 # Select for MiniBooNE considering the outer spheres
 def select_muB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
     df = df.copy(deep=True)
@@ -216,6 +343,46 @@ def select_muB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
     df['scatt_x'] = x0
     df['scatt_y'] = y0
     df['scatt_z'] = z0
+
+    return df
+
+# Select for MiniBooNE considering the outer spheres
+def select_muB_decay_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
+    df = df.copy(deep=True)
+
+    # get momenta and decay length for decay_N
+    pN = df.P_decay_N_parent.values
+    if not(l_decay_proper_cm):
+        l_decay_proper_cm = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0)) / coupling_factor**2
+    else:
+        l_decay_proper_cm /= coupling_factor**2
+    
+    # compute the position of decay
+    x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)[1:]
+    decay_rate_lab = np.sqrt(x*x + y*y + z*z)
+    x_norm, y_norm, z_norm = x/decay_rate_lab, y/decay_rate_lab, z/decay_rate_lab
+    phat = np.array([x_norm,y_norm,z_norm])
+    length_events = len(x)
+    
+    # generate a random position for scattering position
+    num_sphere = round(sphere_cut_muB*length_events)
+    num_cylinder = length_events - 2*num_sphere
+    
+    r_cylinder = random_cylinder(num=num_cylinder)
+    r_sphere_up = random_cut_sphere(num=num_sphere,radius=r_s_muB,up=True)
+    r_sphere_down = random_cut_sphere(num=num_sphere,radius=r_s_muB,up=False)
+    x0,y0,z0 = np.concatenate([r_cylinder,r_sphere_up,r_sphere_down],axis=1)
+    p0 = np.array([x0,y0,z0])
+    
+    # compute the distance to the point of exit from the detector
+    dist_in_detector = get_distances_in_muB(p0,phat)
+    dist1 = dist_in_detector.T[0]
+    dist2 = dist_in_detector.T[1]
+    probabilities = expon.cdf(dist2,0,decay_rate_lab) - expon.cdf(dist1,0,decay_rate_lab)
+    
+    # new reconstructed weights
+    df['reco_w_pre_decay'] = df.reco_w.values
+    df.loc[:,'reco_w'] = df.reco_w.values * probabilities
 
     return df
 
