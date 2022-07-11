@@ -1,7 +1,7 @@
 <h1 align="center"> DarkNews </h1> <br>
 
 <!-- <img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/logo.png" width="180" title="DarkNews-logo"> -->
-<img align="left" src="assets/logo.svg" width="180" title="DarkNews-logo">
+<img align="left" src="src/DarkNews/include/assets/logo.svg" width="180" title="DarkNews-logo">
 DarkNews is an event generator for new physics processes at accelerator neutrino experiments based on Vegas. It simulates neutrino upscattering to heavy neutrinos as well as heavy neutrino decays to dileptons via neutrino, vector, and transition magnetic moment portals.
 
 
@@ -43,9 +43,9 @@ The full information of the event genration is saved to a pandas dataframes, but
 
 Required dependencies:
 * [Python](http://www.python.org/) 3.6.1 or above
+* [NumPy](http://www.numpy.org/)
 
 The following dependencies (if missing) will be automatically installed during the main installation of the package:
-* [NumPy](http://www.numpy.org/)
 * [scipy](https://scipy.org/)
 * [pandas](https://pandas.pydata.org/) 1.0 or above
 * [pyarrow](https://arrow.apache.org/docs/python/index.html)
