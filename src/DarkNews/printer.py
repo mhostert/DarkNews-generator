@@ -1,7 +1,9 @@
 import os
+import sys
 import pandas as pd
 import numpy as np
 import dill
+
 from pathlib import Path
 from particle import literals as lp
 
@@ -182,9 +184,9 @@ class Printer:
         logger.info(f"Unweighing events down to {nevents} entries.")
         prob = self.df_gen[prob_col] / np.sum(self.df_gen[prob_col])
         if (prob < 0).any():
-            logger.error(f"ERROR! Probabily for unweighing contains negative values! Bad weights? {prob_col} < 0.")
+            logger.error(f"ERROR! Probabily for unweighting contains negative values! Bad weights? {prob_col} < 0.")
         if (prob == 0).any():
-            logger.warning(f"WARNING! Discarding zero-valued weights for unweighing. Total of {sum(prob == 0)} of {len(prob)} zero entries for {prob_col}.")
+            logger.warning(f"WARNING! Discarding zero-valued weights for unweighting. Total of {sum(prob == 0)} of {len(prob)} zero entries for {prob_col}.")
             AccEntries = np.random.choice(self.df_gen.index[prob > 0], size=nevents, p=prob[prob > 0], *kwargs)
         else:
             AccEntries = np.random.choice(self.df_gen.index, size=nevents, p=prob, *kwargs)
@@ -192,23 +194,23 @@ class Printer:
         # extract selected entries
         return self.df_gen.filter(AccEntries, axis=0).reset_index()
 
-    def _prepare_kinematics(self, unweigh=False, unweighed_hep_events=None):
+    def _prepare_kinematics(self, hep_unweight=False, unweighted_hep_events=None):
         """ pre compute the numpy arrays from dataframe to speed up hepmc priting routines. 
 
 		Args:
-			unweigh (bool, optional): _description_. Defaults to False.
-			unweighed_hep_events (_type_, optional): _description_. Defaults to None.
+			hep_unweight (bool, optional): _description_. Defaults to False.
+			unweighted_hep_events (_type_, optional): _description_. Defaults to None.
 		"""
 
         if not self._kinematics_in_np_arrays:
-            # Unweigh events down to unweighed_hep_events?
-            if unweigh:
-                df_gen = self.get_unweighted_events(nevents=unweighed_hep_events)
+            # Unweigh events down to unweighted_hep_events?
+            if hep_unweight:
+                df_gen = self.get_unweighted_events(nevents=unweighted_hep_events)
             else:
                 df_gen = self.df_gen
 
             # sample size (# of events)
-            self.tot_events_to_print = min(len(self.df_gen.index), unweighed_hep_events)
+            self.tot_events_to_print = min(len(self.df_gen.index), unweighted_hep_events)
 
             if not "pos_scatt" in self.df_gen.columns:
 
@@ -316,43 +318,43 @@ class Printer:
         # 	id_lepton_plus = int(lp.e_plus.pdgid)
         # 	logger.warning(f'Decay product {decay_product} not recognized, assuming it to be e+e-.')
 
-    def print_events_to_hepevt(self, filename=None, unweigh=False, unweighed_hep_events=100):
-        if not unweigh:
+    def print_events_to_hepevt(self, filename=None, hep_unweight=False, unweighted_hep_events=100):
+        if not hep_unweight:
             logger.warning(
                 "WARNING: HEPevt is not a lossless format -- you will lose the event weights. \
 If you want to force-print weights, use the hepevt_legacy format instead. \
-Otherwise, please set unweigh=True and set the desired number of unweighted events."
+Otherwise, please set hep_unweight=True and set the desired number of unweighted events."
             )
         # HEPevt file name
         if filename:
             hep_path = filename
         else:
             hep_path = Path(f"{self.out_file_name}/HEPevt.dat").__str__()
-        self._pyhepmc_printer(hep.WriterHEPEVT(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
+        self._pyhepmc_printer(hep.WriterHEPEVT(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
 
-    def print_events_to_hepmc2(self, filename=None, unweigh=False, unweighed_hep_events=100):
+    def print_events_to_hepmc2(self, filename=None, hep_unweight=False, unweighted_hep_events=100):
         # HEPevt file name
         if filename:
             hep_path = filename
         else:
             hep_path = Path(f"{self.out_file_name}/hep_ascii.hepmc2").__str__()
-        self._pyhepmc_printer(hep.WriterAsciiHepMC2(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
+        self._pyhepmc_printer(hep.WriterAsciiHepMC2(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
 
-    def print_events_to_hepmc3(self, filename=None, unweigh=False, unweighed_hep_events=100):
+    def print_events_to_hepmc3(self, filename=None, hep_unweight=False, unweighted_hep_events=100):
         # HEPevt file name
         if filename:
             hep_path = filename
         else:
             hep_path = Path(f"{self.out_file_name}/hep_ascii.hepmc3").__str__()
-        self._pyhepmc_printer(hep.WriterAscii(hep_path), unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
+        self._pyhepmc_printer(hep.WriterAscii(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
 
-    def _pyhepmc_printer(self, hep_writer, unweigh=False, unweighed_hep_events=100):
+    def _pyhepmc_printer(self, hep_writer, hep_unweight=False, unweighted_hep_events=100):
         """ Use pyhepmc to print events to standard HEP formats.
 
 		Args:
 			hep_writer (an instance of a hep writer bindings): of one of the following types: WriterHEPEVT, WriterAsciiHepMC2, WriterAscii
-			unweigh (bool, optional): if true, unweigh events. Defaults to False.
-			unweighed_hep_events (int, optional): if unweight is true, use this value to determine how many unweighted events to print. Defaults to 100.
+			hep_unweight (bool, optional): if true, unweight events. Defaults to False.
+			unweighted_hep_events (int, optional): if hep_unweight is true, use this value to determine how many unweighted events to print. Defaults to 100.
 
 		Events are printed using the numpy arrays that have obtained from the pandas dataframe. This speeds up the printing process
 		Four momenta are printed following the convention:
@@ -374,7 +376,7 @@ Otherwise, please set unweigh=True and set the desired number of unweighted even
 		"""
 
         # pre-compute kinematics with numpy for faster index access
-        self._prepare_kinematics(unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
+        self._prepare_kinematics(hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
 
         # converting Lorentz order -- px, py, pz, E
         hep_order = [1, 2, 3, 0]
@@ -389,7 +391,7 @@ Otherwise, please set unweigh=True and set the desired number of unweighted even
         ri.weight_names = df_weight_names
 
         # for i in range(df.index[-1]):
-        for i in range(unweighed_hep_events):
+        for i in range(unweighted_hep_events):
             evt = hep.GenEvent(hep.Units.GEV, hep.Units.CM)
             evt.event_number = i
 
@@ -446,13 +448,13 @@ Otherwise, please set unweigh=True and set the desired number of unweighted even
             evt.add_vertex(v2)
 
             evt.run_info = ri
-            if not unweigh:
+            if not hep_unweight:
                 evt.weights = [self.df_gen[name, ""].to_numpy()[i] for name in df_weight_names]
 
             # write event to file using the chosen hep writer (HEPevt, hepmc2 or 3)
             hep_writer.write(evt)
 
-    def print_events_to_hepevt_legacy(self, filename=None, unweigh=False, unweighed_hep_events=100, sparse=False):
+    def print_events_to_hepevt_legacy(self, filename=None, hep_unweight=False, unweighted_hep_events=100):
         """
 			Print events to HEPevt format.
 
@@ -484,14 +486,17 @@ Otherwise, please set unweigh=True and set the desired number of unweighted even
 		"""
 
         # pre-compute kinematics with numpy for faster index access
-        self._prepare_kinematics(unweigh=unweigh, unweighed_hep_events=unweighed_hep_events)
+        self._prepare_kinematics(hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
 
+        logger.info("Printing events to HEPevt using legacy format...")
         lines = []
-        # loop over events
-        for i in self.df_gen.index:
 
+
+        range_of_evts = self.df_gen.index
+        # loop over events
+        for i in range_of_evts:
             # no particles & event id
-            if unweigh:
+            if hep_unweight:
                 lines.append(f"{i} 7\n")
             else:
                 lines.append(f"{i} 7 {self.df_gen['w_event_rate',''].to_numpy()[i]:.8E}\n")
@@ -510,67 +515,69 @@ Otherwise, please set unweigh=True and set the desired number of unweighted even
                     "\n"
                 )
             )
-
-            lines.append(
-                (  # Target
-                    f"0 "
-                    f" {int(self.df_gen['target_pdgid',''].to_numpy()[i])}"
-                    f" 0 0 0 0"
-                    f" {print_in_order(self.pvec_target[i])}"
-                    f" {self.df_gen['P_target','0'].to_numpy()[i]:.8E}"
-                    f" {self.mass_target[i]:.8E}"
-                    f" {print_in_order(self.pvec_pos_scatt[i])}"
-                    f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
-                    "\n"
+            
+            # Only print targets and HNLs if not sparse
+            if not self.sparse:
+                lines.append(
+                    (  # Target
+                        f"0 "
+                        f" {int(self.df_gen['target_pdgid',''].to_numpy()[i])}"
+                        f" 0 0 0 0"
+                        f" {print_in_order(self.pvec_target[i])}"
+                        f" {self.df_gen['P_target','0'].to_numpy()[i]:.8E}"
+                        f" {self.mass_target[i]:.8E}"
+                        f" {print_in_order(self.pvec_pos_scatt[i])}"
+                        f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
+                        "\n"
+                    )
                 )
-            )
 
-            # scatter final products
-            lines.append(
-                (  # HNL produced
-                    f"0 "
-                    f" {int(pdg.neutrino5.pdgid)}"
-                    f" 0 0 0 0"
-                    f" {print_in_order(self.pvec_decay_N_parent[i])}"
-                    f" {self.df_gen['P_decay_N_parent','0'].to_numpy()[i]:.8E}"
-                    f" {self.mass_decay_N_parent[i]:.8E}"
-                    f" {print_in_order(self.pvec_pos_scatt[i])}"
-                    f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
-                    "\n"
+                # scatter final products
+                lines.append(
+                    (  # HNL produced
+                        f"0 "
+                        f" {int(pdg.neutrino5.pdgid)}"
+                        f" 0 0 0 0"
+                        f" {print_in_order(self.pvec_decay_N_parent[i])}"
+                        f" {self.df_gen['P_decay_N_parent','0'].to_numpy()[i]:.8E}"
+                        f" {self.mass_decay_N_parent[i]:.8E}"
+                        f" {print_in_order(self.pvec_pos_scatt[i])}"
+                        f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
+                        "\n"
+                    )
                 )
-            )
 
-            lines.append(
-                (  # recoiled target
-                    f"0 "
-                    f" {int(self.df_gen['target_pdgid',''].to_numpy()[i])}"
-                    f" 0 0 0 0"
-                    f" {print_in_order(self.pvec_recoil[i])}"
-                    f" {self.df_gen['P_recoil','0'].to_numpy()[i]:.8E}"
-                    f" {self.mass_recoil[i]:.8E}"
-                    f" {print_in_order(self.pvec_pos_scatt[i])}"
-                    f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
-                    "\n"
+                lines.append(
+                    (  # recoiled target
+                        f"0 "
+                        f" {int(self.df_gen['target_pdgid',''].to_numpy()[i])}"
+                        f" 0 0 0 0"
+                        f" {print_in_order(self.pvec_recoil[i])}"
+                        f" {self.df_gen['P_recoil','0'].to_numpy()[i]:.8E}"
+                        f" {self.mass_recoil[i]:.8E}"
+                        f" {print_in_order(self.pvec_pos_scatt[i])}"
+                        f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
+                        "\n"
+                    )
                 )
-            )
 
-            # decay final products
-            lines.append(
-                (  # daughter neutrino/HNL
-                    f"0 "
-                    f" {int(pdg.nulight.pdgid)}"
-                    f" 0 0 0 0"
-                    f" {print_in_order(self.pvec_decay_N_daughter[i])}"
-                    f" {self.df_gen['P_decay_N_daughter','0'].to_numpy()[i]:.8E}"
-                    f" {self.mass_decay_N_daughter[i]:.8E}"
-                    f" {print_in_order(self.pvec_pos_decay[i])}"
-                    f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
-                    "\n"
+                # decay final products
+                lines.append(
+                    (  # daughter neutrino/HNL
+                        f"0 "
+                        f" {int(pdg.nulight.pdgid)}"
+                        f" 0 0 0 0"
+                        f" {print_in_order(self.pvec_decay_N_daughter[i])}"
+                        f" {self.df_gen['P_decay_N_daughter','0'].to_numpy()[i]:.8E}"
+                        f" {self.mass_decay_N_daughter[i]:.8E}"
+                        f" {print_in_order(self.pvec_pos_decay[i])}"
+                        f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
+                        "\n"
+                    )
                 )
-            )
 
             lines.append(
-                (  # electron
+                (  # ell-
                     f"1 "
                     f" {self.id_lepton_minus}"
                     f" 0 0 0 0"
@@ -584,7 +591,7 @@ Otherwise, please set unweigh=True and set the desired number of unweighted even
             )
 
             lines.append(
-                (  # positron
+                (  # ell+
                     f"1 "
                     f" {self.id_lepton_plus}"
                     f" 0 0 0 0"

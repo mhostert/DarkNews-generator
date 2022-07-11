@@ -134,8 +134,8 @@ class MC_events:
         # process being considered
         self.underl_process_name = \
             f"{self.nu_projectile.name} {self.ups_case.target.name} --> \
-            {self.nu_upscattered.name}  {self.ups_case.target.name} --> \
-            {self.nu_outgoing.name} {DECAY_PRODUCTS} {self.ups_case.target.name}"
+{self.nu_upscattered.name}  {self.ups_case.target.name} --> \
+{self.nu_outgoing.name} {DECAY_PRODUCTS} {self.ups_case.target.name}"
 
     def get_total_xsec(self, Enu):
         """

@@ -249,8 +249,14 @@ class AssignmentParser:
 
     def parse_file(self, file, comments="#"):
         # read file
-        with open(file, "r", encoding="utf8") as f:
-            lines = f.readlines()
+        try:
+            # assume it is an open file
+            lines = file.readlines()
+        except AttributeError:
+            # assume it is a str to file path
+            with open(file, "r", encoding="utf8") as f:
+                lines = f.readlines()
+
         # create a clean text without blank lines and comments
         clean_text = ""
         for i, line in enumerate(lines):

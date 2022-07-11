@@ -1,6 +1,6 @@
 # flux from https://arxiv.org/pdf/2105.08270.pdf
 name = "FASERnu"
-fluxfile = "../fluxes/FASERnu.dat"
+fluxfile = "FASERnu.dat"
 flux_norm = 1/(70*65/2) # neutrinos in an approximate rectangular area of |x| < 70 cm and 5cm < y < 70 cm to nus/cm^2
 erange = [
     10, 

@@ -1,6 +1,5 @@
 import numpy as np
 import scipy
-import pandas as pd
 import os
 
 from . import analysis_decay as av
@@ -82,7 +81,7 @@ def chi2_binned_rate(NP_MC, NPevents, back_MC,D, sys=[0.1,0.1]):
     
     # shape of new physics prediction normalized to NPevents
     if np.sum(NP_MC)!=0:
-    	NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
+        NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
 
     dpoints = len(D)
     
@@ -111,21 +110,21 @@ def chi2_binned_rate_3p1(df, umu4,back_MC,D, on_shell=True,r_eps=1., sys=[0.1,0.
     if on_shell:
         coupling_factor = v4i_f(umu4)/v4i_def
     else:
-	    coupling_factor = (v4i_f(umu4)*r_eps)/(v4i_def)
+        coupling_factor = (v4i_f(umu4)*r_eps)/(v4i_def)
     
     df_decay = av.select_MB_decay_expo(df,coupling_factor=coupling_factor)
     sum_w_post_smearing = np.abs(np.sum(df_decay['reco_w']))
     total_Nevent_MB = 400 * np.abs((1/df_decay['reco_eff'][0]))
     if type_fit=='angle':
-    	histograms = np.histogram(np.cos(df_decay['reco_theta_beam'].values*np.pi/180.), weights=df_decay['reco_w'], bins=np.linspace(-1,1,21), density = False)
+        histograms = np.histogram(np.cos(df_decay['reco_theta_beam'].values*np.pi/180.), weights=df_decay['reco_w'], bins=np.linspace(-1,1,21), density = False)
     else:
-    	histograms = np.histogram(df_decay['reco_Enu'], weights=df_decay['reco_w'], bins=bin_e_def, density = False)
+        histograms = np.histogram(df_decay['reco_Enu'], weights=df_decay['reco_w'], bins=bin_e_def, density = False)
     NP_MC = histograms[0]
     NPevents = (vmu4_f(umu4) *r_eps / vmu4_def)**2 * sum_w_post_smearing
     
     # shape of new physics prediction normalized to NPevents
     if np.sum(NP_MC)!=0:
-    	NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
+        NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
 
     dpoints = len(D)
     
@@ -153,21 +152,21 @@ def chi2_binned_rate_3p1(df, umu4,back_MC,D, on_shell=True,r_eps=1., sys=[0.1,0.
 def chi2_binned_rate_3p2(df_decay, vmu5, back_MC,D, sys=[0.1,0.1],r_eps=1.,type_fit='angle',decay_limit = 10000):
     err_flux = sys[0]
     err_back = sys[1]
-    
+
     sum_w_post_smearing = np.abs(np.sum(df_decay['reco_w']))
     if type_fit=='angle':
-    	histograms = histograms = np.histogram(np.cos(df_decay['reco_theta_beam'].values*np.pi/180.), weights=df_decay['reco_w'], bins=np.linspace(-1,1,21), density = False)
+        histograms = histograms = np.histogram(np.cos(df_decay['reco_theta_beam'].values*np.pi/180.), weights=df_decay['reco_w'], bins=np.linspace(-1,1,21), density = False)
     else:
-    	histograms = np.histogram(df_decay['reco_Enu'], weights=df_decay['reco_w'], bins=bin_e_def, density = False)
+        histograms = np.histogram(df_decay['reco_Enu'], weights=df_decay['reco_w'], bins=bin_e_def, density = False)
     NP_MC = histograms[0]
     NPevents = (vmu5 * r_eps / vmu5_def)**2 * sum_w_post_smearing
-    
+
     # shape of new physics prediction normalized to NPevents
     if np.sum(NP_MC)!=0:
-    	NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
+        NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
 
     dpoints = len(D)
-    
+
     def chi2bin(nuis):
         alpha=nuis[:dpoints]
         beta = nuis[dpoints:]
@@ -176,9 +175,9 @@ def chi2_binned_rate_3p2(df_decay, vmu5, back_MC,D, sys=[0.1,0.1],r_eps=1.,type_
         
         return 2*np.sum(mu - D + safe_log(D, mu) ) + np.sum(alpha**2/(err_flux**2)) + np.sum(beta**2 /(err_back**2))
 
-    
+
     cons = ({'type': 'ineq', 'fun': lambda x: x})
-    
+
     res = scipy.optimize.minimize(chi2bin, np.zeros(dpoints*2),constraints=cons)
 
     l_decay = get_decay_length(df,coupling_factor=coupling_factor)
@@ -193,7 +192,7 @@ def chi2_MiniBooNE_2020(NP_MC, NPevents):
 
     # shape of new physics prediction normalized to NPevents
     if np.sum(NP_MC)!= 0:
-    	NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
+        NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
 
     NP_diag_matrix  = np.diag(np.concatenate([NP_MC,nue_bkg*0.0,numu_bkg*0.0]))
     tot_diag_matrix = np.diag(np.concatenate([NP_MC,nue_bkg,numu_bkg]))
@@ -213,14 +212,14 @@ def chi2_MiniBooNE_2020(NP_MC, NPevents):
     error_matrix[n_signal:(n_signal+n_numu),n_signal:(n_signal+n_numu)] = rescaled_covariance[2*n_signal:2*n_signal+n_numu,2*n_signal:(2*n_signal+n_numu)]
 
     if not(np.abs(np.sum(error_matrix) - np.sum(rescaled_covariance)) < 1.e-3):
-    	return -1
+        return -1
 
     # compute residuals
     residuals = np.concatenate([nue_data - (NP_MC + nue_bkg), (numu_data - numu_bkg)])
 
     inv_cov = np.linalg.inv(error_matrix)
     
-	# calculate chi^2
+    # calculate chi^2
     chi2 = np.dot(residuals,np.dot(inv_cov,residuals)) #+ np.log(np.linalg.det(error_matrix))
 
     return chi2
@@ -234,8 +233,8 @@ def chi2_MiniBooNE_2020_3p1(df, umu4, on_shell=True, decay_limit = False, r_eps=
     if on_shell:
         coupling_factor = v4i_f(umu4)/v4i_def
     else:
-	    coupling_factor = (v4i_f(umu4)*r_eps)/(v4i_def)
-	
+        coupling_factor = (v4i_f(umu4)*r_eps)/(v4i_def)
+    
     df_decay = av.select_MB_decay_expo_prob(df,coupling_factor=coupling_factor,l_decay_proper_cm=l_decay_proper_cm)
     sum_w_post_smearing = np.abs(np.sum(df_decay['reco_w']))
     hist = np.histogram(df_decay['reco_Enu'], weights=df_decay['reco_w'], bins=bin_e_def, density = False)
@@ -244,7 +243,7 @@ def chi2_MiniBooNE_2020_3p1(df, umu4, on_shell=True, decay_limit = False, r_eps=
         
     # shape of new physics prediction normalized to NPevents
     if np.sum(NP_MC)!= 0:
-    	NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
+        NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
 
 
     ####
@@ -258,7 +257,7 @@ def chi2_MiniBooNE_2020_3p1(df, umu4, on_shell=True, decay_limit = False, r_eps=
     n_signal = len(NP_MC)
     n_numu = len(numu_bkg)
 
-	# procedure described by MiniBooNE itself
+    # procedure described by MiniBooNE itself
     error_matrix = np.zeros([n_signal+n_numu,n_signal+n_numu])
     error_matrix[0:n_signal,0:n_signal] = rescaled_covariance[0:n_signal,0:n_signal] + rescaled_covariance[n_signal:2*n_signal,0:n_signal] + rescaled_covariance[0:n_signal,n_signal:2*n_signal] + rescaled_covariance[n_signal:2*n_signal,n_signal:2*n_signal]
     error_matrix[n_signal:(n_signal+n_numu),0:n_signal] = rescaled_covariance[2*n_signal:(2*n_signal+n_numu),0:n_signal] + rescaled_covariance[2*n_signal:(2*n_signal+n_numu),n_signal:2*n_signal]
@@ -266,14 +265,14 @@ def chi2_MiniBooNE_2020_3p1(df, umu4, on_shell=True, decay_limit = False, r_eps=
     error_matrix[n_signal:(n_signal+n_numu),n_signal:(n_signal+n_numu)] = rescaled_covariance[2*n_signal:2*n_signal+n_numu,2*n_signal:(2*n_signal+n_numu)]
 
     if not(np.abs(np.sum(error_matrix) - np.sum(rescaled_covariance)) < 1.e-3):
-    	return -1
+        return -1
 
     # compute residuals
     residuals = np.concatenate([nue_data - (NP_MC + nue_bkg), (numu_data - numu_bkg)])
 
     inv_cov = np.linalg.inv(error_matrix)
     
-	# calculate chi^2
+    # calculate chi^2
     chi2 = np.dot(residuals,np.dot(inv_cov,residuals))
 
     if decay_limit:
@@ -296,7 +295,7 @@ def chi2_MiniBooNE_2020_3p2(df_decay, vmu5,r_eps=1.):
         
     # shape of new physics prediction normalized to NPevents
     if np.sum(NP_MC)!= 0:
-    	NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
+        NP_MC  = (NP_MC/np.sum(NP_MC)) * NPevents
 
 
     ####
@@ -318,7 +317,7 @@ def chi2_MiniBooNE_2020_3p2(df_decay, vmu5,r_eps=1.):
     error_matrix[n_signal:(n_signal+n_numu),n_signal:(n_signal+n_numu)] = rescaled_covariance[2*n_signal:2*n_signal+n_numu,2*n_signal:(2*n_signal+n_numu)]
 
     if not(np.abs(np.sum(error_matrix) - np.sum(rescaled_covariance)) < 1.e-3):
-    	return -1
+        return -1
 
     # compute residuals
     residuals = np.concatenate([nue_data - (NP_MC + nue_bkg), (numu_data - numu_bkg)])

@@ -41,8 +41,8 @@ GENERATOR_ARGS = [
     "hepevt_legacy",
     "hepmc2",
     "hepmc3",
-    "hep_unweigh",
-    "unweighed_hep_events",
+    "hep_unweight",
+    "unweighted_hep_events",
     "sparse",
     "print_to_float32",
     "path",
@@ -264,8 +264,8 @@ class GenLauncher:
         self.hepevt_legacy = False
         self.hepmc2 = False
         self.hepmc3 = False
-        self.hep_unweigh = False
-        self.unweighed_hep_events = 100
+        self.hep_unweight = False
+        self.unweighted_hep_events = 100
         self.sparse = False
         self.print_to_float32 = False
         self.path = "."
@@ -317,9 +317,9 @@ class GenLauncher:
 
         _boson_string = ""
         if self.bsm_model.mzprime is not None:
-            _boson_string += f"mzprime_{self.bsm_model.mzprime:.4g}"
+            _boson_string += f"_mzprime_{self.bsm_model.mzprime:.4g}"
         if self.bsm_model.mhprime is not None:
-            _boson_string += f"mhprime_{self.bsm_model.mhprime:.4g}"
+            _boson_string += f"_mhprime_{self.bsm_model.mhprime:.4g}"
 
         # 3+1
         if self.bsm_model.m4 is not None and self.bsm_model.m5 is None and self.bsm_model.m6 is None:
@@ -333,7 +333,7 @@ class GenLauncher:
             self.upscattered_nus = [dn.pdg.neutrino5]
             self.outgoing_nus = [dn.pdg.neutrino4]
             self.data_path = Path(
-                f"{self.path}/data/{exp_path_part}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_{_boson_string}_{self.bsm_model.HNLtype}/"
+                f"{self.path}/data/{exp_path_part}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}{_boson_string}_{self.bsm_model.HNLtype}/"
             )
 
         # 3+3
@@ -354,9 +354,9 @@ class GenLauncher:
 
         ####################################################
         # Miscellaneous checks 
-        if self.hep_unweigh:
+        if self.hep_unweight:
             logger.warning(
-                f"Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hep-formatted events. Currently: n_unweighed/n_eval = {self.unweighed_hep_events/self.neval*100}%."
+                f"Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hep-formatted events. Currently: n_unweighted/n_eval = {self.unweighted_hep_events/self.neval*100}%."
             )
         
 
@@ -593,13 +593,13 @@ class GenLauncher:
         if self.numpy:
             self.dn_printer.print_events_to_ndarray()
         if self.hepevt_legacy:
-            self.dn_printer.print_events_to_hepevt_legacy(unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events)
+            self.dn_printer.print_events_to_hepevt_legacy(hep_unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
         if self.hepmc2:
-            self.dn_printer.print_events_to_hepmc2(unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events)
+            self.dn_printer.print_events_to_hepmc2(hep_unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
         if self.hepmc3:
-            self.dn_printer.print_events_to_hepmc3(unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events)
+            self.dn_printer.print_events_to_hepmc3(hep_unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
         if self.hepevt:
-            self.dn_printer.print_events_to_hepevt(unweigh=self.hep_unweigh, unweighed_hep_events=self.unweighed_hep_events)
+            self.dn_printer.print_events_to_hepevt(hep_unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
 
         #############################################################################
         # Make summary plots?
@@ -611,7 +611,7 @@ class GenLauncher:
                 logger.warning("Warning! Could not find matplotlib -- stopping the making of summary plots.")
             else:
                 self.path_to_summary_plots = Path(self.data_path) / "summary_plots/"
-                dn.plot_tools.batch_plot(self.df, self.path_to_summary_plots, title="DarkNews")
+                dn.plot_tools.batch_plot(self.df, self.path_to_summary_plots, title=rf"{self.name}")
             logger.info(f"Plots saved in {self.path_to_summary_plots}.")
 
         # restore overwritten path
