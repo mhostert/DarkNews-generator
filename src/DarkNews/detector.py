@@ -104,7 +104,7 @@ class Detector:
         try:
             exp_dir = os.path.dirname(experiment_file)
             _enu, *_fluxes = np.genfromtxt(f"{exp_dir}/{self.FLUXFILE}", unpack=True)
-        except (FileNotFoundError, TypeError):
+        except (OSError, FileNotFoundError, TypeError):
             try:
                 file = resources.open_text("DarkNews.include.fluxes", self.FLUXFILE)
                 _enu, *_fluxes = np.genfromtxt(file, unpack=True)
