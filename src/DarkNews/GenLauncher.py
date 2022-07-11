@@ -593,13 +593,13 @@ class GenLauncher:
         if self.numpy:
             self.dn_printer.print_events_to_ndarray()
         if self.hepevt_legacy:
-            self.dn_printer.print_events_to_hepevt_legacy(unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
+            self.dn_printer.print_events_to_hepevt_legacy(hep_unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
         if self.hepmc2:
-            self.dn_printer.print_events_to_hepmc2(unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
+            self.dn_printer.print_events_to_hepmc2(hep_unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
         if self.hepmc3:
-            self.dn_printer.print_events_to_hepmc3(unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
+            self.dn_printer.print_events_to_hepmc3(hep_unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
         if self.hepevt:
-            self.dn_printer.print_events_to_hepevt(unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
+            self.dn_printer.print_events_to_hepevt(hep_unweight=self.hep_unweight, unweighted_hep_events=self.unweighted_hep_events)
 
         #############################################################################
         # Make summary plots?

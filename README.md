@@ -43,9 +43,9 @@ The full information of the event genration is saved to a pandas dataframes, but
 
 Required dependencies:
 * [Python](http://www.python.org/) 3.6.1 or above
-* [NumPy](http://www.numpy.org/)
 
 The following dependencies (if missing) will be automatically installed during the main installation of the package:
+* [NumPy](http://www.numpy.org/)
 * [scipy](https://scipy.org/)
 * [pandas](https://pandas.pydata.org/) 1.0 or above
 * [pyarrow](https://arrow.apache.org/docs/python/index.html)
@@ -60,22 +60,28 @@ The following dependencies (if missing) will be automatically installed during t
 ---
 ## Installation
 
-*Currently set for local `pip` installation*  
-To install the package, download the release for the stable version (or clone the repository for the development version).
-Save everything in a directory.
-Then enter in the main folder and run:
+DarkNews is available on PyPI so from your python3.6+ (virtual environment or otherwise), run 
+```sh
+python3 -m pip install DarkNews
+```
+or if your pip version is already set to your preferred python version, simply ```pip install DarkNews```.
+
+This should install all dependencies for you. If you have any problems, try creating a brand new (conda or pyenv) environment, install the latest version of ```pip```, pip install numpy, and try to install DarkNews. 
+We have tested installations on Ubuntu, Mac OS X, as well as Windows.
+
+If your installation is successful, you should be able to
+* import the module from your python scripts or notebook with `import DarkNews`
+* run the command line tool `dn_gen` to generate events on the terminal.
+
+
+##### Editable mode / Developing
+To make changes to the package or contribute, you can clone the latest repository from GitHub, and from the main folder of the cloned directory, run:
 ```sh
 python3 -m pip install -e .
 ```
+The package will be installed locally in editable mode.  Any changes to your local files in the repo will be automatically propagated to your DarkNews installation (except setup configurations). You may want to use Jupyter notebooks with `auto reload`.
 
-The package will be installed locally in editable mode.  
-The command will take care of installing any missing dependencies. It is necessary to have Python 3.6.1.
-
-Alternatively, if you experience any problems with pip, you can resort to a local manual installation. In the main folder of the repo, run
-```sh
-python3 setup.py install
-```
-or
+If you experience any problems with pip, you can resort to a local manual installation. After downloading the repository, from the main folder, you can run 
 ```sh
 python3 setup.py develop
 ```
@@ -84,24 +90,18 @@ to install it in developer mode (similar to editable mode above).
 ---
 ## Usage
 
-The main usage of DarkNews is covered in depth in the notebook `Example_0_start_here.ipynb` in the `examples` folder.
+A lot of information on the usage of the generator is provided by the example Jupyter notebooks in the repository.
 
-It is possible to run the generator in two ways.
-In both cases, the generated dataset is saved into a directory tree which is created by default in the same folder the generator is run.  
-The directory tree has the following form:
-```
-<path>/data/<exp>/<model_name>/<relevant_masses>_<HNLtype>/
-```
-where:
-* `<path>`: is the value of the `path` argument (or option), default to `./`
-* `<exp>`: is the value of the `exp` argument (or option), default set to `miniboone_fhc`
-* `<model_name>`: is the name of the chosen model according to the values of the chosen parameters; it can be `3plus1`, `3plus2`, `3plus3`
-* `<relevant_masses>`: it is a string made of strings of the kind `"<parameter>_<mass>"` separated by underscores, where `<parameter>` is the name of a mass parameter among `mzprime`, `m4`, `m5`, `m6`; while `<mass>` is a the value, formatted as float, of `<parameter>`
-* `<HNLtype>`: is the value of the `HNLtype` argument (or option), default set to `majorana`
 
-**Note:** the directory tree can be overwritten when running the generator in a script with the parameter `overwrite_path`. 
+You can download example notebooks from the repository's folder `examples/`, or simply run
+* ```dn_get_examples```
+to download the examples folder in the current directory (requires git version >=2.19).
 
-### Command line functionality
+The main usage of DarkNews is covered in depth in the notebook **`Example_0_start_here.ipynb`**.
+We encourage you to read through the cells of the notebook.
+
+
+#### Command line functionality
 
 It is possible to run the generator through the script `bin/dn_gen`, passing the parameters as options.
 ```sh
@@ -109,11 +109,11 @@ dn_gen --mzprime=1.25 --m4=0.140 --neval=1000 --HNLtype=dirac --loglevel=INFO
 ```
 Run `dn_gen --help` to inspect the meaning of each parameter.
 
-### Scripting functionality
+#### Scripting functionality
 
 It is possible to run the generator by creating an instance of the `DarkNews.GenLauncher.GenLauncher` class and calling its `run` method.
 ```python
-from DarkNews.GenLauncher import GenLauncher
+from DarkNews import GenLauncher
 gen_object = GenLauncher(mzprime=1.25, m4=0.140, neval=1000, HNLtype="dirac")
 gen_object.run(loglevel="INFO")
 ```
@@ -127,13 +127,19 @@ Some parameters (`loglevel`, `verbose`, `logfile`, `path`, `overwrite_path`) rel
 If the argument `pandas = True` (as it is by default), a dataframe containing the generated events is saved in the directory tree.
 
 The dataframe is multi-indexed, where the second column is empty, then there is only the first index.  
-The process described is:
+All dataframes contain the following process:
 
-neutrino (P\_projectile) + Nucleus (P\_target) &#8594; HNL\_parent (P\_decay\_N\_parent) + Recoiled Nucleus (P\_recoil)
+$\nu$ (`P_projectile`) + $\mathcal{H}$ (`P_target`) $\to$ $N_{\rm i}$ (`P_decay_N_parent`) + $\mathcal{H}$ (`P_recoil`)
 
-Followed by:
+which can be followed by a decay into di-leptons if `decay_product=e+e-` or `decay_product=mu+mu-`:
 
-HNL\_parent (P\_decay\_N\_parent) &#8594; HNL/nu\_daughter (P\_decay\_N\_daughter) + e<sup>-</sup> (P\_decay\_ell\_plus) + e<sup>-</sup> (P\_decay\_ell\_minus)
+$N_i$ (`P_decay_N_parent`) $\to$ $N_j$(`P_decay_N_daughter`) + $\ell^+$ (`P_decay_ell_plus`) + $\ell^-$ (`P_decay_ell_minus`)
+
+where $\ell = \{e, \mu\}$, or if `decay_product=photon`:
+
+$N_i$ (`P_decay_N_parent`) $\to$ $N_j$(`P_decay_N_daughter`) + $\gamma$ (`P_decay_photon`). Only one of the above decays is allowed per generation.
+
+Here follows a complete description of the pandas dataframe:
 
 | **Column**            | **Subcolumn** |**type**  | **description**|
 |:--------------------------|:--------:|:--------:|:-----------------------------------|
@@ -404,7 +410,7 @@ The following parameters must be present (in general it is possible to specify a
 | **POTs**                     | `float`           | Protons on target                                                                                          |
 
 
-### The event generator engine
+#### Additional information on the generator engine
 
 DarkNews relies on vegas to integrate and sample differential cross sections and decay rates. 
 The main point of contact with vegas is through the ```vegas.Integrator``` class, which will receive the DarkNews integrands (e.g. ```DarkNews.integrands.UpscatteringHNLDecay()```), whose ```__call__()``` method will compute the differential rates.
