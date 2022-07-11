@@ -7,8 +7,12 @@ from particle import literals as lp
 from DarkNews import const
 from DarkNews.GenLauncher import GenLauncher
 
-MODEL_KWARGS = {"HNLtype": "dirac", "UD4": 1.0, "alphaD": 0.25, "Umu4": np.sqrt(9e-7), "epsilon": np.sqrt(2e-10 / const.alphaQED)}
+MODEL_KWARGS = {"HNLtype": "dirac", "UD4": 1.0, "alphaD": 0.25, "Umu4": np.sqrt(9e-7), 
+                "epsilon": np.sqrt(2e-10 / const.alphaQED)}
 
+GENERIC_MODEL_KWARGS = {"HNLtype": "dirac", "deV": 1, "duV": 1, "ddV": 1,
+                    "d_mu4": 1, "d_mu5": 1, "d_mu6": 1,
+                    "d_45": 1, "d_56": 1, "d_46": 1}
 
 @pytest.fixture(scope="session")
 def set_seeds():
@@ -51,6 +55,32 @@ def light_DP_gen_all_outputs():
         **MODEL_KWARGS
     )
     return gen.run()
+
+
+@pytest.fixture(scope="session")
+def generic_model_gen():
+
+    gen = GenLauncher(
+        mzprime=0.03,
+        m4=0.100,
+        m5=0.200,
+        m6=0.300,
+        neval=1000,
+        exp="miniboone_fhc",
+        loglevel="ERROR",
+        seed=42,
+        parquet=True,
+        numpy=True,
+        hepevt=True,
+        hepevt_legacy=True,
+        hepmc2=True,
+        hepmc3=True,
+        hep_unweight=True,
+        hep_unweight_events=100,
+        **GENERIC_MODEL_KWARGS
+    )
+    return gen.run()
+
 
 
 @pytest.fixture(scope="session")
