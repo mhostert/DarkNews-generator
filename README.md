@@ -1,6 +1,6 @@
 <h1 align="center"> DarkNews </h1> <br>
 
-<img align="left" src="https://github.com/mhostert/DarkNews-generator/blob/main/src/DarkNews/include/assets/logo.svg" width="180" title="DarkNews-logo">
+<img align="left" src="https://raw.githubusercontent.com/mhostert/DarkNews-generator/main/src/DarkNews/include/assets/logo.svg" width="180" title="DarkNews-logo">
 DarkNews is an event generator for new physics processes at accelerator neutrino experiments that simulates neutrino upscattering to heavy neutral leptons and their subsequent decays to single photons and di-lepton pairs.
 
 ![Tests](https://github.com/mhostert/DarkNews-generator/actions/workflows/tests.yml/badge.svg)
