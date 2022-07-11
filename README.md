@@ -35,6 +35,8 @@ Experiments as well as models are implemented on a case-by-case basis. The neces
 
 The full information of the event genration is saved to a pandas dataframes, but the user may also choose to print events to numpy ndarrays, as well as to HEPevt-formatted text files. 
 
+If you experience any problems or bugs, either open a new issue or contact <mhostert@pitp.ca>.
+
 ## Dependencies
 
 Required dependencies:
