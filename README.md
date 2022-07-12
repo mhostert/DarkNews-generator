@@ -4,10 +4,10 @@
 DarkNews is an event generator for new physics processes at accelerator neutrino experiments that simulates neutrino upscattering to heavy neutral leptons and their subsequent decays to single photons and di-lepton pairs.
 
 ![Tests](https://github.com/mhostert/DarkNews-generator/actions/workflows/tests.yml/badge.svg)
-[![InspireHEP](https://img.shields.io/badge/InspireHEP-Abdullahi:xxx2022-dodgerblue.svg)](https://arxiv.org/abs/2202.xxxxx)
+[![InspireHEP](https://img.shields.io/badge/InspireHEP-Abdullahi:2207.04137-dodgerblue.svg)](https://arxiv.org/abs/2207.04137)
 <!-- [![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/mhostert/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/raw/DarkNews-generator__heads_main.json)] -->
 <!-- <br>[![License: MIT](https://img.shields.io/badge/License-MIT-deeppink.svg)](https://opensource.org/licenses/MIT) -->
-<!-- [![arXiv](https://img.shields.io/badge/arXiv-2202.xxxxxx%20-violet.svg)](https://arxiv.org/abs/2202.xxxxx) -->
+<!-- [![arXiv](https://img.shields.io/badge/arXiv-2202.04137%20-violet.svg)](https://arxiv.org/abs/2207.04137) -->
 
 
 <br>
@@ -64,7 +64,8 @@ python3 -m pip install DarkNews
 ```
 or if your pip version is already set to your preferred python version, simply ```pip install DarkNews```.
 
-This should install all dependencies for you. If you have any problems, try creating a brand new (conda or pyenv) environment, install the latest version of ```pip```, pip install numpy, and try to install DarkNews. 
+This should install all dependencies for you. If you have any problems, try creating a brand new (conda or pyenv) environment, install the latest version of ```pip```, pip install numpy, and try to install DarkNews.
+If you experience any issues with the pyhepmc-ng installation, try pip installing it from [their repository](https://github.com/scikit-hep/pyhepmc) directly We found that version to be more stable.
 We have tested installations on Ubuntu, Mac OS X, as well as Windows.
 
 If your installation is successful, you should be able to
