@@ -62,10 +62,13 @@ DarkNews is available on PyPI so from your python3.6+ (virtual environment or ot
 ```sh
 python3 -m pip install DarkNews
 ```
-or if your pip version is already set to your preferred python version, simply ```pip install DarkNews```.
+or if your pip version is already set to your preferred python version, simply ```pip install DarkNews```. This should install all dependencies for you. 
 
-This should install all dependencies for you. If you have any problems, try creating a brand new (conda or pyenv) environment, install the latest version of ```pip```, pip install numpy, and try to install DarkNews. 
-We have tested installations on Ubuntu, Mac OS X, as well as Windows.
+**troubleshooting**: If you have any problems, try creating a brand new (conda or pyenv) environment, install the latest version of ```pip```, then pip install numpy first, and only then try to install pip install DarkNews. 
+
+If you experience any issues installing pyhepmc-ng, try installing numpy first, and then install pyhepmc-ng directly from Git using the following command: `pip install git+https://git@github.com/scikit-hep/pyhepmc@master`.
+Then pip install DarkNews.
+
 
 If your installation is successful, you should be able to
 * import the module from your python scripts or notebook with `import DarkNews`
