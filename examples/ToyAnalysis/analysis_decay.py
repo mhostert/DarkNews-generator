@@ -258,7 +258,12 @@ def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
     x0_square = r0*r0 + z0*z0
     discriminant = (x0_dot_p * x0_dot_p) - (x0_square - radius_MB**2)
     mask_in_detector = ((discriminant > 0) & (z_norm > 0))
+    
     df = df[mask_in_detector]
+    discriminant = discriminant[mask_in_detector]
+    x0_dot_p = x0_dot_p[mask_in_detector]
+    decay_rate_lab = decay_rate_lab[mask_in_detector]
+
     distance_traveled_1 = - x0_dot_p - np.sqrt(discriminant)
     distance_traveled_2 = - x0_dot_p + np.sqrt(discriminant)
     probabilities = expon.cdf(distance_traveled_2,0,decay_rate_lab) - expon.cdf(distance_traveled_1,0,decay_rate_lab)
@@ -297,7 +302,12 @@ def select_MB_decay_steal(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
     x0_square = x0*x0 + y0*y0 + z0*z0
     discriminant = (x0_dot_p * x0_dot_p) - (x0_square - radius_MB**2)
     mask_in_detector = ((discriminant > 0) & (z_norm > 0))
+    
     df = df[mask_in_detector]
+    discriminant = discriminant[mask_in_detector]
+    x0_dot_p = x0_dot_p[mask_in_detector]
+    decay_rate_lab = decay_rate_lab[mask_in_detector]
+
     distance_traveled_1 = - x0_dot_p - np.sqrt(discriminant)
     distance_traveled_2 = - x0_dot_p + np.sqrt(discriminant)
     probabilities = expon.cdf(distance_traveled_2,0,decay_rate_lab) - expon.cdf(distance_traveled_1,0,decay_rate_lab)
