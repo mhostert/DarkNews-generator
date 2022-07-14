@@ -276,7 +276,7 @@ def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
 
 
 # This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
-def select_MB_decay_steal(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
+def select_MB_decay_steel(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
