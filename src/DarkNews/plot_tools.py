@@ -1,4 +1,5 @@
 import os
+import os.path
 import numpy as np
 from scipy.interpolate import splprep, splev
 
@@ -45,6 +46,8 @@ def std_fig(ax_form=std_axes_form, figsize=std_figsize, rasterized=False):
 
 # standard saving function
 def std_savefig(fig, path, dpi=400, **kwargs):
+    dir_tree = os.path.dirname(path)
+    os.makedirs(dir_tree, exist_ok=True)
     fig.savefig(path, dpi=dpi, **kwargs)
 
 
