@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import scipy
+import os
 from pathos.multiprocessing import ProcessingPool as Pool
 
 import matplotlib.pyplot as plt
@@ -56,26 +57,26 @@ def get_data_MB(varplot='reco_Evis',loc='ToyAnalysis/data'):
     return [signal,bkg,sys_signal,sys_bkg]
 
 
-def get_events_df(model='3+1',exp='miniboone_fhc',neval=100000, HNLtype="dirac",mzprime=1.25,m4=0.8,m5=1.0,UD4=UD4_def,UD5=UD5_def,Umu4=Umu4_def,Umu5=Umu5_def,gD=gD_def,epsilon=epsilon_def, **kwargs):
+def get_events_df(model='3+1',experiment='miniboone_fhc',neval=100000, HNLtype="dirac",mzprime=1.25,m4=0.8,m5=1.0,UD4=UD4_def,UD5=UD5_def,Umu4=Umu4_def,Umu5=Umu5_def,gD=gD_def,epsilon=epsilon_def, **kwargs):
     if model=='3+1':
-        gen = GenLauncher(mzprime=mzprime, m4=m4, Umu4=Umu4, UD4=UD4, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, experiment=exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+        gen = GenLauncher(mzprime=mzprime, m4=m4, Umu4=Umu4, UD4=UD4, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, experiment=experiment,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
     elif model=='3+1':
-        gen = GenLauncher(mzprime=mzprime, m4=m4, m5=m5, Umu4=Umu4, Umu5=Umu5, UD4=UD4, UD5=UD5, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, experiment=exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+        gen = GenLauncher(mzprime=mzprime, m4=m4, m5=m5, Umu4=Umu4, Umu5=Umu5, UD4=UD4, UD5=UD5, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, experiment=experiment,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
     gen.run(loglevel="ERROR")
     df = gen.df
     decay_l = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0))
     
     df = df[df.w_event_rate>0]
     
-    if exp=='miniboone_fhc':
+    if experiment=='miniboone_fhc':
         df = av2.compute_spectrum(df, EXP='miniboone',EVENT_TYPE='both')
-    elif exp=='miniboone_fhc':
+    elif experiment=='miniboone_fhc':
         df = av.set_params(df)
     df = df[df.reco_w>0]
     
-    if exp=='miniboone_fhc':
+    if experiment=='miniboone_fhc':
         df = av.select_MB_decay_expo_prob(df,l_decay_proper_cm=decay_l)
-    elif exp=='microboone':
+    elif experiment=='microboone':
         df = av.select_muB_decay(df,l_decay_proper_cm=decay_l)
     df.reset_index(inplace=True)
 
@@ -84,7 +85,7 @@ def get_events_df(model='3+1',exp='miniboone_fhc',neval=100000, HNLtype="dirac",
 class grid_analysis:
 
     def __init__(self,model='3+1',
-                    exp='miniboone_fhc',
+                    experiment='miniboone_fhc',
                     neval=100000, 
                     HNLtype="dirac",
                     x_label='mzprime',
@@ -109,7 +110,7 @@ class grid_analysis:
         
         # initialize model parameters
         self.model = model
-        self.exp = exp
+        self.experiment = experiment
         self.neval = neval
         self.HNLtype = HNLtype
         self.cores = cores
@@ -123,7 +124,7 @@ class grid_analysis:
         if output_file:
             self.output_file = output_file
         else:
-            self.output_file = f'fit_{model[0]}p{model[2]}_{HNLtype}_{exp}.dat'
+            self.output_file = f'fit_{model[0]}p{model[2]}_{HNLtype}_{experiment}.dat'
         keys_3p1 = ['mzprime','m4']
         keys_3p2 = ['mzprime','m4','m5','delta']
         if log_interval_x:
@@ -156,7 +157,7 @@ class grid_analysis:
             self.cols=['m5','m4','delta','sum_w_post_smearing','couplings','chi2','decay_length','N_events','mzprime']
         
         # initialize data from experiment
-        if self.exp=='miniboone_fhc':
+        if self.experiment=='miniboone_fhc':
             self.data_enu = get_data_MB()
             self.back_MC_enu = self.data_enu[1]
             self.D_enu = self.data_enu[0] + self.data_enu[1]
@@ -200,10 +201,10 @@ class grid_analysis:
                         mzs = x_s
 
                     try:
-                        pd.read_parquet(location + '/' + self.exp + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
+                        pd.read_parquet(location + '/' + self.experiment + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                     except:
                         try:
-                            gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+                            gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.experiment,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                             gen.run(loglevel="ERROR")
                         except:
                             continue
@@ -266,10 +267,10 @@ class grid_analysis:
                     if (m5s <= m4s):
                         continue
                     try:
-                        pd.read_parquet(location + '/' + self.exp + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
+                        pd.read_parquet(location + '/' + self.experiment + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                     except:
                         try:
-                            gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+                            gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.experiment,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                             gen.run(loglevel="ERROR")
                         except:
                             continue
@@ -281,7 +282,7 @@ class grid_analysis:
     
 
     def fit_events(self,location='data',location_fit='data_fitting'):
-        
+        os.makedirs(location_fit, exist_ok=True)
         if self.model == '3+1':
             A_cut = self.UmuN_max
             data_list = [location_fit+f'/chi2_enu_3p1_y_axis_{k}.dat' for k in range(self.grid_params['y_points'])]
@@ -306,7 +307,7 @@ class grid_analysis:
                         data_enu = [[mzs,m4s,0,0,0,0,0,0]]
                         
                         try:
-                            df = pd.read_parquet(location + '/' + self.exp + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
+                            df = pd.read_parquet(location + '/' + self.experiment + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                         except:
                             continue
                         
@@ -417,7 +418,7 @@ class grid_analysis:
                             continue
 
                         try:
-                            pd.read_parquet(location + '/' + self.exp + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
+                            pd.read_parquet(location + '/' + self.experiment + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                         except:
                             continue
                         
@@ -511,9 +512,9 @@ class grid_analysis:
         levels = [0,2.3,6.18,11.83]
         plot_labels = {'mzprime' : r'$m_{Z \prime}$', 'm4' : r'$m_4$', 'm5' : r'$m_5$', 'delta' : r'$\Delta$'}
         if not(plot_path):
-            plot_path = './fit_' + self.model[0] + 'p' + self.model[2] + '_' + self.HNLtype + '_' + self.exp + '.jpg'
+            plot_path = './fit_' + self.model[0] + 'p' + self.model[2] + '_' + self.HNLtype + '_' + self.experiment + '.jpg'
         if not(title):
-            title = r'Fitting for $E_\nu$, ' + self.model + ', ' + self.HNLtype + ', ' + self.exp
+            title = r'Fitting for $E_\nu$, ' + self.model + ', ' + self.HNLtype + ', ' + self.experiment
         
         # plot
         plt.tricontourf(X,Y,Z,levels=levels,cmap='viridis')
@@ -548,11 +549,11 @@ class grid_analysis:
 
 class grid_analysis_couplings:
 
-    def __init__(self,model='3+1',exp='miniboone_fhc',neval=100000, HNLtype="dirac",x_label='mzprime', x_range=(0.02,10,10),coupling_range=(1e-4,1e-2,10),log_interval_x=True,log_interval_coupling=True,mzprime=None,m4=None,m5=None,delta=None,UD4=UD4_def,UD5=UD5_def,Umu4=Umu4_def,Umu5=Umu5_def,gD=gD_def,epsilon=8e-4,cores=1,output_file=None):
+    def __init__(self,model='3+1',experiment='miniboone_fhc',neval=100000, HNLtype="dirac",x_label='mzprime', x_range=(0.02,10,10),coupling_range=(1e-4,1e-2,10),log_interval_x=True,log_interval_coupling=True,mzprime=None,m4=None,m5=None,delta=None,UD4=UD4_def,UD5=UD5_def,Umu4=Umu4_def,Umu5=Umu5_def,gD=gD_def,epsilon=8e-4,cores=1,output_file=None):
         
         # initialize model parameters
         self.model = model
-        self.exp = exp
+        self.experiment = experiment
         self.neval = neval
         self.HNLtype = HNLtype
         self.cores = cores
@@ -564,7 +565,7 @@ class grid_analysis_couplings:
         if output_file:
             self.output_file = output_file + '.dat'
         else:
-            self.output_file = 'coupling_fit_' + model[0] + 'p' + model[2] + '_' + HNLtype + '_' + exp + '.dat'
+            self.output_file = 'coupling_fit_' + model[0] + 'p' + model[2] + '_' + HNLtype + '_' + experiment + '.dat'
         keys_3p1 = ['mzprime','m4']
         keys_3p2 = ['mzprime','m4','m5','delta']
         if log_interval_x:
@@ -601,7 +602,7 @@ class grid_analysis_couplings:
             self.cols = ['m4','m5','delta','decay_length','vmu5','Nevents','chi2','mzprime']
         
         # initialize data from experiment
-        if self.exp=='miniboone_fhc':
+        if self.experiment=='miniboone_fhc':
             self.data_enu = get_data_MB()
             self.back_MC_enu = self.data_enu[1]
             self.D_enu = self.data_enu[0] + self.data_enu[1]
@@ -639,10 +640,10 @@ class grid_analysis_couplings:
                     m4s = self.params['m4']
                 
                 try:
-                    pd.read_parquet(location + '/' + self.exp + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
+                    pd.read_parquet(location + '/' + self.experiment + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                 except:
                     try:
-                        gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+                        gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.experiment,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                         gen.run(loglevel="ERROR")
                     except:
                         return "Nothing done"
@@ -691,10 +692,10 @@ class grid_analysis_couplings:
                             m4s = m5s/(deltas + 1)
                 
                 try:
-                    pd.read_parquet(location + '/' + self.exp + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
+                    pd.read_parquet(location + '/' + self.experiment + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                 except:
                     try:
-                        gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+                        gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.experiment,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                         gen.run(loglevel="ERROR")
                     except:
                         return "Nothing done"
@@ -704,6 +705,7 @@ class grid_analysis_couplings:
 
 
     def fit_events(self,location='data',location_fit='data_fitting'):
+        os.makedirs(location_fit, exist_ok=True)
         if self.model == '3+1':
             data_list = [location_fit+f'/chi2_enu_3p1_coupling_{k}.dat' for k in range(self.grid_params['x_points'])]
             def chi2_grid(k_x):
@@ -721,7 +723,7 @@ class grid_analysis_couplings:
                 data_error = [[m4s,mzs,0,0,0,-1,0] for i in range(n)]
 
                 try:
-                    df = pd.read_parquet(location + '/' + self.exp + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
+                    df = pd.read_parquet(location + '/' + self.experiment + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                     l_decay = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0))
                     if df.w_event_rate.sum()==0:
                         return data_error
@@ -814,7 +816,7 @@ class grid_analysis_couplings:
                             m4s = m5s/(deltas + 1)
                 data_error = [[m4s,m5s,deltas,0,0,0,-1,mzs] for i in range(n)]
                 try:
-                    df = pd.read_parquet(location + '/' + self.exp + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
+                    df = pd.read_parquet(location + '/' + self.experiment + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                     if df.w_event_rate.sum()==0:
                         return data_error
                     decay_l = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0))
@@ -911,9 +913,9 @@ class grid_analysis_couplings:
         plot_labels = {'mzprime' : r'$m_{Z \prime}$', 'm4' : r'$m_4$', 'm5' : r'$m_5$', 'delta' : r'$\Delta$'}
         coupling_label = {'3+1': r'$|U_{\mu 4}|^2$', '3+2': r'$|V_{\mu 5}|^2$'}
         if not(plot_path):
-            plot_path = './fit_' + self.model[0] + 'p' + self.model[2] + '_' + self.HNLtype + '_' + self.exp + '.jpg'
+            plot_path = './fit_' + self.model[0] + 'p' + self.model[2] + '_' + self.HNLtype + '_' + self.experiment + '.jpg'
         if not(title):
-            title = r'Fitting for $E_\nu$, ' + self.model + ', ' + self.HNLtype + ', ' + self.exp
+            title = r'Fitting for $E_\nu$, ' + self.model + ', ' + self.HNLtype + ', ' + self.experiment
         
         # plot
         plt.tricontourf(X,Y,Z,levels=levels,cmap='viridis')
