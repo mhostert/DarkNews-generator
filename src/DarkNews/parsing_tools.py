@@ -183,7 +183,7 @@ def add_scope_arguments(parser, DEFAULTS):
     parser.add_argument("--decay_product", type=str.lower, help="decay process of interest", choices=DEFAULTS._choices["decay_product"])
 
     ##### experiments
-    parser.add_argument("--exp", type=str.lower, help="experiment file path or keyword")
+    parser.add_argument("--experiment", type=str.lower, help="experiment file path or keyword")
 
     ##### scattering types
     parser.add_argument("--nopelastic", help="do not generate proton elastic events", action="store_true")

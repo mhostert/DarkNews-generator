@@ -257,7 +257,7 @@ Parameters marked as *internal* can not be specified as they are automatically c
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:--------|:--------:|:-----------------------------------------------------------------|------------------:|
-| **exp** | `string` | The experiment to consider: see [this section](#the-experiments) | `"miniboone_fhc"` |
+| **experiment** | `string` | The experiment to consider: see [this section](#the-experiments) | `"miniboone_fhc"` |
 
 ##### Monte-Carlo scope
 
@@ -382,7 +382,7 @@ numpy = false
 
 ### The experiments
 
-The experiment to use can be specified in two ways through the `exp` argument (or `--exp` option accordingly):
+The experiment to use can be specified in two ways through the `experiment` argument (or `--experiment` option accordingly):
 1. specifying a keyword for a pre-defined experiment among:
     * DUNE FHC ND (`"dune_nd_fhc"`)
     * DUNE RHC ND (`"dune_nd_rhc"`)

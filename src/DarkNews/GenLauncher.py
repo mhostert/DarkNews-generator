@@ -13,7 +13,7 @@ from DarkNews.AssignmentParser import AssignmentParser
 GENERATOR_ARGS = [
     # scope
     "decay_product",
-    "exp",
+    "experiment",
     "nopelastic",
     "nocoh",
     "noHC",
@@ -208,7 +208,7 @@ class GenLauncher:
             AttributeError: when unused parameters are specified (raise only a
                 warning if unused parameters are specified within the model file).
             FileNotFoundError: when param_file is specified, but the path is invalid.
-            ValueError: when model, exp, or generation parameters are not well defined.
+            ValueError: when model, experiment, or generation parameters are not well defined.
         """
 
         # Choose what model to initialize
@@ -236,7 +236,7 @@ class GenLauncher:
         self.name = None
         self.nu_flavors = ["nu_mu"]
         self.decay_product = "e+e-"
-        self.exp = "miniboone_fhc"
+        self.experiment = "miniboone_fhc"
         self.nopelastic = False
         self.include_nelastic = False
         self.nocoh = False
@@ -297,7 +297,7 @@ class GenLauncher:
 
         ####################################################
         # Choose experiment and scope of simulation
-        self.experiment = dn.detector.Detector(self.exp)
+        self.experiment = dn.detector.Detector(self.experiment)
 
         ####################################################
         # MC evaluations and iterations
@@ -313,7 +313,7 @@ class GenLauncher:
         # Default data path based on model and experimental definitioons
 
         # set the path of the experiment name (needed in the case of custom experiment path)
-        exp_path_part = os.path.basename(self.exp).rsplit(".", maxsplit=1)[0]
+        exp_path_part = os.path.basename(self.experiment).rsplit(".", maxsplit=1)[0]
 
         _boson_string = ""
         if self.bsm_model.mzprime is not None:

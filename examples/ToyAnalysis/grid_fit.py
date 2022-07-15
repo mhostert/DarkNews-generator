@@ -58,9 +58,9 @@ def get_data_MB(varplot='reco_Evis',loc='ToyAnalysis/data'):
 
 def get_events_df(model='3+1',exp='miniboone_fhc',neval=100000, HNLtype="dirac",mzprime=1.25,m4=0.8,m5=1.0,UD4=UD4_def,UD5=UD5_def,Umu4=Umu4_def,Umu5=Umu5_def,gD=gD_def,epsilon=epsilon_def, **kwargs):
     if model=='3+1':
-        gen = GenLauncher(mzprime=mzprime, m4=m4, Umu4=Umu4, UD4=UD4, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, exp=exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+        gen = GenLauncher(mzprime=mzprime, m4=m4, Umu4=Umu4, UD4=UD4, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, experiment=exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
     elif model=='3+1':
-        gen = GenLauncher(mzprime=mzprime, m4=m4, m5=m5, Umu4=Umu4, Umu5=Umu5, UD4=UD4, UD5=UD5, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, exp=exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+        gen = GenLauncher(mzprime=mzprime, m4=m4, m5=m5, Umu4=Umu4, Umu5=Umu5, UD4=UD4, UD5=UD5, gD=gD,epsilon=epsilon, neval=neval, HNLtype=HNLtype, experiment=exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
     gen.run(loglevel="ERROR")
     df = gen.df
     decay_l = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0))
@@ -203,7 +203,7 @@ class grid_analysis:
                         pd.read_parquet(location + '/' + self.exp + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                     except:
                         try:
-                            gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+                            gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                             gen.run(loglevel="ERROR")
                         except:
                             continue
@@ -269,7 +269,7 @@ class grid_analysis:
                         pd.read_parquet(location + '/' + self.exp + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                     except:
                         try:
-                            gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+                            gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                             gen.run(loglevel="ERROR")
                         except:
                             continue
@@ -642,7 +642,7 @@ class grid_analysis_couplings:
                     pd.read_parquet(location + '/' + self.exp + f'/3plus1/m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                 except:
                     try:
-                        gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+                        gen = GenLauncher(mzprime=mzs, m4=m4s, Umu4=self.couplings_def['Umu4'], UD4=self.couplings_def['UD4'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                         gen.run(loglevel="ERROR")
                     except:
                         return "Nothing done"
@@ -694,7 +694,7 @@ class grid_analysis_couplings:
                     pd.read_parquet(location + '/' + self.exp + f'/3plus2/m5_{m5s}_m4_{m4s}_mzprime_{mzs}_'+self.HNLtype+'/pandas_df.parquet', engine='pyarrow')
                 except:
                     try:
-                        gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, exp=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
+                        gen = GenLauncher(mzprime=mzs, m5=m5s, m4=m4s, Umu4=self.couplings_def['Umu4'], Umu5=self.couplings_def['Umu5'], UD4=self.couplings_def['UD4'], UD5=self.couplings_def['UD5'], gD=self.couplings_def['gD'],epsilon=self.couplings_def['epsilon'], neval=self.neval, HNLtype=self.HNLtype, experiment=self.exp,sparse=True,print_to_float32=True, pandas=False, parquet=True, **kwargs)
                         gen.run(loglevel="ERROR")
                     except:
                         return "Nothing done"

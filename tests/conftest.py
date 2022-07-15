@@ -43,7 +43,7 @@ def light_DP_gen_all_outputs():
         mzprime=0.03,
         m4=0.420,
         neval=1000,
-        exp="miniboone_fhc",
+        experiment="miniboone_fhc",
         loglevel="ERROR",
         seed=42,
         parquet=True,
@@ -66,7 +66,7 @@ def generic_model_gen():
         m5=0.200,
         m6=0.300,
         neval=1000,
-        exp="miniboone_fhc",
+        experiment="miniboone_fhc",
         loglevel="ERROR",
         seed=42,
         parquet=True,
@@ -90,7 +90,7 @@ def light_DP_gen_all_outputs_sparse():
         mzprime=0.03,
         m4=0.425,
         neval=1000,
-        exp="miniboone_fhc",
+        experiment="miniboone_fhc",
         loglevel="ERROR",
         seed=42,
         parquet=True,
@@ -109,13 +109,13 @@ def light_DP_gen_all_outputs_sparse():
 @pytest.fixture(scope="session")
 def gen_simplest_benchmarks():
 
-    gen = GenLauncher(mzprime=0.03, m4=0.420, neval=1000, exp="miniboone_fhc", loglevel="ERROR", seed=42, **MODEL_KWARGS)
+    gen = GenLauncher(mzprime=0.03, m4=0.420, neval=1000, experiment="miniboone_fhc", loglevel="ERROR", seed=42, **MODEL_KWARGS)
     df_light = gen.run()
 
-    gen = GenLauncher(mzprime=1.25, m4=0.150, neval=1000, exp="miniboone_fhc", loglevel="ERROR", seed=42, **MODEL_KWARGS)
+    gen = GenLauncher(mzprime=1.25, m4=0.150, neval=1000, experiment="miniboone_fhc", loglevel="ERROR", seed=42, **MODEL_KWARGS)
     df_heavy = gen.run()
 
-    gen = GenLauncher(mu_tr_mu4=1e-6, m4=0.150, epsilon=0.0, gD=0.0, Umu4=0.0, neval=1000, exp="miniboone_fhc", loglevel="ERROR", seed=42)
+    gen = GenLauncher(mu_tr_mu4=1e-6, m4=0.150, epsilon=0.0, gD=0.0, Umu4=0.0, neval=1000, experiment="miniboone_fhc", loglevel="ERROR", seed=42)
     df_TMM = gen.run()
 
     return df_light, df_heavy, df_TMM
@@ -124,10 +124,10 @@ def gen_simplest_benchmarks():
 @pytest.fixture(scope="session")
 def gen_other_final_states():
 
-    gen = GenLauncher(mzprime=0.3, m4=0.5, decay_product="mu+mu-", neval=1000, exp="miniboone_fhc", loglevel="ERROR", seed=42, **MODEL_KWARGS)
+    gen = GenLauncher(mzprime=0.3, m4=0.5, decay_product="mu+mu-", neval=1000, experiment="miniboone_fhc", loglevel="ERROR", seed=42, **MODEL_KWARGS)
     df_light = gen.run()
 
-    gen = GenLauncher(mzprime=1.25, m4=0.5, decay_product="mu+mu-", neval=1000, exp="miniboone_fhc", loglevel="ERROR", seed=42, **MODEL_KWARGS)
+    gen = GenLauncher(mzprime=1.25, m4=0.5, decay_product="mu+mu-", neval=1000, experiment="miniboone_fhc", loglevel="ERROR", seed=42, **MODEL_KWARGS)
     df_heavy = gen.run()
 
     gen = GenLauncher(
@@ -139,7 +139,7 @@ def gen_other_final_states():
         Umu4=0.0,
         neval=1000,
         HNLtype="dirac",
-        exp="miniboone_fhc",
+        experiment="miniboone_fhc",
         loglevel="ERROR",
         seed=42,
     )
@@ -154,7 +154,7 @@ def gen_other_final_states():
         Umu4=0.0,
         neval=1000,
         HNLtype="dirac",
-        exp="miniboone_fhc",
+        experiment="miniboone_fhc",
         loglevel="ERROR",
         seed=42,
     )
