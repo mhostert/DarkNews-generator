@@ -270,9 +270,9 @@ class AssignmentParser:
             try:
                 self.evaluate_stack()
             except ParseException as pe:
-                print(partition, f"Failed parse (start: {i_beg}, end: {i_end}):", str(pe))
+                raise self.ParseException(" ".join(tokens) + f" Failed parse (start: {i_beg}, end: {i_end}): " + str(pe))
             except self.ParsingError as e:
-                print(partition, f"Failed evaluation (start: {i_beg}, end: {i_end}):", str(e))
+                raise self.ParsingError(" ".join(tokens) + f" Failed evaluation (start: {i_beg}, end: {i_end}): " + str(e))
             finally:
                 self.clean_stack()  # clean the stack in any case, because if there are errors, then we need to have a clean list before the next iteration
 
