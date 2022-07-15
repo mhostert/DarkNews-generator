@@ -313,7 +313,10 @@ class GenLauncher:
         # Default data path based on model and experimental definitioons
 
         # set the path of the experiment name (needed in the case of custom experiment path)
-        exp_path_part = os.path.basename(self.experiment).rsplit(".", maxsplit=1)[0]
+        # it uses the name of the detector object (don't use the path otherwise it could include
+        # the full directory tree inside the data_path if the file picked is not in the same
+        # directory)
+        exp_path_part = os.path.basename(str(self.experiment)).rsplit(".", maxsplit=1)[0]
 
         _boson_string = ""
         if self.bsm_model.mzprime is not None:
@@ -325,7 +328,7 @@ class GenLauncher:
         if self.bsm_model.m4 is not None and self.bsm_model.m5 is None and self.bsm_model.m6 is None:
             self.upscattered_nus = [dn.pdg.neutrino4]
             self.outgoing_nus = [dn.pdg.nulight]
-            self.data_path = Path(f"{self.path}/data/{exp_path_part}/3plus1/m4_{self.bsm_model.m4:.4g}_{_boson_string}_{self.bsm_model.HNLtype}/")
+            self.data_path = Path(f"{self.path}/data/{exp_path_part}/3plus1/m4_{self.bsm_model.m4:.4g}{_boson_string}_{self.bsm_model.HNLtype}/")
 
         # 3+2
         elif self.bsm_model.m4 is not None and self.bsm_model.m5 is not None and self.bsm_model.m6 is None:
@@ -345,7 +348,7 @@ class GenLauncher:
             ]
             self.outgoing_nus = [dn.pdg.nulight, dn.pdg.neutrino4, dn.pdg.neutrino5]
             self.data_path = Path(
-                f"{self.path}/data/{exp_path_part}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}_{_boson_string}_{self.bsm_model.HNLtype}/"
+                f"{self.path}/data/{exp_path_part}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}{_boson_string}_{self.bsm_model.HNLtype}/"
             )
 
         else:
