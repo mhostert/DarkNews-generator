@@ -135,3 +135,6 @@ class Detector:
             self.place_scatters = geom.miniboone_geometry
         else:
             self.place_scatters = geom.point_geometry
+
+    def __str__(self):
+        return self.NAME.replace(" ", "_").lower()
