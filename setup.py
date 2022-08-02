@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # proceed as usual
-from setuptools import setup, find_packages, Extension
+from setuptools import setup, Extension
 import numpy as np
 import os
 
