@@ -45,6 +45,7 @@ class Detector:
         "minerva_me_fhc": "minerva_me_fhc.txt",
         "minerva_me_rhc": "minerva_me_fhc.txt",
         "miniboone_fhc": "miniboone_fhc.txt",
+        "miniboone_fhc_dirt": "miniboone_fhc_dirt.txt",
         "miniboone_rhc": "miniboone_rhc.txt",
         "minos_le_fhc": "minos_le_fhc.txt",
         "nd280_fhc": "nd280_fhc.txt",

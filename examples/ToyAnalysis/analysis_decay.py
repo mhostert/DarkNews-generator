@@ -11,7 +11,7 @@ precision = 1e-10
 radius_MB = 610 #cm
 
 # geometry of cylinder_MB for dirt
-radius_MB_outer = 13.7 / 2.
+radius_MB_outer = 1370 / 2.
 radius_cyl_MB = 1.5 * radius_MB_outer
 l_cyl_MB = 47400.
 end_point_cyl_MB = -1320.
@@ -153,7 +153,7 @@ def decay_position(pN, l_decay_proper_cm,random_gen = True):
     return t,x,y,z
 
 
-def select_MB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
+def select_MB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -182,14 +182,14 @@ def select_MB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
     decay_position_ = np.sqrt(xf*xf + yf*yf + zf*zf)
     df['decay_position'] = decay_position_
     df['in_detector'] = df.decay_position.values <= radius_MB
-    df['reco_w_pre_decay'] = df.reco_w.values
-    df.loc[:,'reco_w'] = df.reco_w.values * df.in_detector.values
+    df['w_pre_decay'] = df[weights].values
+    df.loc[:,weights] = df[weights] * df.in_detector.values
 
     return df
 
 
 # This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
-def select_MB_decay_expo_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
+def select_MB_decay_expo_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -221,14 +221,20 @@ def select_MB_decay_expo_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0)
     probabilities = expon.cdf(distance_traveled,0,decay_rate_lab)
 
     # new reconstructed weights
-    df['reco_w_pre_decay'] = df.reco_w.values
-    df.loc[:,'reco_w'] = df.reco_w.values * probabilities
+    df['w_pre_decay'] = df[weights].values
+    df.loc[:,weights] = df[weights].values * probabilities
+    df.loc[:,('pos_scatt', '1')] = x0
+    df.loc[:,('pos_scatt', '2')] = y0
+    df.loc[:,('pos_scatt', '3')] = z0
+    df.loc[:,('pos_decay', '1')] = x0 + x
+    df.loc[:,('pos_decay', '2')] = y0 + y
+    df.loc[:,('pos_decay', '3')] = z0 + z
 
     return df
 
 
 # This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
-def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
+def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -269,14 +275,20 @@ def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
     probabilities = expon.cdf(distance_traveled_2,0,decay_rate_lab) - expon.cdf(distance_traveled_1,0,decay_rate_lab)
 
     # new reconstructed weights
-    df['reco_w_pre_decay'] = df.reco_w.values
-    df.loc[:,'reco_w'] = df.reco_w.values * probabilities
+    df['w_event_rate'] = df[weights].values
+    df.loc[:,weights] = df[weights].values * probabilities
+    df.loc[:,('pos_scatt', '1')] = x0[mask_in_detector]
+    df.loc[:,('pos_scatt', '2')] = y0[mask_in_detector]
+    df.loc[:,('pos_scatt', '3')] = z0[mask_in_detector]
+    df.loc[:,('pos_decay', '1')] = x0[mask_in_detector] + x[mask_in_detector]
+    df.loc[:,('pos_decay', '2')] = y0[mask_in_detector] + y[mask_in_detector]
+    df.loc[:,('pos_decay', '3')] = z0[mask_in_detector] + z[mask_in_detector]
 
     return df
 
 
 # This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
-def select_MB_decay_steel(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
+def select_MB_decay_steel(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -313,14 +325,20 @@ def select_MB_decay_steel(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
     probabilities = expon.cdf(distance_traveled_2,0,decay_rate_lab) - expon.cdf(distance_traveled_1,0,decay_rate_lab)
 
     # new reconstructed weights
-    df['reco_w_pre_decay'] = df.reco_w.values
-    df.loc[:,'reco_w'] = df.reco_w.values * probabilities
+    df['w_pre_decay'] = df[weights].values
+    df.loc[:,weights] = df[weights].values * probabilities
+    df.loc[:,('pos_scatt', '1')] = x0[mask_in_detector]
+    df.loc[:,('pos_scatt', '2')] = y0[mask_in_detector]
+    df.loc[:,('pos_scatt', '3')] = z0[mask_in_detector]
+    df.loc[:,('pos_decay', '1')] = x0[mask_in_detector] + x[mask_in_detector]
+    df.loc[:,('pos_decay', '2')] = y0[mask_in_detector] + y[mask_in_detector]
+    df.loc[:,('pos_decay', '3')] = z0[mask_in_detector] + z[mask_in_detector]
 
     return df
 
 
 # Select for MiniBooNE considering the outer spheres
-def select_muB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
+def select_muB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -347,8 +365,8 @@ def select_muB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
     df['decay_position_y'] = yf
     df['decay_position_z'] = zf
     df['in_detector'] = (-x_muB/2. <= df.decay_position_x.values) & (df.decay_position_x.values <= x_muB/2.) & (-y_muB/2. <= df.decay_position_y.values) & (df.decay_position_y.values <= y_muB/2) & (df.decay_position_z.values <= z_muB + dif_z/2) & (df.decay_position_z.values >= dif_z/2)
-    df['reco_w_pre_decay'] = df.reco_w.values
-    df.loc[:,'reco_w'] = df.reco_w.values * df.in_detector.values
+    df['w_pre_decay'] = df[weights].values
+    df.loc[:,weights] = df[weights].values * df.in_detector.values
 
     df['scatt_x'] = x0
     df['scatt_y'] = y0
@@ -357,7 +375,7 @@ def select_muB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
     return df
 
 # Select for MiniBooNE considering the outer spheres
-def select_muB_decay_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
+def select_muB_decay_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -391,8 +409,8 @@ def select_muB_decay_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0):
     probabilities = expon.cdf(dist2,0,decay_rate_lab) - expon.cdf(dist1,0,decay_rate_lab)
     
     # new reconstructed weights
-    df['reco_w_pre_decay'] = df.reco_w.values
-    df.loc[:,'reco_w'] = df.reco_w.values * probabilities
+    df['w_pre_decay'] = df[weights].values
+    df.loc[:,weights] = df[weights].values * probabilities
 
     return df
 
