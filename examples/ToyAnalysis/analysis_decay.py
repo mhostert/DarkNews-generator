@@ -40,6 +40,16 @@ sphere_cut_muB = 0.030441980173709752
 cylinder_cut_muB = 1. - 2*sphere_cut_muB
 
 
+# geometry of cylinder_muB for dirt
+x_muB_dirt_min = -1100.
+x_muB_dirt_max = 1100.
+y_muB_dirt_min = -1600.
+y_muB_dirt_max = 600.
+l_dirt_muB = 40000.
+z_muB_dirt_max = -215
+z_muB_dirt_max = z_muB_dirt_max - l_dirt_muB
+
+
 def random_cylinder(num=100):
 
     # generate a random position for scattering position
@@ -288,6 +298,56 @@ def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weigh
 
 
 # This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
+def select_MB_decay_dirt_no_filt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+    df = df.copy(deep=True)
+
+    # get momenta and decay length for decay_N
+    pN = df.P_decay_N_parent.values
+    if not(l_decay_proper_cm):
+        l_decay_proper_cm = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0)) / coupling_factor**2
+    else:
+        l_decay_proper_cm /= coupling_factor**2
+
+    # compute the position of decay
+    x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)[1:]
+    decay_rate_lab = np.sqrt(x*x + y*y + z*z)
+    x_norm, y_norm, z_norm = x/decay_rate_lab, y/decay_rate_lab, z/decay_rate_lab
+    length_events = len(x)
+
+    # generate a random position for scattering position
+    if seed:
+        np.random.seed(seed)
+    u0 = np.random.random(length_events)
+    phi0 = np.random.random(length_events) * 2. * np.pi
+    r0 = radius_cyl_MB * u0**(1./2.)
+    x0, y0  = r0 * np.cos(phi0), r0 * np.sin(phi0)
+    z0 = np.random.random(length_events) * l_cyl_MB + start_point_cyl_MB
+
+    # compute the distance to the point of exit from the detector
+    x0_dot_p = x_norm * x0 + y_norm * y0 + z_norm * z0
+    x0_square = r0*r0 + z0*z0
+    discriminant = (x0_dot_p * x0_dot_p) - (x0_square - radius_MB**2)
+    mask_in_detector = ((discriminant > 0) & (z_norm > 0))
+    discriminant = mask_in_detector * discriminant
+    
+    distance_traveled_1 = (- x0_dot_p - np.sqrt(discriminant)) * mask_in_detector
+    distance_traveled_2 = (- x0_dot_p + np.sqrt(discriminant)) * mask_in_detector
+    probabilities = expon.cdf(distance_traveled_2,0,decay_rate_lab) - expon.cdf(distance_traveled_1,0,decay_rate_lab)
+
+    # new reconstructed weights
+    df['w_event_rate'] = df[weights].values
+    df.loc[:,weights] = df[weights].values * probabilities
+    df.loc[:,('pos_scatt', '1')] = x0
+    df.loc[:,('pos_scatt', '2')] = y0
+    df.loc[:,('pos_scatt', '3')] = z0
+    df.loc[:,('pos_decay', '1')] = x0 + x
+    df.loc[:,('pos_decay', '2')] = y0 + y
+    df.loc[:,('pos_decay', '3')] = z0 + z
+
+    return df
+
+
+# This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
 def select_MB_decay_steel(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
     df = df.copy(deep=True)
 
@@ -374,7 +434,7 @@ def select_muB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='
 
     return df
 
-# Select for MiniBooNE considering the outer spheres
+# Select for MicroBooNE considering the outer spheres
 def select_muB_decay_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
     df = df.copy(deep=True)
 
@@ -403,6 +463,45 @@ def select_muB_decay_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weig
     p0 = np.array([x0,y0,z0])
     
     # compute the distance to the point of exit from the detector
+    dist_in_detector = get_distances_in_muB(p0,phat)
+    dist1 = dist_in_detector.T[0]
+    dist2 = dist_in_detector.T[1]
+    probabilities = expon.cdf(dist2,0,decay_rate_lab) - expon.cdf(dist1,0,decay_rate_lab)
+    
+    # new reconstructed weights
+    df['w_pre_decay'] = df[weights].values
+    df.loc[:,weights] = df[weights].values * probabilities
+
+    return df
+
+
+# Select decay for MicroBooNE Dirt
+def select_muB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+    df = df.copy(deep=True)
+
+    # get momenta and decay length for decay_N
+    pN = df.P_decay_N_parent.values
+    if not(l_decay_proper_cm):
+        l_decay_proper_cm = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0)) / coupling_factor**2
+    else:
+        l_decay_proper_cm /= coupling_factor**2
+    
+    # compute the position of decay
+    x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)[1:]
+    decay_rate_lab = np.sqrt(x*x + y*y + z*z)
+    x_norm, y_norm, z_norm = x/decay_rate_lab, y/decay_rate_lab, z/decay_rate_lab
+    phat = np.array([x_norm,y_norm,z_norm])
+    length_events = len(x)
+    
+    # generate a random position for scattering position
+    if seed:
+        np.random.seed(seed)
+    x0 = np.random.random(length_events)*(x_muB_dirt_max - x_muB_dirt_min)  - x_muB_dirt_min
+    y0 = np.random.random(length_events)*(y_muB_dirt_max - y_muB_dirt_min)  - y_muB_dirt_min
+    z0 = np.random.random(length_events)*(z_muB_dirt_max - z_muB_dirt_min)  - z_muB_dirt_min
+    p0 = np.array([x0,y0,z0])
+    
+    # compute the distance to the point of access and exit from the detector
     dist_in_detector = get_distances_in_muB(p0,phat)
     dist1 = dist_in_detector.T[0]
     dist2 = dist_in_detector.T[1]
