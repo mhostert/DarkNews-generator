@@ -47,7 +47,7 @@ y_muB_dirt_min = -1600.
 y_muB_dirt_max = 600.
 l_dirt_muB = 40000.
 z_muB_dirt_max = -215
-z_muB_dirt_max = z_muB_dirt_max - l_dirt_muB
+z_muB_dirt_min = z_muB_dirt_max - l_dirt_muB
 
 
 def random_cylinder(num=100):
@@ -434,6 +434,48 @@ def select_muB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='
 
     return df
 
+
+# Select for MicroBooNE considering the outer spheres
+def select_muB_decay_dirt_MC(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+    df = df.copy(deep=True)
+
+    # get momenta and decay length for decay_N
+    pN = df.P_decay_N_parent.values
+    if not(l_decay_proper_cm):
+        l_decay_proper_cm = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0)) / coupling_factor**2
+    else:
+        l_decay_proper_cm /= coupling_factor**2
+    
+    # compute the position of decay
+    x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)[1:]
+    decay_rate_lab = np.sqrt(x*x + y*y + z*z)
+    x_norm, y_norm, z_norm = x/decay_rate_lab, y/decay_rate_lab, z/decay_rate_lab
+    phat = np.array([x_norm,y_norm,z_norm])
+    length_events = len(x)
+    
+    # generate a random position for scattering position
+    if seed:
+        np.random.seed(seed)
+    x0 = np.random.random(length_events)*(x_muB_dirt_max - x_muB_dirt_min)  + x_muB_dirt_min
+    y0 = np.random.random(length_events)*(y_muB_dirt_max - y_muB_dirt_min)  + y_muB_dirt_min
+    z0 = np.random.random(length_events)*(z_muB_dirt_max - z_muB_dirt_min)  + z_muB_dirt_min
+
+    
+    # compute final position and radius
+    xf, yf, zf = x0 + x, y0 + y, z0 + z
+    df['decay_position_x'] = xf
+    df['decay_position_y'] = yf
+    df['decay_position_z'] = zf
+    df['in_detector'] = (-x_muB/2. <= df.decay_position_x.values) & (df.decay_position_x.values <= x_muB/2.) & (-y_muB/2. <= df.decay_position_y.values) & (df.decay_position_y.values <= y_muB/2) & (df.decay_position_z.values <= z_muB + dif_z/2) & (df.decay_position_z.values >= dif_z/2)
+    df['w_pre_decay'] = df[weights].values
+    df.loc[:,weights] = df[weights].values * df.in_detector.values
+
+    df['scatt_x'] = x0
+    df['scatt_y'] = y0
+    df['scatt_z'] = z0
+
+    return df
+
 # Select for MicroBooNE considering the outer spheres
 def select_muB_decay_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
     df = df.copy(deep=True)
@@ -496,9 +538,9 @@ def select_muB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weig
     # generate a random position for scattering position
     if seed:
         np.random.seed(seed)
-    x0 = np.random.random(length_events)*(x_muB_dirt_max - x_muB_dirt_min)  - x_muB_dirt_min
-    y0 = np.random.random(length_events)*(y_muB_dirt_max - y_muB_dirt_min)  - y_muB_dirt_min
-    z0 = np.random.random(length_events)*(z_muB_dirt_max - z_muB_dirt_min)  - z_muB_dirt_min
+    x0 = np.random.random(length_events)*(x_muB_dirt_max - x_muB_dirt_min)  + x_muB_dirt_min
+    y0 = np.random.random(length_events)*(y_muB_dirt_max - y_muB_dirt_min)  + y_muB_dirt_min
+    z0 = np.random.random(length_events)*(z_muB_dirt_max - z_muB_dirt_min)  + z_muB_dirt_min
     p0 = np.array([x0,y0,z0])
     
     # compute the distance to the point of access and exit from the detector
@@ -518,22 +560,20 @@ def set_params(df):
 
     df = df.copy(deep=True)
 
-    df['reco_Enu'] = df[(  'P_projectile', '0')]
-    p1 = [df[( 'P_projectile', '1')],df[( 'P_projectile', '2')],df[( 'P_projectile', '3')]]
-
     p21 = np.array([df[( 'P_decay_ell_minus', '1')].values,df[( 'P_decay_ell_minus', '2')].values,df[( 'P_decay_ell_minus', '3')].values])
     p22 = np.array([df[( 'P_decay_ell_plus', '1')].values,df[( 'P_decay_ell_plus', '2')].values,df[( 'P_decay_ell_plus', '3')].values])
     p2 = (p21+p22)/2
 
+    p1 = np.array([0,0,1])
     angle = get_angle(p1,p2)
 
     df['reco_theta_beam'] = angle * 180 / np.pi
 
     df['reco_Evis'] = df[( 'P_decay_ell_minus', '0')].values + df[( 'P_decay_ell_plus', '0')].values
 
-    df=df.rename(columns = {'w_event_rate':'reco_w'})
-
-    #df['reco_w'] = df.w_event_rate
+    df['reco_w'] = df.w_event_rate
+    
+    df['reco_Enu'] = const.m_proton * (df['reco_Evis']) / ( const.m_proton - (df['reco_Evis'])*(1.0 - np.cos(angle)))
 
     return df
 
