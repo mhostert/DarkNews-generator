@@ -8,14 +8,16 @@ from matplotlib.pyplot import cm
 import matplotlib.patches as mpatches
 
 from DarkNews import const
+from DarkNews import plot_tools as pt
 
 from ToyAnalysis import analysis
+from ToyAnalysis import analysis_decay
 from ToyAnalysis import fourvec as fv
 from ToyAnalysis import toy_logger
 
 ###########################
 
-def plot_all_rates(df, case_name, Nevents=550, truth_plots=False, title=None, plot_muB = False, path=None,loc=''):
+def plot_all_rates(df, case_name, Nevents=None, truth_plots=False, title=None, plot_muB = False, path=None,loc=''):
     
     toy_logger.info("Plot MiniBooNE signal in {PATH_MB}")
     if path:
@@ -31,11 +33,13 @@ def plot_all_rates(df, case_name, Nevents=550, truth_plots=False, title=None, pl
         title = case_name
 
     # get observables at MiniBooNE
-    bag_reco_MB = analysis.compute_MB_spectrum(df, EVENT_TYPE='both')
-    if Nevents:
+    bag_reco_MB = analysis_decay.select_MB_decay_expo_prob(analysis.compute_spectrum(df, EVENT_TYPE='both'))
+    if Nevents is not None:
         total_Nevent_MB = Nevents*(1/bag_reco_MB['reco_eff'][0])
     else:
         total_Nevent_MB = bag_reco_MB['reco_w'].sum()
+    
+    print(f"MB events: {total_Nevent_MB:.2g}")
     batch_plot_signalMB(bag_reco_MB, PATH_MB, BP=case_name, title=title, NEVENTS=total_Nevent_MB,loc=loc)
 
     # plot true variables for MiniBooNE
@@ -55,7 +59,7 @@ def batch_plot_signalMB(obs, PATH, title='Dark News', NEVENTS=1, kde=False, BP =
         varplot='reco_costheta_beam', tot_events=NEVENTS,loc=loc)
 
     ###################### HISTOGRAM 2D ##################################################
-    
+
     n2D = 20
     # histogram2D(PATH+"/"+BP+"2D_reco_Evis_ctheta.pdf", [obs['reco_Evis'], obs['reco_w']],\
     #                                       [obs['reco_costheta_beam'],obs['reco_w']],\
@@ -212,7 +216,7 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
         
     fsize = 10
     fig = plt.figure()
-    ax = fig.add_axes(std_axes_form, rasterized=rasterized)
+    ax = fig.add_axes(pt.std_axes_form, rasterized=rasterized)
     ax.patch.set_alpha(0.0)
 
 
@@ -315,7 +319,7 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
     else:
         ax.set_ylim(-20,ax.get_ylim()[1]*1.1)
         ax.set_ylabel(r"Excess events",fontsize=fsize)
-    std_savefig(fig, plotname, dpi=400)
+    pt.std_savefig(fig, plotname, dpi=400)
 
 def errorband_plot(ax, X, BINW, DATA, ERRORLOW, ERRORUP, band=False, **kwargs):
     # ax.step(X, DATA, where='mid', **kwargs)
@@ -332,7 +336,7 @@ def histogram1D(plotname, obs, w, TMIN, TMAX,  XLABEL, TITLE, nbins, regime=None
 
     fsize = 10
     fig = plt.figure()
-    ax = fig.add_axes(std_axes_form, rasterized=rasterized)
+    ax = fig.add_axes(pt.std_axes_form, rasterized=rasterized)
     ax.patch.set_alpha(0.0)
 
     # normalize
@@ -375,7 +379,7 @@ def histogram1D(plotname, obs, w, TMIN, TMAX,  XLABEL, TITLE, nbins, regime=None
 
     ax.set_xlim(TMIN,TMAX)
     ax.set_ylim(0.0,ax.get_ylim()[1]*1.1)
-    std_savefig(fig, plotname, dpi=400)
+    pt.std_savefig(fig, plotname, dpi=400)
     plt.close()
 
 
@@ -383,7 +387,7 @@ def histogram2D(plotname, obsx, obsy, w,  xrange=None, yrange=None,  xlabel='x',
     
     fsize = 11
     
-    fig, ax = std_fig(ax_form = [0.15,0.15,0.78,0.74])
+    fig, ax = pt.std_fig(ax_form = [0.15,0.15,0.78,0.74])
 
     if logx:
         obsx = np.log10(obsx)
@@ -404,7 +408,7 @@ def histogram2D(plotname, obsx, obsy, w,  xrange=None, yrange=None,  xlabel='x',
 
     ax.set_xlabel(xlabel,fontsize=fsize)
     ax.set_ylabel(ylabel,fontsize=fsize)
-    std_savefig(fig, plotname, dpi=400)
+    pt.std_savefig(fig, plotname, dpi=400)
     plt.close()
 
 

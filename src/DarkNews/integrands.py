@@ -122,11 +122,14 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
         self.norm["diff_event_rate"] = 1
         self.norm["diff_flux_avg_xsec"] = 1
         if self.MC_case.decays_to_dilepton:
-            if self.MC_case.decay_case.on_shell:
+            if (self.MC_case.decay_case.scalar_on_shell and self.MC_case.decay_case.vector_off_shell)\
+                or (self.MC_case.decay_case.scalar_off_shell and self.MC_case.decay_case.vector_on_shell):
                 self.norm["diff_decay_rate_0"] = 1
                 self.norm["diff_decay_rate_1"] = 1
-            elif self.MC_case.decay_case.off_shell:
+            elif self.MC_case.decay_case.scalar_off_shell and self.MC_case.decay_case.vector_off_shell:
                 self.norm["diff_decay_rate_0"] = 1
+            else:
+                raise NotImplementedError("Both mediators on shell not yet implemented.")
         elif self.MC_case.decays_to_singlephoton:
             self.norm["diff_decay_rate_0"] = 1
         else:
@@ -153,7 +156,6 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
         M = ups_case.target.mass
         m_parent = ups_case.m_ups
         m_daughter = decay_case.m_daughter
-        mzprime = ups_case.mzprime
 
         i_var = 0
         # neutrino energy
@@ -186,27 +188,45 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
         ##############################################
         if self.MC_case.decays_to_dilepton:
 
-            if decay_case.on_shell:
-                ##############################################
-                # decay nu_parent -> nu_daughter mediator
+            if decay_case.vector_on_shell and decay_case.scalar_on_shell:
+                logger.error("Vector and scalar simultaneously on shell is not implemented.")
+                raise NotImplementedError("Feature not implemented.")
 
+            elif decay_case.vector_on_shell and decay_case.scalar_off_shell:
+                # decay nu_parent -> nu_daughter mediator
                 # angle between nu_daughter and z axis
                 cost = -1.0 + (2.0) * x[:, i_var]
                 i_var += 1
 
-                # params.UD4**2 * (params.Ue4**2 + params.Umu4**2 + params.Utau4**2)*params.gD**2
                 self.int_dic["diff_decay_rate_0"] = dr.diff_gamma_Ni_to_Nj_V(
-                    cost=cost, vertex_ij=np.sqrt(decay_case.Dih), mi=m_parent, mj=m_daughter, mV=mzprime, HNLtype=decay_case.HNLtype, h=decay_case.h_parent,
+                    cost=cost, vertex_ij=np.sqrt(decay_case.Dih), mi=m_parent, mj=m_daughter, mV=decay_case.mzprime, HNLtype=decay_case.HNLtype, h=decay_case.h_parent,
+                )
+                self.int_dic["diff_decay_rate_0"] *= 2  # hypercube jacobian
+
+
+                # mediator decay M --> ell+ ell-
+                self.int_dic["diff_decay_rate_1"] = dr.gamma_V_to_ell_ell(vertex=decay_case.TheoryModel.deV, mV=decay_case.mzprime, m_ell=decay_case.mm) * np.full_like(
+                    self.int_dic["diff_decay_rate_0"], 1.0
+                )
+
+            elif decay_case.vector_off_shell and decay_case.scalar_on_shell:
+                # decay nu_parent -> nu_daughter mediator
+                # angle between nu_daughter and z axis
+                cost = -1.0 + (2.0) * x[:, i_var]
+                i_var += 1
+
+                self.int_dic["diff_decay_rate_0"] = dr.diff_gamma_Ni_to_Nj_S(
+                    cost=cost, vertex_ij=np.sqrt(decay_case.Sih), mi=m_parent, mj=m_daughter, mS=decay_case.mhprime, HNLtype=decay_case.HNLtype, h=decay_case.h_parent,
                 )
                 self.int_dic["diff_decay_rate_0"] *= 2  # hypercube jacobian
 
                 ##############################################
                 # mediator decay M --> ell+ ell-
-                self.int_dic["diff_decay_rate_1"] = dr.gamma_V_to_ell_ell(vertex=decay_case.TheoryModel.deV, mV=mzprime, m_ell=decay_case.mm) * np.full_like(
+                self.int_dic["diff_decay_rate_1"] = dr.gamma_S_to_ell_ell(vertex=decay_case.TheoryModel.deS, mS=decay_case.mhprime, m_ell=decay_case.mm) * np.full_like(
                     self.int_dic["diff_decay_rate_0"], 1.0
                 )
 
-            elif decay_case.off_shell:
+            elif decay_case.vector_off_shell and decay_case.scalar_off_shell:
                 ##############################################
                 # decay nu_parent -> nu_daughter ell+ ell-
 
@@ -242,6 +262,9 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
                 dgamma *= 2  # c3
                 dgamma *= 2 * np.pi  # phi34
                 self.int_dic["diff_decay_rate_0"] = dgamma
+            else:
+                logger.error("Could not find decay integrand.")
+                raise ValueError("Integrand not found for this model.")
 
         elif self.MC_case.decays_to_singlephoton:
             ##############################################
@@ -259,8 +282,9 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
             self.int_dic["diff_decay_rate_0"] *= 2
 
         else:
-            logger.error("ERROR: Could not determine decay process in vegas integral.")
-            raise ValueError
+            logger.error("Could not find decay integrand.")
+            raise ValueError("Integrand not found for this model.")
+
 
         ##############################################
         # storing normalization factor that guarantees that integrands are O(1) numbers
@@ -343,9 +367,15 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
         mf = MC_case.decay_case.m_daughter
         mm = MC_case.decay_case.mm
         mp = MC_case.decay_case.mm
-        mzprime = MC_case.decay_case.mzprime
 
-        if MC_case.decay_case.on_shell:
+        if MC_case.decay_case.vector_on_shell or MC_case.decay_case.scalar_on_shell:
+
+            if MC_case.decay_case.vector_on_shell and MC_case.decay_case.scalar_off_shell:
+                m_mediator = MC_case.decay_case.mzprime
+            elif MC_case.decay_case.vector_off_shell and MC_case.decay_case.scalar_on_shell:
+                m_mediator = MC_case.decay_case.mhprime
+            else:
+                raise NotImplementedError("Both mediators on-shell is not yet implemented.")
 
             ########################
             ### HNL decay
@@ -354,7 +384,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
             masses_decay = {
                 "m1": mh,  # Ni
                 "m2": mf,  # Nj
-                "m3": mzprime,  # Z'
+                "m3": m_mediator,  # Z'
             }
             # Phnl, Phnl_daughter, Pz'
             P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
@@ -371,7 +401,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
             Z_decay_samples = {}  # all uniform
             # Z'(k1) --> ell- (k2)  ell+ (k3)
             masses_decay = {
-                "m1": mzprime,  # Ni
+                "m1": m_mediator,  # Ni
                 "m2": mp,  # \ell+
                 "m3": mm,  # \ell-
             }
@@ -383,7 +413,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
             four_momenta["P_decay_ell_minus"] = P2LAB_decayZ
             four_momenta["P_decay_ell_plus"] = P3LAB_decayZ
 
-        elif MC_case.decay_case.off_shell:
+        elif MC_case.decay_case.vector_off_shell and MC_case.decay_case.scalar_off_shell:
 
             ########################
             # HNL decay

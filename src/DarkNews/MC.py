@@ -199,12 +199,20 @@ class MC_events:
 
         if self.decays_to_dilepton:
 
-            if self.decay_case.on_shell:
+            if self.decay_case.vector_on_shell:
                 DIM = 3
                 logger.info(f"{self.nu_upscattered.name} decays via on-shell Z'.")
-            elif self.decay_case.off_shell:
+            elif self.decay_case.vector_off_shell:
                 DIM = 6
                 logger.info(f"{self.nu_upscattered.name} three-body decays.")
+            
+            if self.decay_case.scalar_on_shell:
+                DIM = 3
+                logger.info(f"{self.nu_upscattered.name} decays via on-shell h'.")
+            elif self.decay_case.scalar_off_shell:
+                DIM = 6
+                logger.info(f"{self.nu_upscattered.name} three-body decays.")
+        
         elif self.decays_to_singlephoton:
             DIM = 3
             logger.info(f"{self.nu_upscattered.name} decays via TMM.")

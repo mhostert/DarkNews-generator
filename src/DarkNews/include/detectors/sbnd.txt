@@ -1,0 +1,18 @@
+# digitized from Marco Del Tutto
+# On behalf of the SBND Collaboration NuFACT 2022 Conference 4th August 2022
+# https://indico.fnal.gov/event/53004/contributions/244480/
+name = "SBND"
+fluxfile = "sbnd_fhc.dat"
+flux_norm = 1.0
+erange = [
+    0.05, 
+    3
+]
+nuclear_targets = [
+    'Ar40'
+]
+fiducial_mass = 85.0 # tons
+fiducial_mass_per_target = [
+    fiducial_mass
+] 
+POTs = 12.25e20

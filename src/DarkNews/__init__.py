@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 import sys
 from pathlib import Path
@@ -47,6 +47,10 @@ from DarkNews import model
 from DarkNews.processes import UpscatteringProcess
 from DarkNews.processes import FermionDileptonDecay
 from DarkNews.processes import FermionSinglePhotonDecay
+
+from DarkNews.nuclear_tools import NuclearTarget
+from DarkNews.detector import Detector
+from DarkNews.geom import Chisel
 
 # Monte Carlo modules
 from DarkNews import MC

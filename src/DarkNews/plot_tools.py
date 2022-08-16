@@ -210,9 +210,9 @@ def batch_plot(df, PATH, title="Dark News"):
 
     histogram1D(PATH / "1D_Q.pdf", np.sqrt(df["Q2"]), w, r"$Q/$GeV", title, 50, **args)
     histogram1D(PATH / "1D_Q2.pdf", df["Q2"], w, r"$Q^2/$GeV$^2$", title, 50, **args)
-    histogram1D(PATH / "1D_T_proton.pdf", df["T_proton"][pel] * 1e3, w_pel, r"$T_{\rm p^+}$/MeV", "el proton only", 50, **args)
+    histogram1D(PATH / "1D_T_proton.pdf", df["T_proton"][pel] * 1e3, w_pel, r"$T_{\rm p^+}$/MeV", "el proton only", 50, TMIN=0, TMAX=1e3, **args)
     histogram1D(PATH / "1D_theta_proton.pdf", df["theta_proton"][pel], w_pel, r"$\theta_{p^+}$ degrees", "el proton only", 50, **args)
-    histogram1D(PATH / "1D_T_nucleus.pdf", df["T_nucleus"][coherent] * 1e3, w_coh, r"$T_{\rm Nucleus}$/MeV", "coh nucleus only", 50, **args)
+    histogram1D(PATH / "1D_T_nucleus.pdf", df["T_nucleus"][coherent] * 1e3, w_coh, r"$T_{\rm Nucleus}$/MeV", "coh nucleus only", 50, TMIN=0, TMAX=2e1, **args)
     histogram1D(PATH / "1D_theta_nucleus.pdf", df["theta_nucleus"][coherent], w_coh, r"$\theta_{\rm Nucleus}$ degrees", "coh nucleus only", 50, **args)
 
     # Variables of interest for single photon decays

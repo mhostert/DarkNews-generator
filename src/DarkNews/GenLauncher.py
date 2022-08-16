@@ -497,11 +497,13 @@ class GenLauncher:
                                     }
 
                                     if scope["INCLUDE_HC"]:  # helicity conserving scattering
-                                        self.gen_cases.append(dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, **args, helicity="conserving",))
+                                        mc_case = dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, **args, helicity="conserving",)
+                                        self.gen_cases.append(mc_case)
 
                                     if scope["INCLUDE_HF"]:  # helicity flipping scattering
-                                        self.gen_cases.append(dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, **args, helicity="flipping",))
-
+                                        mc_case = dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, **args, helicity="flipping",)
+                                        self.gen_cases.append(mc_case)
+                                    
                                     logger.debug(f"Created an MC instance of {self.gen_cases[-1].underl_process_name}.")
 
         return self.gen_cases

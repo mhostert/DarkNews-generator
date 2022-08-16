@@ -111,7 +111,7 @@ class UpscatteringProcess:
             integ = vg.Integrator(DIM * [[0.0, 1.0]])  # unit hypercube
 
             integrals = MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
-            logger.debug(f"Main VEGAS run completed.")
+            logger.debug("Main VEGAS run completed.")
 
             return integrals["diff_xsec"].mean * batch_f.norm["diff_xsec"]
 
@@ -211,12 +211,17 @@ class FermionDileptonDecay:
         self.CC_mixing2 *= -1
 
         if self.m_parent - self.m_daughter - self.mm - self.mp < 0:
-            logger.error(f"Error! Final states have an excess in mass of {self.m_parent - self.m_daughter - self.mm - self.mp} on top of parent particle.")
+            logger.error(f"Error! Final states are above the mass of parent particle: mass excess = {self.m_parent - self.m_daughter - self.mm - self.mp}.")
             raise ValueError("Energy not conserved.")
 
         ## Is the mediator on shell?
-        self.on_shell = (self.m_parent - self.m_daughter > TheoryModel.mzprime) and (TheoryModel.mzprime > self.mm + self.mp)
-        self.off_shell = not self.on_shell
+        self.vector_on_shell = (TheoryModel.mzprime is not None) and (self.m_parent - self.m_daughter > TheoryModel.mzprime) and (TheoryModel.mzprime > self.mm + self.mp)
+        self.vector_off_shell = not self.vector_on_shell
+
+        self.scalar_on_shell = (TheoryModel.mhprime is not None) and (self.m_parent - self.m_daughter > TheoryModel.mhprime) and (TheoryModel.mhprime > self.mm + self.mp)
+        self.scalar_off_shell = not self.scalar_on_shell
+        
+
         ## does it have transition magnetic moment?
         self.TMM = TheoryModel.has_TMM
 
