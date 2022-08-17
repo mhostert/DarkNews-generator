@@ -15,7 +15,7 @@ class Chisel:
                 * spherical_cap
 
         More complex and final pre-defined objects are also available:
-                * the microboone cryostat as a junction of a tubbe with two spherical caps.
+                * the microboone cryostat as a junction of a tube with two spherical caps.
 
         A desired set of points randomly distributed across a final 3D object can then found by iteratively
         creating more sculptors with the same Chisel, until the desired number of points is reached.
@@ -53,7 +53,7 @@ class Chisel:
     # simple geometrical objects
     def rectangle(self, dx, dy, dz, origin=np.zeros((3, 1))):
         x, y, z = self.translate(origin, self.events)
-        return (-dx / 2 < x & x < dx / 2) & (-dy / 2 < y & y < dy / 2) & (-dz / 2 < z & z < dz / 2)
+        return ( (-dx / 2 < x) & (x < dx / 2)) & ((-dy / 2 < y) & (y < dy / 2)) & ((-dz / 2 < z) & (z < dz / 2))
 
     def sphere(self, radius, origin=np.zeros((3, 1))):
         x, y, z = self.translate(origin, self.events)
@@ -168,6 +168,33 @@ def microboone_geometry(df):
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
 
+
+# distribute events in df accross the pre-defined spherical MiniBooNE volume
+def sbnd_geometry(df):
+
+    nsamples = len(df.index)
+
+    detector_box = np.array([[-600, 600], [-600, 600], [-600, 600]])
+
+    tries = 0
+    npoints = 0
+    events = np.array(3 * [[]])
+    while npoints < nsamples:
+
+        new_detector = Chisel(nsamples=nsamples, box=detector_box)
+        new_events = new_detector.events[:, new_detector.rectangle(dx=400, dy=400, dz=500)]
+        events = np.concatenate((events, new_events), axis=1)
+
+        npoints += np.shape(new_events)[1]
+        tries += nsamples
+        if tries > 1e3 * nsamples:
+            raise ValueError(f"Geometry sampled too inefficiently, tries = {tries} and npoints = {npoints}. Wrong setup?")
+
+    # guarantee that array has number of samples asked (nsamples)
+    df["pos_scatt", "0"] = np.zeros((nsamples,))
+    df["pos_scatt", "1"] = events[0, :nsamples]
+    df["pos_scatt", "2"] = events[1, :nsamples]
+    df["pos_scatt", "3"] = events[2, :nsamples]
 
 # distribute events in df accross the pre-defined spherical MiniBooNE volume
 def miniboone_geometry(df):

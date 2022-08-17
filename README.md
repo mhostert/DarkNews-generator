@@ -9,9 +9,7 @@ DarkNews is an event generator for new physics processes at accelerator neutrino
 <!-- <br>[![License: MIT](https://img.shields.io/badge/License-MIT-deeppink.svg)](https://opensource.org/licenses/MIT) -->
 <!-- [![arXiv](https://img.shields.io/badge/arXiv-2202.04137%20-violet.svg)](https://arxiv.org/abs/2207.04137) -->
 
-
 <br>
-
 
 ## Table of Contents
 
@@ -19,110 +17,126 @@ DarkNews is an event generator for new physics processes at accelerator neutrino
 - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [Usage](#usage)
-    - [Command line functionality](#command-line-functionality)
-    - [Scripting functionality](#scripting-functionality)
-    - [List of parameters](#list-of-parameters)
-    - [Specify parameters via a file](#specify-parameters-via-a-file)
-    - [The experiments](#the-experiments)
-    - [Generated events dataframe](#generated-events-dataframe)
+  - [Command line functionality](#command-line-functionality)
+  - [Scripting functionality](#scripting-functionality)
+  - [List of parameters](#list-of-parameters)
+  - [Specify parameters via a file](#specify-parameters-via-a-file)
+  - [The experiments](#the-experiments)
+  - [Generated events dataframe](#generated-events-dataframe)
 
 ---
+
 ## Introduction
 
-DarkNews uses Vegas to generate weighted Monte Carlo samples of scattering and decay processes. Differential observables are implemented using analytical expressions with arbitrary interaction vertices, which are then specified at run-time based on the available models and the user's parameter choices. Processes involving heavy neutrinos N are calculated including contributions from the Standard Model Z and W bosons, as well as from a kinetically-mixed dark photon (Z'), and neutrino-N transition magnetic moments. DarkNews also computes the partial decay widths of heavy neutrinos for models with up to 3 heavy neutrinos. 
+DarkNews uses Vegas to generate weighted Monte Carlo samples of scattering and decay processes. Differential observables are implemented using analytical expressions with arbitrary interaction vertices, which are then specified at run-time based on the available models and the user's parameter choices. Processes involving heavy neutrinos N are calculated including contributions from the Standard Model Z and W bosons, as well as from a kinetically-mixed dark photon (Z'), and neutrino-N transition magnetic moments. DarkNews also computes the partial decay widths of heavy neutrinos for models with up to 3 heavy neutrinos.
 
 Experiments as well as models are implemented on a case-by-case basis. The necessary ingredients to simulate upscattering or decay-in-flight rates are the active-neutrino flux, detector material, and geometry.
 
-The full information of the event genration is saved to a pandas dataframes, but the user may also choose to print events to numpy ndarrays, as well as to HEPevt-formatted text files. 
+The full information of the event genration is saved to a pandas dataframes, but the user may also choose to print events to numpy ndarrays, as well as to HEPevt-formatted text files.
 
 If you experience any problems or bugs, either open a new issue or contact <mhostert@pitp.ca>.
 
 ## Dependencies
 
 Required dependencies:
-* [Python](http://www.python.org/) 3.6.1 or above
-* [NumPy](http://www.numpy.org/)
+
+- [Python](http://www.python.org/) 3.6.1 or above
+- [NumPy](http://www.numpy.org/)
 
 The following dependencies (if missing) will be automatically installed during the main installation of the package:
-* [scipy](https://scipy.org/)
-* [pandas](https://pandas.pydata.org/) 1.0 or above
-* [pyarrow](https://arrow.apache.org/docs/python/index.html)
-* [Cython](https://cython.org/)
-* [vegas](https://pypi.org/project/vegas/) 5.1.1 or above
-* [Particle](https://pypi.org/project/particle/)
-* [pyhepmc-ng](https://github.com/scikit-hep/pyhepmc)
-* [pyparsing](https://github.com/pyparsing/pyparsing/)
-* [dill](https://pypi.org/project/dill/)
-* [matplotlib](https://matplotlib.org/)
+
+- [scipy](https://scipy.org/)
+- [pandas](https://pandas.pydata.org/) 1.0 or above
+- [pyarrow](https://arrow.apache.org/docs/python/index.html)
+- [Cython](https://cython.org/)
+- [vegas](https://pypi.org/project/vegas/) 5.1.1 or above
+- [Particle](https://pypi.org/project/particle/)
+- [pyhepmc-ng](https://github.com/scikit-hep/pyhepmc)
+- [pyparsing](https://github.com/pyparsing/pyparsing/)
+- [dill](https://pypi.org/project/dill/)
+- [matplotlib](https://matplotlib.org/)
 
 ---
+
 ## Installation
 
-DarkNews is available on PyPI so from your python3.6+ (virtual environment or otherwise), run 
+DarkNews is available on PyPI so from your python3.6+ (virtual environment or otherwise), run
+
 ```sh
 python3 -m pip install DarkNews
 ```
-or if your pip version is already set to your preferred python version, simply ```pip install DarkNews```. This should install all dependencies for you. 
 
-**troubleshooting**: If you have any problems, try creating a brand new (conda or pyenv) environment, install the latest version of ```pip```, then pip install numpy first, and only then try to install pip install DarkNews. 
+or if your pip version is already set to your preferred python version, simply ```pip install DarkNews```. This should install all dependencies for you.
+
+**troubleshooting**: If you have any problems, try creating a brand new (conda or pyenv) environment, install the latest version of ```pip```, then pip install numpy first, and only then try to install pip install DarkNews.
 
 If you experience any issues installing pyhepmc-ng, try installing numpy first, and then install pyhepmc-ng directly from Git using the following command: `pip install git+https://git@github.com/scikit-hep/pyhepmc@master`.
 Then pip install DarkNews.
 
-
 If your installation is successful, you should be able to
-* import the module from your python scripts or notebook with `import DarkNews`
-* run the command line tool `dn_gen` to generate events on the terminal.
 
+- import the module from your python scripts or notebook with `import DarkNews`
+- run the command line tool `dn_gen` to generate events on the terminal.
 
 ##### Editable mode / Developing
+
 To make changes to the package or contribute, you can clone the latest repository from GitHub, and from the main folder of the cloned directory, run:
+
 ```sh
 python3 -m pip install -e .
 ```
+
 The package will be installed locally in editable mode.  Any changes to your local files in the repo will be automatically propagated to your DarkNews installation (except setup configurations). You may want to use Jupyter notebooks with `auto reload`.
 
-If you experience any problems with pip, you can resort to a local manual installation. After downloading the repository, from the main folder, you can run 
+If you experience any problems with pip, you can resort to a local manual installation. After downloading the repository, from the main folder, you can run
+
 ```sh
 python3 setup.py develop
 ```
+
 to install it in developer mode (similar to editable mode above).
 
 ---
+
 ## Usage
 
 A lot of information on the usage of the generator is provided by the example Jupyter notebooks in the repository.
 
-
 You can download example notebooks from the repository's folder `examples/`, or simply run
-* ```dn_get_examples```
+
+- ```dn_get_examples```
 to download the examples folder in the current directory (requires git version >=2.19).
 
 The main usage of DarkNews is covered in depth in the notebook **`Example_0_start_here.ipynb`**.
 We encourage you to read through the cells of the notebook.
 
-
 #### Command line functionality
 
 It is possible to run the generator through the script `bin/dn_gen`, passing the parameters as options.
+
 ```sh
 dn_gen --mzprime=1.25 --m4=0.140 --neval=1000 --HNLtype=dirac --loglevel=INFO
 ```
+
 Run `dn_gen --help` to inspect the meaning of each parameter.
 
 #### Scripting functionality
 
 It is possible to run the generator by creating an instance of the `DarkNews.GenLauncher.GenLauncher` class and calling its `run` method.
+
 ```python
 from DarkNews import GenLauncher
 gen_object = GenLauncher(mzprime=1.25, m4=0.140, neval=1000, HNLtype="dirac")
 gen_object.run(loglevel="INFO")
 ```
+
 The parameters are passed directly while instantiating the `GenLauncher` object.
 Some parameters (`loglevel`, `verbose`, `logfile`, `path`, `overwrite_path`) related to the run itself can be passed also within the call of the `run()` method.
 
 ---
-## Output 
+
+## Output
+
 ### Generated events dataframe
 
 If the argument `pandas = True` (as it is by default), a dataframe containing the generated events is saved in the directory tree.
@@ -167,9 +181,11 @@ Here follows a complete description of the pandas dataframe:
 #### Additional Attributes
 
 The pandas DataFrame also contains several useful information in `attrs`. They can be accessed via
+
 ```python
 df.attrs['foo']
 ```
+
 and are specific to the generation run. The attributes are detailed below:
 
 | **Attrs**            | **type**  | **description**|
@@ -179,8 +195,8 @@ and are specific to the generation run. The attributes are detailed below:
 | **data_path**   | *string*  | The path used to save the generation outputs. |
 | **N{i}_ctau0**   | *float*  | The proper decay length of the i-th HNL in *centimeters* used in the generation of events, with `i`={4,5,6}. |
 
-
 ---
+
 ## Input
 
 ### List of parameters
@@ -188,9 +204,11 @@ and are specific to the generation run. The attributes are detailed below:
 This is an exhaustive list of the parameters that can be passed to the program.
 They can be passed in the command line mode by prepending `--` to the name.
 This summary can also be accessed by running
+
 ```sh
 dn_gen --help
 ```
+
 The first column is the name of the parameter, the second is the type or the list of allowed values, the third is a brief explanation and the fourth is the default.
 Parameters marked as *internal* can not be specified as they are automatically computed on the basis of other parameters.
 
@@ -227,7 +245,7 @@ Parameters marked as *internal* can not be specified as they are automatically c
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:-------------------|:-------:|:-------------------------------------------------------------------------------|-----------:|
-| **gD**             | `float` | U(1)<sub>d</sub> dark coupling g<sub>D</sub>                                   | 1.0        | 
+| **gD**             | `float` | U(1)<sub>d</sub> dark coupling g<sub>D</sub>                                   | 1.0        |
 | **alphaD**         | `float` | U(1)<sub>d</sub> &alpha;<sub>dark</sub> = (g<sub>D</sub><sup>2</sup> / 4 &pi;) | *internal* |
 | **epsilon**        | `float` | &epsilon;                                                                      | 0.01       |
 | **epsilon2**       | `float` | &epsilon;<sup>2</sup>                                                          | *internal* |
@@ -235,6 +253,7 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **chi**            | `float` | Kinetic mixing parameter                                                       | `None`     |
 
 ##### Transition magnetic moment
+
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:---------------|:--------:|:---------------|----:|
 | **mu_tr_e4**       | `float` | TMM mu_tr_e4   | 0.0 |
@@ -263,10 +282,10 @@ Parameters marked as *internal* can not be specified as they are automatically c
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:---------------|:------:|:------------------------------------------|--------:|
-| **nopelastic** | `bool` | Do not generate proton elastic events     | `False` | 
-| **nocoh**      | `bool` | Do not generate coherent events           | `False` | 
-| **noHC**       | `bool` | Do not include helicity conserving events | `False` | 
-| **noHF**       | `bool` | Do not include helicity flipping events   | `False` | 
+| **nopelastic** | `bool` | Do not generate proton elastic events     | `False` |
+| **nocoh**      | `bool` | Do not generate coherent events           | `False` |
+| **noHC**       | `bool` | Do not include helicity conserving events | `False` |
+| **noHF**       | `bool` | Do not include helicity flipping events   | `False` |
 | **decay_products** | `["e+e-","mu+mu-","photon"]` | Decay process of interest | "e+e-" |
 | **enforce_prompt** | `bool` | Force particles to decay promptly | `False` |
 | **nu_flavors**     | `["nu_e","nu_mu","nu_tau","nu_e_bar","nu_mu_bar","nu_tau_bar"]` | Projectile neutrino | `["nu_mu"]` |
@@ -278,37 +297,36 @@ Parameters marked as *internal* can not be specified as they are automatically c
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:------------|:---------------------------------------:|:---------------------------------------------|---------:|
-| **loglevel**     | `["INFO", "WARNING", "ERROR", "DEBUG"]` | Logging level                                | `"INFO"` | 
-| **verbose** | `bool`                                  | Verbose for logging                          | `False`  | 
-| **logfile** | `string`                                | Path to log file; if not set, use std output | `None`   | 
+| **loglevel**     | `["INFO", "WARNING", "ERROR", "DEBUG"]` | Logging level                                | `"INFO"` |
+| **verbose** | `bool`                                  | Verbose for logging                          | `False`  |
+| **logfile** | `string`                                | Path to log file; if not set, use std output | `None`   |
 
 ##### `vegas` integration arguments
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:-----------------|:-----:|:---------------------------------------------|------:|
-| **neval**        | `int` | Number of evaluations of integrand           | 10000 | 
-| **nint**         | `int` | Number of adaptive iterations                | 20    | 
-| **neval_warmup** | `int` | Number of evaluations of integrand in warmup | 1000  | 
-| **nint_warmup**  | `int` | Number of adaptive iterations in warmup      | 10    | 
-| **seed**         | `int` | numpy random number generator seed used in vegas      | None    | 
+| **neval**        | `int` | Number of evaluations of integrand           | 10000 |
+| **nint**         | `int` | Number of adaptive iterations                | 20    |
+| **neval_warmup** | `int` | Number of evaluations of integrand in warmup | 1000  |
+| **nint_warmup**  | `int` | Number of adaptive iterations in warmup      | 10    |
+| **seed**         | `int` | numpy random number generator seed used in vegas      | None    |
 
 ##### Output formats
 
 |<!-- -->|<!-- -->|<!-- -->|<!-- -->|
 |:------------------|:--------:|:-----------------------------------------------------------------------|--------:|
-| **pandas**        | `bool`   | Save `pandas.DataFrame` as `.pckl` file                                | `True`  | 
-| **parquet**       | `bool`   | Save `pandas.DataFrame` as `.parquet` file (engine=pyarrow)            | `False`  | 
-| **numpy**         | `bool`   | Save events in `.npy` files                                            | `False` | 
-| **hepevt**        | `bool`   | If true, print events to HEPEVT-formatted text files (does not save event weights) | `False` | 
-| **hepevt_legacy**        | `bool`   | If true, print events to a legacy HEPEVT format (saving weights next to the number of particle in the event and without linebreaks in particle entries) | `False` | 
-| **hepmc2** | `bool`   | If true, prints events to HepMC2 format. | `False` | 
-| **hepmc3** | `bool`   | If true, prints events to HepMC3 format. | `False` | 
-| **hep_unweight** | `bool`   | Unweigh events when printing in HEPEVT format (needs large statistics) | `False` | 
-| **unweighted_hep_events** | `int`   | number of unweighted events to accept in any of the standard HEP formats. Has to be much smaller than neval for unweight procedure to work. | 100 | 
-| **sparse**        | `bool`   | if True, save only the neutrino energy, charged lepton or photon momenta, and weights. Not supported for HEPevt. | `False`  | 
-| **path**          | `string` | Path where to save run's outputs                                       | `"./"`  | 
-| **make_summary_plots** | `bool` | if True, generates summary plots of kinematics in the `path` | `False`  | 
-
+| **pandas**        | `bool`   | Save `pandas.DataFrame` as `.pckl` file                                | `True`  |
+| **parquet**       | `bool`   | Save `pandas.DataFrame` as `.parquet` file (engine=pyarrow)            | `False`  |
+| **numpy**         | `bool`   | Save events in `.npy` files                                            | `False` |
+| **hepevt**        | `bool`   | If true, print events to HEPEVT-formatted text files (does not save event weights) | `False` |
+| **hepevt_legacy**        | `bool`   | If true, print events to a legacy HEPEVT format (saving weights next to the number of particle in the event and without linebreaks in particle entries) | `False` |
+| **hepmc2** | `bool`   | If true, prints events to HepMC2 format. | `False` |
+| **hepmc3** | `bool`   | If true, prints events to HepMC3 format. | `False` |
+| **hep_unweight** | `bool`   | Unweigh events when printing in HEPEVT format (needs large statistics) | `False` |
+| **unweighted_hep_events** | `int`   | number of unweighted events to accept in any of the standard HEP formats. Has to be much smaller than neval for unweight procedure to work. | 100 |
+| **sparse**        | `bool`   | if True, save only the neutrino energy, charged lepton or photon momenta, and weights. Not supported for HEPevt. | `False`  |
+| **path**          | `string` | Path where to save run's outputs                                       | `"./"`  |
+| **make_summary_plots** | `bool` | if True, generates summary plots of kinematics in the `path` | `False`  |
 
 ### Specify parameters via a file
 
@@ -317,64 +335,82 @@ The parameter file should be provided as the argument `param_file` of `GenLaunch
 
 A template file [`template_parameters_file.txt`](examples/template_parameters_file.txt) can be found in [in the `examples` directory](examples/).
 In the following there are the main rules to specify the parameters:
-* every line should be in the form of an assignment statement
+
+- every line should be in the form of an assignment statement
+
 ```rst
 <variable_name> = <variable_value>
 ```
-* comments can be specified with with `"#"`
-* the different parameters can be specified with:
-    * string: by encapsulating each string with double or single quotes `"<string>"` or `'<string>'` are equivalent, the escape character is `\` (backslash).
-    * booleans: by writing `True` or `False` (it is case insensitive)
-    * mathematical expression (which will results in `float` or `int` numbers): see section below
-    * lists: by encapsulating them into square brackets, separating each element with a comma; elements can be string, numbers, mathematical expressions or all of them together.
-* When using mathematical expression, the following rules should be applied:
-    * numbers can be specified as usual: `5` is integer, `5.0` is float (but `5.` will result in an error), `5e10` is the float number 5*10^10
-    * `+`, `-`, `*`, `/` are the usual mathematical operators;
-    * `^` is used to make powers (do not use `**`);
-    * it is possible to use round brackets `(` and `)`
-    * `e` (case-insensitive, isolated: not inside float numbers) is understood as python `math.e = 2.718281828`
-    * `pi` (case-insensitive) is understood as `math.pi = 3.1415926535`
-    * `sin(<expr>)`, `cos(<expr>)`, `tan(<expr>)` are the usual trigonometric functions
-    * `exp(<expr>)` is the usual exponentiation
-    * `abs(<expr>)` is the absolute value
-    * `sgn(<expr>) = -1` if `<expr> < -1e-100`, `+1` if `<expr> > 1e-100`, `0` otherwise
-    * `trunc(<expr>)` returns the truncated float `<expr>` to integer
-    * `round(<expr>)` is the integer part of the float number `<expr>`
-    * `sum(<list>)` will sum each element of the list, returning a float number
-    * any other string is intended as a variable which must have been previously defined (the file is scanned from top to bottom)
-    * in general it is possible to define any kind of variable, independently on those that will be actually used by the program, following the usual conventions for the variable name (use only letters, digits and underscores). Moreover, it's not possible to name variables after program-defined names, as for example the name of the functions.
+
+- comments can be specified with with `"#"`
+
+- the different parameters can be specified with:
+  - string: by encapsulating each string with double or single quotes `"<string>"` or `'<string>'` are equivalent, the escape character is `\` (backslash).
+  - booleans: by writing `True` or `False` (it is case insensitive)
+  - mathematical expression (which will results in `float` or `int` numbers): see section below
+  - lists: by encapsulating them into square brackets, separating each element with a comma; elements can be string, numbers, mathematical expressions or all of them together.
+- When using mathematical expression, the following rules should be applied:
+  - numbers can be specified as usual: `5` is integer, `5.0` is float (but `5.` will result in an error), `5e10` is the float number 5*10^10
+  - `+`, `-`, `*`, `/` are the usual mathematical operators;
+  - `^` is used to make powers (do not use `**`);
+  - it is possible to use round brackets `(` and `)`
+  - `e` (case-insensitive, isolated: not inside float numbers) is understood as python `math.e = 2.718281828`
+  - `pi` (case-insensitive) is understood as `math.pi = 3.1415926535`
+  - `sin(<expr>)`, `cos(<expr>)`, `tan(<expr>)` are the usual trigonometric functions
+  - `exp(<expr>)` is the usual exponentiation
+  - `abs(<expr>)` is the absolute value
+  - `sgn(<expr>) = -1` if `<expr> < -1e-100`, `+1` if `<expr> > 1e-100`, `0` otherwise
+  - `trunc(<expr>)` returns the truncated float `<expr>` to integer
+  - `round(<expr>)` is the integer part of the float number `<expr>`
+  - `sum(<list>)` will sum each element of the list, returning a float number
+  - any other string is intended as a variable which must have been previously defined (the file is scanned from top to bottom)
+  - in general it is possible to define any kind of variable, independently on those that will be actually used by the program, following the usual conventions for the variable name (use only letters, digits and underscores). Moreover, it's not possible to name variables after program-defined names, as for example the name of the functions.
 
 ##### Example 1
+
 The following lines
+
 ```rst
 hbar = 6.582119569e-25 # GeV s
 c = 299792458.0 # m s^-1
 ```
+
 will define two variables, named `hbar` and `c` with their values.
 
 ##### Example 2
+
 It is possible to write
+
 ```rst
 a_certain_constant = hbar * c
 ```
+
 to define a variable named `a_certain_constant` with the value of the product between the pre-defined `hbar` and `c` variables from the example above.
 
 ##### Example 3
+
 It is possible to write any kind of possible expression, for example
+
 ```rst
 a_variable = c^2 * 3.2e-4 / sin(PI/7) + 12 * exp( -2 * abs(hbar) )
 ```
+
 obtaining a new variable `a_variable` with the value of 66285419633555.3
 
 ##### Example 4
+
 The line
+
 ```rst
 path = "my_directory/projects/this_project"
 ```
+
 defines the `path` variable, stored as the string `"my_directory/projects/this_project"`.
 
 ##### Example 5
+
 The following lines are defining booleans (they are case insensitive), used to set the various switches:
+
 ```rst
 pandas = True
 numpy = false
@@ -383,18 +419,20 @@ numpy = false
 ### The experiments
 
 The experiment to use can be specified in two ways through the `experiment` argument (or `--experiment` option accordingly):
+
 1. specifying a keyword for a pre-defined experiment among:
-    * DUNE FHC ND (`"dune_nd_fhc"`)
-    * DUNE RHC ND (`"dune_nd_rhc"`)
-    * MicroBooNE (`"microboone"`)
-    * MINERVA FHC LE (`"minerva_le_fhc"`)
-    * MINERVA FHC ME (`"minerva_me_fhc"`)
-    * MiniBooNE FHC (`"miniboone_fhc"`)
-    * NUMI FHC ME (`"minos_le_fhc"`)
-    * NUMI FHC LE (`"minos_me_fhc"`)
-    * ND280 FHC (`"nd280_fhc"`)
-    * NOva FHC LE (`"nova_le_fhc"`)
-    * FASERnu (`"fasernu"`)
+    - DUNE FHC ND (`"dune_nd_fhc"`)
+    - DUNE RHC ND (`"dune_nd_rhc"`)
+    - SBND (`"sbnd"`)
+    - MicroBooNE (`"microboone"`)
+    - MINERVA FHC LE (`"minerva_le_fhc"`)
+    - MINERVA FHC ME (`"minerva_me_fhc"`)
+    - MiniBooNE FHC (`"miniboone_fhc"`)
+    - NUMI FHC ME (`"minos_le_fhc"`)
+    - NUMI FHC LE (`"minos_me_fhc"`)
+    - ND280 FHC (`"nd280_fhc"`)
+    - NOva FHC LE (`"nova_le_fhc"`)
+    - FASERnu (`"fasernu"`)
 1. specifying the file path of an experiment file: every file should be specified using the same rules as for the parameters file, listed in [the previous section](#specify-parameters-via-a-file).
 A template file [`template_custom_experiment.txt`](examples/template_custom_experiment.txt) can be found in [in the `examples` directory](examples/).
 The following parameters must be present (in general it is possible to specify any number of parameters, but only the ones below would be relevant).
@@ -410,13 +448,22 @@ The following parameters must be present (in general it is possible to specify a
 | **fiducial_mass_per_target** | list of `float`   | Fiducial mass for each target in the same order as the `nuclear_targets` parameter                         |
 | **POTs**                     | `float`           | Protons on target                                                                                          |
 
+#### Detector geometries
 
-#### Additional information on the generator engine
+The only geometries currently implemented in DarkNews are:
 
-DarkNews relies on vegas to integrate and sample differential cross sections and decay rates. 
+- MiniBooNE -- a sphere with origin (0,0,0,0) and radius 574.6 cm.
+- SBND -- a box with sides 4m x 4m x 5m.
+- MicroBooNE -- the geometry of the cryostat. This is just a junction of a tube with two spherical caps.
+
+Times of interactions are always set to 0, and any additional delay due to the N lifetime is taken in to account. All other experiments spit out events with spatial coordinates (0,0,0).
+
+### Additional information on the generator engine
+
+DarkNews relies on vegas to integrate and sample differential cross sections and decay rates.
 The main point of contact with vegas is through the ```vegas.Integrator``` class, which will receive the DarkNews integrands (e.g. ```DarkNews.integrands.UpscatteringHNLDecay()```), whose ```__call__()``` method will compute the differential rates.
 
 It is possible to set a seed for numpy's random number with the ```--seed``` argument, which accepts integer values. This integer seed is then passed to numpy.seed().
-By default, vegas uses numpy's random number generator, which is based on the Mersenne Twister pseudo-random number generator method. 
+By default, vegas uses numpy's random number generator, which is based on the Mersenne Twister pseudo-random number generator method.
 
 The reproducibility of the generator output (i.e., same vegas samples) is only guaranteed for the same parameters and number of integrand evaluations, which effectively means that the user has to specify the same scope, model parameters, as well as the same number of neval, nint, neval_warmup and nint_warmup.

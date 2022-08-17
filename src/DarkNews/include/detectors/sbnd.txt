@@ -1,6 +1,7 @@
-# digitized from Marco Del Tutto
+# fluxes digitized from Marco Del Tutto
 # On behalf of the SBND Collaboration NuFACT 2022 Conference 4th August 2022
 # https://indico.fnal.gov/event/53004/contributions/244480/
+# and POTs read by eye from Mark Ross Lonergan's talk at NuFACT 2022.
 name = "SBND"
 fluxfile = "sbnd_fhc.dat"
 flux_norm = 1.0
@@ -11,8 +12,8 @@ erange = [
 nuclear_targets = [
     'Ar40'
 ]
-fiducial_mass = 85.0 # tons
+fiducial_mass = 112.0 # tons
 fiducial_mass_per_target = [
     fiducial_mass
 ] 
-POTs = 12.25e20
+POTs = 15.6e20 # roughly ~22 - 6.6 = 15.6

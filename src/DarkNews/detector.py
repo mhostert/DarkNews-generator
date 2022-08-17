@@ -40,6 +40,7 @@ class Detector:
     KEYWORDS = {
         "dune_nd_fhc": "dune_nd_fhc.txt",
         "dune_nd_rhc": "dune_nd_rhc.txt",
+        "sbnd": "sbnd.txt",
         "microboone": "microboone.txt",
         "minerva_le_fhc": "minerva_le_fhc.txt",
         "minerva_me_fhc": "minerva_me_fhc.txt",
@@ -131,6 +132,8 @@ class Detector:
     def set_geometry(self):
         if "microboone" in self.NAME.lower():
             self.place_scatters = geom.microboone_geometry
+        elif "sbnd" in self.NAME.lower():
+            self.place_scatters = geom.sbnd_geometry
         elif "miniboone" in self.NAME.lower():
             self.place_scatters = geom.miniboone_geometry
         else:
