@@ -9,6 +9,7 @@ precision = 1e-10
 
 # radius of MB
 radius_MB = 610 #cm
+radius_MB_fid = 500 #cm
 
 # geometry of cylinder_MB for dirt
 radius_MB_outer = 1370 / 2.
@@ -191,7 +192,7 @@ def select_MB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w
     xf, yf, zf = x0 + x, y0 + y, z0 + z
     decay_position_ = np.sqrt(xf*xf + yf*yf + zf*zf)
     df['decay_position'] = decay_position_
-    df['in_detector'] = df.decay_position.values <= radius_MB
+    df['in_detector'] = df.decay_position.values <= radius_MB_fid
     df['w_pre_decay'] = df[weights].values
     df.loc[:,weights] = df[weights] * df.in_detector.values
 
@@ -227,18 +228,29 @@ def select_MB_decay_expo_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,
 
     # compute the distance to the point of exit from the detector
     x0_dot_p = x_norm * x0 + y_norm * y0 + z_norm * z0
-    distance_traveled = np.sqrt(x0_dot_p*x0_dot_p - r0*r0 + radius_MB*radius_MB) - x0_dot_p
-    probabilities = expon.cdf(distance_traveled,0,decay_rate_lab)
+    x0_square = r0*r0 + z0*z0
+    discriminant = (x0_dot_p * x0_dot_p) - (x0_square - radius_MB_fid**2)
+    mask_in_detector = ((discriminant > 0) & (z_norm > 0))
+    
+    df = df[mask_in_detector]
+    discriminant = discriminant[mask_in_detector]
+    x0_dot_p = x0_dot_p[mask_in_detector]
+    decay_rate_lab = decay_rate_lab[mask_in_detector]
+
+    distance_traveled_1 = (- x0_dot_p - np.sqrt(discriminant))
+    distance_traveled_1 = distance_traveled_1 * (distance_traveled_1 >= 0)
+    distance_traveled_2 = - x0_dot_p + np.sqrt(discriminant)
+    probabilities = expon.cdf(distance_traveled_2,0,decay_rate_lab) - expon.cdf(distance_traveled_1,0,decay_rate_lab)
 
     # new reconstructed weights
-    df['w_pre_decay'] = df[weights].values
+    df['w_event_rate'] = df[weights].values
     df.loc[:,weights] = df[weights].values * probabilities
-    df.loc[:,('pos_scatt', '1')] = x0
-    df.loc[:,('pos_scatt', '2')] = y0
-    df.loc[:,('pos_scatt', '3')] = z0
-    df.loc[:,('pos_decay', '1')] = x0 + x
-    df.loc[:,('pos_decay', '2')] = y0 + y
-    df.loc[:,('pos_decay', '3')] = z0 + z
+    df.loc[:,('pos_scatt', '1')] = x0[mask_in_detector]
+    df.loc[:,('pos_scatt', '2')] = y0[mask_in_detector]
+    df.loc[:,('pos_scatt', '3')] = z0[mask_in_detector]
+    df.loc[:,('pos_decay', '1')] = x0[mask_in_detector] + x[mask_in_detector]
+    df.loc[:,('pos_decay', '2')] = y0[mask_in_detector] + y[mask_in_detector]
+    df.loc[:,('pos_decay', '3')] = z0[mask_in_detector] + z[mask_in_detector]
 
     return df
 
@@ -272,7 +284,7 @@ def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weigh
     # compute the distance to the point of exit from the detector
     x0_dot_p = x_norm * x0 + y_norm * y0 + z_norm * z0
     x0_square = r0*r0 + z0*z0
-    discriminant = (x0_dot_p * x0_dot_p) - (x0_square - radius_MB**2)
+    discriminant = (x0_dot_p * x0_dot_p) - (x0_square - radius_MB_fid**2)
     mask_in_detector = ((discriminant > 0) & (z_norm > 0))
     
     df = df[mask_in_detector]
