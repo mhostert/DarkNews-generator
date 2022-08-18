@@ -128,6 +128,18 @@ class Detector:
 \tfiducial mass: {self.FIDUCIAL_MASS_PER_TARGET} tonnes"""
         )
 
+    # For experiment comparison: experiments are equivalent if main defintions are the same
+    def __eq__(self, other):
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return (self.NAME == other.NAME) and\
+                (self.FLUXFILE == other.FLUXFILE) and\
+                (self.FLUX_NORM == other.FLUX_NORM) and\
+                (self.ERANGE == other.ERANGE) and\
+                (self.NUCLEAR_TARGETS == other.NUCLEAR_TARGETS) and\
+                (self.POTS == other.POTS) and\
+                (self.FIDUCIAL_MASS_PER_TARGET == other.FIDUCIAL_MASS_PER_TARGET)
+
     def neutrino_flux(self, projectile):
         _flux_index = pdg.get_doublet(projectile) + 3 * pdg.is_antiparticle(projectile)
         return self.FLUX_FUNCTIONS[_flux_index]

@@ -174,7 +174,7 @@ def select_MB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w
         l_decay_proper_cm /= coupling_factor**2
 
     # compute the position of decay
-    x,y,z = decay_position(pN, l_decay_proper_cm)[1:]
+    t,x,y,z = decay_position(pN, l_decay_proper_cm)
     length_events = len(x)
 
     # generate a random position for scattering position
@@ -190,6 +190,7 @@ def select_MB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w
     # compute final position and radius
     xf, yf, zf = x0 + x, y0 + y, z0 + z
     decay_position_ = np.sqrt(xf*xf + yf*yf + zf*zf)
+    df['decay_time'] = t + df['pos_scatt','0']
     df['decay_position'] = decay_position_
     df['in_detector'] = df.decay_position.values <= radius_MB
     df['w_pre_decay'] = df[weights].values
@@ -205,12 +206,18 @@ def select_MB_decay_expo_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,
     # get momenta and decay length for decay_N
     pN = df.P_decay_N_parent.values
     if not(l_decay_proper_cm):
-        l_decay_proper_cm = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0)) / coupling_factor**2
+        for i in range(4,7):
+            if df.attrs[f'N{i}_ctau0']:
+                l_decay_proper_cm = df.attrs[f'N{i}_ctau']
+            else:
+                raise ValueError("Could not determine the parent HNL decay length.")
     else:
         l_decay_proper_cm /= coupling_factor**2
 
+
+
     # compute the position of decay
-    x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)[1:]
+    t,x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)
     decay_rate_lab = np.sqrt(x*x + y*y + z*z)
     x_norm, y_norm, z_norm = x/decay_rate_lab, y/decay_rate_lab, z/decay_rate_lab
     length_events = len(x)
@@ -233,9 +240,11 @@ def select_MB_decay_expo_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,
     # new reconstructed weights
     df['w_pre_decay'] = df[weights].values
     df.loc[:,weights] = df[weights].values * probabilities
+    df.loc[:,('pos_scatt', '0')] = z0/const.c_LIGHT
     df.loc[:,('pos_scatt', '1')] = x0
     df.loc[:,('pos_scatt', '2')] = y0
     df.loc[:,('pos_scatt', '3')] = z0
+    df.loc[:,('pos_decay', '0')] = df.loc[:,('pos_scatt', '0')] + t
     df.loc[:,('pos_decay', '1')] = x0 + x
     df.loc[:,('pos_decay', '2')] = y0 + y
     df.loc[:,('pos_decay', '3')] = z0 + z
@@ -255,7 +264,7 @@ def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weigh
         l_decay_proper_cm /= coupling_factor**2
 
     # compute the position of decay
-    x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)[1:]
+    t,x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)
     decay_rate_lab = np.sqrt(x*x + y*y + z*z)
     x_norm, y_norm, z_norm = x/decay_rate_lab, y/decay_rate_lab, z/decay_rate_lab
     length_events = len(x)
@@ -287,9 +296,11 @@ def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weigh
     # new reconstructed weights
     df['w_event_rate'] = df[weights].values
     df.loc[:,weights] = df[weights].values * probabilities
+    df.loc[:,('pos_scatt', '0')] = z0[mask_in_detector]/const.c_LIGHT
     df.loc[:,('pos_scatt', '1')] = x0[mask_in_detector]
     df.loc[:,('pos_scatt', '2')] = y0[mask_in_detector]
     df.loc[:,('pos_scatt', '3')] = z0[mask_in_detector]
+    df.loc[:,('pos_decay', '0')] = df.loc[:,('pos_scatt', '0')] + (distance_traveled_1+distance_traveled_2)/2/const.c_LIGHT
     df.loc[:,('pos_decay', '1')] = x0[mask_in_detector] + x[mask_in_detector]
     df.loc[:,('pos_decay', '2')] = y0[mask_in_detector] + y[mask_in_detector]
     df.loc[:,('pos_decay', '3')] = z0[mask_in_detector] + z[mask_in_detector]
@@ -335,11 +346,14 @@ def select_MB_decay_dirt_no_filt(df,seed=0,coupling_factor=1.,l_decay_proper_cm 
     probabilities = expon.cdf(distance_traveled_2,0,decay_rate_lab) - expon.cdf(distance_traveled_1,0,decay_rate_lab)
 
     # new reconstructed weights
-    df['w_event_rate'] = df[weights].values
+    df['w_pre_decay'] = df[weights].values
     df.loc[:,weights] = df[weights].values * probabilities
+    df.loc[:,('pos_scatt', '0')] = z0/const.c_LIGHT
     df.loc[:,('pos_scatt', '1')] = x0
     df.loc[:,('pos_scatt', '2')] = y0
     df.loc[:,('pos_scatt', '3')] = z0
+    # take the average of the entry and exit points
+    df.loc[:,('pos_decay', '0')] = df.loc[:,('pos_scatt', '0')] + (distance_traveled_1+distance_traveled_2)/2/const.c_LIGHT
     df.loc[:,('pos_decay', '1')] = x0 + x
     df.loc[:,('pos_decay', '2')] = y0 + y
     df.loc[:,('pos_decay', '3')] = z0 + z
@@ -488,7 +502,7 @@ def select_muB_decay_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weig
         l_decay_proper_cm /= coupling_factor**2
     
     # compute the position of decay
-    x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)[1:]
+    t,x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)
     decay_rate_lab = np.sqrt(x*x + y*y + z*z)
     x_norm, y_norm, z_norm = x/decay_rate_lab, y/decay_rate_lab, z/decay_rate_lab
     phat = np.array([x_norm,y_norm,z_norm])

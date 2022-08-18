@@ -11,7 +11,7 @@ from DarkNews import decay_rates as dr
 
 
 class HNLModel:
-    def __init__(self, model_file=None, **model_params):
+    def __init__(self, model_file=None, **user_input):
         """ HNL model class for models with HNLs + additional new physics
 
         Args:
@@ -19,6 +19,7 @@ class HNLModel:
 
         """
         self.model_file = model_file
+        self.user_input = user_input
         self.name = "my_model"
 
         # DEFAULTS
@@ -77,7 +78,13 @@ class HNLModel:
         self.dPneutron = None
 
         # Now assign parameters based on user input
-        self.__dict__.update(model_params)
+        self.__dict__.update(user_input)
+    
+    # For model comparison: models are equivalent if user_input and model_file are the same.
+    def __eq__(self, other):
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return (self.user_input == other.user_input) and (self.model_file == other.model_file)
 
     def _initialize_spectrum(self):
 
@@ -141,8 +148,8 @@ class HNLModel:
 
 
 class GenericHNLModel(HNLModel):
-    def __init__(self, model_file=None, **model_params):
-        super().__init__(model_file, model_params=model_params)
+    def __init__(self, model_file=None, **user_input):
+        super().__init__(model_file, user_input=user_input)
 
         # set defaults
         self.c_e4 = 0.0
@@ -212,7 +219,7 @@ class GenericHNLModel(HNLModel):
         self.dneutronP = None
 
         # Now assign parameters based on user input
-        self.__dict__.update(model_params)
+        self.__dict__.update(user_input)
 
         # initialize spectrum of HNLs
         self._initialize_spectrum()
@@ -312,9 +319,9 @@ class GenericHNLModel(HNLModel):
 
 
 class ThreePortalModel(HNLModel):
-    def __init__(self, model_file=None, **model_params):
+    def __init__(self, model_file=None, **user_input):
 
-        super().__init__(model_file, model_params=model_params)
+        super().__init__(model_file, user_input=user_input)
 
         # set defaults
         self.gD = 1.0
@@ -343,10 +350,10 @@ class ThreePortalModel(HNLModel):
         self.UD6 = 1.0
 
         # Now assign parameters based on user input
-        self.__dict__.update(model_params)
+        self.__dict__.update(user_input)
 
         # Now assign parameters based on user input
-        self.__dict__.update(model_params)
+        self.__dict__.update(user_input)
 
         # initialize spectrum of HNLs
         self._initialize_spectrum()
@@ -477,14 +484,14 @@ class ThreePortalModel(HNLModel):
         self.Udark = [0, 0, 0, self.UD4, self.UD5, self.UD6]
 
         # FIX-ME -- expand to arbitrary number of dark flavors?
-        self.n_dark_HNLs = 1  
+        self.n_dark_flavors = 1  
         
         # list of dark flavors
-        self.inds_dark = range(const.ind_tau + 1, 3 + self.n_dark_HNLs)
+        self.inds_dark = range(const.ind_tau + 1, 3 + self.n_dark_flavors)
 
         # Mixing matrices
         # if PMNS, use dtype=complex
-        self.Ulep = np.diag(np.full_like(self.Ue, 1))
+        self.Ulep = np.diag(np.full_like(self.Ue, np.float128(1)))
         # self.Ulep = np.diag(np.full(self.n_nus,1,dtype=complex))
         # self.Ulep[:3,:3] = const.UPMNS # massless light neutrinos
 
@@ -499,22 +506,26 @@ class ThreePortalModel(HNLModel):
             self.Ulep[const.ind_tau, i] = self.Utau[i]
             self.Ulep[i, const.ind_tau] = self.Utau[i]
 
-            self.Ulep[self.inds_dark, i] = self.Udark[i] / self.n_dark_HNLs
-            self.Ulep[i, self.inds_dark] = self.Udark[i] / self.n_dark_HNLs
+            self.Ulep[self.inds_dark, i] = self.Udark[i] / self.n_dark_flavors
+            self.Ulep[i, self.inds_dark] = self.Udark[i] / self.n_dark_flavors
 
+        # Matrices ------------------
+        # 3 x n
         self.Ua = self.Ulep[const.inds_active, :]
+        # 3 x 3
         self.Uactive_heavy = self.Ulep[const.inds_active, 3:]
 
+        # n_dark_flavors x n
         self.UD = self.Ulep[self.inds_dark, :]
+        # n_dark_flavors x 3
         self.UD_heavy = self.Ulep[self.inds_dark, 3:]
 
-        # Matrices
         # (Ua^dagger . Ua)_ij = Uei Uej + Umui Umuj + Utaui Utauj
         self.C_weak = np.dot(self.Ua.conjugate().T, self.Ua)
         # (UDi^dagger . UD)_ij
         self.D_dark = np.dot(self.UD.conjugate().T, self.UD)
 
-        # Vectors
+        # Vectors ------------------
         # ( |Ua4|^2, |Ua5|^2, |Ua6|^2, ...)
         self.UactiveUactive_diag = np.diagonal(np.dot(self.Uactive_heavy.conjugate(), self.Uactive_heavy.T))
         # ( |UD4|^2, |UD5|^2, |UD6|^2, ...)
@@ -529,7 +540,7 @@ class ThreePortalModel(HNLModel):
         # (Ue4* UD4 + Ue5* UD5+... , Umu4* Umu4 + Umu5* Umu5+..., Utau4* Utau4 + Utau5* Utau5+...)
         self.UahUDh_mass_summed = np.sum(np.dot(self.Uactive_heavy.conjugate(), self.UD_heavy.T), axis=0)
 
-        # Numbers
+        # Numbers ------------------
         # |U_a4|^2 + |U_{a5}|^2 + ...
         self.A_heavy_sum = np.sum(self.UactiveUactive_diag)
         # |U_D4|^2 + |U_{D5}|^2 + ...
@@ -545,27 +556,67 @@ class ThreePortalModel(HNLModel):
         self.D5 = self.UD5 ** 2  # self.UD5#(1.0 - self.A4 - self.A5)/(1.0+1.0/self.R)
         self.D6 = self.UD6 ** 2  # self.UD6#(1.0 - self.A4 - self.A5)/(1.0+1.0/self.R)
 
-        # NEUTRAL LEPTON SECTOR VERTICES
+        # Interaction vertices between neutral leptons (matrices) ------------------
+        
+        # Z vertices c_ij (3 x 3) where ij are the heavy mass eigenstate indices
+        # c^{ij} ~ (g/2c_W) (U_{\alpha i}^* U_{\alpha j} ( 1 + s_W \chi \beta )) + U_{Di}^* U_{Dj} g_X Q_X \beta
         self.c_ij = self._weak_vertex * self.C_weak * self._g_weak_correction + self.D_dark * self._gschi
 
-        self.c_aj = (
-            self._weak_vertex * np.dot(np.diag(1 - self.UahUah_mass_summed), self.Uactive_heavy) * self._g_weak_correction
-            + np.dot(np.diag(-self.UahUDh_mass_summed), self.UD_heavy) * self._gschi
-        )
-
+        # Z' vertices d_ij (n x n) where ij are mass eigenstate indices 
+        # d^{ij} ~ (g/2c_W) (U_{\alpha i}^* U_{\alpha j} ( s_W \chi  - \beta)) + U_{Di}^* U_{Dj} g_X Q_X 
         self.d_ij = self._weak_vertex * self.C_weak * self._g_dark_correction + self.D_dark * self.gD
-        self.d_aj = (
-            self._weak_vertex * np.dot(np.diag(1 - self.UahUah_mass_summed), self.Uactive_heavy) * self._g_dark_correction
-            + np.dot(np.diag(-self.UahUDh_mass_summed), self.UD_heavy) * self.gD
-        )
 
-        # make it 3 x n_nus
-        self.c_aj = np.hstack((np.diag([1, 1, 1]), self.c_aj))
-        self.d_aj = np.hstack((np.diag([1, 1, 1]), self.d_aj))
 
-        # make n_nus x n_nus
-        self.c_aj = np.vstack((self.c_aj, self.c_ij[3:]))
-        self.d_aj = np.vstack((self.d_aj, self.d_ij[3:]))
+        # c_aj (3 x 3)
+        #   columns: 0 - e, 1 - mu, 2 -tau 
+        #   rows: 0 - N4, 1 - N5, 2 - N6
+        # self.c_aj = (
+        #     # Z coupling to J_NC^[e, mu, tau]
+        #     self._weak_vertex * np.dot(np.diag(1 - self.UahUah_mass_summed), self.Uactive_heavy) * self._g_weak_correction\
+        #     # Z coupling to J_dark^[d, ..., d^{n_dark_flavors}]
+        #     + np.dot(np.diag(-self.UahUDh_mass_summed), self.UD_heavy) * self._gschi 
+        # )
+        
+        # Leptonic mixing matrix with all zeros except the active and dark sub-blocks
+        Ulep_active_only = np.kron(np.diag([1,0]),self.Ulep[:3,:3])
+        Ulep_dark_only = np.diag(6*[0])
+        Ulep_dark_only[self.inds_dark,self.inds_dark] = self.Ulep[self.inds_dark,self.inds_dark]
+
+        # normalization of low-energy flavor states
+        # sqrt( 1- Sum_i=4^6 |U_ai|^2)
+        self.le_state_norms = np.sqrt(1 - np.sum((self.Ulep.conjugate()*self.Ulep)[:,3:], axis=1))
+
+        # Z coupling of between LOW-ENERGY flavor states and the mass eigenstates
+        # c_aj (n x n) using unitarity and rotating one index to flavor basis
+        #   columns: mass eigenstate indices
+        #   rows: flavors (0 - e, 1 - mu, 2 - tau, 3 - dark_flavor1, 4 - dark_flavor2 or sterile, 4 - dark_flavor3 or sterile)
+        self.c_aj =  self._weak_vertex *  self._g_weak_correction * (Ulep_active_only - np.dot(self.Ulep[:,3:],self.C_weak[3:])) \
+                    + self._gschi * ( Ulep_dark_only - np.dot( self.Ulep[:,3:], self.D_dark[3:]))
+        
+
+
+        # self.d_aj = (
+        #     # Z' coupling to J_NC^[e, mu, tau]
+        #     self._weak_vertex * np.dot(np.diag(1 - self.UahUah_mass_summed), self.Uactive_heavy) * self._g_dark_correction\
+        #     # Z' coupling to J_dark^[d, ..., d^{n_dark_flavors}]
+        #     + np.dot(np.diag(-self.UahUDh_mass_summed), self.UD_heavy) * self.gD
+        # )
+
+        # Z' coupling of between LOW-ENERGY flavor states and the mass eigenstates
+        # d_aj (n x n) using unitarity and rotating one index to flavor basis
+        #   columns: mass eigenstate indices
+        #   rows: flavors (0 - e, 1 - mu, 2 - tau, 3 - dark_flavor1, 4 - dark_flavor2 or sterile, 4 - dark_flavor3 or sterile)
+        self.d_aj =  self._weak_vertex *  self._g_dark_correction * (Ulep_active_only - np.dot(self.Ulep[:,3:],self.C_weak[3:])) \
+                    + self.gD * (  Ulep_dark_only - np.dot(self.Ulep[:,3:], self.D_dark[3:]))
+        
+
+        # # make it 3 x n_nus
+        # self.c_aj = np.hstack((np.diag([1, 1, 1]), self.c_aj))
+        # self.d_aj = np.hstack((np.diag([1, 1, 1]), self.d_aj))
+
+        # # make n_nus x n_nus
+        # self.c_aj = np.vstack((self.c_aj, self.c_ij[3:]))
+        # self.d_aj = np.vstack((self.d_aj, self.d_ij[3:]))
         self.dlight = 0.0
 
         # ########################
@@ -588,7 +639,7 @@ class ThreePortalModel(HNLModel):
         self.fN_higgs = 2 / 9 + 7 / 9 * (self.fu + self.fd + self.fs)
         self.c_nucleon_higgs = self.fN_higgs * const.m_avg / const.vev_EW
         self.cnucleonS = self.sintheta * self.c_nucleon_higgs
-        
+
         # isospin
         self.dprotonS = self.cnucleonS
         self.dneutronS = self.cnucleonS

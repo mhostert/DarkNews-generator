@@ -199,7 +199,7 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
                 i_var += 1
 
                 self.int_dic["diff_decay_rate_0"] = dr.diff_gamma_Ni_to_Nj_V(
-                    cost=cost, vertex_ij=np.sqrt(decay_case.Dih), mi=m_parent, mj=m_daughter, mV=decay_case.mzprime, HNLtype=decay_case.HNLtype, h=decay_case.h_parent,
+                    cost=cost, vertex_ij=decay_case.Dih, mi=m_parent, mj=m_daughter, mV=decay_case.mzprime, HNLtype=decay_case.HNLtype, h=decay_case.h_parent,
                 )
                 self.int_dic["diff_decay_rate_0"] *= 2  # hypercube jacobian
 
@@ -216,7 +216,7 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
                 i_var += 1
 
                 self.int_dic["diff_decay_rate_0"] = dr.diff_gamma_Ni_to_Nj_S(
-                    cost=cost, vertex_ij=np.sqrt(decay_case.Sih), mi=m_parent, mj=m_daughter, mS=decay_case.mhprime, HNLtype=decay_case.HNLtype, h=decay_case.h_parent,
+                    cost=cost, vertex_ij=decay_case.Sih, mi=m_parent, mj=m_daughter, mS=decay_case.mhprime, HNLtype=decay_case.HNLtype, h=decay_case.h_parent,
                 )
                 self.int_dic["diff_decay_rate_0"] *= 2  # hypercube jacobian
 

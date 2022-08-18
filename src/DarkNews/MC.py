@@ -377,6 +377,11 @@ def get_merged_MC_output(df1, df2):
     Resetting index to go from (0,n_1+n_2) where n_i is the number of events in dfi
     """
     logger.debug(f"Appending {df2.underlying_process[0]}")
+    if df1.attrs['model'] != df2.attrs['model']:
+        logger.warning("Beware! Merging generation cases with different df.attrs['models']! Discarting the second (newest) case.")
+    if df1.attrs['experiment'] != df2.attrs['experiment']:
+        logger.warning("Beware! Merging generation cases with different df.attrs['experiment']! Discarting the second (newest) case.")
+
     df = pd.concat([df1, df2], axis=0).reset_index(drop=True)
 
     # for older versions of pandas, concat does not keep the attributes

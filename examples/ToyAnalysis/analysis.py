@@ -180,27 +180,38 @@ def compute_spectrum(df, EXP='miniboone', EVENT_TYPE='asymmetric'):
     # Initial weigths
     w = df['w_event_rate'].values
 
-    # Smear e+ and e-
-    pep = cuts.smear_samples(df['P_decay_ell_plus'],const.m_e,EXP=EXP)
-    pem = cuts.smear_samples(df['P_decay_ell_minus'],const.m_e,EXP=EXP)
-    
-    # compute some reco kinematical variables from smeared electrons
-    pep_mod = mv.modulus3(pep)
-    pem_mod = mv.modulus3(pem)
-    costhetaep = pep[3]/pep_mod
-    costhetaem = pem[3]/pem_mod
-    Delta_costheta = mv.dot3(pem,pep)/pem_mod/pep_mod
+    if EVENT_TYPE=='photon':
+        # Smear e+ and e-
+        pgamma = cuts.smear_samples(df['P_decay_photon'], 0.0, EXP=EXP)
+        
+        # compute some reco kinematical variables from smeared electrons
+        pgamma_mod = mv.modulus3(pgamma)
+        costhetagamma = pgamma[3]/pgamma_mod
+        Evis = pgamma[0]
+        theta_beam = np.arccos(costhetagamma)*180.0/np.pi
+    else:
+        # Smear e+ and e-
+        pep = cuts.smear_samples(df['P_decay_ell_plus'],const.m_e,EXP=EXP)
+        pem = cuts.smear_samples(df['P_decay_ell_minus'],const.m_e,EXP=EXP)
+        
+        # compute some reco kinematical variables from smeared electrons
+        pep_mod = mv.modulus3(pep)
+        pem_mod = mv.modulus3(pem)
+        costhetaep = pep[3]/pep_mod
+        costhetaem = pem[3]/pem_mod
+        Delta_costheta = mv.dot3(pem,pep)/pem_mod/pep_mod
 
-    ############################################################################
-    # This takes the events and asks for them to be either overlapping or asymmetric
-    # THRESHOLD -- how low energy does Esubleading need to be for event to be asymmetric
-    # ANGLE_MAX -- how wide opening angle needs to be in order to be overlapping
-    # EVENT_TYPE -- what kind of "mis-identificatin" selection to be used:
-    #	  		-- 'asymmetric' picks events where one of the letpons (independent of charge) is below a hard threshold
-    #	  		-- 'overlapping' picks events where the two leptons are overlapping
-    #			-- 'both' for *either* asymmetric or overlapping condition to be true
-    #	  		-- 'separated' picks events where both letpons are above threshold and non-overlapping
-    Evis, theta_beam, w, eff_s = signal_events(pep, pem, Delta_costheta, costhetaep, costhetaem, w, THRESHOLD=ep.THRESHOLD[EXP], ANGLE_MAX=ep.ANGLE_MAX[EXP], EVENT_TYPE=EVENT_TYPE)
+        ############################################################################
+        # This takes the events and asks for them to be either overlapping or asymmetric
+        # THRESHOLD -- how low energy does Esubleading need to be for event to be asymmetric
+        # ANGLE_MAX -- how wide opening angle needs to be in order to be overlapping
+        # EVENT_TYPE -- what kind of "mis-identificatin" selection to be used:
+        #	  		-- 'asymmetric' picks events where one of the letpons (independent of charge) is below a hard threshold
+        #	  		-- 'overlapping' picks events where the two leptons are overlapping
+        #			-- 'both' for *either* asymmetric or overlapping condition to be true
+        #	  		-- 'separated' picks events where both letpons are above threshold and non-overlapping
+        Evis, theta_beam, w, eff_s = signal_events(pep, pem, Delta_costheta, costhetaep, costhetaem, w, THRESHOLD=ep.THRESHOLD[EXP], ANGLE_MAX=ep.ANGLE_MAX[EXP], EVENT_TYPE=EVENT_TYPE)
+
 
     ############################################################################
     # Applies analysis cuts on the surviving LEE candidate events

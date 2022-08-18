@@ -191,7 +191,7 @@ def sbnd_geometry(df):
             raise ValueError(f"Geometry sampled too inefficiently, tries = {tries} and npoints = {npoints}. Wrong setup?")
 
     # guarantee that array has number of samples asked (nsamples)
-    df["pos_scatt", "0"] = np.zeros((nsamples,))
+    df["pos_scatt", "0"] = events[2, :nsamples]/const.c_LIGHT
     df["pos_scatt", "1"] = events[0, :nsamples]
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
@@ -218,7 +218,7 @@ def miniboone_geometry(df):
             raise ValueError(f"Geometry sampled too inefficiently, tries = {tries} and npoints = {npoints}. Wrong setup?")
 
     # guarantee that array has number of samples asked (nsamples)
-    df["pos_scatt", "0"] = np.zeros((nsamples,))
+    df["pos_scatt", "0"] = events[2, :nsamples]/const.c_LIGHT
     df["pos_scatt", "1"] = events[0, :nsamples]
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]

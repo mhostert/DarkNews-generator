@@ -150,7 +150,7 @@ which can be followed by a decay into di-leptons if `decay_product=e+e-` or `dec
 
 $N_i$ (`P_decay_N_parent`) $\to$ $N_j$(`P_decay_N_daughter`) + $\ell^+$ (`P_decay_ell_plus`) + $\ell^-$ (`P_decay_ell_minus`)
 
-where $\ell = \{e, \mu\}$, or if `decay_product=photon`:
+where $\ell = \{e, \mu\}$, or if `decay_product='photon'`:
 
 $N_i$ (`P_decay_N_parent`) $\to$ $N_j$(`P_decay_N_daughter`) + $\gamma$ (`P_decay_photon`). Only one of the above decays is allowed per generation.
 
