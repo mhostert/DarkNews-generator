@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import scipy
 from . import math_vecs as mv
 from . import cuts
@@ -10,15 +9,38 @@ from DarkNews import const
 
 # COMPUTE SPECTRUM FOR ANY EXPERIMENT
 def compute_spectrum(df, EXP='miniboone', EVENT_TYPE='asymmetric'):
+    """compute_spectrum _summary_
+
+    Parameters
+    ----------
+    df : pd.DatagFrame
+        DarkNews events (preferrably after selecting events inside detector)
+    EXP : str, optional
+        what experiment to use, by default 'miniboone' but can also be 'microboone'
+    EVENT_TYPE : str, optional
+        what kind of "mis-identificatin" selection to be used:
+            for photons:
+                'photon' assumes this is a photon and therefore always a single shower
+            for lepton pairs:
+                'asymmetric' picks events where one of the letpons (independent of charge) is below a hard threshold
+                'overlapping' picks events where the two leptons are overlapping
+                'both' for *either* asymmetric or overlapping condition to be true
+                'separated' picks events where both letpons are above threshold and non-overlapping by default 'asymmetric'
+
+    Returns
+    -------
+    pd.DatagFrame
+        A new dataframe with additional columns containing weights of the selected events.
+    """
 
     df = df.copy(deep=True)
     # Initial weigths
-    w = df['w_event_rate'].values
+    w = df['w_event_rate'].values # typically already selected for fiducial volume
 
     if EVENT_TYPE=='photon':
         # Smear e+ and e-
         pgamma = cuts.smear_samples(df['P_decay_photon'], 0.0, EXP=EXP)
-        
+
         # compute some reco kinematical variables from smeared electrons
         pgamma_mod = mv.modulus3(pgamma)
         costhetagamma = pgamma[3]/pgamma_mod
@@ -28,7 +50,7 @@ def compute_spectrum(df, EXP='miniboone', EVENT_TYPE='asymmetric'):
         # Smear e+ and e-
         pep = cuts.smear_samples(df['P_decay_ell_plus'],const.m_e,EXP=EXP)
         pem = cuts.smear_samples(df['P_decay_ell_minus'],const.m_e,EXP=EXP)
-        
+
         # compute some reco kinematical variables from smeared electrons
         pep_mod = mv.modulus3(pep)
         pem_mod = mv.modulus3(pem)
@@ -36,24 +58,12 @@ def compute_spectrum(df, EXP='miniboone', EVENT_TYPE='asymmetric'):
         costhetaem = pem[3]/pem_mod
         Delta_costheta = mv.dot3(pem,pep)/pem_mod/pep_mod
 
-        ############################################################################
-        # This takes the events and asks for them to be either overlapping or asymmetric
-        # THRESHOLD -- how low energy does Esubleading need to be for event to be asymmetric
-        # ANGLE_MAX -- how wide opening angle needs to be in order to be overlapping
-        # EVENT_TYPE -- what kind of "mis-identificatin" selection to be used:
-        #	  		-- 'asymmetric' picks events where one of the letpons (independent of charge) is below a hard threshold
-        #	  		-- 'overlapping' picks events where the two leptons are overlapping
-        #			-- 'both' for *either* asymmetric or overlapping condition to be true
-        #	  		-- 'separated' picks events where both letpons are above threshold and non-overlapping
         Evis, theta_beam, w, eff_s = signal_events(pep, pem, Delta_costheta, costhetaep, costhetaem, w, THRESHOLD=ep.THRESHOLD[EXP], ANGLE_MAX=ep.ANGLE_MAX[EXP], EVENT_TYPE=EVENT_TYPE)
 
 
     ############################################################################
     # Applies analysis cuts on the surviving LEE candidate events
     Evis2, theta_beam, w2, eff_c = expcuts(Evis, theta_beam, w, EXP=EXP,EVENT_TYPE=EVENT_TYPE)
-
-    # overall efficiency of all steps of our analysis so far ... NOT USED, PERHAPS IN THE FUTURE
-    #my_eff = eff_c*eff_s
 
     ############################################################################
     # Compute reconsructed neutrino energy
@@ -64,7 +74,7 @@ def compute_spectrum(df, EXP='miniboone', EVENT_TYPE='asymmetric'):
 
     ############################################################################
     # return reco observables of LEE -- regime is still a true quantity...
-    df['reco_w'] = w2 * (6.1/5.)**3 # correcting for the fiducial volume cut in MiniBooNE
+    df['reco_w'] = w2 * (6.1/5.)**3 # correcting for the fiducial volume cut already in MiniBooNE's efficiencies
     df['reco_Evis'] = Evis2
     df['reco_theta_beam'] = theta_beam
     df['reco_costheta_beam'] = np.cos(theta_beam*np.pi/180)
@@ -73,9 +83,7 @@ def compute_spectrum(df, EXP='miniboone', EVENT_TYPE='asymmetric'):
     return df
 
 
-
-
-def get_efficiencies(reco_Enu,Evis,w,w2,EXP='miniboone'):
+def get_efficiencies(reco_Enu, Evis, w, w2, EXP='miniboone'):
 
     if EXP=='miniboone':
         ###########################################################################
@@ -87,16 +95,16 @@ def get_efficiencies(reco_Enu,Evis,w,w2,EXP='miniboone'):
         eff_func = scipy.interpolate.interp1d(enu_c, eff, fill_value=(eff[0],eff[-1]), bounds_error=False, kind='nearest')
         wsum = w.sum()
         if wsum==0:
-        	eff_miniboone = (eff_func(reco_Enu)*w).sum()
+            eff_miniboone = (eff_func(reco_Enu)*w).sum()
         else:
-        	eff_miniboone = (eff_func(reco_Enu)*w).sum()/w.sum()
+            eff_miniboone = (eff_func(reco_Enu)*w).sum()/w.sum()
 
         ############################################################################
         # Now, apply efficiency as a function of energy to event weights
         w2 = eff_func(reco_Enu)*w2
 
         return eff_miniboone, w2
-    
+
     elif EXP=='microboone':
         ############################################################################
         # Total nueCCQE efficiency -- using efficiencies provided by MicroBooNE
@@ -112,14 +120,45 @@ def get_efficiencies(reco_Enu,Evis,w,w2,EXP='miniboone'):
 
         return muB_eff, w2
 
-
-
 def signal_events(pep, pem, cosdelta_ee, costheta_ep, costheta_em, w, THRESHOLD=0.03, ANGLE_MAX=13.0, EVENT_TYPE='both'):
+    """signal_events _summary_
+# This takes the events and asks for them to be either overlapping or asymmetric
+        # THRESHOLD --
+        # ANGLE_MAX --
+    Parameters
+    ----------
+    pep : numpy.ndarray[ndim=2]
+        four momenta of the positive lepton
+    pem : numpy.ndarray[ndim=2]
+        four momenta of the negative lepton
+    cosdelta_ee : numpy.ndarray[ndim=1]
+        cosine of the opening angle between lepton
+    costheta_ep : numpy.ndarray[ndim=1]
+        costheta of the positive lepton
+    costheta_em : numpy.ndarray[ndim=1]
+        costheta of the negative lepton
+    w : numpy.ndarray[ndim=1]
+        event weights
+    
+    THRESHOLD : float, optional
+         how low energy does Esubleading need to be for event to be asymmetric, by default 0.03
+    ANGLE_MAX : float, optional
+         how wide opening angle needs to be in order to be overlapping, by default 13.0
+    EVENT_TYPE : str, optional
+        what kind of "mis-identificatin" selection to be used:
+            'asymmetric' picks events where one of the letpons (independent of charge) is below a hard threshold
+            'overlapping' picks events where the two leptons are overlapping
+            'both' for *either* asymmetric or overlapping condition to be true
+            'separated' picks events where both letpons are above threshold and non-overlapping by default 'asymmetric'
 
+    Returns
+    -------
+    set of np.ndarrays
+        Depending on the final event type, a list of energies and angles
+    """
     ################### PROCESS KINEMATICS ##################
     # electron kinematics
     Eep = pep[0]
-
     Eem = pem[0]
 
     # angle of separation between ee
@@ -147,8 +186,6 @@ def signal_events(pep, pem, cosdelta_ee, costheta_ep, costheta_em, w, THRESHOLD=
     inv_filter = (Eep - const.m_e < THRESHOLD) & (Eem - const.m_e < THRESHOLD) & inv_mass_cut
     both_filter = (asym_m_filter | asym_p_filter | ovl_filter)
 
-    #w_asym_p = w[asym_p_filter]
-    #w_asym_m = w[asym_m_filter]
     w_asym = w[asym_m_filter | asym_p_filter]
     w_ovl = w[ovl_filter]
     w_sep = w[sep_filter]

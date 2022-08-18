@@ -25,18 +25,18 @@ z_steal_MB = 380.
 start_point_steal_MB = start_point_cyl_MB - z_steal_MB
 
 # geometry of muBoone
-	#cryostat vessel
+#cryostat vessel
 r_muB = 191.61
 l_muB  = 1086.49
-	#detector
+    #detector
 z_muB = 1040.
 x_muB = 256.
 y_muB = 232.
 dif_z = l_muB - z_muB
-    #outer spheres
+#outer spheres
 r_s_muB = 305.250694958
 theta_lim_muB = 38.8816337686 * np.pi / 180.0
-    #how much volume for each - rates
+#how much volume for each - rates
 sphere_cut_muB = 0.030441980173709752
 cylinder_cut_muB = 1. - 2*sphere_cut_muB
 
@@ -65,8 +65,8 @@ def random_cylinder(num=100):
     return np.array([x0,y0,z0])
 
 # Generate random uniformly distributed points in sphere
-def random_sphere(num=100,seed=0,radius=1,theta=[0,np.pi],phi=[0,2*np.pi]):
-    if seed:
+def random_sphere(num=100, seed=None, radius=1, theta=[0,np.pi], phi=[0,2*np.pi]):
+    if seed is not None:
         np.random.seed(seed)
     u0 = np.random.random(num)
     cos_theta = [np.cos(theta[0]),np.cos(theta[1])]
@@ -78,8 +78,9 @@ def random_sphere(num=100,seed=0,radius=1,theta=[0,np.pi],phi=[0,2*np.pi]):
     return np.array([r0,theta0,phi0])
     
 # Generate random uniformly distributed points in cut sphere
-def random_cut_sphere(num=100,seed=0,radius=1,up=True):
-    
+def random_cut_sphere(num=100, seed=None, radius=1, up=True):
+    if seed is not None:
+        np.random.seed(seed)
     output = random_sphere(num=int(3.25*num),radius=radius,theta=[0,theta_lim_muB])
     mask = output[0] > r_s_muB * np.cos(theta_lim_muB) / np.cos(output[1])
     output = (output.T[mask]).T
@@ -88,7 +89,7 @@ def random_cut_sphere(num=100,seed=0,radius=1,up=True):
         mask = output_2[0] > r_s_muB * np.cos(theta_lim_muB) / np.cos(output_2[1])
         output_2 = (output_2.T[mask]).T
         output = np.concatenate([output,output_2],axis=1)
-    
+
     output = (output.T[:num]).T
     output = np.array([output[0] * np.sin(output[1]) * np.cos(output[2]), output[0] * np.sin(output[1]) * np.sin(output[2]), output[0] * np.cos(output[1])])
 
@@ -96,10 +97,10 @@ def random_cut_sphere(num=100,seed=0,radius=1,up=True):
         output[2] += l_muB - radius * np.cos(theta_lim_muB)
     else:
         output[2] = radius * np.cos(theta_lim_muB) - output[2]
-    
+
     return output
 
-def get_distances_in_muB(p0,phat):
+def get_distances_in_muB(p0, phat):
     n = len(p0.T)
     
     #positions of the 6 planes of the active detector in order (2 for X, 2 for Y, 2 for Z)
@@ -131,12 +132,12 @@ def get_distances_in_muB(p0,phat):
     return distances
 
 
-def get_angle(p1,p2):
+def get_angle(p1, p2):
     x1,y1,z1 = p1
     x2,y2,z2 = p2
     return np.arccos((x1*x2+y1*y2+z1*z2)/(np.sqrt(x1*x1+y1*y1+z1*z1)*np.sqrt(x2*x2+y2*y2+z2*z2)))
 
-def dot4(p1,p2):
+def dot4(p1, p2):
     return p1[0]*p2[0] - p1[1]*p2[1] - p1[2]*p2[2] - p1[3]*p2[3]
 
 def get_3direction(p0):
@@ -145,7 +146,7 @@ def get_3direction(p0):
     p /= norm
     return p
 
-def decay_position(pN, l_decay_proper_cm,random_gen = True):
+def decay_position(pN, l_decay_proper_cm, random_gen = True):
 
     # decay the particle
     M4 = np.sqrt(dot4(pN.T,pN.T))
@@ -164,7 +165,7 @@ def decay_position(pN, l_decay_proper_cm,random_gen = True):
     return t,x,y,z
 
 
-def select_MB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+def select_MB_decay(df, seed=0, coupling_factor=1., l_decay_proper_cm =0, weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -201,7 +202,7 @@ def select_MB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w
 
 
 # This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
-def select_MB_decay_expo_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+def select_MB_decay_expo_prob(df, seed=0, coupling_factor=1., l_decay_proper_cm =0, weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -214,8 +215,6 @@ def select_MB_decay_expo_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,
                 raise ValueError("Could not determine the parent HNL decay length.")
     else:
         l_decay_proper_cm /= coupling_factor**2
-
-
 
     # compute the position of decay
     t,x,y,z = decay_position(pN, l_decay_proper_cm,random_gen = False)
@@ -264,7 +263,7 @@ def select_MB_decay_expo_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,
 
 
 # This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
-def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+def select_MB_decay_dirt(df, seed=0, coupling_factor=1., l_decay_proper_cm =0, weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -320,7 +319,7 @@ def select_MB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weigh
 
 
 # This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
-def select_MB_decay_dirt_no_filt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+def select_MB_decay_dirt_no_filt(df, seed=0, coupling_factor=1., l_decay_proper_cm =0, weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -373,7 +372,7 @@ def select_MB_decay_dirt_no_filt(df,seed=0,coupling_factor=1.,l_decay_proper_cm 
 
 
 # This programs multiplies the probability of decaying inside the detector by the reco_w. The scattering point is random
-def select_MB_decay_steel(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+def select_MB_decay_steel(df, seed=0, coupling_factor=1., l_decay_proper_cm =0, weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -423,7 +422,7 @@ def select_MB_decay_steel(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weig
 
 
 # Select for MiniBooNE considering the outer spheres
-def select_muB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+def select_muB_decay(df, seed=0, coupling_factor=1., l_decay_proper_cm =0, weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -461,7 +460,7 @@ def select_muB_decay(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='
 
 
 # Select for MicroBooNE considering the outer spheres
-def select_muB_decay_dirt_MC(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+def select_muB_decay_dirt_MC(df, seed=0, coupling_factor=1., l_decay_proper_cm =0, weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -502,7 +501,7 @@ def select_muB_decay_dirt_MC(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,w
     return df
 
 # Select for MicroBooNE considering the outer spheres
-def select_muB_decay_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+def select_muB_decay_prob(df, seed=0, coupling_factor=1., l_decay_proper_cm =0, weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -543,7 +542,7 @@ def select_muB_decay_prob(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weig
 
 
 # Select decay for MicroBooNE Dirt
-def select_muB_decay_dirt(df,seed=0,coupling_factor=1.,l_decay_proper_cm =0,weights='w_event_rate'):
+def select_muB_decay_dirt(df, seed=0, coupling_factor=1., l_decay_proper_cm =0, weights='w_event_rate'):
     df = df.copy(deep=True)
 
     # get momenta and decay length for decay_N
@@ -603,7 +602,7 @@ def set_params(df):
     return df
 
 
-def filter_angle_ee(df,angle_max=5):
+def filter_angle_ee(df, angle_max=5):
     df = df.copy(deep=True)
 
     p1 = np.array([df[( 'P_decay_ell_minus', '1')].values,df[( 'P_decay_ell_minus', '2')].values,df[( 'P_decay_ell_minus', '3')].values])
