@@ -51,7 +51,7 @@ The following dependencies (if missing) will be automatically installed during t
 - [Cython](https://cython.org/)
 - [vegas](https://pypi.org/project/vegas/) 5.1.1 or above
 - [Particle](https://pypi.org/project/particle/)
-- [pyhepmc-ng](https://github.com/scikit-hep/pyhepmc)
+- [pyhepmc](https://github.com/scikit-hep/pyhepmc)
 - [pyparsing](https://github.com/pyparsing/pyparsing/)
 - [dill](https://pypi.org/project/dill/)
 - [matplotlib](https://matplotlib.org/)

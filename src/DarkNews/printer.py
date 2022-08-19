@@ -15,7 +15,7 @@ from DarkNews import Cfourvec as Cfv
 import pyarrow.parquet as pq
 import pyarrow as pa
 
-import pyhepmc_ng as hep
+import pyhepmc as hep
 
 
 def print_in_order(x):

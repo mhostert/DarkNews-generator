@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pandas as pd
 import numpy as np
-import pyhepmc_ng as hep
+import pyhepmc as hep
 
 import DarkNews as dn
 
