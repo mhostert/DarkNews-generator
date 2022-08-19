@@ -570,13 +570,15 @@ class ThreePortalModel(HNLModel):
         # c_aj (3 x 3)
         #   columns: 0 - e, 1 - mu, 2 -tau 
         #   rows: 0 - N4, 1 - N5, 2 - N6
-        # self.c_aj = (
-        #     # Z coupling to J_NC^[e, mu, tau]
-        #     self._weak_vertex * np.dot(np.diag(1 - self.UahUah_mass_summed), self.Uactive_heavy) * self._g_weak_correction\
-        #     # Z coupling to J_dark^[d, ..., d^{n_dark_flavors}]
-        #     + np.dot(np.diag(-self.UahUDh_mass_summed), self.UD_heavy) * self._gschi 
-        # )
-        
+        self.c_aj = (
+            # Z coupling to J_NC^[e, mu, tau]
+            self._weak_vertex * np.dot(np.diag(1 - self.UahUah_mass_summed), self.Uactive_heavy) * self._g_weak_correction\
+            # Z coupling to J_dark^[d, ..., d^{n_dark_flavors}]
+            + np.dot(np.diag(-self.UahUDh_mass_summed), self.UD_heavy) * self._gschi 
+        )
+        self.c_aj = np.hstack((np.diag([1, 1, 1]), self.c_aj))
+        self.c_aj = np.vstack((self.c_aj, self.c_ij[3:]))
+
         # Leptonic mixing matrix with all zeros except the active and dark sub-blocks
         Ulep_active_only = np.kron(np.diag([1,0]),self.Ulep[:3,:3])
         Ulep_dark_only = np.diag(6*[0])
@@ -590,7 +592,7 @@ class ThreePortalModel(HNLModel):
         # c_aj (n x n) using unitarity and rotating one index to flavor basis
         #   columns: mass eigenstate indices
         #   rows: flavors (0 - e, 1 - mu, 2 - tau, 3 - dark_flavor1, 4 - dark_flavor2 or sterile, 4 - dark_flavor3 or sterile)
-        self.c_aj =  self._weak_vertex *  self._g_weak_correction * (Ulep_active_only - np.dot(self.Ulep[:,3:],self.C_weak[3:])) \
+        self.c_aj =  self._weak_vertex *  self._g_weak_correction * (Ulep_active_only - np.dot(self.Ulep[:,:3],self.C_weak[:3])) \
                     + self._gschi * ( Ulep_dark_only - np.dot( self.Ulep[:,3:], self.D_dark[3:]))
         
 
@@ -601,22 +603,16 @@ class ThreePortalModel(HNLModel):
         #     # Z' coupling to J_dark^[d, ..., d^{n_dark_flavors}]
         #     + np.dot(np.diag(-self.UahUDh_mass_summed), self.UD_heavy) * self.gD
         # )
-
+        # self.d_aj = np.hstack((np.diag([1, 1, 1]), self.d_aj))
+        # self.d_aj = np.vstack((self.d_aj, self.d_ij[3:]))
+        
         # Z' coupling of between LOW-ENERGY flavor states and the mass eigenstates
         # d_aj (n x n) using unitarity and rotating one index to flavor basis
         #   columns: mass eigenstate indices
         #   rows: flavors (0 - e, 1 - mu, 2 - tau, 3 - dark_flavor1, 4 - dark_flavor2 or sterile, 4 - dark_flavor3 or sterile)
-        self.d_aj =  self._weak_vertex *  self._g_dark_correction * (Ulep_active_only - np.dot(self.Ulep[:,3:],self.C_weak[3:])) \
+        self.d_aj =  self._weak_vertex *  self._g_dark_correction * (Ulep_active_only - np.dot(self.Ulep[:,:3],self.C_weak[:3])) \
                     + self.gD * (  Ulep_dark_only - np.dot(self.Ulep[:,3:], self.D_dark[3:]))
         
-
-        # # make it 3 x n_nus
-        # self.c_aj = np.hstack((np.diag([1, 1, 1]), self.c_aj))
-        # self.d_aj = np.hstack((np.diag([1, 1, 1]), self.d_aj))
-
-        # # make n_nus x n_nus
-        # self.c_aj = np.vstack((self.c_aj, self.c_ij[3:]))
-        # self.d_aj = np.vstack((self.d_aj, self.d_ij[3:]))
         self.dlight = 0.0
 
         # ########################
