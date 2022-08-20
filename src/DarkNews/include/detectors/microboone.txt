@@ -13,4 +13,4 @@ fiducial_mass = 85.0 # tons
 fiducial_mass_per_target = [
     fiducial_mass
 ] 
-POTs = 12.25e20
+POTs = 6.80e20
