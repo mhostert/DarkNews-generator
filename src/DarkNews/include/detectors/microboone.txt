@@ -1,16 +1,16 @@
 # rescaled from MiniBooNE flux (Data Released with A.A. Aguilar-Arevalo et al., “The Neutrino Flux Prediction at MiniBooNE”, arXiv:0806.1449 [hep-ex], Phys. Rev. D. 79, 072002 (2009).)
-name = "MicroBooNE"
-fluxfile = "MiniBooNE_FHC.dat"
-flux_norm = 1.0*((550/470)^2)
+name = "microboone"
+fluxfile = "MicroBooNE_BNB_fullflux.txt"
+flux_norm = 1.0/0.05
 erange = [
-    0.05, 
-    9
+    0.05,
+    7
 ]
 nuclear_targets = [
     'Ar40'
-]
-fiducial_mass = 85.0 # tons
+  ]
+fiducial_mass = 170.0 # tons
 fiducial_mass_per_target = [
     fiducial_mass
-] 
-POTs = 6.80e20
+  ]
+POTs = 6.8e+20
