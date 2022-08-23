@@ -41,6 +41,7 @@ class Detector:
         "dune_nd_fhc": "dune_nd_fhc.txt",
         "dune_nd_rhc": "dune_nd_rhc.txt",
         "sbnd": "sbnd.txt",
+        "sbnd_dirt": "sbnd_dirt.txt",
         "microboone": "microboone.txt",
         "microboone_dirt": "microboone_dirt.txt",
         "minerva_le_fhc": "minerva_le_fhc.txt",
