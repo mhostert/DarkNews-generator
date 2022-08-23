@@ -588,7 +588,7 @@ class ThreePortalModel(HNLModel):
 
         # normalization of low-energy flavor states
         # sqrt( 1- Sum_i=4^6 |U_ai|^2)
-        self.le_state_norms = np.sqrt(1 - np.sum((self.Ulep.conjugate()*self.Ulep)[:,3:], axis=1))
+        # self.le_state_norms = np.sqrt(1 - np.sum((self.Ulep.conjugate()*self.Ulep)[:,3:], axis=1))
 
         # Z coupling of between LOW-ENERGY flavor states and the mass eigenstates
         # c_aj (n x n) using unitarity and rotating one index to flavor basis

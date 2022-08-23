@@ -252,7 +252,6 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         df['pos_decay', '2'] = df['pos_scatt', '2'] + (dist2 + dist1)/2 * phat[1]
         df['pos_decay', '3'] = df['pos_scatt', '3'] + (dist2 + dist1)/2 * phat[2]
 
-
     else:
         raise NotImplementedError("This experiment is not implemented")
 

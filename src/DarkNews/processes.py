@@ -72,8 +72,6 @@ class UpscatteringProcess:
         ###############
         # Hadronic vertices
         if self.target.is_nucleus:
-            # self.Chad = const.gweak/4.0/const.cw*np.abs((1.0-4.0*const.s2w)*self.target.Z-self.target.N)
-            # self.Vhad = const.eQED*TheoryModel.epsilon*self.target.Z
             self.Chad = TheoryModel.cprotonV * self.target.Z + TheoryModel.cneutronV * self.target.N
             self.Vhad = TheoryModel.dprotonV * self.target.Z + TheoryModel.dneutronV * self.target.N
             self.Shad = TheoryModel.dprotonS * self.target.Z + TheoryModel.dneutronS * self.target.N

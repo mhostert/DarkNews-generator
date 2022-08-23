@@ -17,8 +17,8 @@ from ToyAnalysis import toy_logger
 
 ###########################
 
-def plot_all_rates(df, case_name, Nevents=None, truth_plots=False, title=None, plot_muB = False, path=None,loc=''):
-    
+def plot_all_rates(df, case_name, Nevents=None, truth_plots=False, title=None, path=None, loc=''):
+
     toy_logger.info("Plot MiniBooNE signal in {PATH_MB}")
     if path:
         PATH_MB = path
@@ -33,14 +33,12 @@ def plot_all_rates(df, case_name, Nevents=None, truth_plots=False, title=None, p
         title = case_name
 
     # get observables at MiniBooNE
-    bag_reco_MB = analysis_decay.select_MB_decay_expo_prob(analysis.compute_spectrum(df, EVENT_TYPE='both'))
-    if Nevents is not None:
-        total_Nevent_MB = Nevents*(1/bag_reco_MB['reco_eff'][0])
-    else:
-        total_Nevent_MB = bag_reco_MB['reco_w'].sum()
-    
-    print(f"MB events: {total_Nevent_MB:.2g}")
-    batch_plot_signalMB(bag_reco_MB, PATH_MB, BP=case_name, title=title, NEVENTS=total_Nevent_MB,loc=loc)
+    bag_reco_MB = analysis_decay.decay_selection(
+                                                analysis.compute_spectrum(df, EVENT_TYPE='both'),
+                                                experiment='miniboone',
+                                                l_decay_proper_cm=df.attrs['N5_ctau0'])
+
+    batch_plot_signalMB(bag_reco_MB, PATH_MB, BP=case_name, title=title, NEVENTS=Nevents, loc=loc)
 
     # plot true variables for MiniBooNE
     if truth_plots:
@@ -48,25 +46,22 @@ def plot_all_rates(df, case_name, Nevents=None, truth_plots=False, title=None, p
 
 
 
-def batch_plot_signalMB(obs, PATH, title='Dark News', NEVENTS=1, kde=False, BP = "",loc=''):
+def batch_plot_signalMB(obs, PATH, title='Dark News', Nevents= None, loc=''):
+
+    if Nevents is not None:
+        total_Nevent_MB = Nevents*(1/obs['reco_eff'][0])
+    else:
+        total_Nevent_MB = obs['reco_w'].sum()
+    print(f"MB events: {total_Nevent_MB:.2g}")
 
     #################### HISTOGRAMS 1D - STACKED ####################################################
-    histogram1D_data_stacked(PATH/"1D_Enu_data_stacked", obs, r"$E_{\rm \nu}/$GeV", title,
-        varplot='reco_Enu', tot_events=NEVENTS,loc=loc)
-    histogram1D_data_stacked(PATH/"1D_Evis_data_stacked", obs, r"$E_{\rm vis}/$GeV", title,
-        varplot='reco_Evis', tot_events=NEVENTS,loc=loc)
-    histogram1D_data_stacked(PATH/"1D_costheta_data_stacked", obs, r"$\cos\theta$", title,
-        varplot='reco_costheta_beam', tot_events=NEVENTS,loc=loc)
+    histogram1D_data_stacked(Path(PATH)/"1D_Enu_data_stacked", obs, r"$E_{\rm \nu}/$GeV", title,
+        varplot='reco_Enu', tot_events=total_Nevent_MB, loc=loc)
+    histogram1D_data_stacked(Path(PATH)/"1D_Evis_data_stacked", obs, r"$E_{\rm vis}/$GeV", title,
+        varplot='reco_Evis', tot_events=total_Nevent_MB, loc=loc)
+    histogram1D_data_stacked(Path(PATH)/"1D_costheta_data_stacked", obs, r"$\cos\theta$", title,
+        varplot='reco_costheta_beam', tot_events=total_Nevent_MB, loc=loc)
 
-    ###################### HISTOGRAM 2D ##################################################
-
-    n2D = 20
-    # histogram2D(PATH+"/"+BP+"2D_reco_Evis_ctheta.pdf", [obs['reco_Evis'], obs['reco_w']],\
-    #                                       [obs['reco_costheta_beam'],obs['reco_w']],\
-    #                                       0.0, 2.0,\
-                                            # -1.0,1.0,\
-                                            # r"$E_{\rm vis}$ (GeV)", r'$\cos\theta$', title, n2D)
-    
 
 def batch_plot_signalMB_bf(obs, PATH, title='Dark News', NEVENTS=1, kde=False, BP = "",loc=''):
 
