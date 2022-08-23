@@ -152,7 +152,7 @@ def get_distances(p0, phat, experiment):
     for i in range(n):
         dist_temp = solutions[i][mask_inter[i]]
         if len(dist_temp) == 2:
-            distances[i] = dist_temp
+            distances[i] = [dist_temp.min(), dist_temp.max()]
         elif len(dist_temp) == 1:
             distances[i] = [0, dist_temp[0]]
         else:
@@ -251,7 +251,6 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         df['pos_decay', '1'] = df['pos_scatt', '1'] + (dist2 + dist1)/2 * phat[0]
         df['pos_decay', '2'] = df['pos_scatt', '2'] + (dist2 + dist1)/2 * phat[1]
         df['pos_decay', '3'] = df['pos_scatt', '3'] + (dist2 + dist1)/2 * phat[2]
-
 
     else:
         raise NotImplementedError("This experiment is not implemented")
