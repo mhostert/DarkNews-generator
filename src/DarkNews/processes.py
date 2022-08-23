@@ -219,8 +219,7 @@ class FermionDileptonDecay:
         self.vector_off_shell = not self.vector_on_shell
 
         self.scalar_on_shell = (TheoryModel.mhprime is not None) and (self.m_parent - self.m_daughter > TheoryModel.mhprime) and (TheoryModel.mhprime > self.mm + self.mp)
-        self.scalar_off_shell = not self.scalar_on_shell
-        
+        self.scalar_off_shell = not self.scalar_on_shell     
 
         ## does it have transition magnetic moment?
         self.TMM = TheoryModel.has_TMM

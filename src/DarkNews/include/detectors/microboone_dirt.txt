@@ -1,10 +1,10 @@
-# Data Released with A.A. Aguilar-Arevalo et al., “The Neutrino Flux Prediction at MiniBooNE”, arXiv:0806.1449[hep-ex], Phys. Rev. D. 79, 072002 (2009).
-name = "MicroBooNE_dirt"
-fluxfile = "MiniBooNE_FHC.dat"
-flux_norm = 1.0*((550/470)^2)
+# MicroBooNE (Wire-Cell PRD https://arxiv.org/abs/2110.13978)
+name = "microboone_dirt"
+fluxfile = "MicroBooNE_BNB_fullflux.txt"
+flux_norm = 1.0/0.05 # units in file are nu/POT/bin/cm2, with bin size 50 MeV.
 erange = [
     0.05,
-    9
+    7
 ]
 nuclear_targets = [
     'Si28',
@@ -15,4 +15,4 @@ fiducial_mass_per_target = [
     fiducial_mass*28/60, 
     fiducial_mass*32/60
 ] # tons
-POTs = 12.25e20
+POTs = 6.8e+20

@@ -295,36 +295,51 @@ class MC_events:
         # Normalize to total exposure
         exposure = self.experiment.NUMBER_OF_TARGETS[self.nuclear_target.name] * self.experiment.POTS
 
-        # differential rate weights
+        # > differential rate weights
         df_gen["w_event_rate"] = (
             weights["diff_event_rate"] * const.attobarn_to_cm2 / decay_rates * target_multiplicity * exposure * batch_f.norm["diff_event_rate"]
         )
 
-        # flux averaged xsec weights (neglecting kinematics of decay)
+        # > flux averaged xsec weights (neglecting kinematics of decay)
         df_gen["w_flux_avg_xsec"] = weights["diff_flux_avg_xsec"] * const.attobarn_to_cm2 * target_multiplicity * exposure * batch_f.norm["diff_flux_avg_xsec"]
 
+        # > target name
         df_gen.insert(
             loc=len(df_gen.columns), column="target", value=np.full(tot_nevents, self.ups_case.target.name),
         )
         df_gen["target"] = df_gen["target"].astype("string")
+        
+        # > target pdgid
         df_gen.insert(
             loc=len(df_gen.columns), column="target_pdgid", value=self.ups_case.target.pdgid,
         )
         df_gen["target_pdgid"] = df_gen["target_pdgid"].astype("int")
+        
+        # > projectile pdgid
+        df_gen.insert(
+            loc=len(df_gen.columns), column="projectile_pdgid", value=self.ups_case.nu_projectile.pdgid,
+        )
+        df_gen["projectile_pdgid"] = df_gen["projectile_pdgid"].astype("int")
+        
+        # > scattering regime
         df_gen.insert(
             loc=len(df_gen.columns), column="scattering_regime", value=np.full(tot_nevents, self.ups_case.scattering_regime),
         )
         df_gen["scattering_regime"] = df_gen["scattering_regime"].astype("string")
+        
+        # > heliciy
         df_gen.insert(
             loc=len(df_gen.columns), column="helicity", value=np.full(tot_nevents, self.helicity),
         )
         df_gen["helicity"] = df_gen["helicity"].astype("string")
+        
+        # > underlying process string
         df_gen.insert(
             loc=len(df_gen.columns), column="underlying_process", value=np.full(tot_nevents, self.underl_process_name),
         )
         df_gen["underlying_process"] = df_gen["underlying_process"].astype("string")
 
-        # Helicity of incoming neutrino
+        # > Helicity of incoming neutrino
         if self.nu_projectile.pdgid < 0:
             df_gen.insert(
                 loc=len(df_gen.columns), column="h_projectile", value=np.full(tot_nevents, +1),
@@ -334,19 +349,19 @@ class MC_events:
                 loc=len(df_gen.columns), column="h_projectile", value=np.full(tot_nevents, -1),
             )
 
-        # Helicity of outgoing HNL
+        # > Helicity of outgoing HNL
         if self.helicity == "conserving":
             df_gen["h_parent", ""] = df_gen["h_projectile"]
         elif self.helicity == "flipping":
             df_gen["h_parent", ""] = -df_gen["h_projectile"]
 
-        # saving the experiment class
+        # > saving the experiment class
         df_gen.attrs["experiment"] = self.experiment
 
-        # saving the bsm_model class
+        # > saving the bsm_model class
         df_gen.attrs["model"] = self.bsm_model
 
-        # saving the lifetime of the parent (upscattered) HNL
+        # > saving the lifetime of the parent (upscattered) HNL
         df_gen.attrs[f"{self.nu_upscattered.name}_ctau0"] = const.get_decay_rate_in_cm(df_gen["w_decay_rate_0"].sum())
 
         # #########################################################################

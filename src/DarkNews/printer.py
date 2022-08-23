@@ -19,7 +19,7 @@ import pyhepmc as hep
 
 
 def print_in_order(x):
-    return " ".join(f"{t:.8E}" for t in list(x))
+    return " ".join(f"{t:.8E}" for t in list(x[1:]))
 
 
 class Printer:
@@ -253,7 +253,7 @@ class Printer:
             self.pvec_pos_scatt = self.df_gen["pos_scatt"].to_numpy()
 
             # string to be saved to file
-            self.projectile_flavor = int(lp.nu_mu.pdgid)
+            self.projectile_flavor = self.df_gen['projectile_pdgid']
             if self.decay_product == "e+e-":
                 self.id_lepton_minus = int(lp.e_minus.pdgid)
                 self.id_lepton_plus = int(lp.e_plus.pdgid)
@@ -396,7 +396,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             evt.event_number = i
 
             #### Upscattering process
-            p1 = hep.GenParticle(self.pvec_projectile[i, hep_order], self.projectile_flavor, 4)
+            p1 = hep.GenParticle(self.pvec_projectile[i, hep_order], self.projectile_flavor[i], 4)
             p1.generated_mass = self.mass_projectile[i]
             evt.add_particle(p1)
 
@@ -505,7 +505,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             lines.append(
                 (  # Projectile
                     f"0 "
-                    f" {self.projectile_flavor}"
+                    f" {self.projectile_flavor[i]}"
                     f" 0 0 0 0"
                     f" {print_in_order(self.pvec_projectile[i])}"
                     f" {self.df_gen['P_projectile','0'].to_numpy()[i]:.8E}"

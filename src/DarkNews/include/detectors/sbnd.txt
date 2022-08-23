@@ -2,7 +2,7 @@
 # On behalf of the SBND Collaboration NuFACT 2022 Conference 4th August 2022
 # https://indico.fnal.gov/event/53004/contributions/244480/
 # and POTs read by eye from Mark Ross Lonergan's talk at NuFACT 2022.
-name = "SBND"
+name = "sbnd"
 fluxfile = "sbnd_fhc.dat"
 flux_norm = 1.0
 erange = [

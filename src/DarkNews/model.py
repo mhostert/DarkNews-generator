@@ -488,6 +488,8 @@ class ThreePortalModel(HNLModel):
         
         # list of dark flavors
         self.inds_dark = range(const.ind_tau + 1, 3 + self.n_dark_flavors)
+        # list of heavy neutrinos
+        self.inds_hnls = range(3,6)
 
         # Mixing matrices
         # if PMNS, use dtype=complex
@@ -594,7 +596,8 @@ class ThreePortalModel(HNLModel):
         #   rows: flavors (0 - e, 1 - mu, 2 - tau, 3 - dark_flavor1, 4 - dark_flavor2 or sterile, 4 - dark_flavor3 or sterile)
         self.c_aj =  self._weak_vertex *  self._g_weak_correction * (Ulep_active_only - np.dot(self.Ulep[:,:3],self.C_weak[:3])) \
                     + self._gschi * ( Ulep_dark_only - np.dot( self.Ulep[:,3:], self.D_dark[3:]))
-        
+        self.c_aj[3:,3:] = self.c_ij[3:,3:]
+
 
 
         # self.d_aj = (
@@ -606,12 +609,14 @@ class ThreePortalModel(HNLModel):
         # self.d_aj = np.hstack((np.diag([1, 1, 1]), self.d_aj))
         # self.d_aj = np.vstack((self.d_aj, self.d_ij[3:]))
         
-        # Z' coupling of between LOW-ENERGY flavor states and the mass eigenstates
+        # Z' coupling of between LOW-ENERGY flavor states and the mass eigenstates for the LL, LH, HL sub-blocks of the matrix
         # d_aj (n x n) using unitarity and rotating one index to flavor basis
         #   columns: mass eigenstate indices
         #   rows: flavors (0 - e, 1 - mu, 2 - tau, 3 - dark_flavor1, 4 - dark_flavor2 or sterile, 4 - dark_flavor3 or sterile)
         self.d_aj =  self._weak_vertex *  self._g_dark_correction * (Ulep_active_only - np.dot(self.Ulep[:,:3],self.C_weak[:3])) \
                     + self.gD * (  Ulep_dark_only - np.dot(self.Ulep[:,3:], self.D_dark[3:]))
+        # now we make the HH subblock couple like genuine mass states
+        self.d_aj[3:,3:] = self.d_ij[3:,3:]
         
         self.dlight = 0.0
 

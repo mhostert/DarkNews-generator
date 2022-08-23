@@ -1,5 +1,5 @@
 # Data Released with A.A. Aguilar-Arevalo et al., “The Neutrino Flux Prediction at MiniBooNE”, arXiv:0806.1449[hep-ex], Phys. Rev. D. 79, 072002 (2009).
-name = "MiniBooNE_FHC"
+name = "miniboone_fhc"
 fluxfile = "MiniBooNE_FHC.dat"
 flux_norm = 1
 erange = [

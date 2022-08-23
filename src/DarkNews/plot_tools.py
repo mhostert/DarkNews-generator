@@ -33,7 +33,7 @@ def std_fig(ax_form=std_axes_form, figsize=std_figsize, rasterized=False):
         "legend.loc": "best",
     }
     plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}\usepackage{amssymb}"
-    rc("font", **{"family": "serif", "serif": ["Computer Modern"]})
+    # rc("font", **{"family": "serif", "serif": ["Computer Modern"]})
     rc("text", usetex=True)
     rcParams.update(rcparams)
     matplotlib.rcParams["hatch.linewidth"] = 0.3

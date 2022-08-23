@@ -145,13 +145,20 @@ class Detector:
         return self.FLUX_FUNCTIONS[_flux_index]
 
     def set_geometry(self):
-        if "microboone" in self.NAME.lower():
-            self.place_scatters = geom.microboone_geometry
-        elif "sbnd" in self.NAME.lower():
-            self.place_scatters = geom.sbnd_geometry
-        elif "miniboone" in self.NAME.lower():
-            self.place_scatters = geom.miniboone_geometry
+
+        geometries = {}
+        geometries["microboone_dirt"] = geom.microboone_dirt_geometry
+        geometries["sbnd_dirt"] = geom.sbnd_dirt_geometry
+        geometries["miniboone_fhc_dirt"] = geom.miniboone_dirt_geometry
+        geometries["microboone"] = geom.microboone_geometry
+        geometries["sbnd"] = geom.sbnd_geometry
+        geometries["miniboone_fhc"] = geom.miniboone_geometry
+        geometries["miniboone_rhc"] = geom.miniboone_geometry
+
+        if self.NAME.lower() in geometries.keys():
+            self.place_scatters = geometries[self.NAME.lower()]
         else:
+            logger.info(f"Experimental geometry for {self.NAME} not implemented, assuming scattering at (0,0,0,0)")
             self.place_scatters = geom.point_geometry
 
     def __str__(self):
