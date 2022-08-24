@@ -101,6 +101,11 @@ class Chisel:
 
 # @dataclass
 # class MicroBooNE:
+# geometry of tpc
+z_muB = 1040.
+x_muB = 256.
+y_muB = 232.
+
 # geometry of cylinder_muB for dirt
 l_muB  = 1086.49
 z_muB = 1040.
@@ -240,6 +245,20 @@ def microboone_dirt_geometry(df):
     df["pos_scatt", "1"] = np.random.random(length_events)*(x_muB_dirt_max - x_muB_dirt_min)  + x_muB_dirt_min
     df["pos_scatt", "2"] = np.random.random(length_events)*(y_muB_dirt_max - y_muB_dirt_min)  + y_muB_dirt_min
     df["pos_scatt", "3"] = z0
+
+
+def microboone_tpc_geometry(df):
+
+    # geometry of cylinder_MB for dirt
+    length_events = len(df)
+    z0 = np.random.random(length_events)*(z_muB) - z_muB/2.
+
+    time = MicroBooNEGlobalTimeOffset + (MicroBooNERandomTimeOffset) * np.random.rand(length_events)
+    df["pos_scatt", "0"] = time + (z0)/const.c_LIGHT*1e9 # z0 is negative
+    df["pos_scatt", "1"] = np.random.random(length_events)*(x_muB) - x_muB/2.
+    df["pos_scatt", "2"] = np.random.random(length_events)*(y_muB) - y_muB/2.
+    df["pos_scatt", "3"] = z0
+
 
 def sbnd_dirt_geometry(df):
 

@@ -1,0 +1,16 @@
+# MicroBooNE (Wire-Cell PRD https://arxiv.org/abs/2110.13978)
+name = "microboone_tpc"
+fluxfile = "MicroBooNE_BNB_fullflux.txt"
+flux_norm = 1.0/0.05 # units in file are nu/POT/bin/cm2, with bin size 50 MeV.
+erange = [
+    0.05,
+    7
+]
+nuclear_targets = [
+    'Ar40'
+]
+fiducial_mass = 86.1906 # tons, density: 1.3954 g/cm3, vol = 1040*256*232 = 6.176768e7 cm3
+fiducial_mass_per_target = [
+    fiducial_mass
+]
+POTs = 6.8e+20

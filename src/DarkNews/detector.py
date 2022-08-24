@@ -42,6 +42,7 @@ class Detector:
         "dune_nd_rhc": "dune_nd_rhc.txt",
         "sbnd": "sbnd.txt",
         "microboone": "microboone.txt",
+        "microboone_tpc": "microboone_tpc.txt",
         "microboone_dirt": "microboone_dirt.txt",
         "minerva_le_fhc": "minerva_le_fhc.txt",
         "minerva_me_fhc": "minerva_me_fhc.txt",
@@ -151,6 +152,7 @@ class Detector:
         geometries["sbnd_dirt"] = geom.sbnd_dirt_geometry
         geometries["miniboone_fhc_dirt"] = geom.miniboone_dirt_geometry
         geometries["microboone"] = geom.microboone_geometry
+        geometries["microboone_tpc"] = geom.microboone_tpc_geometry
         geometries["sbnd"] = geom.sbnd_geometry
         geometries["miniboone_fhc"] = geom.miniboone_geometry
         geometries["miniboone_rhc"] = geom.miniboone_geometry
