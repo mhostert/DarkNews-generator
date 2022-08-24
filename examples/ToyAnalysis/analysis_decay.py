@@ -127,9 +127,9 @@ def get_distances(p0, phat, experiment):
     n = len(p0.T)
 
     # positions of the 6 walls of the cryostat in order (2 for X, 2 for Y, 2 for Z)
-    if experiment == 'microboone':
+    if experiment == 'microboone' or experiment == 'microboone_dirt':
         planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,dif_z/2,z_muB + dif_z/2])
-    elif experiment == 'sbnd':
+    elif experiment == 'sbnd' or experiment == 'sbnd_dirt':
         planes = np.array([-x_sbnd/2,x_sbnd/2,-y_sbnd/2,y_sbnd/2,dif_z_sbnd/2,z_sbnd + dif_z_sbnd/2])
 
     # suitable forms for parameters
@@ -208,7 +208,7 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
     p0 = np.array([df['pos_scatt','1'], df['pos_scatt','2'], df['pos_scatt','3']])
 
 
-    if experiment == 'miniboone':
+    if experiment == 'miniboone' or experiment == 'miniboone_dirt':
         # compute the distance to the point of exit from the detector using intersection of line with sphere
         #  p0 . phat
         x0_dot_p = dot3(p0, phat)
@@ -238,7 +238,7 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         df.loc[:,('pos_decay', '2')] = p0[1] + (dist2 + dist1)/2 * phat[1]
         df.loc[:,('pos_decay', '3')] = p0[2] + (dist2 + dist1)/2 * phat[2]
 
-    elif experiment == 'microboone' or experiment == 'sbnd':
+    else: 
         # dist1 is the distance between the point of production and the entrance of the FIDUCIAL vol
         # dist2 is the distance between the point of production and the exit of the FIDUCIAL vol
         dist1, dist2 = get_distances(p0,phat, experiment).T
@@ -252,8 +252,9 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         df['pos_decay', '2'] = df['pos_scatt', '2'] + (dist2 + dist1)/2 * phat[1]
         df['pos_decay', '3'] = df['pos_scatt', '3'] + (dist2 + dist1)/2 * phat[2]
 
-    else:
-        raise NotImplementedError("This experiment is not implemented")
+
+    #else:
+    #    raise NotImplementedError("This experiment is not implemented")
 
         
     # new reconstructed weights
