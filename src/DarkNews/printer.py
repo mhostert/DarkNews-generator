@@ -503,7 +503,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             if hep_unweight:
                 lines.append(f"{i} 7\n")
             else:
-                lines.append(f"{i} 7 {self.df_gen['w_event_rate',''].to_numpy()[i]:.8E}\n")
+                lines.append(f"{i} 7 {self.df_gen['w_event_rate',''].to_numpy()[i]:.8E} {self.df_gen['w_pre_decay',''].to_numpy()[i]:.8E}\n")
 
             # scattering inital states
             lines.append(
