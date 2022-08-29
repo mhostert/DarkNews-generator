@@ -98,7 +98,6 @@ class Chisel:
         return mask_full
 
 
-
 # @dataclass
 # class MicroBooNE:
 # geometry of tpc
@@ -175,7 +174,7 @@ def microboone_geometry(df):
     while npoints < nsamples:
 
         new_detector = Chisel(nsamples=nsamples, box=detector_box)
-        new_events = new_detector.events[:, new_detector.microboone_active_tpc_geometry_benchmark()]
+        new_events = new_detector.events[:, new_detector.microboone_cryostat()]
         events = np.concatenate((events, new_events), axis=1)
 
         npoints += np.shape(new_events)[1]

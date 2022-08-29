@@ -154,6 +154,7 @@ class Detector:
         geometries["miniboone_fhc_dirt"] = geom.miniboone_dirt_geometry
         geometries["microboone"] = geom.microboone_geometry
         geometries["microboone_tpc"] = geom.microboone_tpc_geometry
+        geometries["microboone_active_tpc_benchmark"] = geom.microboone_active_tpc_geometry_benchmark
         geometries["sbnd"] = geom.sbnd_geometry
         geometries["miniboone_fhc"] = geom.miniboone_geometry
         geometries["miniboone_rhc"] = geom.miniboone_geometry
