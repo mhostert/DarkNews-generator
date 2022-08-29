@@ -102,13 +102,13 @@ class Chisel:
 # @dataclass
 # class MicroBooNE:
 # geometry of tpc
-z_muB = 1040.
-x_muB = 256.
-y_muB = 232.
+z_muB = 1036.8
+x_muB = 256.35
+y_muB = 116.5*2
 
 # geometry of cylinder_muB for dirt
 l_muB  = 1086.49
-z_muB = 1040.
+#z_muB = 1040.
 
 # target to front of detector
 baseline_muB = 470e2
@@ -175,7 +175,7 @@ def microboone_geometry(df):
     while npoints < nsamples:
 
         new_detector = Chisel(nsamples=nsamples, box=detector_box)
-        new_events = new_detector.events[:, new_detector.microboone_cryostat()]
+        new_events = new_detector.events[:, new_detector.microboone_active_tpc_geometry_benchmark()]
         events = np.concatenate((events, new_events), axis=1)
 
         npoints += np.shape(new_events)[1]
@@ -245,6 +245,19 @@ def microboone_dirt_geometry(df):
     df["pos_scatt", "1"] = np.random.random(length_events)*(x_muB_dirt_max - x_muB_dirt_min)  + x_muB_dirt_min
     df["pos_scatt", "2"] = np.random.random(length_events)*(y_muB_dirt_max - y_muB_dirt_min)  + y_muB_dirt_min
     df["pos_scatt", "3"] = z0
+
+def microboone_active_tpc_geometry_benchmark(df):
+
+    # geometry of cylinder_MB for dirt
+    length_events = len(df)
+    z0 = np.random.random(length_events)*(z_muB) - z_muB/2.
+
+    time = MicroBooNEGlobalTimeOffset + (MicroBooNERandomTimeOffset) * np.random.rand(length_events)
+    df["pos_scatt", "0"] = time  #+ (z0)/const.c_LIGHT*1e9 # z0 is negative no need for this
+    df["pos_scatt", "1"] = np.random.random(length_events)*(x_muB) - x_muB/2.
+    df["pos_scatt", "2"] = np.random.random(length_events)*(y_muB) - y_muB/2.
+    df["pos_scatt", "3"] = z0
+
 
 
 def microboone_tpc_geometry(df):
