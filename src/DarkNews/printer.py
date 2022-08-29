@@ -15,11 +15,11 @@ from DarkNews import Cfourvec as Cfv
 import pyarrow.parquet as pq
 import pyarrow as pa
 
-import pyhepmc as hep
+import pyhepmc_ng as hep
 
 
 def print_in_order(x):
-    return " ".join(f"{t:.8E}" for t in list(x[1:]))
+    return " ".join(f"{t:.8E}" for t in list(x))
 
 
 class Printer:
@@ -253,7 +253,7 @@ class Printer:
             self.pvec_pos_scatt = self.df_gen["pos_scatt"].to_numpy()
 
             # string to be saved to file
-            self.projectile_flavor = self.df_gen['projectile_pdgid']
+            self.projectile_flavor = int(lp.nu_mu.pdgid)
             if self.decay_product == "e+e-":
                 self.id_lepton_minus = int(lp.e_minus.pdgid)
                 self.id_lepton_plus = int(lp.e_plus.pdgid)
@@ -396,7 +396,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             evt.event_number = i
 
             #### Upscattering process
-            p1 = hep.GenParticle(self.pvec_projectile[i, hep_order], self.projectile_flavor[i], 4)
+            p1 = hep.GenParticle(self.pvec_projectile[i, hep_order], self.projectile_flavor, 4)
             p1.generated_mass = self.mass_projectile[i]
             evt.add_particle(p1)
 
@@ -491,6 +491,10 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
         logger.info("Printing events to HEPevt using legacy format...")
         lines = []
 
+        fudge = (128.17500-1.55, 0.97, 518.4+0.1)
+
+        #detector_box = np.array([[-200, 200], [-200, 200], [-800, 800]])
+        #detector_box = np.array([[-1.55,254.8], [-115.53,117.47], [0.1,1036.9]])	
 
         range_of_evts = self.df_gen.index
         # loop over events
@@ -505,17 +509,17 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             lines.append(
                 (  # Projectile
                     f"0 "
-                    f" {self.projectile_flavor[i]}"
+                    f" {self.projectile_flavor}"
                     f" 0 0 0 0"
                     f" {print_in_order(self.pvec_projectile[i])}"
                     f" {self.df_gen['P_projectile','0'].to_numpy()[i]:.8E}"
                     f" {self.mass_projectile[i]:.8E}"
-                    f" {print_in_order(self.pvec_pos_scatt[i])}"
+                    f" {print_in_order(self.pvec_pos_scatt[i][1:]+fudge)}"
                     f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
                     "\n"
                 )
             )
-            
+           
             # Only print targets and HNLs if not sparse
             if not self.sparse:
                 lines.append(
@@ -526,7 +530,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                         f" {print_in_order(self.pvec_target[i])}"
                         f" {self.df_gen['P_target','0'].to_numpy()[i]:.8E}"
                         f" {self.mass_target[i]:.8E}"
-                        f" {print_in_order(self.pvec_pos_scatt[i])}"
+                        f" {print_in_order(self.pvec_pos_scatt[i][1:]+fudge)}"
                         f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
@@ -541,7 +545,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                         f" {print_in_order(self.pvec_decay_N_parent[i])}"
                         f" {self.df_gen['P_decay_N_parent','0'].to_numpy()[i]:.8E}"
                         f" {self.mass_decay_N_parent[i]:.8E}"
-                        f" {print_in_order(self.pvec_pos_scatt[i])}"
+                        f" {print_in_order(self.pvec_pos_scatt[i][1:]+fudge)}"
                         f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
@@ -555,7 +559,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                         f" {print_in_order(self.pvec_recoil[i])}"
                         f" {self.df_gen['P_recoil','0'].to_numpy()[i]:.8E}"
                         f" {self.mass_recoil[i]:.8E}"
-                        f" {print_in_order(self.pvec_pos_scatt[i])}"
+                        f" {print_in_order(self.pvec_pos_scatt[i][1:]+fudge)}"
                         f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
@@ -570,7 +574,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                         f" {print_in_order(self.pvec_decay_N_daughter[i])}"
                         f" {self.df_gen['P_decay_N_daughter','0'].to_numpy()[i]:.8E}"
                         f" {self.mass_decay_N_daughter[i]:.8E}"
-                        f" {print_in_order(self.pvec_pos_decay[i])}"
+                        f" {print_in_order(self.pvec_pos_decay[i][1:]+fudge)}"
                         f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
@@ -584,7 +588,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                     f" {print_in_order(self.pvec_decay_ell_minus[i])}"
                     f" {self.df_gen['P_decay_ell_minus','0'].to_numpy()[i]:.8E}"
                     f" {const.m_e:.8E}"
-                    f" {print_in_order(self.pvec_pos_decay[i])}"
+                    f" {print_in_order(self.pvec_pos_decay[i][1:]+fudge)}"
                     f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
                     "\n"
                 )
@@ -598,7 +602,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                     f" {print_in_order(self.pvec_decay_ell_plus[i])}"
                     f" {self.df_gen['P_decay_ell_plus','0'].to_numpy()[i]:.8E}"
                     f" {const.m_e:.8E}"
-                    f" {print_in_order(self.pvec_pos_decay[i])}"
+                    f" {print_in_order(self.pvec_pos_decay[i][1:]+fudge)}"
                     f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
                     "\n"
                 )
