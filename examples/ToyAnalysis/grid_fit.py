@@ -25,7 +25,7 @@ Umu5_def = np.sqrt(1.0e-12)
 epsilon_def = 8e-4
 
 
-def get_data_MB(varplot='reco_Evis',loc='ToyAnalysis/data'):
+def get_data_MB(varplot='reco_Evis',loc='./data'):
     
     if varplot=='reco_Evis':
         _, data = np.loadtxt(loc+"/digitized/miniboone_2020/Evis/data_Evis.dat", unpack=True)

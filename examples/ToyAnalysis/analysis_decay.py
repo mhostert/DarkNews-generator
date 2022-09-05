@@ -265,26 +265,43 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
 
 
 
-def set_params(df):
+def set_params(df, showers='e+e-'):
 
     df = df.copy(deep=True)
-
-    p21 = np.array([df[( 'P_decay_ell_minus', '1')].values,df[( 'P_decay_ell_minus', '2')].values,df[( 'P_decay_ell_minus', '3')].values])
-    p22 = np.array([df[( 'P_decay_ell_plus', '1')].values,df[( 'P_decay_ell_plus', '2')].values,df[( 'P_decay_ell_plus', '3')].values])
-    p2 = (p21+p22)/2
-
-    p1 = np.array([0,0,1])
-    angle = get_angle(p1,p2)
-
-    df['reco_theta_beam'] = angle * 180 / np.pi
-
-    df['reco_Evis'] = df[( 'P_decay_ell_minus', '0')].values + df[( 'P_decay_ell_plus', '0')].values
-
-    df['reco_w'] = df.w_event_rate
     
-    df['reco_Enu'] = const.m_proton * (df['reco_Evis']) / ( const.m_proton - (df['reco_Evis'])*(1.0 - np.cos(angle)))
+    if showers == 'e+e-':
+        p21 = np.array([df[( 'P_decay_ell_minus', '1')].values,df[( 'P_decay_ell_minus', '2')].values,df[( 'P_decay_ell_minus', '3')].values])
+        p22 = np.array([df[( 'P_decay_ell_plus', '1')].values,df[( 'P_decay_ell_plus', '2')].values,df[( 'P_decay_ell_plus', '3')].values])
+        p2 = (p21+p22)/2
 
-    return df
+        p1 = np.array([0,0,1])
+        angle = get_angle(p1,p2)
+
+        df['reco_theta_beam'] = angle * 180 / np.pi
+
+        df['reco_Evis'] = df[( 'P_decay_ell_minus', '0')].values + df[( 'P_decay_ell_plus', '0')].values
+
+        df['reco_w'] = df.w_event_rate
+        
+        df['reco_Enu'] = const.m_proton * (df['reco_Evis']) / ( const.m_proton - (df['reco_Evis'])*(1.0 - np.cos(angle)))
+
+        return df
+    
+    elif showers == 'photon':
+        p2 = np.array([df[( 'P_decay_photon', '1')].values,df[( 'P_decay_photon', '2')].values,df[( 'P_decay_photon', '3')].values])
+        
+        p1 = np.array([0,0,1])
+        angle = get_angle(p1,p2)
+
+        df['reco_theta_beam'] = angle * 180 / np.pi
+
+        df['reco_Evis'] = df[( 'P_decay_photon', '0')].values
+
+        df['reco_w'] = df.w_event_rate
+        
+        df['reco_Enu'] = const.m_proton * (df['reco_Evis']) / ( const.m_proton - (df['reco_Evis'])*(1.0 - np.cos(angle)))
+
+        return df
 
 
 def filter_angle_ee(df, angle_max=5):
@@ -302,6 +319,22 @@ def filter_angle_ee(df, angle_max=5):
 
     return df
 
+
+def out_of_active_volume(df,experiment='microboone'):
+    df = df.copy(deep=True)
+    
+    if experiment == 'microboone':
+        # filtering out those scatterings inside the active volume
+        mask = (-x_muB/2. <= df['pos_scatt','1'].values) & (df['pos_scatt','1'].values <= x_muB/2.) & (-y_muB/2. <= df['pos_scatt','2'].values) & (df['pos_scatt','2'].values<= y_muB/2.) & (-z_muB/2. <= df['pos_scatt','3'].values) & (df['pos_scatt','3'].values <= z_muB/2.)
+        not_mask = np.array([bool(1-mask[j]) for j in range(len(mask))])
+        df = df[not_mask]
+    if experiment == 'sbnd':
+        # filtering out those scatterings inside the active volume
+        mask = (-x_sbnd/2. <= df['pos_scatt','1'].values) & (df['pos_scatt','1'].values <= x_sbnd/2.) & (-y_sbnd/2. <= df['pos_scatt','2'].values) & (df['pos_scatt','2'].values<= y_sbnd/2.) & (-z_sbnd/2. <= df['pos_scatt','3'].values) & (df['pos_scatt','3'].values <= z_sbnd/2.)
+        not_mask = np.array([bool(1-mask[j]) for j in range(len(mask))])
+        df = df[not_mask]
+    
+    return df
 
 def set_opening_angle(df):
     df = df.copy(deep=True)
