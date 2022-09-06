@@ -127,9 +127,9 @@ def get_distances(p0, phat, experiment):
     n = len(p0.T)
 
     # positions of the 6 walls of the cryostat in order (2 for X, 2 for Y, 2 for Z)
-    if experiment == 'microboone':
+    if experiment == 'microboone' or experiment == 'microboone_dirt':
         planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,dif_z/2,z_muB + dif_z/2])
-    elif experiment == 'sbnd':
+    elif experiment == 'sbnd' or experiment == 'sbnd_dirt':
         planes = np.array([-x_sbnd/2,x_sbnd/2,-y_sbnd/2,y_sbnd/2,dif_z_sbnd/2,z_sbnd + dif_z_sbnd/2])
 
     # suitable forms for parameters
@@ -152,7 +152,7 @@ def get_distances(p0, phat, experiment):
     for i in range(n):
         dist_temp = solutions[i][mask_inter[i]]
         if len(dist_temp) == 2:
-            distances[i] = [dist_temp.min(), dist_temp.max()]
+            distances[i] = [dist_temp.min(),dist_temp.max()]
         elif len(dist_temp) == 1:
             distances[i] = [0, dist_temp[0]]
         else:
@@ -208,7 +208,7 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
     p0 = np.array([df['pos_scatt','1'], df['pos_scatt','2'], df['pos_scatt','3']])
 
 
-    if experiment == 'miniboone':
+    if experiment == 'miniboone' or experiment == 'miniboone_dirt':
         # compute the distance to the point of exit from the detector using intersection of line with sphere
         #  p0 . phat
         x0_dot_p = dot3(p0, phat)
@@ -238,7 +238,7 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         df.loc[:,('pos_decay', '2')] = p0[1] + (dist2 + dist1)/2 * phat[1]
         df.loc[:,('pos_decay', '3')] = p0[2] + (dist2 + dist1)/2 * phat[2]
 
-    elif experiment == 'microboone' or experiment == 'sbnd':
+    else: 
         # dist1 is the distance between the point of production and the entrance of the FIDUCIAL vol
         # dist2 is the distance between the point of production and the exit of the FIDUCIAL vol
         dist1, dist2 = get_distances(p0,phat, experiment).T
@@ -252,8 +252,9 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         df['pos_decay', '2'] = df['pos_scatt', '2'] + (dist2 + dist1)/2 * phat[1]
         df['pos_decay', '3'] = df['pos_scatt', '3'] + (dist2 + dist1)/2 * phat[2]
 
-    else:
-        raise NotImplementedError("This experiment is not implemented")
+
+    #else:
+    #    raise NotImplementedError("This experiment is not implemented")
 
         
     # new reconstructed weights
@@ -264,26 +265,43 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
 
 
 
-def set_params(df):
+def set_params(df, showers='e+e-'):
 
     df = df.copy(deep=True)
-
-    p21 = np.array([df[( 'P_decay_ell_minus', '1')].values,df[( 'P_decay_ell_minus', '2')].values,df[( 'P_decay_ell_minus', '3')].values])
-    p22 = np.array([df[( 'P_decay_ell_plus', '1')].values,df[( 'P_decay_ell_plus', '2')].values,df[( 'P_decay_ell_plus', '3')].values])
-    p2 = (p21+p22)/2
-
-    p1 = np.array([0,0,1])
-    angle = get_angle(p1,p2)
-
-    df['reco_theta_beam'] = angle * 180 / np.pi
-
-    df['reco_Evis'] = df[( 'P_decay_ell_minus', '0')].values + df[( 'P_decay_ell_plus', '0')].values
-
-    df['reco_w'] = df.w_event_rate
     
-    df['reco_Enu'] = const.m_proton * (df['reco_Evis']) / ( const.m_proton - (df['reco_Evis'])*(1.0 - np.cos(angle)))
+    if showers == 'e+e-':
+        p21 = np.array([df[( 'P_decay_ell_minus', '1')].values,df[( 'P_decay_ell_minus', '2')].values,df[( 'P_decay_ell_minus', '3')].values])
+        p22 = np.array([df[( 'P_decay_ell_plus', '1')].values,df[( 'P_decay_ell_plus', '2')].values,df[( 'P_decay_ell_plus', '3')].values])
+        p2 = (p21+p22)/2
 
-    return df
+        p1 = np.array([0,0,1])
+        angle = get_angle(p1,p2)
+
+        df['reco_theta_beam'] = angle * 180 / np.pi
+
+        df['reco_Evis'] = df[( 'P_decay_ell_minus', '0')].values + df[( 'P_decay_ell_plus', '0')].values
+
+        df['reco_w'] = df.w_event_rate
+        
+        df['reco_Enu'] = const.m_proton * (df['reco_Evis']) / ( const.m_proton - (df['reco_Evis'])*(1.0 - np.cos(angle)))
+
+        return df
+    
+    elif showers == 'photon':
+        p2 = np.array([df[( 'P_decay_photon', '1')].values,df[( 'P_decay_photon', '2')].values,df[( 'P_decay_photon', '3')].values])
+        
+        p1 = np.array([0,0,1])
+        angle = get_angle(p1,p2)
+
+        df['reco_theta_beam'] = angle * 180 / np.pi
+
+        df['reco_Evis'] = df[( 'P_decay_photon', '0')].values
+
+        df['reco_w'] = df.w_event_rate
+        
+        df['reco_Enu'] = const.m_proton * (df['reco_Evis']) / ( const.m_proton - (df['reco_Evis'])*(1.0 - np.cos(angle)))
+
+        return df
 
 
 def filter_angle_ee(df, angle_max=5):
@@ -301,6 +319,22 @@ def filter_angle_ee(df, angle_max=5):
 
     return df
 
+
+def out_of_active_volume(df,experiment='microboone'):
+    df = df.copy(deep=True)
+    
+    if experiment == 'microboone':
+        # filtering out those scatterings inside the active volume
+        mask = (-x_muB/2. <= df['pos_scatt','1'].values) & (df['pos_scatt','1'].values <= x_muB/2.) & (-y_muB/2. <= df['pos_scatt','2'].values) & (df['pos_scatt','2'].values<= y_muB/2.) & (-z_muB/2. <= df['pos_scatt','3'].values) & (df['pos_scatt','3'].values <= z_muB/2.)
+        not_mask = np.array([bool(1-mask[j]) for j in range(len(mask))])
+        df = df[not_mask]
+    if experiment == 'sbnd':
+        # filtering out those scatterings inside the active volume
+        mask = (-x_sbnd/2. <= df['pos_scatt','1'].values) & (df['pos_scatt','1'].values <= x_sbnd/2.) & (-y_sbnd/2. <= df['pos_scatt','2'].values) & (df['pos_scatt','2'].values<= y_sbnd/2.) & (-z_sbnd/2. <= df['pos_scatt','3'].values) & (df['pos_scatt','3'].values <= z_sbnd/2.)
+        not_mask = np.array([bool(1-mask[j]) for j in range(len(mask))])
+        df = df[not_mask]
+    
+    return df
 
 def set_opening_angle(df):
     df = df.copy(deep=True)
