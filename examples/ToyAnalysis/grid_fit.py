@@ -4,6 +4,8 @@ import scipy
 import os
 from pathos.multiprocessing import ProcessingPool as Pool
 
+import importlib.resources as resources
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib import cm
@@ -25,35 +27,35 @@ Umu5_def = np.sqrt(1.0e-12)
 epsilon_def = 8e-4
 
 
-def get_data_MB(varplot='reco_Evis',loc='ToyAnalysis/data'):
-    
+def get_data_MB(varplot='reco_Evis'):
+
     if varplot=='reco_Evis':
-        _, data = np.loadtxt(loc+"/miniboone_2020/Evis/data_Evis.dat", unpack=True)
-        _, bkg = np.loadtxt(loc+"/miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
+        _, data = resources.open_text("ToyAnalysis.include.miniboone_2020.Evis_data.dat", unpack=True)
+        _, bkg = resources.open_text("ToyAnalysis.include.miniboone_2020.Evis_bkg.dat", unpack=True)
         signal = data - bkg
         sys_signal = 0.1
         sys_bkg = 0.1
-        
+
     elif varplot=='reco_Enu':
         # miniboone nu data 2020
-        _, data = np.loadtxt(loc+"/miniboone_2020/Enu/data.dat", unpack=True)
-        _, bkg = np.loadtxt(loc+"/miniboone_2020/Enu/constrained_bkg.dat", unpack=True)
-        _, error_low = np.loadtxt(loc+"/miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat", unpack=True)
+        _, data = resources.open_text("ToyAnalysis.include.miniboone_2020.Enu_data.dat", unpack=True)
+        _, bkg = resources.open_text("ToyAnalysis.include.miniboone_2020.Enu_constrained_bkg.dat", unpack=True)
+        _, error_low = resources.open_text("ToyAnalysis.include.miniboone_2020.Enu_lower_error_bar_constrained_bkg.dat", unpack=True)
         signal = data - bkg
         sys_bkg = (bkg - error_low)/bkg
         sys_signal = 0.1
-        bin_e = np.loadtxt(loc+"/miniboone_2020/Enu/bin_edges.dat")
+        bin_e = resources.open_text("ToyAnalysis.include.miniboone_2020.Enu_bin_edges.dat")
         bin_w = (bin_e[1:] - bin_e[:-1])
         signal *= bin_w*1e3
         bkg *= bin_w*1e3
-            
+
     elif varplot=='reco_angle':
-        _, data = np.loadtxt(loc+"/miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
-        _, bkg = np.loadtxt(loc+"/miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
+        _, data = resources.open_text("ToyAnalysis.include.miniboone_2020.cosTheta_data.dat", unpack=True)
+        _, bkg = resources.open_text("ToyAnalysis.include.miniboone_2020.cosTheta_bkg.dat", unpack=True)
         signal = data - bkg
         sys_signal = 0.1
         sys_bkg = 0.1
-        
+
     return [signal,bkg,sys_signal,sys_bkg]
 
 
@@ -65,15 +67,15 @@ def get_events_df(model='3+1',experiment='miniboone_fhc',neval=100000, HNLtype="
     gen.run(loglevel="ERROR")
     df = gen.df
     decay_l = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0))
-    
+
     df = df[df.w_event_rate>0]
-    
+
     if experiment=='miniboone_fhc':
         df = av2.compute_spectrum(df, EXP='miniboone',EVENT_TYPE='both')
     elif experiment=='miniboone_fhc':
         df = av.set_params(df)
     df = df[df.reco_w>0]
-    
+
     if experiment=='miniboone_fhc':
         df = av.select_MB_decay_expo_prob(df,l_decay_proper_cm=decay_l)
     elif experiment=='microboone':

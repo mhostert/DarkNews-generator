@@ -24,4 +24,5 @@ jobs:
         python -m pip install --upgrade pip
         pip install tox tox-gh-actions
     - name: Test generator and physics output
+      uses: codecov/codecov-action@v
       run: tox

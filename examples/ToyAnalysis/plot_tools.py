@@ -1,4 +1,4 @@
-import os 
+import os
 import numpy as np
 from scipy.interpolate import splprep, splev
 from pathlib import Path

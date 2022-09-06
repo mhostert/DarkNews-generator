@@ -1,13 +1,8 @@
 import numpy as np
 from scipy import interpolate
-from pathlib import Path
 import os.path
 import os
-try:
-    import importlib.resources as resources
-except ImportError:
-    # Try backported to PY<37 `importlib_resources`.
-    import importlib_resources as resources
+import importlib.resources as resources
 
 
 from . import logger, prettyprinter
