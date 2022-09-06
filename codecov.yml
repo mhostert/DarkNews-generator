@@ -1,0 +1,16 @@
+coverage:
+  status:
+    project: off
+    patch: off
+
+flag_management:
+  default_rules:
+    carryforward: true
+  individual_flags:
+    - name: generator
+      paths:
+        - src/DarkNews/
+      statuses:
+        - type: project
+          target: 100%
+          threshold: 1%

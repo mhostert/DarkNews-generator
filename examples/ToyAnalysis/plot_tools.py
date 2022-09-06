@@ -1,4 +1,4 @@
-import os 
+import os
 import numpy as np
 from scipy.interpolate import splprep, splev
 from pathlib import Path
@@ -46,7 +46,7 @@ def plot_all_rates(df, case_name, Nevents=None, truth_plots=False, title=None, p
 
 
 
-def batch_plot_signalMB(obs, PATH, title='Dark News', Nevents= None, loc=''):
+def batch_plot_signalMB(obs, PATH, title='Dark News', Nevents= None, loc='', prefix=''):
 
     if Nevents is not None:
         total_Nevent_MB = Nevents*(1/obs['reco_eff'][0])
@@ -55,11 +55,11 @@ def batch_plot_signalMB(obs, PATH, title='Dark News', Nevents= None, loc=''):
     print(f"MB events: {total_Nevent_MB:.2g}")
 
     #################### HISTOGRAMS 1D - STACKED ####################################################
-    histogram1D_data_stacked(Path(PATH)/"1D_Enu_data_stacked", obs, r"$E_{\rm \nu}/$GeV", title,
+    histogram1D_data_stacked(Path(PATH)/f"{prefix}_1D_Enu_data_stacked", obs, r"$E_{\rm \nu}/$GeV", title,
         varplot='reco_Enu', tot_events=total_Nevent_MB, loc=loc)
-    histogram1D_data_stacked(Path(PATH)/"1D_Evis_data_stacked", obs, r"$E_{\rm vis}/$GeV", title,
+    histogram1D_data_stacked(Path(PATH)/f"{prefix}_1D_Evis_data_stacked", obs, r"$E_{\rm vis}/$GeV", title,
         varplot='reco_Evis', tot_events=total_Nevent_MB, loc=loc)
-    histogram1D_data_stacked(Path(PATH)/"1D_costheta_data_stacked", obs, r"$\cos\theta$", title,
+    histogram1D_data_stacked(Path(PATH)/f"{prefix}_1D_costheta_data_stacked", obs, r"$\cos\theta$", title,
         varplot='reco_costheta_beam', tot_events=total_Nevent_MB, loc=loc)
 
 

@@ -101,7 +101,7 @@ def get_decay_length_in_lab(p, l_decay_proper_cm):
     return l_decay_proper_cm*gammabeta
 
 def get_distances(p0, phat, experiment):
-    """get_distances_in_muB gets the distance to the entry and exit 
+    """get_distances_in_muB gets the distance to the entry and exit
     of the MicroBooNE fiducial volume
 
     NOTE: this function uses a coordinate system with (0,0,0) being the center 
