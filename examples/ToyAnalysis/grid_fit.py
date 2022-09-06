@@ -28,28 +28,28 @@ epsilon_def = 8e-4
 def get_data_MB(varplot='reco_Evis',loc='ToyAnalysis/data'):
     
     if varplot=='reco_Evis':
-        _, data = np.loadtxt(loc+"/digitized/miniboone_2020/Evis/data_Evis.dat", unpack=True)
-        _, bkg = np.loadtxt(loc+"/digitized/miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
+        _, data = np.loadtxt(loc+"/miniboone_2020/Evis/data_Evis.dat", unpack=True)
+        _, bkg = np.loadtxt(loc+"/miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
         signal = data - bkg
         sys_signal = 0.1
         sys_bkg = 0.1
         
     elif varplot=='reco_Enu':
         # miniboone nu data 2020
-        _, data = np.loadtxt(loc+"/digitized/miniboone_2020/Enu/data.dat", unpack=True)
-        _, bkg = np.loadtxt(loc+"/digitized/miniboone_2020/Enu/constrained_bkg.dat", unpack=True)
-        _, error_low = np.loadtxt(loc+"/digitized/miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat", unpack=True)
+        _, data = np.loadtxt(loc+"/miniboone_2020/Enu/data.dat", unpack=True)
+        _, bkg = np.loadtxt(loc+"/miniboone_2020/Enu/constrained_bkg.dat", unpack=True)
+        _, error_low = np.loadtxt(loc+"/miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat", unpack=True)
         signal = data - bkg
         sys_bkg = (bkg - error_low)/bkg
         sys_signal = 0.1
-        bin_e = np.loadtxt(loc+"/digitized/miniboone_2020/Enu/bin_edges.dat")
+        bin_e = np.loadtxt(loc+"/miniboone_2020/Enu/bin_edges.dat")
         bin_w = (bin_e[1:] - bin_e[:-1])
         signal *= bin_w*1e3
         bkg *= bin_w*1e3
             
     elif varplot=='reco_angle':
-        _, data = np.loadtxt(loc+"/digitized/miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
-        _, bkg = np.loadtxt(loc+"/digitized/miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
+        _, data = np.loadtxt(loc+"/miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
+        _, bkg = np.loadtxt(loc+"/miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
         signal = data - bkg
         sys_signal = 0.1
         sys_bkg = 0.1

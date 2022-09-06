@@ -151,7 +151,7 @@ def get_histogram1D(obs, NEVENTS=1, varplot='reco_Evis', get_bins=False,loc=''):
         
 
         # miniboone nu data for bins
-        Enu_binc, _ = np.loadtxt(loc+"digitized/miniboone_2020/Evis/data_Evis.dat", unpack=True)
+        Enu_binc, _ = np.loadtxt(loc+"miniboone_2020/Evis/data_Evis.dat", unpack=True)
         nbins=np.size(Enu_binc)
         Enu_binc *= 1e-3
         binw_enu = 0.05*np.ones((nbins))
@@ -177,7 +177,7 @@ def get_histogram1D(obs, NEVENTS=1, varplot='reco_Evis', get_bins=False,loc=''):
     elif varplot=='reco_Enu':
 
         # miniboone nu data for bins
-        bin_e = np.loadtxt(loc+"digitized/miniboone_2020/Enu/bin_edges.dat")
+        bin_e = np.loadtxt(loc+"miniboone_2020/Enu/bin_edges.dat")
         bin_w = (bin_e[1:] - bin_e[:-1])
         units = 1e3 # from GeV to MeV
         
@@ -229,28 +229,28 @@ def get_histogram1D(obs, NEVENTS=1, varplot='reco_Evis', get_bins=False,loc=''):
 def get_data_MB(varplot='reco_Evis',loc=''):
     
     if varplot=='reco_Evis':
-        _, data = np.loadtxt(loc+"digitized/miniboone_2020/Evis/data_Evis.dat", unpack=True)
-        _, bkg = np.loadtxt(loc+"digitized/miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
+        _, data = np.loadtxt(loc+"miniboone_2020/Evis/data_Evis.dat", unpack=True)
+        _, bkg = np.loadtxt(loc+"miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
         signal = data - bkg
         sys_signal = 0.1
         sys_bkg = 0.1
         
     elif varplot=='reco_Enu':
         # miniboone nu data 2020
-        _, data = np.loadtxt(loc+"digitized/miniboone_2020/Enu/data.dat", unpack=True)
-        _, bkg = np.loadtxt(loc+"digitized/miniboone_2020/Enu/constrained_bkg.dat", unpack=True)
-        _, error_low = np.loadtxt(loc+"digitized/miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat", unpack=True)
+        _, data = np.loadtxt(loc+"miniboone_2020/Enu/data.dat", unpack=True)
+        _, bkg = np.loadtxt(loc+"miniboone_2020/Enu/constrained_bkg.dat", unpack=True)
+        _, error_low = np.loadtxt(loc+"miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat", unpack=True)
         signal = data - bkg
         sys_bkg = (bkg - error_low)/bkg
         sys_signal = 0.1
-        bin_e = np.loadtxt(loc+"digitized/miniboone_2020/Enu/bin_edges.dat")
+        bin_e = np.loadtxt(loc+"miniboone_2020/Enu/bin_edges.dat")
         bin_w = (bin_e[1:] - bin_e[:-1])
         signal *= bin_w*1e3
         bkg *= bin_w*1e3
             
     elif varplot=='reco_angle':
-        _, data = np.loadtxt(loc+"digitized/miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
-        _, bkg = np.loadtxt(loc+"digitized/miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
+        _, data = np.loadtxt(loc+"miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
+        _, bkg = np.loadtxt(loc+"miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
         signal = data - bkg
         sys_signal = 0.1
         sys_bkg = 0.1
@@ -292,8 +292,8 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
     if varplot=='reco_Evis':
 
         # miniboone nu data
-        bin_c, data_MB_enu_nue = np.loadtxt(loc+"digitized/miniboone_2020/Evis/data_Evis.dat", unpack=True)
-        _, data_MB_bkg = np.loadtxt(loc+"digitized/miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
+        bin_c, data_MB_enu_nue = np.loadtxt(loc+"miniboone_2020/Evis/data_Evis.dat", unpack=True)
+        _, data_MB_bkg = np.loadtxt(loc+"miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
         bin_c *= 1e-3
         bin_w = 0.05*bin_c/bin_c
         bin_e = np.append(0.1, bin_w/2.0 + bin_c)
@@ -309,10 +309,10 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
     elif varplot=='reco_Enu':
 
         # miniboone nu data 2020
-        _, data_MB = np.loadtxt(loc+"digitized/miniboone_2020/Enu/data.dat", unpack=True)
-        _, data_MB_bkg = np.loadtxt(loc+"digitized/miniboone_2020/Enu/constrained_bkg.dat", unpack=True)
-        _, MB_bkg_lower_error_bar = np.loadtxt(loc+"digitized/miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat", unpack=True)
-        bin_e = np.loadtxt(loc+"digitized/miniboone_2020/Enu/bin_edges.dat")
+        _, data_MB = np.loadtxt(loc+"miniboone_2020/Enu/data.dat", unpack=True)
+        _, data_MB_bkg = np.loadtxt(loc+"miniboone_2020/Enu/constrained_bkg.dat", unpack=True)
+        _, MB_bkg_lower_error_bar = np.loadtxt(loc+"miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat", unpack=True)
+        bin_e = np.loadtxt(loc+"miniboone_2020/Enu/bin_edges.dat")
         
         
         data_MB = data_MB[:-1]
@@ -339,8 +339,8 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
     elif varplot=='reco_costheta_beam':
 
         # miniboone nu data
-        bin_c, data_MB_cost_nue = np.loadtxt(loc+"digitized/miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
-        _, data_MB_bkg = np.loadtxt(loc+"digitized/miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
+        bin_c, data_MB_cost_nue = np.loadtxt(loc+"miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
+        _, data_MB_bkg = np.loadtxt(loc+"miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
         bin_w = np.ones(len(bin_c))*0.1
         bin_e = np.linspace(-1,1,21)
         units = 1
@@ -426,8 +426,8 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
 #     if varplot=='reco_Evis':
 
 #         # miniboone nu data
-#         bin_c, data_MB_enu_nue = np.loadtxt("digitized/miniboone_2020/Evis/data_Evis.dat", unpack=True)
-#         _, data_MB_bkg = np.loadtxt("digitized/miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
+#         bin_c, data_MB_enu_nue = np.loadtxt("miniboone_2020/Evis/data_Evis.dat", unpack=True)
+#         _, data_MB_bkg = np.loadtxt("miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
 #         bin_c *= 1e-3
 #         bin_w = 0.05*bin_c/bin_c
 #         bin_e = np.append(0.1, bin_w/2.0 + bin_c)
@@ -443,10 +443,10 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
 #     elif varplot=='reco_Enu':
 
 #         # miniboone nu data 2020
-#         _, data_MB = np.loadtxt("digitized/miniboone_2020/Enu/data.dat", unpack=True)
-#         _, data_MB_bkg = np.loadtxt("digitized/miniboone_2020/Enu/constrained_bkg.dat", unpack=True)
-#         _, MB_bkg_lower_error_bar = np.loadtxt("digitized/miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat", unpack=True)
-#         bin_e = np.loadtxt("digitized/miniboone_2020/Enu/bin_edges.dat")
+#         _, data_MB = np.loadtxt("miniboone_2020/Enu/data.dat", unpack=True)
+#         _, data_MB_bkg = np.loadtxt("miniboone_2020/Enu/constrained_bkg.dat", unpack=True)
+#         _, MB_bkg_lower_error_bar = np.loadtxt("miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat", unpack=True)
+#         bin_e = np.loadtxt("miniboone_2020/Enu/bin_edges.dat")
         
         
 #         data_MB = data_MB[:-1]
@@ -475,8 +475,8 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
 #     elif varplot=='reco_costheta_beam':
 
 #         # miniboone nu data
-#         bin_c, data_MB_cost_nue = np.loadtxt("digitized/miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
-#         _, data_MB_bkg = np.loadtxt("digitized/miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
+#         bin_c, data_MB_cost_nue = np.loadtxt("miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
+#         _, data_MB_bkg = np.loadtxt("miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
 #         bin_w = np.ones(len(bin_c))*0.1
 #         bin_e = np.linspace(-1,1,21)
 #         hist_type = 'count'
@@ -565,8 +565,8 @@ def histogram1D_data_muB(plotname, obs, XLABEL, TITLE, regime=None,varplot='reco
         
 
         # microboone nu data for bins
-        Enu_binc, data_MB_enu_nue = np.loadtxt("digitized/miniboone_2020/Evis/data_Evis.dat", unpack=True)
-        _, data_MB_enu_nue_bkg = np.loadtxt("digitized/miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
+        Enu_binc, data_MB_enu_nue = np.loadtxt("miniboone_2020/Evis/data_Evis.dat", unpack=True)
+        _, data_MB_enu_nue_bkg = np.loadtxt("miniboone_2020/Evis/bkg_Evis.dat", unpack=True)
         Enu_binc *= 1e-3
         binw_enu = 0.05*Enu_binc/Enu_binc
         bin_e = np.append(0.1, binw_enu/2.0 + Enu_binc)
@@ -628,9 +628,9 @@ def histogram1D_data_muB(plotname, obs, XLABEL, TITLE, regime=None,varplot='reco
     elif varplot=='reco_Enu':
 
         # microboone nu data
-        Enu_binc, data_MB_enu_nue = np.loadtxt("digitized/miniboone/Enu_excess_nue.dat", unpack=True)
-        Enu_binc, data_MB_enu_nue_errorlow = np.loadtxt("digitized/miniboone/Enu_excess_nue_lowererror.dat", unpack=True)
-        Enu_binc, data_MB_enu_nue_errorup = np.loadtxt("digitized/miniboone/Enu_excess_nue_uppererror.dat", unpack=True)
+        Enu_binc, data_MB_enu_nue = np.loadtxt("miniboone/Enu_excess_nue.dat", unpack=True)
+        Enu_binc, data_MB_enu_nue_errorlow = np.loadtxt("miniboone/Enu_excess_nue_lowererror.dat", unpack=True)
+        Enu_binc, data_MB_enu_nue_errorup = np.loadtxt("miniboone/Enu_excess_nue_uppererror.dat", unpack=True)
         binw_enu = np.array([0.1,0.075,0.1,0.075,0.125,0.125,0.15,0.15,0.2,0.2])
         bin_e = np.array([0.2,0.3,0.375,0.475,0.550,0.675,0.8,0.95,1.1,1.3,1.5])
         data_MB_enu_nue *=  binw_enu*1e3
@@ -696,8 +696,8 @@ def histogram1D_data_muB(plotname, obs, XLABEL, TITLE, regime=None,varplot='reco
     elif varplot=='reco_angle':
 
         # microboone nu data
-        cost_binc, data_MB_cost_nue = np.loadtxt("digitized/miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
-        _, data_MB_cost_nue_bkg = np.loadtxt("digitized/miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
+        cost_binc, data_MB_cost_nue = np.loadtxt("miniboone_2020/cos_Theta/data_cosTheta.dat", unpack=True)
+        _, data_MB_cost_nue_bkg = np.loadtxt("miniboone_2020/cos_Theta/bkg_cosTheta.dat", unpack=True)
         nbins = np.size(cost_binc)
         binw_cost = np.ones(nbins)*0.1
         bincost_e = np.linspace(-1,1,21)

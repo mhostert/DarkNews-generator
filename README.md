@@ -40,7 +40,7 @@ If you experience any problems or bugs, either open a new issue or contact <mhos
 
 Required dependencies:
 
-- [Python](http://www.python.org/) 3.6.1 or above
+- [Python](http://www.python.org/) 3.7 or above
 - [NumPy](http://www.numpy.org/)
 
 The following dependencies (if missing) will be automatically installed during the main installation of the package:
@@ -60,7 +60,7 @@ The following dependencies (if missing) will be automatically installed during t
 
 ## Installation
 
-DarkNews is available on PyPI so from your python3.6+ (virtual environment or otherwise), run
+DarkNews is available on PyPI so from your python3.7+ (virtual environment or otherwise), run
 
 ```sh
 python3 -m pip install DarkNews

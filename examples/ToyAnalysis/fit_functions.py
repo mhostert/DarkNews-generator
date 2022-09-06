@@ -18,6 +18,12 @@ from . import analysis as a
 from . import grid_fit
 from . import plot_tools
 
+try:
+    import importlib.resources as resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as resources
+
 #from ToyAnalysis import PATH_TO_DATA_RELEASE
 PATH_TO_DATA_RELEASE = os.path.dirname(os.path.realpath(__file__)) + '/data'
 
@@ -77,7 +83,7 @@ def get_decay_length(df,coupling_factor=1.):
 	l_decay_proper_cm = const.get_decay_rate_in_cm(np.sum(df.w_decay_rate_0)) / coupling_factor**2
 
 	# compute the position of decay
-	x,y,z = analysis_decay.decay_position(pN, l_decay_proper_cm)[1:]
+	x,y,z = av.decay_position(pN, l_decay_proper_cm)[1:]
 
 	return np.sqrt(x*x+y*y+z*z).mean()
 
@@ -133,17 +139,19 @@ def chi2_MiniBooNE_2020(NP_MC, NPevents):
 
 	####
 	# using __init__ path definition
-	bin_e = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_binboundaries_nue_lowe.txt')
+	# bin_e = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}//miniboone_binboundaries_nue_lowe.txt')
+	bin_e = resources.open_text("ToyAnalysis.include.MB_data_release.nue2020.numode", '/miniboone_binboundaries_nue_lowe.txt')
+
 	bin_w = -bin_e[:-1]  + bin_e[1:]
 	bin_c = bin_e[:-1] + bin_w/2
 	
-	nue_data = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_nuedata_lowe.txt')
-	numu_data = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_numudata.txt')
+	nue_data = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_nuedata_lowe.txt')
+	numu_data = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_numudata.txt')
 	
-	nue_bkg = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_nuebgr_lowe.txt')
-	numu_bkg = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_numu.txt')
+	nue_bkg = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_nuebgr_lowe.txt')
+	numu_bkg = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_numu.txt')
 	
-	fract_covariance = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_full_fractcovmatrix_nu_lowe.txt')
+	fract_covariance = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_full_fractcovmatrix_nu_lowe.txt')
 
 	MB_LEE = nue_data - nue_bkg
 
@@ -187,16 +195,16 @@ def cov_matrix_MB():
 
 	# shape of new physics prediction normalized to NPevents
 	# using __init__ path definition
-	bin_e = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_binboundaries_nue_lowe.txt')
+	bin_e = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_binboundaries_nue_lowe.txt')
 	bin_w = -bin_e[:-1]  + bin_e[1:]
 	
-	nue_data = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_nuedata_lowe.txt')
-	numu_data = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_numudata.txt')
+	nue_data = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_nuedata_lowe.txt')
+	numu_data = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_numudata.txt')
 	
-	nue_bkg = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_nuebgr_lowe.txt')
-	numu_bkg = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_numu.txt')
+	nue_bkg = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_nuebgr_lowe.txt')
+	numu_bkg = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_numu.txt')
 	
-	fract_covariance = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_full_fractcovmatrix_nu_lowe.txt')
+	fract_covariance = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_full_fractcovmatrix_nu_lowe.txt')
 
 	
 	NP_diag_matrix  = np.diag(np.concatenate([nue_data-nue_bkg,nue_bkg*0.0,numu_bkg*0.0]))
@@ -357,17 +365,17 @@ def chi2_MiniBooNE_2020_3p2_nodecay(NP_MC, NPevents):
 
 	####
 	# using __init__ path definition
-	bin_e = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_binboundaries_nue_lowe.txt')
+	bin_e = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_binboundaries_nue_lowe.txt')
 	bin_w = -bin_e[:-1]  + bin_e[1:]
 	bin_c = bin_e[:-1] + bin_w/2
 	
-	nue_data = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_nuedata_lowe.txt')
-	numu_data = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_numudata.txt')
+	nue_data = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_nuedata_lowe.txt')
+	numu_data = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_numudata.txt')
 	
-	nue_bkg = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_nuebgr_lowe.txt')
-	numu_bkg = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_numu.txt')
+	nue_bkg = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_nuebgr_lowe.txt')
+	numu_bkg = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_numu.txt')
 	
-	fract_covariance = np.genfromtxt(f'{PATH_TO_DATA_RELEASE}/MB_data_release/nue2020/numode/miniboone_full_fractcovmatrix_nu_lowe.txt')
+	fract_covariance = resources.open_text('ToyAnalysis.include.MB_data_release.nue2020.numode', 'miniboone_full_fractcovmatrix_nu_lowe.txt')
 
 	MB_LEE = nue_data - nue_bkg
 
