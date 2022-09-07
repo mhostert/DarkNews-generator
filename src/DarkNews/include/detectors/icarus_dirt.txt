@@ -1,0 +1,18 @@
+# MicroBooNE (Wire-Cell PRD https://arxiv.org/abs/2110.13978)
+name = "icarus_dirt"
+fluxfile = "MicroBooNE_BNB_fullflux.txt"
+flux_norm = 1.0/0.05 # units in file are nu/POT/bin/cm2, with bin size 50 MeV.
+erange = [
+    0.05,
+    7
+]
+nuclear_targets = [
+    'Si28',
+    'O16'
+]
+fiducial_mass = 416240. # tons, density:  2.15 g/cm3, length = 40000cm, width/height = 2200 cm
+fiducial_mass_per_target = [
+    fiducial_mass*28/60, 
+    fiducial_mass*32/60
+] # tons
+POTs = 6.6e+20

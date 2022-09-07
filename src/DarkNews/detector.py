@@ -45,6 +45,8 @@ class Detector:
         "minerva_me_rhc": "minerva_me_fhc.txt",
         "miniboone_fhc": "miniboone_fhc.txt",
         "miniboone_fhc_dirt": "miniboone_fhc_dirt.txt",
+        "icarus": "icarus.txt",
+        "icarus_dirt": "icarus_dirt.txt",
         "miniboone_fhc_steel": "miniboone_fhc_steel.txt",
         "miniboone_rhc": "miniboone_rhc.txt",
         "minos_le_fhc": "minos_le_fhc.txt",
@@ -146,10 +148,12 @@ class Detector:
         geometries = {}
         geometries["microboone_dirt"] = geom.microboone_dirt_geometry
         geometries["sbnd_dirt"] = geom.sbnd_dirt_geometry
+        geometries["icarus_dirt"] = geom.icarus_dirt_geometry
         geometries["miniboone_fhc_dirt"] = geom.miniboone_dirt_geometry
         geometries["microboone"] = geom.microboone_geometry
         geometries["microboone_tpc"] = geom.microboone_tpc_geometry
         geometries["sbnd"] = geom.sbnd_geometry
+        geometries["icarus"] = geom.icarus_geometry
         geometries["miniboone_fhc"] = geom.miniboone_geometry
         geometries["miniboone_rhc"] = geom.miniboone_geometry
 

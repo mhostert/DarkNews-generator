@@ -160,7 +160,22 @@ x_sbnd_dirt_max = x_muB_dirt_max
 y_sbnd_dirt_min = y_muB_dirt_min
 y_sbnd_dirt_max = y_muB_dirt_max
 z_sbnd_dirt_max = - dz_sbnd/2 - gap_sbnd_wall_TPC
-z_sbnd_dirt_min = -l_baseline_sbnd + booster_decay_tunnel 
+z_sbnd_dirt_min = -l_baseline_sbnd + booster_decay_tunnel
+
+# Icarus
+l_baseline_icarus = 600e2
+x_icarus = 3.6e2*2
+y_icarus = 3.9e2
+z_icarus = 19.6e2
+
+l_dirt_icarus = 400e2
+icarus_gap = 1e2
+x_icarus_dirt_min = x_muB_dirt_min
+x_icarus_dirt_max = x_muB_dirt_max
+y_icarus_dirt_min = y_muB_dirt_min
+y_icarus_dirt_max = y_muB_dirt_max
+z_icarus_dirt_max = - icarus_gap + z_icarus/2.
+z_icarus_dirt_min = - l_dirt_icarus + z_icarus_dirt_max
 
 # distribute events in df accross the pre-defined MicroBooNE (cryostat) volume
 def microboone_geometry(df):
@@ -220,6 +235,32 @@ def sbnd_geometry(df):
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
 
+def icarus_geometry(df):
+
+    nsamples = len(df)
+
+    detector_box = np.array([[-300, 300], [-300, 300], [-300, 300]])
+
+    tries = 0
+    npoints = 0
+    events = np.array(3 * [[]])
+    while npoints < nsamples:
+
+        new_detector = Chisel(nsamples=nsamples, box=detector_box)
+        new_events = new_detector.events[:, new_detector.rectangle(dx=x_icarus, dy=y_icarus, dz=z_icarus)]
+        events = np.concatenate((events, new_events), axis=1)
+
+        npoints += np.shape(new_events)[1]
+        tries += nsamples
+        if tries > 1e3 * nsamples:
+            raise ValueError(f"Geometry sampled too inefficiently, tries = {tries} and npoints = {npoints}. Wrong setup?")
+
+    # guarantee that array has number of samples asked (nsamples)
+    df["pos_scatt", "0"] = (events[2, :nsamples] + l_baseline_icarus + icarus_gap + z_icarus/2)/const.c_LIGHT
+    df["pos_scatt", "1"] = events[0, :nsamples]
+    df["pos_scatt", "2"] = events[1, :nsamples]
+    df["pos_scatt", "3"] = events[2, :nsamples]
+
 
 def miniboone_dirt_geometry(df):
 
@@ -244,6 +285,18 @@ def microboone_dirt_geometry(df):
     df["pos_scatt", "0"] = time + (z0)/const.c_LIGHT*1e9 # z0 is negative
     df["pos_scatt", "1"] = np.random.random(length_events)*(x_muB_dirt_max - x_muB_dirt_min)  + x_muB_dirt_min
     df["pos_scatt", "2"] = np.random.random(length_events)*(y_muB_dirt_max - y_muB_dirt_min)  + y_muB_dirt_min
+    df["pos_scatt", "3"] = z0
+
+def icarus_dirt_geometry(df):
+
+    # geometry of cylinder_MB for dirt
+    length_events = len(df)
+    z0 = np.random.random(length_events)*(z_icarus_dirt_max - z_icarus_dirt_min)  + z_icarus_dirt_min
+
+    time = MicroBooNEGlobalTimeOffset + (MicroBooNERandomTimeOffset) * np.random.rand(length_events)
+    df["pos_scatt", "0"] = time + (z0)/const.c_LIGHT*1e9 # z0 is negative
+    df["pos_scatt", "1"] = np.random.random(length_events)*(x_icarus_dirt_max - x_icarus_dirt_min)  + x_icarus_dirt_min
+    df["pos_scatt", "2"] = np.random.random(length_events)*(y_icarus_dirt_max - y_icarus_dirt_min)  + y_icarus_dirt_min
     df["pos_scatt", "3"] = z0
 
 
