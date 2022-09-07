@@ -40,11 +40,19 @@ theta_lim_muB = 38.8816337686 * np.pi / 180.0
 sphere_cut_muB = 0.030441980173709752
 cylinder_cut_muB = 1. - 2*sphere_cut_muB
 
-#detector
+#SBND detector
 z_sbnd = 5e2
 x_sbnd = 4e2
 y_sbnd = 4e2
 dif_z_sbnd = 20 # 20 cm between TPC and wall of detector
+
+
+# Icarus
+l_baseline_icarus = 600e2
+x_icarus = 3.6e2*2
+y_icarus = 3.9e2
+z_icarus = 19.6e2
+
 
 
 def get_angle(p1, p2):
@@ -128,9 +136,11 @@ def get_distances(p0, phat, experiment):
 
     # positions of the 6 walls of the cryostat in order (2 for X, 2 for Y, 2 for Z)
     if experiment == 'microboone' or experiment == 'microboone_dirt':
-        planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,dif_z/2,z_muB + dif_z/2])
+        planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,-z_muB/2,z_muB/2])
     elif experiment == 'sbnd' or experiment == 'sbnd_dirt':
-        planes = np.array([-x_sbnd/2,x_sbnd/2,-y_sbnd/2,y_sbnd/2,dif_z_sbnd/2,z_sbnd + dif_z_sbnd/2])
+        planes = np.array([-x_sbnd/2,x_sbnd/2,-y_sbnd/2,y_sbnd/2,z_sbnd/2,z_sbnd/2])
+    elif experiment == 'icarus' or experiment == 'icarus_dirt':
+        planes = np.array([-x_icarus/2,x_icarus/2,-y_icarus/2,y_icarus/2,z_icarus/2,z_icarus/2])
 
     # suitable forms for parameters
     p0_6 = np.array([p0[0], p0[0], p0[1], p0[1], p0[2], p0[2]]).T
