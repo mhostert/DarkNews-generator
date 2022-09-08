@@ -48,10 +48,11 @@ dif_z_sbnd = 20 # 20 cm between TPC and wall of detector
 
 
 # Icarus
-l_baseline_icarus = 600e2
+l_icarus = 600e2
 x_icarus = 3.6e2*2
 y_icarus = 3.9e2
 z_icarus = 19.6e2
+dif_z_icarus = l_icarus - z_icarus
 
 
 
@@ -138,9 +139,9 @@ def get_distances(p0, phat, experiment):
     if experiment == 'microboone' or experiment == 'microboone_dirt':
         planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,-z_muB/2,z_muB/2])
     elif experiment == 'sbnd' or experiment == 'sbnd_dirt':
-        planes = np.array([-x_sbnd/2,x_sbnd/2,-y_sbnd/2,y_sbnd/2,z_sbnd/2,z_sbnd/2])
+        planes = np.array([-x_sbnd/2,x_sbnd/2,-y_sbnd/2,y_sbnd/2,-z_sbnd/2,z_sbnd/2])
     elif experiment == 'icarus' or experiment == 'icarus_dirt':
-        planes = np.array([-x_icarus/2,x_icarus/2,-y_icarus/2,y_icarus/2,z_icarus/2,z_icarus/2])
+        planes = np.array([-x_icarus/2,x_icarus/2,-y_icarus/2,y_icarus/2,-z_icarus/2,z_icarus/2])
 
     # suitable forms for parameters
     p0_6 = np.array([p0[0], p0[0], p0[1], p0[1], p0[2], p0[2]]).T
