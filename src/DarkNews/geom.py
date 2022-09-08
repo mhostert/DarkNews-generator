@@ -174,7 +174,7 @@ x_icarus_dirt_min = x_muB_dirt_min
 x_icarus_dirt_max = x_muB_dirt_max
 y_icarus_dirt_min = y_muB_dirt_min
 y_icarus_dirt_max = y_muB_dirt_max
-z_icarus_dirt_max = - icarus_gap + z_icarus/2.
+z_icarus_dirt_max = - icarus_gap - z_icarus/2.
 z_icarus_dirt_min = - l_dirt_icarus + z_icarus_dirt_max
 
 # distribute events in df accross the pre-defined MicroBooNE (cryostat) volume

@@ -52,7 +52,7 @@ l_icarus = 600e2
 x_icarus = 3.6e2*2
 y_icarus = 3.9e2
 z_icarus = 19.6e2
-dif_z_icarus = l_icarus - z_icarus
+dif_z_icarus = 1e2
 
 
 
@@ -339,11 +339,18 @@ def out_of_active_volume(df,experiment='microboone'):
         mask = (-x_muB/2. <= df['pos_scatt','1'].values) & (df['pos_scatt','1'].values <= x_muB/2.) & (-y_muB/2. <= df['pos_scatt','2'].values) & (df['pos_scatt','2'].values<= y_muB/2.) & (-z_muB/2. <= df['pos_scatt','3'].values) & (df['pos_scatt','3'].values <= z_muB/2.)
         not_mask = np.array([bool(1-mask[j]) for j in range(len(mask))])
         df = df[not_mask]
-    if experiment == 'sbnd':
+    elif experiment == 'sbnd':
         # filtering out those scatterings inside the active volume
         mask = (-x_sbnd/2. <= df['pos_scatt','1'].values) & (df['pos_scatt','1'].values <= x_sbnd/2.) & (-y_sbnd/2. <= df['pos_scatt','2'].values) & (df['pos_scatt','2'].values<= y_sbnd/2.) & (-z_sbnd/2. <= df['pos_scatt','3'].values) & (df['pos_scatt','3'].values <= z_sbnd/2.)
         not_mask = np.array([bool(1-mask[j]) for j in range(len(mask))])
         df = df[not_mask]
+    elif experiment == 'icarus':
+        # filtering out those scatterings inside the active volume
+        mask = (-x_icarus/2. <= df['pos_scatt','1'].values) & (df['pos_scatt','1'].values <= x_icarus/2.) & (-y_icarus/2. <= df['pos_scatt','2'].values) & (df['pos_scatt','2'].values<= y_icarus/2.) & (-z_icarus/2. <= df['pos_scatt','3'].values) & (df['pos_scatt','3'].values <= z_icarus/2.)
+        not_mask = np.array([bool(1-mask[j]) for j in range(len(mask))])
+        df = df[not_mask]
+    else:
+        raise NotImplementedError("This experiment is not implemented")
     
     return df
 
