@@ -111,7 +111,7 @@ l_muB  = 1086.49
 z_muB = 1040.
 
 # target to front of detector
-baseline_muB = 470e2
+l_baseline_muB = 470e2
 l_dirt_muB = 400e2
 x_muB_dirt_min = -1100.
 x_muB_dirt_max = 1100.
@@ -139,6 +139,7 @@ MicroBooNERandomTimeOffset = 1600.0
 # @dataclass
 # class MiniBooNE:
 # geometry of cylinder_MB for dirt
+l_baseline_MB = 541e2
 radius_MB_outer = 1370 / 2.
 radius_cyl_MB = 1.5 * radius_MB_outer
 l_cyl_MB = 47400.
@@ -174,7 +175,7 @@ x_icarus_dirt_min = x_muB_dirt_min
 x_icarus_dirt_max = x_muB_dirt_max
 y_icarus_dirt_min = y_muB_dirt_min
 y_icarus_dirt_max = y_muB_dirt_max
-z_icarus_dirt_max = - icarus_gap + z_icarus/2.
+z_icarus_dirt_max = - icarus_gap - z_icarus/2.
 z_icarus_dirt_min = - l_dirt_icarus + z_icarus_dirt_max
 
 # distribute events in df accross the pre-defined MicroBooNE (cryostat) volume
@@ -206,6 +207,11 @@ def microboone_geometry(df):
     df["pos_scatt", "1"] = events[0, :nsamples]
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
+    
+    # rescale the weights considering a higher flux
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_muB)**2)
+    df.w_event_rate *= (l_baseline_muB / distances)**2
+    
 
 
 # distribute events in df accross the pre-defined spherical MiniBooNE volume
@@ -234,6 +240,10 @@ def sbnd_geometry(df):
     df["pos_scatt", "1"] = events[0, :nsamples]
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
+    
+    # rescale the weights considering a higher flux
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_sbnd)**2)
+    df.w_event_rate *= (l_baseline_sbnd / distances)**2
 
 def icarus_geometry(df):
 
@@ -260,6 +270,10 @@ def icarus_geometry(df):
     df["pos_scatt", "1"] = events[0, :nsamples]
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
+    
+    # rescale the weights considering a higher flux
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_icarus)**2)
+    df.w_event_rate *= (l_baseline_icarus / distances)**2
 
 
 def miniboone_dirt_geometry(df):
@@ -274,6 +288,10 @@ def miniboone_dirt_geometry(df):
     df["pos_scatt", "1"] = r0 * np.cos(phi0)
     df["pos_scatt", "2"] = r0 * np.sin(phi0)
     df["pos_scatt", "3"] = z0
+    
+    # rescale the weights considering a higher flux
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_MB)**2)
+    df.w_event_rate *= (l_baseline_MB / distances)**2
 
 def microboone_dirt_geometry(df):
 
@@ -286,6 +304,10 @@ def microboone_dirt_geometry(df):
     df["pos_scatt", "1"] = np.random.random(length_events)*(x_muB_dirt_max - x_muB_dirt_min)  + x_muB_dirt_min
     df["pos_scatt", "2"] = np.random.random(length_events)*(y_muB_dirt_max - y_muB_dirt_min)  + y_muB_dirt_min
     df["pos_scatt", "3"] = z0
+    
+    # rescale the weights considering a higher flux
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_muB)**2)
+    df.w_event_rate *= (l_baseline_muB / distances)**2
 
 def icarus_dirt_geometry(df):
 
@@ -298,6 +320,10 @@ def icarus_dirt_geometry(df):
     df["pos_scatt", "1"] = np.random.random(length_events)*(x_icarus_dirt_max - x_icarus_dirt_min)  + x_icarus_dirt_min
     df["pos_scatt", "2"] = np.random.random(length_events)*(y_icarus_dirt_max - y_icarus_dirt_min)  + y_icarus_dirt_min
     df["pos_scatt", "3"] = z0
+    
+    # rescale the weights considering a higher flux
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_icarus)**2)
+    df.w_event_rate *= (l_baseline_icarus / distances)**2
 
 
 def microboone_tpc_geometry(df):
@@ -311,6 +337,10 @@ def microboone_tpc_geometry(df):
     df["pos_scatt", "1"] = np.random.random(length_events)*(x_muB) - x_muB/2.
     df["pos_scatt", "2"] = np.random.random(length_events)*(y_muB) - y_muB/2.
     df["pos_scatt", "3"] = z0
+    
+    # rescale the weights considering a higher flux
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_muB)**2)
+    df.w_event_rate *= (l_baseline_muB / distances)**2
 
 
 def sbnd_dirt_geometry(df):
@@ -323,6 +353,10 @@ def sbnd_dirt_geometry(df):
     df["pos_scatt", "1"] = np.random.random(length_events)*(x_sbnd_dirt_max - x_sbnd_dirt_min)  + x_sbnd_dirt_min
     df["pos_scatt", "2"] = np.random.random(length_events)*(y_sbnd_dirt_max - y_sbnd_dirt_min)  + y_sbnd_dirt_min
     df["pos_scatt", "3"] = z0
+    
+    # rescale the weights considering a higher flux
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_sbnd)**2)
+    df.w_event_rate *= (l_baseline_sbnd / distances)**2
 
 
 # distribute events in df accross the pre-defined spherical MiniBooNE volume
@@ -351,6 +385,10 @@ def miniboone_geometry(df):
     df["pos_scatt", "1"] = events[0, :nsamples]
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
+    
+    # rescale the weights considering a higher flux
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_MB)**2)
+    df.w_event_rate *= (l_baseline_MB / distances)**2
 
 
 # assing all events in df a scattering position at 4-position (0,0,0,0)
