@@ -467,3 +467,6 @@ It is possible to set a seed for numpy's random number with the ```--seed``` arg
 By default, vegas uses numpy's random number generator, which is based on the Mersenne Twister pseudo-random number generator method.
 
 The reproducibility of the generator output (i.e., same vegas samples) is only guaranteed for the same parameters and number of integrand evaluations, which effectively means that the user has to specify the same scope, model parameters, as well as the same number of neval, nint, neval_warmup and nint_warmup.
+
+<!-- .. |Code Coverage| image:: https://codecov.io/gh/scikit-hep/particle/graph/badge.svg?branch=master
+   :target: https://codecov.io/gh/scikit-hep/particle?branch=master -->

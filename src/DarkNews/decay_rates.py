@@ -18,53 +18,53 @@ def L_GeV_to_cm(decay_rate):
 # #################################################
 # Special functions for phase space integrals
 # fmt: off
-def I1_2body(x,y):
-    return ((1+x-y)*(1+x) - 4*x)*const.kallen_sqrt(1.0,x,y)
+# def I1_2body(x,y):
+#     return ((1+x-y)*(1+x) - 4*x)*const.kallen_sqrt(1.0,x,y)
 
-def F_3nu_decay(a,b,c):
-    # all effectively massless
-    if a+b+c < 1e-6:
-        return 1.0
-    else:
+# def F_3nu_decay(a,b,c):
+#     # all effectively massless
+#     if a+b+c < 1e-6:
+#         return 1.0
+#     else:
 
-        def DGammaDuDt(sab,sac,a,b,c):
-            rtot = 1 + a + b + c
-            sbc = 1 - sab - sac + a**2 + b**2 + c**2
-            I =  sab*(rtot - sab) + sac*(rtot - sac) + 2*(a+b*c)*(sbc - (a+b*c)) - (1+a)**2*(b+c)**2
-            return 6*I
+#         def DGammaDuDt(sab,sac,a,b,c):
+#             rtot = 1 + a + b + c
+#             sbc = 1 - sab - sac + a**2 + b**2 + c**2
+#             I =  sab*(rtot - sab) + sac*(rtot - sac) + 2*(a+b*c)*(sbc - (a+b*c)) - (1+a)**2*(b+c)**2
+#             return 6*I
         
-        # check
-        sab_min = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) - (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
-        sab_max = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) + (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
+#         # check
+#         sab_min = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) - (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
+#         sab_max = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) + (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
         
-        integral, error = dblquad(  DGammaDuDt, (a+c)**2, (1-b)**2,  sab_min, sab_max, args=(a,b,c))
-        return integral
+#         integral, error = dblquad(  DGammaDuDt, (a+c)**2, (1-b)**2,  sab_min, sab_max, args=(a,b,c))
+#         return integral
 
-def G_3nu_decay(a,b,c):
-    # all effectively massless
-    if a+b+c < 1e-6:
-        return 1.0
+# def G_3nu_decay(a,b,c):
+#     # all effectively massless
+#     if a+b+c < 1e-6:
+#         return 1.0
 
-    else:
+#     else:
 
-        def DGammaDuDt(sab,sac,a,b,c):
-            rtot = 1 + a + b + c
-            sbc = 1 - sab - sac + a**2 + b**2 + c**2
-            I = sab*(rtot+(c+a*b)-sab)+sbc*(a+b*c)(b+a*c)(sac-(b+a*c)) -(1+b)(1+c)(a+b)(a+c)
-            return 12*I
+#         def DGammaDuDt(sab,sac,a,b,c):
+#             rtot = 1 + a + b + c
+#             sbc = 1 - sab - sac + a**2 + b**2 + c**2
+#             I = sab*(rtot+(c+a*b)-sab)+sbc*(a+b*c)(b+a*c)(sac-(b+a*c)) -(1+b)(1+c)(a+b)(a+c)
+#             return 12*I
         
-        # check
-        sab_min = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) - (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
-        sab_max = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) + (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
+#         # check
+#         sab_min = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) - (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
+#         sab_max = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) + (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
         
-        integral, error = dblquad(  DGammaDuDt, (a+c)**2, (1-b)**2, sab_min, sab_max, args=(a,b,c))
-        return integral
+#         integral, error = dblquad(  DGammaDuDt, (a+c)**2, (1-b)**2, sab_min, sab_max, args=(a,b,c))
+#         return integral
 
 
 
 # ############################################################################
-''' 
-Scalar and vector boson decay rates -- always summed over final state hels
+'''
+    Scalar and vector boson decay rates -- always summed over final state hels
 '''
 
 # S -> ell ell
@@ -81,51 +81,51 @@ def gamma_V_to_ell_ell(vertex, mV, m_ell):
 
 
 
-# S -> Ni Nj -- assuming ordering of i and j matters (S -> Ni Nj) != ( S -> Ni Nj)
-# includes symmetry factor 
-def gamma_S_to_Ni_Nj(vertex, mS, mi, mj, HNLtype = 'majorana'):
+# # S -> Ni Nj -- assuming ordering of i and j matters (S -> Ni Nj) != ( S -> Ni Nj)
+# # includes symmetry factor 
+# def gamma_S_to_Ni_Nj(vertex, mS, mi, mj, HNLtype = 'majorana'):
     
-    r1 = mi/mS
-    r2 = mj/mS
+#     r1 = mi/mS
+#     r2 = mj/mS
 
-    gamma = mS/(4*np.pi)
-    gamma *= const.kallen_sqrt(1, r1**2, r2**2)
+#     gamma = mS/(4*np.pi)
+#     gamma *= const.kallen_sqrt(1, r1**2, r2**2)
 
-    if HNLtype == 'majorana':
-        # Majorana -- dependence real and imag part of vertex 
-        gamma *= r1*r2*( np.conjugate(vertex)**2 + vertex**2) + np.abs(vertex)**2*(1 - r1**2 - r2**2)
+#     if HNLtype == 'majorana':
+#         # Majorana -- dependence real and imag part of vertex 
+#         gamma *= r1*r2*( np.conjugate(vertex)**2 + vertex**2) + np.abs(vertex)**2*(1 - r1**2 - r2**2)
     
-    elif HNLtype == 'dirac':
-        # Dirac -- dependence only on abs value of vertex
-        gamma *=  np.abs(vertex)**2*(1 - r1**2 - r2**2)
-    else: 
-        logger.error(f"HNL type {HNLtype} not recognized.")
-        return 0.0 
+#     elif HNLtype == 'dirac':
+#         # Dirac -- dependence only on abs value of vertex
+#         gamma *=  np.abs(vertex)**2*(1 - r1**2 - r2**2)
+#     else: 
+#         logger.error(f"HNL type {HNLtype} not recognized.")
+#         return 0.0 
 
-    return gamma
+#     return gamma
 
-# V -> Ni Nj -- assuming ordering of i and j matters (Z' -> Ni Nj) != ( Z' -> Ni Nj)
-# includes symmetry factor 
-def gamma_V_to_Ni_Nj(vertex, mV, mi, mj, HNLtype = 'majorana'):
+# # V -> Ni Nj -- assuming ordering of i and j matters (Z' -> Ni Nj) != ( Z' -> Ni Nj)
+# # includes symmetry factor 
+# def gamma_V_to_Ni_Nj(vertex, mV, mi, mj, HNLtype = 'majorana'):
     
-    r1 = mi/mV
-    r2 = mj/mV  
+#     r1 = mi/mV
+#     r2 = mj/mV  
 
-    gamma = mV/(48*np.pi)
-    gamma *= const.kallen_sqrt(1, r1**2, r2**2)
+#     gamma = mV/(48*np.pi)
+#     gamma *= const.kallen_sqrt(1, r1**2, r2**2)
 
-    if HNLtype == 'majorana':
-        # Majorana -- dependence real and imag part of vertex 
-        gamma *= 3*r1*r2*( np.conjugate(vertex)**2 + vertex**2) + np.abs(vertex)**2*(2 - r1**4 - (1 - 2*r2**2)*r1**2 - r2**4 - r2**2)
+#     if HNLtype == 'majorana':
+#         # Majorana -- dependence real and imag part of vertex 
+#         gamma *= 3*r1*r2*( np.conjugate(vertex)**2 + vertex**2) + np.abs(vertex)**2*(2 - r1**4 - (1 - 2*r2**2)*r1**2 - r2**4 - r2**2)
     
-    elif HNLtype == 'dirac':
-        # Dirac -- dependence only on abs value of vertex
-        gamma *=  np.abs(vertex)**2*(2 - r1**4 - (1 - 2*r2**2)*r1**2 - r2**4 - r2**2)
-    else: 
-        logger.error(f"HNL type {HNLtype} not recognized.")
-        return 0.0 
+#     elif HNLtype == 'dirac':
+#         # Dirac -- dependence only on abs value of vertex
+#         gamma *=  np.abs(vertex)**2*(2 - r1**4 - (1 - 2*r2**2)*r1**2 - r2**4 - r2**2)
+#     else: 
+#         logger.error(f"HNL type {HNLtype} not recognized.")
+#         return 0.0 
 
-    return gamma
+#     return gamma
 
 
 # ###########################################

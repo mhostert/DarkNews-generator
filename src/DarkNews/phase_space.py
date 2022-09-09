@@ -4,9 +4,6 @@ import numpy.ma as ma
 from DarkNews import logger
 
 from . import Cfourvec as Cfv
-from . import const
-from . import fourvec
-
 
 ########################################################
 # Kinematical limits

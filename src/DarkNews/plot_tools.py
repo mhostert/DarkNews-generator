@@ -71,17 +71,6 @@ def sci_notation(num, decimal_digits=1, precision=None, exponent=None):
     else:
         return r"0"
 
-
-def get_hist(ax):
-    n, bins = [], []
-    for rect in ax.patches:
-        ((x0, y0), (x1, y1)) = rect.get_bbox().get_points()
-        n.append(y1 - y0)
-        bins.append(x0)  # left edge of each bin
-    bins.append(x1)  # also get right edge of last bin
-    return n, bins
-
-
 def histogram1D(plotname, obs, w, XLABEL, TITLE, nbins, regime=None, colors=None, legends=None, rasterized=True, TMIN=None, TMAX=None):
 
     fig, ax = std_fig()
@@ -459,37 +448,3 @@ def batch_plot(df, PATH, title="Dark News"):
         histogram1D(PATH / "1D_invmass.pdf", df["inv_mass"], w, r"$m_{\ell^+ \ell^-}$/GeV", title, 50, **args)
         histogram1D(PATH / "1D_asym.pdf", df["E_asy"], w, r"$(E_{\ell^+}-E_{\ell^-})$/($E_{\ell^+}+E_{\ell^-}$)", title, 20, TMIN=-1, TMAX=1, **args)
         histogram1D(PATH / "1D_asym_abs.pdf", np.abs(df["E_asy"]), w, r"$|E_{\ell^+}-E_{\ell^-}|$/($E_{\ell^+}+E_{\ell^-}$)", title, 20, TMIN=0, TMAX=1, **args)
-
-
-def plot_closed_region(points, logx=False, logy=False):
-    x, y = points
-    if logy:
-        if (y == 0).any():
-            raise ValueError("y values cannot contain any zeros in log mode.")
-        sy = np.sign(y)
-        ssy = (np.abs(y) < 1) * (-1) + (np.abs(y) > 1) * (1)
-        y = ssy * np.log(y * sy)
-    if logx:
-        if (x == 0).any():
-            raise ValueError("x values cannot contain any zeros in log mode.")
-        sx = np.sign(x)
-        ssx = (x < 1) * (-1) + (x > 1) * (1)
-        x = ssx * np.log(x * sx)
-
-    points = np.array([x, y]).T
-
-    points_s = points - points.mean(0)
-    angles = np.angle((points_s[:, 0] + 1j * points_s[:, 1]))
-    points_sort = points_s[angles.argsort()]
-    points_sort += points.mean(0)
-
-    tck, u = splprep(points_sort.T, u=None, s=0.0, per=0, k=1)
-    u_new = np.linspace(u.min(), u.max(), len(points[:, 0]))
-    x_new, y_new = splev(u_new, tck, der=0)
-
-    if logx:
-        x_new = sx * np.exp(ssx * x_new)
-    if logy:
-        y_new = sy * np.exp(ssy * y_new)
-
-    return x_new, y_new

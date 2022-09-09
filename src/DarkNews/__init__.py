@@ -1,7 +1,6 @@
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 import sys
-from pathlib import Path
 
 """
     Initializing loggers
@@ -21,14 +20,9 @@ if not prettyprinter.hasHandlers():
 logger.propagate = False
 prettyprinter.propagate = False
 
-
 """
-    These definition modules make import of main DarkNews classes easier.
-    Essentially, it allows DarkNews.XXXX instead of DarkNews.YYYY.XXXX
+    Making it easier to import modules
 """
-# Definition modules
-from DarkNews.GenLauncher import GenLauncher
-
 from DarkNews import pdg
 from DarkNews import const
 from DarkNews import fourvec
@@ -44,14 +38,6 @@ from DarkNews import decay_rates
 from DarkNews import processes
 from DarkNews import model
 
-from DarkNews.processes import UpscatteringProcess
-from DarkNews.processes import FermionDileptonDecay
-from DarkNews.processes import FermionSinglePhotonDecay
-
-from DarkNews.nuclear_tools import NuclearTarget
-from DarkNews.detector import Detector
-from DarkNews.geom import Chisel
-
 # Monte Carlo modules
 from DarkNews import MC
 
@@ -60,3 +46,18 @@ from DarkNews import printer
 from DarkNews import geom
 
 from DarkNews import plot_tools
+
+
+"""
+    And now making it easier to import the main DarkNews classes.
+    It allows DarkNews.XXXX instead of DarkNews.YYYY.XXXX
+"""
+# Definition modules
+from DarkNews.GenLauncher import GenLauncher
+from DarkNews.AssignmentParser import AssignmentParser
+from DarkNews.processes import UpscatteringProcess
+from DarkNews.processes import FermionDileptonDecay
+from DarkNews.processes import FermionSinglePhotonDecay
+from DarkNews.nuclear_tools import NuclearTarget
+from DarkNews.detector import Detector
+from DarkNews.geom import Chisel

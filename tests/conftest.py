@@ -1,9 +1,7 @@
-import os
 import pytest
 import random
 import numpy as np
-import pandas as pd
-from particle import literals as lp
+
 from DarkNews import const
 from DarkNews.GenLauncher import GenLauncher
 
@@ -20,21 +18,24 @@ def set_seeds():
     random.seed(seed)
     # os.environ('PYTHONHASHSEED') = str(seed)
 
-
 # generate a specific set of events to be tested in a session
 @pytest.fixture(scope="session")
 def SM_gen():
     gen = GenLauncher(gD=0.0, Umu4=1e-3, epsilon=0.0, m4=0.01, loglevel="ERROR", neval=1000, seed=42)
     return gen.run()
 
+@pytest.fixture(scope='session')
+def portal_vs_simplified():
+    EPSILON = 3.4e-4
+    common_kwargs = {'loglevel': 'ERROR', 'HNLtype': 'majorana', 'neval': 1e4, 'm5': 0.15, 'm4': 0.1, 'mzprime': 1.25}
 
-# # use command line and make summary plots
-# @pytest.fixture(scope='session')
-# def gen_SM_from_script():
-#     os.system("dn_gen --gD=0.0 --Umu4=1e-3 --epsilon=0.0 --m4=0.01 --loglevel='ERROR' --neval=1000 --seed=42 --path=./test_generation --make_summary_plots")
-#     df_p = pd.read_pickle('test_generation/pandas_df.pckl')
-#     return df_p
+    kwargs_1 = {'d_mu5': 1e-3, 'd_45': 1/2, 'dprotonV': EPSILON*const.eQED, 'deV': EPSILON*const.eQED}
+    kwargs_2 = {'UD4': 1/np.sqrt(2), 'UD5': 1/np.sqrt(2), 'Umu5': 1e-3, 'Umu4': 1e-3, 'gD': 1, 'epsilon': EPSILON}
 
+    gen_1 = GenLauncher(experiment='miniboone_fhc',  **kwargs_1, **common_kwargs)
+    gen_2 = GenLauncher(experiment='miniboone_fhc',  **kwargs_2, **common_kwargs)
+
+    return gen_1.run(), gen_2.run()
 
 @pytest.fixture(scope="session")
 def light_DP_gen_all_outputs():

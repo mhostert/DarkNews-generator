@@ -13,11 +13,7 @@ from numpy import sqrt
 import math
 from scipy import interpolate
 
-try:
-    import importlib.resources as resources
-except ImportError:
-    # Try backported to PY<37 `importlib_resources`.
-    import importlib_resources as resources
+import importlib.resources as resources
 
 ################################################
 # constants of light cm/s
@@ -224,31 +220,6 @@ def is_odd(num):
 
 
 np_is_odd = np.vectorize(is_odd)
-
-# https://newbedev.com/how-do-i-annotate-with-power-of-ten-formatting vvv
-# Define function for string formatting of scientific notation
-def sci_notation(num, decimal_digits=1, precision=None, exponent=None):
-    """
-    Returns a string representation of the scientific
-    notation of the given number formatted for use with
-    LaTeX or Mathtext, with specified number of significant
-    decimal digits and precision (number of decimal digits
-    to show). The exponent to be used can also be specified
-    explicitly.
-    """
-    if num != 0:
-        if exponent is None:
-            exponent = int(math.floor(math.log10(abs(num))))
-        coeff = round(num / float(10 ** exponent), decimal_digits)
-        if precision is None:
-            precision = decimal_digits
-
-        return r"${0:.{2}f}\cdot10^{{{1:d}}}$".format(coeff, exponent, precision)
-    else:
-        return r"0"
-
-
-# ^^^
 
 # run shell commands from notebook
 def subprocess_cmd(command, verbose=2):
