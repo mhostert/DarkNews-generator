@@ -3,11 +3,8 @@
 <img align="left" src="https://raw.githubusercontent.com/mhostert/DarkNews-generator/main/src/DarkNews/include/assets/logo.svg" width="180" title="DarkNews-logo">
 DarkNews is an event generator for new physics processes at accelerator neutrino experiments that simulates neutrino upscattering to heavy neutral leptons and their subsequent decays to single photons and di-lepton pairs.
 
-![Tests](https://github.com/mhostert/DarkNews-generator/actions/workflows/tests.yml/badge.svg)
-[![InspireHEP](https://img.shields.io/badge/InspireHEP-Abdullahi:2207.04137-dodgerblue.svg)](https://arxiv.org/abs/2207.04137)
-<!-- [![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/mhostert/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/raw/DarkNews-generator__heads_main.json)] -->
+![Tests](https://github.com/mhostert/DarkNews-generator/actions/workflows/tests.yml/badge.svg) [![CodeCov](https://codecov.io/gh/mhostert/DarkNews-generator/graph/badge.svg?branch=master)](https://codecov.io/gh/mhostert/DarkNews-generator/?branch=master) [![InspireHEP](https://img.shields.io/badge/InspireHEP-Abdullahi:2207.04137-dodgerblue.svg)](https://arxiv.org/abs/2207.04137)
 <!-- <br>[![License: MIT](https://img.shields.io/badge/License-MIT-deeppink.svg)](https://opensource.org/licenses/MIT) -->
-<!-- [![arXiv](https://img.shields.io/badge/arXiv-2202.04137%20-violet.svg)](https://arxiv.org/abs/2207.04137) -->
 
 <br>
 
@@ -467,6 +464,3 @@ It is possible to set a seed for numpy's random number with the ```--seed``` arg
 By default, vegas uses numpy's random number generator, which is based on the Mersenne Twister pseudo-random number generator method.
 
 The reproducibility of the generator output (i.e., same vegas samples) is only guaranteed for the same parameters and number of integrand evaluations, which effectively means that the user has to specify the same scope, model parameters, as well as the same number of neval, nint, neval_warmup and nint_warmup.
-
-<!-- .. |Code Coverage| image:: https://codecov.io/gh/scikit-hep/particle/graph/badge.svg?branch=master
-   :target: https://codecov.io/gh/scikit-hep/particle?branch=master -->

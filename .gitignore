@@ -2,6 +2,7 @@
 plots/*
 examples/plots/*
 examples/test_*
+test_script_*
 
 # profiler
 stats
