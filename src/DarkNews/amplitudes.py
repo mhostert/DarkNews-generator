@@ -6,6 +6,46 @@ from DarkNews.const import Sqrt, MZBOSON, eQED
 from DarkNews import logger
 
 
+def upscattering_dxsec_dQ2_dx(x_phase_space, x, process, diagrams=["total"]):    
+    """ 
+    Computes the differential cross section for upscattering in attobarns
+
+    Args:
+    x_phase_space (list): a list of arrays with [s,t,u] variables
+    process (DarkNews.model.UpscatteringProcess): object reprensenting a given upscattering process.
+    diagrams (list, optional): specify what diagrams to include. 
+                                all -- returns a dictionary with all the separate contributions to the xsecs
+                                separating diagrams with Z', Z, S, etc.
+
+                                NC_SQR
+                            
+                                KinMix_SQR
+                                
+                                total
+
+    Raises:
+    ValueError: if HNL type not recognized
+
+    Returns:
+    numpy.ndarray or dict: either an array with the differential xsec in attobarns at each phase-space point 
+            or a dictioary of such values for each diagram.
+    """
+
+    # kinematics
+    s, t, u = x_phase_space
+    Q2 = -t
+    #x to integrate over
+
+    # hadronic target
+    target = process.target
+
+    # masses
+    M = process.target.mass
+    Z = target.Z
+    mHNL = process.m_ups
+    mzprime = process.mzprime
+    MSCALAR = process.mhprime
+    return (None)
 def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
     """ 
     Computes the differential cross section for upscattering in attobarns
