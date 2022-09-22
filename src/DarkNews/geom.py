@@ -1,6 +1,23 @@
 import numpy as np
+import pandas as pd
 from . import const
 from . import Cfourvec as Cfv
+from numpy.random import choice
+
+# BNB flux and decay pipe DATA
+# get flux angle normalization and decay position of pions for BNB
+n_ebins = 99
+BNB_enu_max = 4.245909093808516 # GeV
+BNB_fluxes = np.genfromtxt('/home/jaime/Documents/0_PhD/dn_pip/DarkNews-generator/src/DarkNews/include/fluxes/BNB_fluxes/BNB_angle_energy_normalization.dat')
+BNB_energies_positions = np.genfromtxt('/home/jaime/Documents/0_PhD/dn_pip/DarkNews-generator/src/DarkNews/include/fluxes/BNB_fluxes/BNB_energy_distances.dat')
+BNB_energy_nu = BNB_energies_positions[1:,0]
+BNB_energy_nu_bins = np.linspace(0,BNB_enu_max,n_ebins + 1)
+BNB_e_bins_angle = np.linspace(0,BNB_enu_max,100)
+BNB_th_bins_angle = np.linspace(-np.pi,np.pi,100)
+BNB_distances_nu = BNB_energies_positions[0,1:]
+BNB_e_vs_z_dist = BNB_energies_positions[1:,1:]
+
+radius_decay_pipe = 35. #cm
 
 class Chisel:
     def __init__(self, nsamples, box=np.array(3 * [[-0.5, 0.5]]), name="my_mold"):
@@ -138,14 +155,16 @@ MicroBooNERandomTimeOffset = 1600.0
 
 # @dataclass
 # class MiniBooNE:
-# geometry of cylinder_MB for dirt
+# geometry of cone_MB for dirt
 l_baseline_MB = 541e2
 radius_MB_outer = 1370 / 2.
-radius_cyl_MB = 1.5 * radius_MB_outer
-l_cyl_MB = 47400.
+radius_cone_outer_MB = 1.5 * radius_MB_outer
+radius_cone_inner_MB = 104.736
+l_cone_MB = 47400.
+l_cone_excluded = 5380.
 
-end_point_cyl_MB = -1320.
-start_point_cyl_MB = end_point_cyl_MB - l_cyl_MB
+end_point_cone_MB = -1320.
+start_point_cone_MB = end_point_cone_MB - l_cone_MB
 
 # SBND - FIX ME, are SBND and MicroBooNE centered along the same Z axis?
 # No, but close enough?
@@ -208,10 +227,49 @@ def microboone_geometry(df):
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
     
-    # rescale the weights considering a higher flux
-    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_muB)**2)
-    df.w_event_rate *= (l_baseline_muB / distances)**2
     
+    # Compute the mean position where the pions decayed
+    n_ebins = 99
+    E_nu = df["P_projectile","0"].values
+    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    
+    probs_distance = np.ones_like(BNB_e_vs_z_dist)
+    for i in range(len(probs_distance)):
+        if BNB_e_vs_z_dist[e_bins[i],:].sum() != 0:
+            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i],:]
+    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    
+    length_events = len(df)
+    u_normal = np.random.random(length_events)
+    phi_normal = np.random.random(length_events) * 2. * np.pi
+    r_normal = radius_decay_pipe * np.sqrt(u_normal)
+    df["pos_prod", "1"] = r_normal * np.cos(phi_normal)
+    df["pos_prod", "2"] = r_normal * np.sin(phi_normal)
+    df["pos_prod", "3"] = origin - l_baseline_muB
+    
+    # RESCALE WEIGHTS
+    # rescale the weights with respect to the distance
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
+    df.w_event_rate *= ((l_baseline_muB - origin) / distances)**2
+    # rescaling with respect to angle
+    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
+    
+    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
+    n_ebins = len(BNB_fluxes)
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
+    n_ebins = len(BNB_fluxes[0])
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        th_bins[mask] = n_ebins - 1
+    
+    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
+    df.w_event_rate *= renorm_flux_angle
 
 
 # distribute events in df accross the pre-defined spherical MiniBooNE volume
@@ -241,9 +299,47 @@ def sbnd_geometry(df):
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
     
-    # rescale the weights considering a higher flux
-    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_sbnd)**2)
-    df.w_event_rate *= (l_baseline_sbnd / distances)**2
+    # Compute the mean position where the pions decayed
+    n_ebins = 99
+    E_nu = df["P_projectile","0"].values
+    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    probs_distance = np.ones_like(BNB_e_vs_z_dist)
+    for i in range(len(probs_distance)):
+        if BNB_e_vs_z_dist[e_bins[i],:].sum() != 0:
+            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i],:]
+    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    
+    length_events = len(df)
+    u_normal = np.random.random(length_events)
+    phi_normal = np.random.random(length_events) * 2. * np.pi
+    r_normal = radius_decay_pipe * np.sqrt(u_normal)
+    df["pos_prod", "1"] = r_normal * np.cos(phi_normal)
+    df["pos_prod", "2"] = r_normal * np.sin(phi_normal)
+    df["pos_prod", "3"] = origin - l_baseline_sbnd
+    
+    # RESCALE WEIGHTS
+    # rescale the weights with respect to the distance
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
+    df.w_event_rate *= ((l_baseline_sbnd - origin) / distances)**2
+    # rescaling with respect to angle
+    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
+    
+    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
+    n_ebins = len(BNB_fluxes)
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
+    n_ebins = len(BNB_fluxes[0])
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        th_bins[mask] = n_ebins - 1
+    
+    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
+    df.w_event_rate *= renorm_flux_angle
 
 def icarus_geometry(df):
 
@@ -271,27 +367,104 @@ def icarus_geometry(df):
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
     
-    # rescale the weights considering a higher flux
-    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_icarus)**2)
-    df.w_event_rate *= (l_baseline_icarus / distances)**2
+    # Compute the mean position where the pions decayed
+    n_ebins = 99
+    E_nu = df["P_projectile","0"].values
+    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    probs_distance = np.ones_like(BNB_e_vs_z_dist)
+    for i in range(len(probs_distance)):
+        if BNB_e_vs_z_dist[e_bins[i],:].sum() != 0:
+            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i],:]
+    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    
+    length_events = len(df)
+    u_normal = np.random.random(length_events)
+    phi_normal = np.random.random(length_events) * 2. * np.pi
+    r_normal = radius_decay_pipe * np.sqrt(u_normal)
+    df["pos_prod", "1"] = r_normal * np.cos(phi_normal)
+    df["pos_prod", "2"] = r_normal * np.sin(phi_normal)
+    df["pos_prod", "3"] = origin - l_baseline_icarus
+    
+    # RESCALE WEIGHTS
+    # rescale the weights with respect to the distance
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
+    df.w_event_rate *= ((l_baseline_icarus - origin) / distances)**2
+    # rescaling with respect to angle
+    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
+    
+    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
+    n_ebins = len(BNB_fluxes)
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
+    n_ebins = len(BNB_fluxes[0])
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        th_bins[mask] = n_ebins - 1
+    
+    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
+    df.w_event_rate *= renorm_flux_angle
 
 
 def miniboone_dirt_geometry(df):
 
     length_events = len(df)
-    u0 = np.random.random(length_events)
-    phi0 = np.random.random(length_events) * 2. * np.pi
-    r0 = radius_cyl_MB * u0**(1./2.)
-    z0 = np.random.random(length_events) * l_cyl_MB + start_point_cyl_MB
+    a = l_cone_MB + l_cone_excluded # height of the cone
+    b = radius_cone_outer_MB # base of the cone
+    fraction_dirt = ((a * b**2) - (l_cone_excluded * radius_cone_inner_MB**2)) / (a * b**2)
+    correction_fraction = 1.5  # just to be sure we produce more than we need
+    n_sample = int(length_events / fraction_dirt * correction_fraction)
     
-    df["pos_scatt", "0"] = (z0 - start_point_cyl_MB + booster_decay_tunnel)/const.c_LIGHT
-    df["pos_scatt", "1"] = r0 * np.cos(phi0)
-    df["pos_scatt", "2"] = r0 * np.sin(phi0)
+    a = l_cone_MB + l_cone_excluded # height of the cone
+    b = radius_cone_outer_MB # base of the cone
+    h = a * np.random.random(n_sample)**(1./3.)
+    r = (b / a) * h * np.sqrt(np.random.random(n_sample))
+    phi = np.random.random(n_sample) * 2. * np.pi
+    
+    x0 = r * np.cos(phi)
+    y0 = r * np.sin(phi)
+    z0 = h
+    
+    mask_truncate_cone = (z0 <= l_cone_MB)
+    x0 = x0[mask_truncate_cone][:length_events]
+    y0 = y0[mask_truncate_cone][:length_events]
+    z0 = -1 * (z0[mask_truncate_cone][:length_events]) + end_point_cone_MB
+    
+    df["pos_scatt", "0"] = (z0 - start_point_cone_MB + booster_decay_tunnel)/const.c_LIGHT
+    df["pos_scatt", "1"] = x0
+    df["pos_scatt", "2"] = y0
     df["pos_scatt", "3"] = z0
     
-    # rescale the weights considering a higher flux
-    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_MB)**2)
-    df.w_event_rate *= (l_baseline_MB / distances)**2
+    # Compute the mean position where the pions decayed
+    n_ebins = 99
+    E_nu = df["P_projectile","0"].values
+    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    probs_distance = np.ones_like(BNB_e_vs_z_dist)
+    for i in range(len(probs_distance)):
+        if BNB_e_vs_z_dist[e_bins[i],:].sum() != 0:
+            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i],:]
+    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    
+    length_events = len(df)
+    u_normal = np.random.random(length_events)
+    phi_normal = np.random.random(length_events) * 2. * np.pi
+    r_normal = radius_decay_pipe * np.sqrt(u_normal)
+    df["pos_prod", "1"] = r_normal * np.cos(phi_normal)
+    df["pos_prod", "2"] = r_normal * np.sin(phi_normal)
+    df["pos_prod", "3"] = origin - l_baseline_MB
+    
+    # RESCALE WEIGHTS
+    # rescale the weights with respect to the distance
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
+    df.w_event_rate *= ((l_baseline_MB - origin) / distances)**2
+    
 
 def microboone_dirt_geometry(df):
 
@@ -305,9 +478,46 @@ def microboone_dirt_geometry(df):
     df["pos_scatt", "2"] = np.random.random(length_events)*(y_muB_dirt_max - y_muB_dirt_min)  + y_muB_dirt_min
     df["pos_scatt", "3"] = z0
     
-    # rescale the weights considering a higher flux
-    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_muB)**2)
-    df.w_event_rate *= (l_baseline_muB / distances)**2
+    # Compute the mean position where the pions decayed
+    n_ebins = 99
+    E_nu = df["P_projectile","0"].values
+    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    probs_distance = np.ones_like(BNB_e_vs_z_dist)
+    for i in range(len(probs_distance)):
+        if BNB_e_vs_z_dist[e_bins[i],:].sum() != 0:
+            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i],:]
+    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    
+    u_normal = np.random.random(length_events)
+    phi_normal = np.random.random(length_events) * 2. * np.pi
+    r_normal = radius_decay_pipe * np.sqrt(u_normal)
+    df["pos_prod", "1"] = r_normal * np.cos(phi_normal)
+    df["pos_prod", "2"] = r_normal * np.sin(phi_normal)
+    df["pos_prod", "3"] = origin - l_baseline_muB
+    
+    # RESCALE WEIGHTS
+    # rescale the weights with respect to the distance
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
+    df.w_event_rate *= ((l_baseline_muB - origin) / distances)**2
+    # rescaling with respect to angle
+    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
+    
+    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
+    n_ebins = len(BNB_fluxes)
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
+    n_ebins = len(BNB_fluxes[0])
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        th_bins[mask] = n_ebins - 1
+    
+    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
+    df.w_event_rate *= renorm_flux_angle
 
 def icarus_dirt_geometry(df):
 
@@ -321,9 +531,46 @@ def icarus_dirt_geometry(df):
     df["pos_scatt", "2"] = np.random.random(length_events)*(y_icarus_dirt_max - y_icarus_dirt_min)  + y_icarus_dirt_min
     df["pos_scatt", "3"] = z0
     
-    # rescale the weights considering a higher flux
-    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_icarus)**2)
-    df.w_event_rate *= (l_baseline_icarus / distances)**2
+    # Compute the mean position where the pions decayed
+    n_ebins = 99
+    E_nu = df["P_projectile","0"].values
+    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    probs_distance = np.ones_like(BNB_e_vs_z_dist)
+    for i in range(len(probs_distance)):
+        if BNB_e_vs_z_dist[e_bins[i],:].sum() != 0:
+            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i],:]
+    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    
+    u_normal = np.random.random(length_events)
+    phi_normal = np.random.random(length_events) * 2. * np.pi
+    r_normal = radius_decay_pipe * np.sqrt(u_normal)
+    df["pos_prod", "1"] = r_normal * np.cos(phi_normal)
+    df["pos_prod", "2"] = r_normal * np.sin(phi_normal)
+    df["pos_prod", "3"] = origin - l_baseline_icarus
+    
+    # RESCALE WEIGHTS
+    # rescale the weights with respect to the distance
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
+    df.w_event_rate *= ((l_baseline_icarus - origin) / distances)**2
+    # rescaling with respect to angle
+    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
+    
+    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
+    n_ebins = len(BNB_fluxes)
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
+    n_ebins = len(BNB_fluxes[0])
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        th_bins[mask] = n_ebins - 1
+    
+    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
+    df.w_event_rate *= renorm_flux_angle
 
 
 def microboone_tpc_geometry(df):
@@ -338,9 +585,46 @@ def microboone_tpc_geometry(df):
     df["pos_scatt", "2"] = np.random.random(length_events)*(y_muB) - y_muB/2.
     df["pos_scatt", "3"] = z0
     
-    # rescale the weights considering a higher flux
-    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_muB)**2)
-    df.w_event_rate *= (l_baseline_muB / distances)**2
+    # Compute the mean position where the pions decayed
+    n_ebins = 99
+    E_nu = df["P_projectile","0"].values
+    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    probs_distance = np.ones_like(BNB_e_vs_z_dist)
+    for i in range(len(probs_distance)):
+        if BNB_e_vs_z_dist[e_bins[i],:].sum() != 0:
+            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i],:]
+    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    
+    u_normal = np.random.random(length_events)
+    phi_normal = np.random.random(length_events) * 2. * np.pi
+    r_normal = radius_decay_pipe * np.sqrt(u_normal)
+    df["pos_prod", "1"] = r_normal * np.cos(phi_normal)
+    df["pos_prod", "2"] = r_normal * np.sin(phi_normal)
+    df["pos_prod", "3"] = origin - l_baseline_muB
+    
+    # RESCALE WEIGHTS
+    # rescale the weights with respect to the distance
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
+    df.w_event_rate *= ((l_baseline_muB - origin) / distances)**2
+    # rescaling with respect to angle
+    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
+    
+    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
+    n_ebins = len(BNB_fluxes)
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
+    n_ebins = len(BNB_fluxes[0])
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        th_bins[mask] = n_ebins - 1
+    
+    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
+    df.w_event_rate *= renorm_flux_angle
 
 
 def sbnd_dirt_geometry(df):
@@ -354,9 +638,46 @@ def sbnd_dirt_geometry(df):
     df["pos_scatt", "2"] = np.random.random(length_events)*(y_sbnd_dirt_max - y_sbnd_dirt_min)  + y_sbnd_dirt_min
     df["pos_scatt", "3"] = z0
     
-    # rescale the weights considering a higher flux
-    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_sbnd)**2)
-    df.w_event_rate *= (l_baseline_sbnd / distances)**2
+    # Compute the mean position where the pions decayed
+    n_ebins = 99
+    E_nu = df["P_projectile","0"].values
+    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    probs_distance = np.ones_like(BNB_e_vs_z_dist)
+    for i in range(len(probs_distance)):
+        if BNB_e_vs_z_dist[e_bins[i],:].sum() != 0:
+            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i],:]
+    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    
+    u_normal = np.random.random(length_events)
+    phi_normal = np.random.random(length_events) * 2. * np.pi
+    r_normal = radius_decay_pipe * np.sqrt(u_normal)
+    df["pos_prod", "1"] = r_normal * np.cos(phi_normal)
+    df["pos_prod", "2"] = r_normal * np.sin(phi_normal)
+    df["pos_prod", "3"] = origin - l_baseline_sbnd
+    
+    # RESCALE WEIGHTS
+    # rescale the weights with respect to the distance
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
+    df.w_event_rate *= ((l_baseline_sbnd - origin) / distances)**2
+    # rescaling with respect to angle
+    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
+    
+    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
+    n_ebins = len(BNB_fluxes)
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
+    n_ebins = len(BNB_fluxes[0])
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        th_bins[mask] = n_ebins - 1
+    
+    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
+    df.w_event_rate *= renorm_flux_angle
 
 
 # distribute events in df accross the pre-defined spherical MiniBooNE volume
@@ -381,14 +702,52 @@ def miniboone_geometry(df):
             raise ValueError(f"Geometry sampled too inefficiently, tries = {tries} and npoints = {npoints}. Wrong setup?")
 
     # guarantee that array has number of samples asked (nsamples)
-    df["pos_scatt", "0"] = (events[2, :nsamples] - start_point_cyl_MB + booster_decay_tunnel)/const.c_LIGHT
+    df["pos_scatt", "0"] = (events[2, :nsamples] - start_point_cone_MB + booster_decay_tunnel)/const.c_LIGHT
     df["pos_scatt", "1"] = events[0, :nsamples]
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
     
-    # rescale the weights considering a higher flux
-    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values + l_baseline_MB)**2)
-    df.w_event_rate *= (l_baseline_MB / distances)**2
+    # Compute the mean position where the pions decayed
+    n_ebins = 99
+    E_nu = df["P_projectile","0"].values
+    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    probs_distance = np.ones_like(BNB_e_vs_z_dist)
+    for i in range(len(probs_distance)):
+        if BNB_e_vs_z_dist[e_bins[i],:].sum() != 0:
+            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i],:]
+    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    
+    length_events = len(df)
+    u_normal = np.random.random(length_events)
+    phi_normal = np.random.random(length_events) * 2. * np.pi
+    r_normal = radius_decay_pipe * np.sqrt(u_normal)
+    df["pos_prod", "1"] = r_normal * np.cos(phi_normal)
+    df["pos_prod", "2"] = r_normal * np.sin(phi_normal)
+    df["pos_prod", "3"] = origin - l_baseline_MB
+    
+    # RESCALE WEIGHTS
+    # rescale the weights with respect to the distance
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
+    df.w_event_rate *= ((l_baseline_MB - origin) / distances)**2
+    # rescaling with respect to angle
+    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
+    
+    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
+    n_ebins = len(BNB_fluxes)
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
+    n_ebins = len(BNB_fluxes[0])
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        th_bins[mask] = n_ebins - 1
+    
+    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
+    df.w_event_rate *= renorm_flux_angle
 
 
 # assing all events in df a scattering position at 4-position (0,0,0,0)
