@@ -4,6 +4,7 @@ from DarkNews import const
 from DarkNews.const import Sqrt, MZBOSON, eQED
 
 from DarkNews import logger
+import lhapdf
 
 
 def upscattering_dxsec_dQ2_dx(x_phase_space, x, process, diagrams=["total"]):    
@@ -40,12 +41,43 @@ def upscattering_dxsec_dQ2_dx(x_phase_space, x, process, diagrams=["total"]):
     target = process.target
 
     # masses
-    M = process.target.mass
+    M = target.mass
     Z = target.Z
     mHNL = process.m_ups
     mzprime = process.mzprime
     MSCALAR = process.mhprime
-    return (None)
+    cfg = lhapdf.getConfig()
+    if target.is_proton == True: #set PDF metadeta
+        cfg.set_entry("Particle", 2212)
+    elif target.is_neutron == True:
+        cfg.set_entry("Particle", 2112)
+    #del(cfg)
+    #PDF reading
+    p = lhapdf.mkPDF("CT18NLO", 0) #allow user to choose +def-CT18?
+    flavs = p.flavors()[1:-2]#d,u,s,c excluding b and gluon
+    f_len = len(flavs)
+    f_half = int(f_len*0.5)
+
+    zeros = np.zeros(f_half)
+
+    xf = np.array(p.xfxQ2(flavs, x, Q2))
+    F2_Z2 = np.sum((g_Z2_V**2+g_Z2_A**2) *(xf[f_half:]+xf[:f_half]))
+    xF3_Z2 = np.sum(2*g_Z2_V*g_Z2_A *(xf[f_half:]-xf[:f_half]))
+    FL_Z2= (R_1+1)*F2_Z2 #WHERE am is supposeed to find disnshit
+    
+    x2F1_Z2 = F2_Z2*(1+4*M**2 * x**2 /Q2)/(1+FL_Z2)
+ 
+    
+    
+    
+    
+    
+    
+    return 
+
+
+
+
 def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
     """ 
     Computes the differential cross section for upscattering in attobarns
