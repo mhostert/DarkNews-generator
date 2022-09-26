@@ -10,8 +10,8 @@ import importlib.resources as resources
 # get flux angle normalization and decay position of pions for BNB
 n_ebins = 99
 BNB_enu_max = 4.245909093808516 # GeV
-BNB_fluxes = np.genfromtxt(resources.open_text('DarkNews.include.fluxes.BNB_fluxes', 'BNB_angle_energy_normalization.dat'))
-BNB_energies_positions = np.genfromtxt(resources.open_text('DarkNews.include.fluxes.BNB_fluxes', 'BNB_energy_distances.dat'))
+BNB_fluxes = np.genfromtxt(resources.open_text('DarkNews.include.fluxes', 'BNB_angle_energy_normalization.dat'))
+BNB_energies_positions = np.genfromtxt(resources.open_text('DarkNews.include.fluxes', 'BNB_energy_distances.dat'))
 BNB_energy_nu = BNB_energies_positions[1:,0]
 BNB_energy_nu_bins = np.linspace(0,BNB_enu_max,n_ebins + 1)
 BNB_e_bins_angle = np.linspace(0,BNB_enu_max,100)
