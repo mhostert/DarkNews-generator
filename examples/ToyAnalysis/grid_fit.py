@@ -17,7 +17,6 @@ from . import fit_functions as ff
 from . import analysis as av2
 from . import analysis_decay as av
 
-
 # default values
 UD4_def = 1.0/np.sqrt(2.)
 UD5_def = 1.0/np.sqrt(2.)
@@ -25,7 +24,6 @@ gD_def = 2.
 Umu4_def = np.sqrt(1.0e-12)
 Umu5_def = np.sqrt(1.0e-12)
 epsilon_def = 8e-4
-
 
 def get_data_MB(varplot='reco_Evis'):
 
