@@ -56,7 +56,7 @@ plotaxes = {'3+1' : [r'$m_{Z\prime} [\mathrm{GeV}]$', r'$m_{4} [\mathrm{GeV}]$']
 #loc = 'ToyAnalysis/data'
 loc = 'data'
 # obtain data from MB for the fitting
-data_MB_source = {'Enu' : grid_fit.get_data_MB(varplot='reco_Enu',loc=loc), 'angle' : grid_fit.get_data_MB(varplot='reco_angle',loc=loc)}
+#data_MB_source = {'Enu' : grid_fit.get_data_MB(varplot='reco_Enu'), 'angle' : grid_fit.get_data_MB(varplot='reco_angle')}
 
 # Normalization (temporal variable)
 NORMALIZATION = 1
@@ -308,10 +308,9 @@ def chi2_binned_rate_3p2(df, couplings, coupling_factor, back_MC,D, sys=[0.1,0.1
     return chi2bin(res.x) if (l_decay<decay_limit) else (chi2bin(res.x) + l_decay**1.5)
 
 
-def chi2_MiniBooNE_2020_3p1(df, umu4, df_dirt=False, on_shell=True, v4i_f=v4i_f, v4i_def=v4i_def, vmu4_f=vmu4_f, vmu4_def=vmu4_def, r_eps = r_eps, l_decay_proper_cm=1):
+def chi2_MiniBooNE_2020_3p1(df, umu4, on_shell=True, v4i_f=v4i_f, v4i_def=v4i_def, vmu4_f=vmu4_f, vmu4_def=vmu4_def, r_eps = r_eps, l_decay_proper_cm=1):
 
-    df1 = df.copy(deep=True)
-    df2 = df_dirt.copy(deep=True)
+    df = df.copy(deep=True)
     
     if on_shell:
         factor = (v4i_f(umu4)/v4i_def)**2
@@ -319,12 +318,8 @@ def chi2_MiniBooNE_2020_3p1(df, umu4, df_dirt=False, on_shell=True, v4i_f=v4i_f,
         factor = (r_eps*v4i_f(umu4)/v4i_def)**2
     
     decay_l = l_decay_proper_cm / factor
-    df_decay = av.select_MB_decay_expo_prob(df1,coupling_factor=1,l_decay_proper_cm=decay_l)
+    df_decay = av.decay_selection(df, decay_l, 'miniboone', weights='w_event_rate')
     df_decay = a.compute_spectrum(df_decay, EVENT_TYPE='both')
-    
-    df_decay2 = av.select_MB_decay_dirt(df2,coupling_factor=1,l_decay_proper_cm=decay_l)
-    df_decay2 = a.compute_spectrum(df_decay2, EVENT_TYPE='both')
-    df_decay = pd.concat([df_decay, df_decay2])
     
     df_decay = df_decay[df_decay.reco_w>0]
     sum_w_post_smearing = np.abs(np.sum(df_decay['reco_w']))

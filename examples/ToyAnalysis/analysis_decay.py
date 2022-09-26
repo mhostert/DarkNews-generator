@@ -130,8 +130,8 @@ def get_beta(p):
     np.ndarray
         array of particle velocities in the LAB frame
     """
-    M = np.sqrt(dot4(p.T, p.T))
-    return np.sqrt(p[:,0]**2 -  M**2)/p[:,0]
+    M = np.sqrt(np.abs(dot4(p.T, p.T)))
+    return np.sqrt(np.abs(p[:,0]**2 -  M**2))/p[:,0]
 
 def get_decay_length_in_lab(p, l_decay_proper_cm):
     """get_decay_length_in_lab given the proper decay length in cm and
