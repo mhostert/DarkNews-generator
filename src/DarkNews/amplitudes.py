@@ -4,10 +4,11 @@ from DarkNews import const
 from DarkNews.const import Sqrt, MZBOSON, eQED
 
 from DarkNews import logger
+from DarkNews import model
 import lhapdf
 
 
-def upscattering_dxsec_dQ2_dx(x_phase_space, x, process, diagrams=["total"]):    
+def upscattering_dxsec_dQ2_dx(x_phase_space, x, process, TheoryModel,  diagrams=["total"]):    
     """ 
     Computes the differential cross section for upscattering in attobarns
 
@@ -46,27 +47,50 @@ def upscattering_dxsec_dQ2_dx(x_phase_space, x, process, diagrams=["total"]):
     mHNL = process.m_ups
     mzprime = process.mzprime
     MSCALAR = process.mhprime
+    Enu = process.Enu
+    
+    Vhad = process.Vhad # Z' int with had
+    Vij = process.Vij
+    Vji = process.Vji
+    lhapdf.setPaths(['include/pdf_data'])
     cfg = lhapdf.getConfig()
-    if target.is_proton == True: #set PDF metadeta
-        cfg.set_entry("Particle", 2212)
+    if target.is_proton == True: #set LHAPDF metadeta
+        cfg.set_entry("Particle", 2212) #PID of target
     elif target.is_neutron == True:
         cfg.set_entry("Particle", 2112)
-    #del(cfg)
+    
+    del(cfg)
     #PDF reading
     p = lhapdf.mkPDF("CT18NLO", 0) #allow user to choose +def-CT18?
     flavs = p.flavors()[1:-2]#d,u,s,c excluding b and gluon
-    f_len = len(flavs)
-    f_half = int(f_len*0.5)
-
-    zeros = np.zeros(f_half)
-
+    f_half = 4
+    R =0.3
+    R_1 = 1/R #ratio for F_L should be calculated instead
+    #zeros = np.zeros(f_half)
+    
+    g_Z2_V = np.zeros(f_half)
+    g_Z2_A = np.zeros(f_half)
+    g_Z2_V[0] =  g_Z2_V[2] = TheoryModel.ddV #down vectorial
+    g_Z2_V[1] = g_Z2_V[3] =TheoryModel.duV #up vectorial
+    g_Z2_A[0] =g_Z2_A[2]  = TheoryModel.ddA #down axial
+    g_Z2_A[1] =g_Z2_A[3]=  TheoryModel.duA #up axial
+    
     xf = np.array(p.xfxQ2(flavs, x, Q2))
     F2_Z2 = np.sum((g_Z2_V**2+g_Z2_A**2) *(xf[f_half:]+xf[:f_half]))
     xF3_Z2 = np.sum(2*g_Z2_V*g_Z2_A *(xf[f_half:]-xf[:f_half]))
-    FL_Z2= (R_1+1)*F2_Z2 #WHERE am is supposeed to find disnshit
-    
+    FL_Z2= (R_1+1)*F2_Z2 
     x2F1_Z2 = F2_Z2*(1+4*M**2 * x**2 /Q2)/(1+FL_Z2)
- 
+    y = Q2/( x*2*M*Enu) 
+    ds1 = 0.5*y**2 *x2F1_Z2 +(1-y-x*y*M/(2*Enu))*F2_Z2 
+    ds2 = y*(1-y*0.5)*xF3_Z2
+    couple = Vhad
+    Vert = TheoryModel.d_ij
+    
+    #couple = g_Z2_V_H*g_Z2_V_D
+    #couple = e*g_X_c*c_B**2 *c_W *t_X/c_X
+    anti =1
+    ds = (Vert[2, 4]*couple)**2  *M*Enu/(np.pi*(mzprime**2+Q2)**2) *(ds1+anti*ds2)
+    return(ds**2)
     
     
     

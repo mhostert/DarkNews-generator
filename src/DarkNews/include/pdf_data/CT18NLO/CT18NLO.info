@@ -1,0 +1,29 @@
+SetDesc: 'CT18NLO, 3-loop PDF evolution with HOPPET and HOPPET alphas_s running solution. This set has 59 member PDFs. mem=0 --> central value; mem=1-58 --> eigenvector sets 90%'
+Authors: T.-J. Hou, K. Xie, J. Gao, S. Dulat, M. Guzzi, T. J. Hobbs, J. Huston, P. Nadolsky, J. Pumplin, C. Schmidt, I. Sitiwaldi, D. Stump, C.-P. Yuan
+Reference: arXiv:1908.11394 (temporary)
+Format: lhagrid1
+DataVersion:     1
+NumMembers:    59
+SetIndex: 14400
+Flavors: [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 21]
+OrderQCD:     1
+FlavorScheme: variable
+NumFlavors: 5
+ErrorType: hessian
+ErrorConfLevel: 90
+XMin:   1.000000e-09
+XMax:   1.000000E+00
+QMin:   1.295000E+00
+QMax:   1.000000E+05
+MZ:  91.1870
+MUp:   0.0010
+MDown:   0.0010
+MStrange:   0.2000
+MCharm:   1.3000
+MBottom:   4.7500
+MTop: 172.0000
+AlphaS_MZ:  0.118000
+AlphaS_OrderQCD:     1
+AlphaS_Type: ipol
+AlphaS_Qs: [ 1.29500E+00, 1.29875E+00, 1.46461E+00, 1.65924E+00, 1.89067E+00, 2.16749E+00, 2.50067E+00, 2.90430E+00, 3.39664E+00, 4.00145E+00, 4.75000E+00, 5.76715E+00, 7.07072E+00, 8.75819E+00, 1.09657E+01, 1.38856E+01, 1.77929E+01, 2.30855E+01, 3.03471E+01, 4.04448E+01, 5.46864E+01, 7.50724E+01, 1.04712E+02, 1.48517E+02, 2.14380E+02, 3.15212E+02, 4.72537E+02, 7.22946E+02, 1.12995E+03, 1.80616E+03, 2.95593E+03, 4.95886E+03, 8.53814E+03, 1.51079E+04, 2.75107E+04, 5.16275E+04, 1.00000E+05]
+AlphaS_Vals: [ 3.72820E-01, 3.72125E-01, 3.47833E-01, 3.25974E-01, 3.06025E-01, 2.87746E-01, 2.70938E-01, 2.55432E-01, 2.41087E-01, 2.27781E-01, 2.15410E-01, 2.04123E-01, 1.93518E-01, 1.83540E-01, 1.74145E-01, 1.65289E-01, 1.56934E-01, 1.49046E-01, 1.41592E-01, 1.34546E-01, 1.27879E-01, 1.21568E-01, 1.15591E-01, 1.09927E-01, 1.04558E-01, 9.94659E-02, 9.46347E-02, 9.00494E-02, 8.56961E-02, 8.15617E-02, 7.76342E-02, 7.39022E-02, 7.03552E-02, 6.69832E-02, 6.37771E-02, 6.07279E-02, 5.78277E-02]
