@@ -30,28 +30,28 @@ epsilon_def = 8e-4
 def get_data_MB(varplot='reco_Evis'):
 
     if varplot=='reco_Evis':
-        _, data = resources.open_text("ToyAnalysis.include.miniboone_2020.Evis_data.dat", unpack=True)
-        _, bkg = resources.open_text("ToyAnalysis.include.miniboone_2020.Evis_bkg.dat", unpack=True)
+        _, data = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", 'Evis_data.dat'), unpack=True)
+        _, bkg = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", 'Evis_bkg.dat'), unpack=True)
         signal = data - bkg
         sys_signal = 0.1
         sys_bkg = 0.1
 
     elif varplot=='reco_Enu':
         # miniboone nu data 2020
-        _, data = resources.open_text("ToyAnalysis.include.miniboone_2020.Enu_data.dat", unpack=True)
-        _, bkg = resources.open_text("ToyAnalysis.include.miniboone_2020.Enu_constrained_bkg.dat", unpack=True)
-        _, error_low = resources.open_text("ToyAnalysis.include.miniboone_2020.Enu_lower_error_bar_constrained_bkg.dat", unpack=True)
+        _, data = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", 'Enu_data.dat'), unpack=True)
+        _, bkg = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", 'Enu_constrained_bkg.dat'), unpack=True)
+        _, error_low = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", 'Enu_lower_error_bar_constrained_bkg.dat'), unpack=True)
         signal = data - bkg
         sys_bkg = (bkg - error_low)/bkg
         sys_signal = 0.1
-        bin_e = resources.open_text("ToyAnalysis.include.miniboone_2020.Enu_bin_edges.dat")
+        bin_e = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", 'Enu_bin_edges.dat'), unpack=True)
         bin_w = (bin_e[1:] - bin_e[:-1])
         signal *= bin_w*1e3
         bkg *= bin_w*1e3
 
     elif varplot=='reco_angle':
-        _, data = resources.open_text("ToyAnalysis.include.miniboone_2020.cosTheta_data.dat", unpack=True)
-        _, bkg = resources.open_text("ToyAnalysis.include.miniboone_2020.cosTheta_bkg.dat", unpack=True)
+        _, data = np.genfromtxt(resources.open_text('ToyAnalysis.include.miniboone_2020', 'cosTheta_data.dat'), unpack=True)
+        _, bkg = np.genfromtxt(resources.open_text('ToyAnalysis.include.miniboone_2020', 'cosTheta_bkg.dat'), unpack=True)
         signal = data - bkg
         sys_signal = 0.1
         sys_bkg = 0.1

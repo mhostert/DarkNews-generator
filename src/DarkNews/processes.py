@@ -13,9 +13,9 @@ from DarkNews import phase_space as ps
 
 
 class UpscatteringProcess:
-    """ 
+    """
         Describes the process of upscattering with arbitrary vertices and masses
-    
+
     """
 
     def __init__(self, nu_projectile, nu_upscattered, nuclear_target, scattering_regime, TheoryModel, helicity):
@@ -40,6 +40,8 @@ class UpscatteringProcess:
             self.target_multiplicity = self.nuclear_target.Z
         elif self.scattering_regime == "n-el":
             self.target_multiplicity = self.nuclear_target.N
+        elif self.scattering_regime == "DIS":
+            self.target_multiplicity = self.nuclear_target.N*self.target.in_neutron + self.nuclear_target.Z*self.target.in_proton
         else:
             logger.error(f"Scattering regime {self.scattering_regime} not supported.")
 
@@ -113,10 +115,14 @@ class UpscatteringProcess:
 
             return integrals["diff_xsec"].mean * batch_f.norm["diff_xsec"]
 
-    def total_xsec(self, Enu, diagrams=["total"], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup):
+    def total_xsec(self, Enu, diagrams=["total"], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, seed=None):
         """ 
             Returns the total upscattering xsec for a fixed neutrino energy in cm^2
         """
+
+        if seed:
+            np.random.seed(seed)
+
         self.Enu = Enu
         all_xsecs = 0.0
         for diagram in diagrams:

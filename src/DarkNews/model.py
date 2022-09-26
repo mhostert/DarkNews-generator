@@ -72,10 +72,10 @@ class HNLModel:
         self.dprotonA = None
         self.dneutronV = None
         self.dneutronA = None
-        self.dSproton = None
-        self.dSneutron = None
-        self.dPproton = None
-        self.dPneutron = None
+        self.dprotonS = None
+        self.dneutronS = None
+        self.dprotonP = None
+        self.dneutronP = None
 
         # Now assign parameters based on user input
         self.__dict__.update(user_input)

@@ -18,21 +18,21 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
                                     separating diagrams with Z', Z, S, etc.
 
                                     NC_SQR
-                                    
+
                                     KinMix_SQR
                                     KinMix_NC_inter
-                                    
+
                                     MassMix_SQR
                                     MassMix_NC_inter
                                     KinMix_MassMix_inter
-                                    
+
                                     TMM_SQR
-                                    
+
                                     Scalar_SQR
                                     Scalar_NC_inter
                                     Scalar_KinMix_inter
                                     Scalar_MassMix_inter
-                                
+
                                     total
 
     Raises:

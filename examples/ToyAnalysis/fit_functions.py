@@ -56,7 +56,7 @@ plotaxes = {'3+1' : [r'$m_{Z\prime} [\mathrm{GeV}]$', r'$m_{4} [\mathrm{GeV}]$']
 #loc = 'ToyAnalysis/data'
 loc = 'data'
 # obtain data from MB for the fitting
-data_MB_source = {'Enu' : grid_fit.get_data_MB(varplot='reco_Enu',loc=loc), 'angle' : grid_fit.get_data_MB(varplot='reco_angle',loc=loc)}
+data_MB_source = {'Enu' : grid_fit.get_data_MB(varplot='reco_Enu'), 'angle' : grid_fit.get_data_MB(varplot='reco_angle')}
 
 # Normalization (temporal variable)
 NORMALIZATION = 1
