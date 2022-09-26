@@ -7,6 +7,9 @@ from DarkNews import const
 #precision
 precision = 1e-10
 
+# baselines
+baselines = {'miniboone': 541e2, 'miniboone_dirt': 541e2, 'microboone': 470e2, 'microboone_dirt': 470e2, 'sbnd': 110e2, 'sbnd_dirt': 110e2, 'icarus': 600e2, 'icarus_dirt': 600e2}
+
 # radius of MB
 radius_MB = 610 #cm
 radius_MB_fid = 500 #cm
@@ -64,6 +67,36 @@ def get_angle(p1, p2):
 def dot3(p1, p2):
     return p1[0]*p2[0] + p1[1]*p2[1] + p1[2]*p2[2]
 
+def normalize_3D_vec(v):
+    return v / np.sqrt(dot3(v,v))
+
+def cross3(p1, p2):
+    px = p1[1]*p2[2] - p1[2]*p2[1]
+    py = p1[2]*p2[0] - p1[0]*p2[2]
+    pz = p1[0]*p2[1] - p1[1]*p2[0]
+    return np.array([px,py,pz])
+
+# rotate v by an angle of theta on the plane perpendicular to k using Rodrigues' rotation formula
+def rotate_by_theta(v,k,theta):
+    # we first normalize k
+    k = normalize_3D_vec(k)
+    
+    # Rodrigues' rotation formula
+    return np.cos(theta) * v + np.sin(theta) * cross3(k,v) + dot3(k,v) * (1 - np.cos(theta)) * k
+
+# rotate a 4D-vector v using the same minimum rotation to take vector a into vector b
+def rotate_similar_to(v,a,b):
+    # normalize vectors a and b
+    a = normalize_3D_vec(a)
+    b = normalize_3D_vec(b)
+    
+    # compute normal vector to those and angle
+    k = cross3(a,b)
+    theta = dot3(a,b)
+    
+    # use previous function to compute new vector
+    return rotate_by_theta(v,k,theta)
+
 def dot4(p1, p2):
     return p1[0]*p2[0] - p1[1]*p2[1] - p1[2]*p2[2] - p1[3]*p2[3]
 
@@ -72,6 +105,17 @@ def get_3direction(p0):
     norm = np.sqrt(p[0]*p[0] + p[1]*p[1] + p[2]*p[2])
     p /= norm
     return p
+
+def rotate_dataframe(df):
+    particles = ['P_target','P_recoil','P_decay_N_parent','P_decay_ell_plus','P_decay_ell_minus','P_decay_N_daughter','P_decay_photon','P_projectile']
+    
+    for particle in particles:
+        try:
+            df.loc[:,(particle,['1','2','3'])] = rotate_similar_to(df[particle].values.T[1:],df.P_projectile.values.T[1:],df.pos_scatt.values.T[1:] - df['pos_prod'].values.T).T
+        except:
+            continue
+    
+    return df
 
 def get_beta(p):
     """get_beta get the velocity in Lab frame
@@ -86,8 +130,8 @@ def get_beta(p):
     np.ndarray
         array of particle velocities in the LAB frame
     """
-    M = np.sqrt(dot4(p.T, p.T))
-    return np.sqrt(p[:,0]**2 -  M**2)/p[:,0]
+    M = np.sqrt(np.abs(dot4(p.T, p.T)))
+    return np.sqrt(np.abs(p[:,0]**2 -  M**2))/p[:,0]
 
 def get_decay_length_in_lab(p, l_decay_proper_cm):
     """get_decay_length_in_lab given the proper decay length in cm and
@@ -208,6 +252,9 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
     """
 
     df = df.copy(deep=True)
+    
+    # rotate all momenta by changing the direction of the incoming beam like coming from the center of the target
+    df = rotate_dataframe(df)
 
     pN = df.P_decay_N_parent.values
     l_decay_lab_cm = get_decay_length_in_lab(pN, l_decay_proper_cm)

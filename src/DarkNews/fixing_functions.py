@@ -441,6 +441,9 @@ def miniboone_dirt_geometry(df):
     
     # Compute the mean position where the pions decayed
     n_ebins = 99
+    df["P_projectile","1"] = 0
+    df["P_projectile","2"] = 0
+    df["P_projectile","3"] = df["P_projectile","0"].values
     E_nu = df["P_projectile","0"].values
     e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
     if (n_ebins in e_bins):
@@ -464,6 +467,8 @@ def miniboone_dirt_geometry(df):
     # rescale the weights with respect to the distance
     distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
     df.w_event_rate *= ((l_baseline_MB - origin) / distances)**2
+    
+    return df
     
 
 def microboone_dirt_geometry(df):
@@ -709,6 +714,9 @@ def miniboone_geometry(df):
     
     # Compute the mean position where the pions decayed
     n_ebins = 99
+    df["P_projectile","1"] = 0
+    df["P_projectile","2"] = 0
+    df["P_projectile","3"] = df["P_projectile","0"].values
     E_nu = df["P_projectile","0"].values
     e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
     if (n_ebins in e_bins):
@@ -748,6 +756,8 @@ def miniboone_geometry(df):
     
     renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
     df.w_event_rate *= renorm_flux_angle
+    
+    return df
 
 
 # assing all events in df a scattering position at 4-position (0,0,0,0)
