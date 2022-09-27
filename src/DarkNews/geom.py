@@ -6,6 +6,56 @@ from numpy.random import choice
 
 import importlib.resources as resources
 
+
+################## ROTATION FUNCTIONS ######################
+def dot3(p1, p2):
+    return p1[0]*p2[0] + p1[1]*p2[1] + p1[2]*p2[2]
+
+def normalize_3D_vec(v):
+    return v / np.sqrt(dot3(v,v))
+
+def cross3(p1, p2):
+    px = p1[1]*p2[2] - p1[2]*p2[1]
+    py = p1[2]*p2[0] - p1[0]*p2[2]
+    pz = p1[0]*p2[1] - p1[1]*p2[0]
+    return np.array([px,py,pz])
+
+# rotate v by an angle of theta on the plane perpendicular to k using Rodrigues' rotation formula
+def rotate_by_theta(v,k,theta):
+    # we first normalize k
+    k = normalize_3D_vec(k)
+    
+    # Rodrigues' rotation formula
+    return np.cos(theta) * v + np.sin(theta) * cross3(k,v) + dot3(k,v) * (1 - np.cos(theta)) * k
+
+
+# rotate a 4D-vector v using the same minimum rotation to take vector a into vector b
+def rotate_similar_to(v,a,b):
+    # normalize vectors a and b
+    a = normalize_3D_vec(a)
+    b = normalize_3D_vec(b)
+    
+    # compute normal vector to those and angle
+    k = cross3(a,b)
+    theta = dot3(a,b)
+    
+    # use previous function to compute new vector
+    return rotate_by_theta(v,k,theta)
+
+
+def rotate_dataframe(df):
+    particles = ['P_target','P_recoil','P_decay_N_parent','P_decay_ell_plus','P_decay_ell_minus','P_decay_N_daughter','P_decay_photon','P_projectile']
+    
+    for particle in particles:
+        try:
+            df.loc[:,(particle,['1','2','3'])] = rotate_similar_to(df[particle].to_numpy().T[1:],df.P_projectile.to_numpy().T[1:],df.pos_scatt.to_numpy().T[1:] - df['pos_prod'].to_numpy().T).T
+        except:
+            continue
+    
+    return df
+
+##################################################
+
 # BNB flux and decay pipe DATA
 # get flux angle normalization and decay position of pions for BNB
 n_ebins = 99
@@ -272,6 +322,9 @@ def microboone_geometry(df):
     
     renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
     df.w_event_rate *= renorm_flux_angle
+    
+    # rotate momenta
+    df = rotate_dataframe(df)
 
 
 # distribute events in df accross the pre-defined spherical MiniBooNE volume
@@ -342,6 +395,9 @@ def sbnd_geometry(df):
     
     renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
     df.w_event_rate *= renorm_flux_angle
+    
+    # rotate momenta
+    df = rotate_dataframe(df)
 
 def icarus_geometry(df):
 
@@ -410,6 +466,9 @@ def icarus_geometry(df):
     
     renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
     df.w_event_rate *= renorm_flux_angle
+    
+    # rotate momenta
+    df = rotate_dataframe(df)
 
 
 def miniboone_dirt_geometry(df):
@@ -467,6 +526,9 @@ def miniboone_dirt_geometry(df):
     distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
     df.w_event_rate *= ((l_baseline_MB - origin) / distances)**2
     
+    # rotate momenta
+    df = rotate_dataframe(df)
+    
 
 def microboone_dirt_geometry(df):
 
@@ -520,6 +582,9 @@ def microboone_dirt_geometry(df):
     
     renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
     df.w_event_rate *= renorm_flux_angle
+    
+    # rotate momenta
+    df = rotate_dataframe(df)
 
 def icarus_dirt_geometry(df):
 
@@ -573,6 +638,9 @@ def icarus_dirt_geometry(df):
     
     renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
     df.w_event_rate *= renorm_flux_angle
+    
+    # rotate momenta
+    df = rotate_dataframe(df)
 
 
 def microboone_tpc_geometry(df):
@@ -627,6 +695,9 @@ def microboone_tpc_geometry(df):
     
     renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
     df.w_event_rate *= renorm_flux_angle
+    
+    # rotate momenta
+    df = rotate_dataframe(df)
 
 
 def sbnd_dirt_geometry(df):
@@ -680,6 +751,9 @@ def sbnd_dirt_geometry(df):
     
     renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
     df.w_event_rate *= renorm_flux_angle
+    
+    # rotate momenta
+    df = rotate_dataframe(df)
 
 
 # distribute events in df accross the pre-defined spherical MiniBooNE volume
@@ -750,6 +824,9 @@ def miniboone_geometry(df):
     
     renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
     df.w_event_rate *= renorm_flux_angle
+    
+    # rotate momenta
+    df = rotate_dataframe(df)
 
 
 # assing all events in df a scattering position at 4-position (0,0,0,0)

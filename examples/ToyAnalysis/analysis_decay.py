@@ -254,7 +254,7 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
     df = df.copy(deep=True)
     
     # rotate all momenta by changing the direction of the incoming beam like coming from the center of the target
-    df = rotate_dataframe(df)
+    #df = rotate_dataframe(df)
 
     pN = df.P_decay_N_parent.values
     l_decay_lab_cm = get_decay_length_in_lab(pN, l_decay_proper_cm)
