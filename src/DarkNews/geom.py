@@ -29,7 +29,7 @@ def rotate_by_theta(v,k,theta):
     return np.cos(theta) * v + np.sin(theta) * cross3(k,v) + dot3(k,v) * (1 - np.cos(theta)) * k
 
 
-# rotate a 4D-vector v using the same minimum rotation to take vector a into vector b
+# rotate a 3D-vector v using the same minimum rotation to take vector a into vector b
 def rotate_similar_to(v,a,b):
     # normalize vectors a and b
     a = normalize_3D_vec(a)
@@ -37,7 +37,7 @@ def rotate_similar_to(v,a,b):
     
     # compute normal vector to those and angle
     k = cross3(a,b)
-    theta = dot3(a,b)
+    theta = np.arccos(dot3(a,b))
     
     # use previous function to compute new vector
     return rotate_by_theta(v,k,theta)
@@ -175,23 +175,20 @@ z_muB = 1040.
 x_muB = 256.
 y_muB = 232.
 
-# geometry of cylinder_muB for dirt
-l_muB  = 1086.49
-z_muB = 1040.
-
-# target to front of detector
-l_baseline_muB = 470e2
-l_dirt_muB = 400e2
-x_muB_dirt_min = -1100.
-x_muB_dirt_max = 1100.
-y_muB_dirt_min = -1600.
-y_muB_dirt_max = 600.
-z_muB_dirt_max = -215 - l_muB / 2
-z_muB_dirt_min = z_muB_dirt_max - l_dirt_muB
-
-# Tube parameters
+# Tube parameters - cryostat
 r_t = 191.61
 z_t = 1086.49
+
+# geometry of cone_muB for dirt
+l_cone_muB = 400e2
+end_point_cone_muB = -215 - z_t / 2
+l_baseline_muB = 470e2
+radius_cone_outer_muB = 1.5 * r_t
+radius_cone_inner_muB = 38.7955
+
+l_cone_excluded_muB = 7000 + end_point_cone_muB
+start_point_cone_muB = end_point_cone_muB - l_cone_muB
+
 
 # cap parameters
 r_c = 305.250694958
@@ -227,10 +224,10 @@ dx_sbnd = 4e2
 dy_sbnd = 4e2
 dz_sbnd = 5e2
 
-x_sbnd_dirt_min = x_muB_dirt_min
-x_sbnd_dirt_max = x_muB_dirt_max
-y_sbnd_dirt_min = y_muB_dirt_min
-y_sbnd_dirt_max = y_muB_dirt_max
+x_sbnd_dirt_min = -1100.
+x_sbnd_dirt_max = 1100.
+y_sbnd_dirt_min = -1600.
+y_sbnd_dirt_max = 600.
 z_sbnd_dirt_max = - dz_sbnd/2 - gap_sbnd_wall_TPC
 z_sbnd_dirt_min = -l_baseline_sbnd + booster_decay_tunnel
 
@@ -242,10 +239,10 @@ z_icarus = 19.6e2
 
 l_dirt_icarus = 400e2
 icarus_gap = 1e2
-x_icarus_dirt_min = x_muB_dirt_min
-x_icarus_dirt_max = x_muB_dirt_max
-y_icarus_dirt_min = y_muB_dirt_min
-y_icarus_dirt_max = y_muB_dirt_max
+x_icarus_dirt_min = -1100.
+x_icarus_dirt_max = 1100.
+y_icarus_dirt_min = -1600.
+y_icarus_dirt_max = 600.
 z_icarus_dirt_max = - icarus_gap - z_icarus/2.
 z_icarus_dirt_min = - l_dirt_icarus + z_icarus_dirt_max
 
@@ -306,22 +303,6 @@ def microboone_geometry(df):
     # rescale the weights with respect to the distance
     distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
     df.w_event_rate *= ((l_baseline_muB - origin) / distances)**2
-    # rescaling with respect to angle
-    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
-    
-    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
-    n_ebins = len(BNB_fluxes)
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
-    n_ebins = len(BNB_fluxes[0])
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        th_bins[mask] = n_ebins - 1
-    
-    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
-    df.w_event_rate *= renorm_flux_angle
     
     # rotate momenta
     df = rotate_dataframe(df)
@@ -379,22 +360,6 @@ def sbnd_geometry(df):
     # rescale the weights with respect to the distance
     distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
     df.w_event_rate *= ((l_baseline_sbnd - origin) / distances)**2
-    # rescaling with respect to angle
-    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
-    
-    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
-    n_ebins = len(BNB_fluxes)
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
-    n_ebins = len(BNB_fluxes[0])
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        th_bins[mask] = n_ebins - 1
-    
-    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
-    df.w_event_rate *= renorm_flux_angle
     
     # rotate momenta
     df = rotate_dataframe(df)
@@ -450,22 +415,6 @@ def icarus_geometry(df):
     # rescale the weights with respect to the distance
     distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
     df.w_event_rate *= ((l_baseline_icarus - origin) / distances)**2
-    # rescaling with respect to angle
-    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
-    
-    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
-    n_ebins = len(BNB_fluxes)
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
-    n_ebins = len(BNB_fluxes[0])
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        th_bins[mask] = n_ebins - 1
-    
-    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
-    df.w_event_rate *= renorm_flux_angle
     
     # rotate momenta
     df = rotate_dataframe(df)
@@ -534,12 +483,28 @@ def microboone_dirt_geometry(df):
 
     # geometry of cylinder_MB for dirt
     length_events = len(df)
-    z0 = np.random.random(length_events)*(z_muB_dirt_max - z_muB_dirt_min)  + z_muB_dirt_min
-
-    time = MicroBooNEGlobalTimeOffset + (MicroBooNERandomTimeOffset) * np.random.rand(length_events)
-    df["pos_scatt", "0"] = time + (z0)/const.c_LIGHT*1e9 # z0 is negative
-    df["pos_scatt", "1"] = np.random.random(length_events)*(x_muB_dirt_max - x_muB_dirt_min)  + x_muB_dirt_min
-    df["pos_scatt", "2"] = np.random.random(length_events)*(y_muB_dirt_max - y_muB_dirt_min)  + y_muB_dirt_min
+    a = l_cone_muB + l_cone_excluded_muB # height of the cone
+    b = radius_cone_outer_muB # base of the cone
+    fraction_dirt = ((a * b**2) - (l_cone_excluded_muB * radius_cone_inner_muB**2)) / (a * b**2)
+    correction_fraction = 2.  # just to be sure we produce more than we need
+    n_sample = int(length_events / fraction_dirt * correction_fraction)
+    
+    h = a * np.random.random(n_sample)**(1./3.)
+    r = (b / a) * h * np.sqrt(np.random.random(n_sample))
+    phi = np.random.random(n_sample) * 2. * np.pi
+    
+    x0 = r * np.cos(phi)
+    y0 = r * np.sin(phi)
+    z0 = h
+    
+    mask_truncate_cone = (z0 <= l_cone_muB)
+    x0 = x0[mask_truncate_cone][:length_events]
+    y0 = y0[mask_truncate_cone][:length_events]
+    z0 = -1 * (z0[mask_truncate_cone][:length_events]) + end_point_cone_muB
+    
+    df["pos_scatt", "0"] = (z0 - start_point_cone_muB + booster_decay_tunnel)/const.c_LIGHT
+    df["pos_scatt", "1"] = x0
+    df["pos_scatt", "2"] = y0
     df["pos_scatt", "3"] = z0
     
     # Compute the mean position where the pions decayed
@@ -566,22 +531,6 @@ def microboone_dirt_geometry(df):
     # rescale the weights with respect to the distance
     distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
     df.w_event_rate *= ((l_baseline_muB - origin) / distances)**2
-    # rescaling with respect to angle
-    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
-    
-    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
-    n_ebins = len(BNB_fluxes)
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
-    n_ebins = len(BNB_fluxes[0])
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        th_bins[mask] = n_ebins - 1
-    
-    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
-    df.w_event_rate *= renorm_flux_angle
     
     # rotate momenta
     df = rotate_dataframe(df)
@@ -679,22 +628,6 @@ def microboone_tpc_geometry(df):
     # rescale the weights with respect to the distance
     distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
     df.w_event_rate *= ((l_baseline_muB - origin) / distances)**2
-    # rescaling with respect to angle
-    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
-    
-    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
-    n_ebins = len(BNB_fluxes)
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
-    n_ebins = len(BNB_fluxes[0])
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        th_bins[mask] = n_ebins - 1
-    
-    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
-    df.w_event_rate *= renorm_flux_angle
     
     # rotate momenta
     df = rotate_dataframe(df)
@@ -808,22 +741,6 @@ def miniboone_geometry(df):
     # rescale the weights with respect to the distance
     distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
     df.w_event_rate *= ((l_baseline_MB - origin) / distances)**2
-    # rescaling with respect to angle
-    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
-    
-    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
-    n_ebins = len(BNB_fluxes)
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
-    n_ebins = len(BNB_fluxes[0])
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        th_bins[mask] = n_ebins - 1
-    
-    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
-    df.w_event_rate *= renorm_flux_angle
     
     # rotate momenta
     df = rotate_dataframe(df)

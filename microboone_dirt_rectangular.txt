@@ -10,7 +10,7 @@ nuclear_targets = [
     'Si28',
     'O16'
 ]
-fiducial_mass = 8579.28 # tons, density:  2.15 g/cm3, vol = 3.99036e9 cm3, R = 287.415 cm, r = 38.7955 cm, L = 40000 cm
+fiducial_mass = 416240. # tons, density:  2.15 g/cm3, length = 40000cm, width/height = 2200 cm
 fiducial_mass_per_target = [
     fiducial_mass*28/60, 
     fiducial_mass*32/60
