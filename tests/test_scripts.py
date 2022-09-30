@@ -19,8 +19,6 @@ def test_dn_gen():
         assert os.path.exists(plots_path), f'Could not find summary plots in {plots_path}'
 
 
-
-    
 @pytest.mark.skip(reason="Still need to find a way to set up git for venvs")
 def test_examples_download():
     os.system("dn_get_examples")
