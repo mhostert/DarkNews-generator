@@ -116,13 +116,13 @@ class UpscatteringProcess:
             return integrals["diff_xsec"].mean * batch_f.norm["diff_xsec"]
 
     def total_xsec(self, Enu, diagrams=["total"], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, seed=None):
-        """ 
+        """
             Returns the total upscattering xsec for a fixed neutrino energy in cm^2
         """
 
-        if seed:
+        if seed is not None:
             np.random.seed(seed)
-
+        
         self.Enu = Enu
         all_xsecs = 0.0
         for diagram in diagrams:

@@ -1,5 +1,4 @@
 import os
-import sys
 import pandas as pd
 import numpy as np
 import dill
@@ -11,9 +10,6 @@ from DarkNews import logger, prettyprinter
 from DarkNews import const
 from DarkNews import pdg
 from DarkNews import Cfourvec as Cfv
-
-import pyarrow.parquet as pq
-import pyarrow as pa
 
 import pyhepmc as hep
 
@@ -138,25 +134,27 @@ class Printer:
 
     def print_events_to_parquet(self, **kwargs):
         """ 
-			Print to pandas DataFrame to parquet file using pyarrow (.parquet) 
+            Print to pandas DataFrame to parquet file using pyarrow (.parquet) 
 
-			This format cannot save df.attrs to file.
+            This format cannot save df.attrs to file.
 
-		"""
-        # kwargs['engine']=kwargs.get('engine','pyarrow')
+        """
+        kwargs['engine']=kwargs.get('engine','pyarrow')
         filename = Path(f"{self.out_file_name}/pandas_df.parquet").__str__()
         if self.sparse:
-            pq.write_table(pa.Table.from_pandas(self.df_sparse), filename, **kwargs)
+            # pq.write_table(pa.Table.from_pandas(self.df_sparse), filename, **kwargs)
+            self.df_sparse.to_parquet(filename, **kwargs)
             prettyprinter.info(f"Events in sparse pandas dataframe saved to parquet file successfully:\n{filename}")
             return self.df_sparse
         else:
-            pq.write_table(pa.Table.from_pandas(self.df_gen), filename, **kwargs)
+            # pq.write_table(pa.Table.from_pandas(self.df_gen), filename, **kwargs)
+            self.df_gen.to_parquet(filename, **kwargs)
             prettyprinter.info(f"Events in pandas dataframe saved to parquet file successfully:\n{filename}")
             return self.df_gen
 
     def print_events_to_pandas(self, **kwargs):
         """ 
-			Print to pandas DataFrame pickle file (.pckl)
+            Print to pandas DataFrame pickle file (.pckl)
 
 			This is the only format that allows to save df.attrs to file.
 			Using Dill to serialize the Model, Detector, and NuclearTarget classes to file.

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
-from . import const
-from . import Cfourvec as Cfv
+from DarkNews import const
+from DarkNews import Cfourvec as Cfv
 from numpy.random import choice
 
 import importlib.resources as resources
@@ -45,13 +45,13 @@ def rotate_similar_to(v,a,b):
 
 def rotate_dataframe(df):
     particles = ['P_target','P_recoil','P_decay_N_parent','P_decay_ell_plus','P_decay_ell_minus','P_decay_N_daughter','P_decay_photon','P_projectile']
-    
+
     for particle in particles:
         try:
             df.loc[:,(particle,['1','2','3'])] = rotate_similar_to(df[particle].to_numpy().T[1:],df.P_projectile.to_numpy().T[1:],df.pos_scatt.to_numpy().T[1:] - df['pos_prod'].to_numpy().T).T
         except:
             continue
-    
+
     return df
 
 ##################################################

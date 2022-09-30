@@ -686,4 +686,3 @@ class GenLauncher:
         if logger.hasHandlers():
             logger.handlers.clear()
         logger.addHandler(handler)
-

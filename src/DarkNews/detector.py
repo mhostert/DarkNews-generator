@@ -5,12 +5,12 @@ import os
 import importlib.resources as resources
 
 
-from . import logger, prettyprinter
-from . import pdg
-from . import geom
-from . import const
-from .nuclear_tools import NuclearTarget
-from .AssignmentParser import AssignmentParser
+from DarkNews import logger, prettyprinter
+from DarkNews import pdg
+from DarkNews import geom
+from DarkNews import const
+from DarkNews.nuclear_tools import NuclearTarget
+from DarkNews.AssignmentParser import AssignmentParser
 
 
 class Detector:

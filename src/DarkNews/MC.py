@@ -137,44 +137,6 @@ class MC_events:
 {self.nu_upscattered.name}  {self.ups_case.target.name} --> \
 {self.nu_outgoing.name} {DECAY_PRODUCTS} {self.ups_case.target.name}"
 
-    def get_total_xsec(self, Enu):
-        """
-        Returns the total upscattering xsec for a fixed neutrino energy
-
-        """
-
-        DIM = 1
-        self.Enu = Enu
-
-        # below threshold
-        if Enu < (self.ups_case.Ethreshold):
-            return 0.0
-
-        batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=self.Enu, MC_case=self)
-        integ = vg.Integrator(DIM * [[0.0, 1.0]])  # unit hypercube
-
-        integrals = run_vegas(batch_f, integ, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup,)
-        logger.debug("Main VEGAS run completed.")
-
-        #############
-        # integrated xsec coverted to cm^2
-        tot_xsec = integrals["diff_xsec"].mean * const.attobarn_to_cm2 * batch_f.norm["diff_xsec"]
-
-        # How many constituent targets inside scattering regime?
-        if self.scope["scattering_regime"] == "coherent":
-            target_multiplicity = 1
-        elif self.scope["scattering_regime"] == "p-el":
-            target_multiplicity = self.nuclear_target.Z
-        elif self.scope["scattering_regime"] == "n-el":
-            target_multiplicity = self.nuclear_target.N
-        elif self.scope["scattering_regime"] == "DIS":
-            target_multiplicity = 1
-        else:
-            logger.error(f"Scattering regime {self.scope['scattering_regime']} not supported.")
-
-        logger.debug("Total cross section calculated.")
-        return tot_xsec * target_multiplicity
-
     def get_MC_events(self):
         """
         Returns MC events from importance sampling

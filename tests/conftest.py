@@ -12,6 +12,25 @@ GENERIC_MODEL_KWARGS = {"HNLtype": "dirac", "deV": 1, "duV": 1, "ddV": 1,
                     "d_mu4": 1, "d_mu5": 1, "d_mu6": 1,
                     "d_45": 1, "d_56": 1, "d_46": 1}
 
+MOST_GENERIC_MODEL_KWARGS = {
+                    "HNLtype": "majorana",
+                    # Turn on all lepton couplings
+                    "deV": 1e-3, "duV": 1e-3, "ddV": 1e-3,
+                    "deA": 1e-3, "duA": 1e-3, "ddA": 1e-3,
+                    "deS": 1e-3, "duS": 1e-3, "ddS": 1e-3,
+                    "ceV": 1e-3, "cuV": 1e-3, "cdV": 1e-3,
+                    "ceA": 1e-3, "cuA": 1e-3, "cdA": 1e-3,
+                    # all neutral lepton couplings
+                    "c_mu4": 1e-3, "c_mu5": 1e-3, "c_mu6": 1e-3,
+                    "d_mu4": 1e-3, "d_mu5": 1e-3, "d_mu6": 1e-3,
+                    "s_mu4": 1e-3, "s_mu5": 1e-3, "s_mu6": 1e-3,
+                    "d_45": 1, "d_56": 1, "d_46": 1,
+                    "c_45": 1, "c_56": 1, "c_46": 1,
+                    "s_45": 1, "s_56": 1, "s_46": 1,
+                    "mu_tr_mu5": 1e-6, "mu_tr_mu6": 1e-6, "mu_tr_mu6": 1e-6,
+                    "mu_tr_45": 1, "mu_tr_56": 1, "mu_tr_46": 1,
+                    }
+                    
 @pytest.fixture(scope="session")
 def set_seeds():
     seed = 42
@@ -162,3 +181,54 @@ def gen_other_final_states():
     df_TMM_photon = gen.run()
 
     return df_light, df_heavy, df_TMM_mumu, df_TMM_photon
+
+@pytest.fixture(scope="session")
+def gen_most_generic_model():
+
+    light_gen = GenLauncher(
+        mzprime=1.25,
+        mhprime=0.06,
+        m4=0.100,
+        m5=0.200,
+        m6=0.300,
+        neval=1000,
+        experiment="miniboone_fhc",
+        loglevel="ERROR",
+        seed=42,
+        pandas=False,
+        **MOST_GENERIC_MODEL_KWARGS
+    )
+    heavy_gen = GenLauncher(
+        mzprime=1.0,
+        mhprime=2.0,
+        m4=0.100,
+        m5=0.200,
+        m6=0.300,
+        neval=1000,
+        experiment="miniboone_fhc",
+        loglevel="ERROR",
+        seed=42,
+        pandas=False,
+        **MOST_GENERIC_MODEL_KWARGS
+    )
+    
+    return light_gen.run(), heavy_gen.run()
+
+@pytest.fixture(scope="session")
+def gen_dirt_cases():
+    
+    gen = GenLauncher(mzprime=1.25, m4=0.5, neval=1000, experiment="sbnd_dirt", loglevel="ERROR", seed=42, **MODEL_KWARGS)
+    df_1 = gen.run()
+
+    gen = GenLauncher(mzprime=1.25, m4=0.5, neval=1000, experiment="microboone_dirt", loglevel="ERROR", seed=42, **MODEL_KWARGS)
+    df_2 = gen.run()
+
+    gen = GenLauncher(mzprime=1.25, m4=0.5, neval=1000, experiment="icarus_dirt", loglevel="ERROR", seed=42, **MODEL_KWARGS)
+    df_3 = gen.run()
+
+    gen = GenLauncher(mzprime=1.25, m4=0.5, neval=1000, experiment="miniboone_fhc_dirt", loglevel="ERROR", seed=42, **MODEL_KWARGS)
+    df_4 = gen.run()
+
+    return df_1, df_2, df_3, df_4
+
+
