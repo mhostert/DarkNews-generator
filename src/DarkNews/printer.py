@@ -6,6 +6,7 @@ import dill
 from pathlib import Path
 from particle import literals as lp
 
+import DarkNews as dn
 from DarkNews import logger, prettyprinter
 from DarkNews import const
 from DarkNews import pdg
@@ -134,24 +135,28 @@ class Printer:
 
     def print_events_to_parquet(self, **kwargs):
         """ 
-            Print to pandas DataFrame to parquet file using pyarrow (.parquet) 
+            Print to pandas DataFrame to parquet file using fastparquet (.parquet) 
 
             This format cannot save df.attrs to file.
 
         """
-        kwargs['engine']=kwargs.get('engine','pyarrow')
+        
         filename = Path(f"{self.out_file_name}/pandas_df.parquet").__str__()
+        
         if self.sparse:
-            # pq.write_table(pa.Table.from_pandas(self.df_sparse), filename, **kwargs)
-            self.df_sparse.to_parquet(filename, **kwargs)
-            prettyprinter.info(f"Events in sparse pandas dataframe saved to parquet file successfully:\n{filename}")
-            return self.df_sparse
+            df = self.df_sparse
+            df_name = 'sparse pandas dataframe'
         else:
-            # pq.write_table(pa.Table.from_pandas(self.df_gen), filename, **kwargs)
-            self.df_gen.to_parquet(filename, **kwargs)
-            prettyprinter.info(f"Events in pandas dataframe saved to parquet file successfully:\n{filename}")
-            return self.df_gen
+            df = self.df_gen
+            df_name = 'pandas dataframe'
 
+        # import pyarrow.parquet as pq
+        # import pyarrow as pa
+        # kwargs['engine']=kwargs.get('engine','pyarrow')
+        dn.pq.write_table(dn.pa.Table.from_pandas(df), filename, **kwargs)
+        prettyprinter.info(f"Events in {df_name} saved to parquet file successfully:\n{filename}")            
+        return df
+    
     def print_events_to_pandas(self, **kwargs):
         """ 
             Print to pandas DataFrame pickle file (.pckl)

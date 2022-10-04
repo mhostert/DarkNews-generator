@@ -16,6 +16,7 @@ GENERATOR_ARGS = [
     "experiment",
     "nopelastic",
     "nocoh",
+    "include_nelastic",
     "noHC",
     "noHF",
     "nu_flavors",
@@ -273,15 +274,19 @@ class GenLauncher:
         ####################################################
         # Loading parameters
 
-       # the argument dictionaries (will contain valid arguments extracted from **kwargs)
+        # the argument dictionaries (will contain valid arguments extracted from **kwargs)
         self.model_args_dict = {}
 
         # load file if not None
         if param_file is not None:
             self._load_file(param_file)
 
-         # load constructor parameters
+        # load constructor parameters
         self._load_parameters(raise_errors=True, **kwargs)
+
+        if self.parquet and not dn.HAS_PYARROW:
+            logger.error("Error: pyarrow is not installed.")
+            raise ModuleNotFoundError("pyarrow is not installed.")
 
         ####################################################
         # Set up loggers

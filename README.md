@@ -93,6 +93,10 @@ python3 setup.py develop
 
 to install it in developer mode (similar to editable mode above).
 
+##### Extras
+
+If you would like to output events to `.parquet` files, you can install the following ```pip install DarkNews[parquet]``` or ```pip install "DarkNews[parquet]"```.
+
 ---
 
 ## Usage

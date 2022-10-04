@@ -215,26 +215,6 @@ UPMNS = np.matrix([[Ue1, Ue2, Ue3], [Umu1, Umu2, Umu3], [Utau1, Utau2, Utau3]], 
 ################################################
 # low-level auxiliary functions
 ################################################
-def is_odd(num):
-    return num & 0x1
-
-
-np_is_odd = np.vectorize(is_odd)
-
-# run shell commands from notebook
-def subprocess_cmd(command, verbose=2):
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-    stdout, stderr = process.communicate()
-    if verbose == 2:
-        print(command)
-        print(stdout.decode("utf-8"))
-        print(stderr.decode("utf-8"))
-    elif verbose == 1:
-        if len(stderr.decode("utf-8")) > 2:
-            print(command)
-            print("n", stderr.decode("utf-8"), "m")
-
-
 def get_decay_rate_in_s(G):
     return 1.0 / G * invGeV_to_s
 

@@ -27,7 +27,7 @@ MOST_GENERIC_MODEL_KWARGS = {
                     "d_45": 1, "d_56": 1, "d_46": 1,
                     "c_45": 1, "c_56": 1, "c_46": 1,
                     "s_45": 1, "s_56": 1, "s_46": 1,
-                    "mu_tr_mu5": 1e-6, "mu_tr_mu6": 1e-6, "mu_tr_mu6": 1e-6,
+                    "mu_tr_mu4": 1e-8, "mu_tr_mu5": 1e-8, "mu_tr_mu6": 1e-8,
                     "mu_tr_45": 1, "mu_tr_56": 1, "mu_tr_46": 1,
                     }
                     
@@ -184,7 +184,7 @@ def gen_other_final_states():
 
 @pytest.fixture(scope="session")
 def gen_most_generic_model():
-
+    
     light_gen = GenLauncher(
         mzprime=1.25,
         mhprime=0.06,
@@ -193,6 +193,7 @@ def gen_most_generic_model():
         m6=0.300,
         neval=1000,
         experiment="miniboone_fhc",
+        include_nelastic=True,
         loglevel="ERROR",
         seed=42,
         pandas=False,
@@ -206,13 +207,30 @@ def gen_most_generic_model():
         m6=0.300,
         neval=1000,
         experiment="miniboone_fhc",
+        include_nelastic=True,
         loglevel="ERROR",
         seed=42,
         pandas=False,
         **MOST_GENERIC_MODEL_KWARGS
     )
     
-    return light_gen.run(), heavy_gen.run()
+    photon_gen = GenLauncher(
+    mzprime=1.0,
+    mhprime=2.0,
+    m4=0.100,
+    m5=0.200,
+    m6=0.300,
+    neval=1000,
+    decay_product="photon",
+    experiment="miniboone_fhc",
+    include_nelastic=True,
+    loglevel="ERROR",
+    seed=42,
+    pandas=False,
+    **MOST_GENERIC_MODEL_KWARGS
+    )
+
+    return light_gen.run(), heavy_gen.run(), photon_gen.run()
 
 @pytest.fixture(scope="session")
 def gen_dirt_cases():

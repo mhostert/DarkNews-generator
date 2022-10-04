@@ -7,6 +7,8 @@ import pandas as pd
 import numpy as np
 import pyhepmc as hep
 
+import DarkNews as dn
+
 def test_(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
     """Test all output formats of DarkNews"""
 
