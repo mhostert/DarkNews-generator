@@ -13,6 +13,7 @@ from DarkNews import pdg
 from DarkNews import Cfourvec as Cfv
 
 import pyhepmc as hep
+import pyhepmc.io as io
 
 
 def print_in_order(x):
@@ -333,7 +334,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             hep_path = filename
         else:
             hep_path = Path(f"{self.out_file_name}/HEPevt.dat").__str__()
-        self._pyhepmc_printer(hep.WriterHEPEVT(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
+        self._pyhepmc_printer(io.WriterHEPEVT(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
 
     def print_events_to_hepmc2(self, filename=None, hep_unweight=False, unweighted_hep_events=100):
         # HEPevt file name
@@ -341,7 +342,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             hep_path = filename
         else:
             hep_path = Path(f"{self.out_file_name}/hep_ascii.hepmc2").__str__()
-        self._pyhepmc_printer(hep.WriterAsciiHepMC2(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
+        self._pyhepmc_printer(io.WriterAsciiHepMC2(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
 
     def print_events_to_hepmc3(self, filename=None, hep_unweight=False, unweighted_hep_events=100):
         # HEPevt file name
@@ -349,7 +350,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             hep_path = filename
         else:
             hep_path = Path(f"{self.out_file_name}/hep_ascii.hepmc3").__str__()
-        self._pyhepmc_printer(hep.WriterAscii(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
+        self._pyhepmc_printer(io.WriterAscii(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
 
     def _pyhepmc_printer(self, hep_writer, hep_unweight=False, unweighted_hep_events=100):
         """ Use pyhepmc to print events to standard HEP formats.

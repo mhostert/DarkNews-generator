@@ -5,9 +5,9 @@ from pathlib import Path
 
 import pandas as pd
 import numpy as np
-import pyhepmc as hep
 
-import DarkNews as dn
+import pyhepmc as hep
+import pyhepmc.io as io
 
 def test_(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
     """Test all output formats of DarkNews"""
@@ -54,7 +54,7 @@ def test_(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
         oss_hepmc2 = Path(f"{gen_path}/hep_ascii.hepmc2").__str__()
         oss_hepmc3 = Path(f"{gen_path}/hep_ascii.hepmc3").__str__()
 
-        with hep.ReaderHEPEVT(oss_hepevt) as f_hepevt, hep.ReaderAsciiHepMC2(oss_hepmc2) as f_hepmc2, hep.ReaderAscii(oss_hepmc3) as f_hepmc3:
+        with io.ReaderHEPEVT(oss_hepevt) as f_hepevt, io.ReaderAsciiHepMC2(oss_hepmc2) as f_hepmc2, io.ReaderAscii(oss_hepmc3) as f_hepmc3:
             # test three cases
             for i in range(0, 3):
                 evtHEPEVT = hep.GenEvent()
