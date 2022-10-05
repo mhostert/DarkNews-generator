@@ -61,7 +61,7 @@ def light_DP_gen_all_outputs():
 
     gen = GenLauncher(
         mzprime=0.03,
-        m4=0.420,
+        m4=0.430,
         neval=1000,
         experiment="miniboone_fhc",
         loglevel="ERROR",
