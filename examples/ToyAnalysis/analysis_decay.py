@@ -181,7 +181,8 @@ def get_distances(p0, phat, experiment):
 
     # positions of the 6 walls of the cryostat in order (2 for X, 2 for Y, 2 for Z)
     if experiment == 'microboone' or experiment == 'microboone_dirt':
-        planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,-z_muB/2,z_muB/2])
+        #planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,dif_z/2,z_muB + dif_z/2])
+        planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,-z_muB/2,+z_muB/2])
     elif experiment == 'sbnd' or experiment == 'sbnd_dirt':
         planes = np.array([-x_sbnd/2,x_sbnd/2,-y_sbnd/2,y_sbnd/2,-z_sbnd/2,z_sbnd/2])
     elif experiment == 'icarus' or experiment == 'icarus_dirt':
@@ -317,7 +318,8 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         
     # new reconstructed weights
     df['w_pre_decay'] = df[weights].values
-    df.loc[:,weights] = df[weights].values * probabilities
+    #df.loc[:,weights] = df[weights].values * probabilities
+    df[weights] = df[weights].values * probabilities
 
     return df
 
