@@ -6,12 +6,14 @@ import dill
 from pathlib import Path
 from particle import literals as lp
 
+import DarkNews as dn
 from DarkNews import logger, prettyprinter
 from DarkNews import const
 from DarkNews import pdg
 from DarkNews import Cfourvec as Cfv
 
 import pyhepmc as hep
+import pyhepmc.io as io
 
 
 def print_in_order(x):
@@ -21,23 +23,23 @@ def print_in_order(x):
 class Printer:
     def __init__(self, df_gen, data_path=None, sparse=False, print_to_float32=False, decay_product="e+e-"):
         """
-		Main printer of DarkNews. Can print events contained in the pandas dataframe to files of various types.
+        Main printer of DarkNews. Can print events contained in the pandas dataframe to files of various types.
 
-		Args:
-			df_gen (pd.DataFrame): dataframe with the generated events.
+        Args:
+            df_gen (pd.DataFrame): dataframe with the generated events.
 
-			data_path (str, optional): path to be used to save the event files. Defaults to the "data_path" attribute of df_gen
+            data_path (str, optional): path to be used to save the event files. Defaults to the "data_path" attribute of df_gen
 
-			sparse (bool, optional): if True, save only the neutrino energy, charged lepton or photon momenta, and weights to save storage space.
-									Not supported for HEPevt.
-									Defaults to False.
+            sparse (bool, optional): if True, save only the neutrino energy, charged lepton or photon momenta, and weights to save storage space.
+                                    Not supported for HEPevt.
+                                    Defaults to False.
 
-			print_to_float32 (bool, optional): If true downgrade floats to float32 to save storage space. Only relevant when sparse is True.
-												Defaults to False.
+            print_to_float32 (bool, optional): If true downgrade floats to float32 to save storage space. Only relevant when sparse is True.
+                                                Defaults to False.
 
-			decay_product (str, optional): what decay products are being used. Choices = ["e+e-", "mu+mu-", "photon"]. Defaults to 'e+e-'.
+            decay_product (str, optional): what decay products are being used. Choices = ["e+e-", "mu+mu-", "photon"]. Defaults to 'e+e-'.
 
-		"""
+        """
 
         # main DataFrame
         self.df_gen = df_gen
@@ -105,9 +107,9 @@ class Printer:
 
     def print_events_to_ndarray(self, **kwargs):
         """ 
-			Print to numpy array file (.npy) 
-		
-		"""
+            Print to numpy array file (.npy) 
+        
+        """
         kwargs["allow_pickle"] = kwargs.get("allow_pickle", False)
 
         if self.sparse:
@@ -134,32 +136,36 @@ class Printer:
 
     def print_events_to_parquet(self, **kwargs):
         """ 
-            Print to pandas DataFrame to parquet file using pyarrow (.parquet) 
+            Print to pandas DataFrame to parquet file using fastparquet (.parquet) 
 
             This format cannot save df.attrs to file.
 
         """
-        kwargs['engine']=kwargs.get('engine','pyarrow')
+        
         filename = Path(f"{self.out_file_name}/pandas_df.parquet").__str__()
+        
         if self.sparse:
-            # pq.write_table(pa.Table.from_pandas(self.df_sparse), filename, **kwargs)
-            self.df_sparse.to_parquet(filename, **kwargs)
-            prettyprinter.info(f"Events in sparse pandas dataframe saved to parquet file successfully:\n{filename}")
-            return self.df_sparse
+            df = self.df_sparse
+            df_name = 'sparse pandas dataframe'
         else:
-            # pq.write_table(pa.Table.from_pandas(self.df_gen), filename, **kwargs)
-            self.df_gen.to_parquet(filename, **kwargs)
-            prettyprinter.info(f"Events in pandas dataframe saved to parquet file successfully:\n{filename}")
-            return self.df_gen
+            df = self.df_gen
+            df_name = 'pandas dataframe'
 
+        # import pyarrow.parquet as pq
+        # import pyarrow as pa
+        # kwargs['engine']=kwargs.get('engine','pyarrow')
+        dn.pq.write_table(dn.pa.Table.from_pandas(df), filename, **kwargs)
+        prettyprinter.info(f"Events in {df_name} saved to parquet file successfully:\n{filename}")            
+        return df
+    
     def print_events_to_pandas(self, **kwargs):
         """ 
             Print to pandas DataFrame pickle file (.pckl)
 
-			This is the only format that allows to save df.attrs to file.
-			Using Dill to serialize the Model, Detector, and NuclearTarget classes to file.
+            This is the only format that allows to save df.attrs to file.
+            Using Dill to serialize the Model, Detector, and NuclearTarget classes to file.
 
-		"""
+        """
         filename = Path(f"{self.out_file_name}/pandas_df.pckl").__str__()
         if self.sparse:
             dill.dump(self.df_sparse, open(filename, "wb"), **kwargs)
@@ -173,12 +179,12 @@ class Printer:
 
     def get_unweighted_events(self, nevents, prob_col="w_event_rate", **kwargs):
         """
-			Unweigh events in dataframe down to "nevents" using accept-reject method with the weights in "prob_col" of dataframe.
-				
-			Fails if nevents is smaller than the total number of unweighted events.
+            Unweigh events in dataframe down to "nevents" using accept-reject method with the weights in "prob_col" of dataframe.
+                
+            Fails if nevents is smaller than the total number of unweighted events.
 
-			kwargs passed to numpy's random.choice.
-		"""
+            kwargs passed to numpy's random.choice.
+        """
         logger.info(f"Unweighing events down to {nevents} entries.")
         prob = self.df_gen[prob_col] / np.sum(self.df_gen[prob_col])
         if (prob < 0).any():
@@ -195,10 +201,10 @@ class Printer:
     def _prepare_kinematics(self, hep_unweight=False, unweighted_hep_events=None):
         """ pre compute the numpy arrays from dataframe to speed up hepmc priting routines. 
 
-		Args:
-			hep_unweight (bool, optional): _description_. Defaults to False.
-			unweighted_hep_events (_type_, optional): _description_. Defaults to None.
-		"""
+        Args:
+            hep_unweight (bool, optional): _description_. Defaults to False.
+            unweighted_hep_events (_type_, optional): _description_. Defaults to None.
+        """
 
         if not self._kinematics_in_np_arrays:
             # Unweigh events down to unweighted_hep_events?
@@ -328,7 +334,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             hep_path = filename
         else:
             hep_path = Path(f"{self.out_file_name}/HEPevt.dat").__str__()
-        self._pyhepmc_printer(hep.WriterHEPEVT(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
+        self._pyhepmc_printer(io.WriterHEPEVT(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
 
     def print_events_to_hepmc2(self, filename=None, hep_unweight=False, unweighted_hep_events=100):
         # HEPevt file name
@@ -336,7 +342,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             hep_path = filename
         else:
             hep_path = Path(f"{self.out_file_name}/hep_ascii.hepmc2").__str__()
-        self._pyhepmc_printer(hep.WriterAsciiHepMC2(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
+        self._pyhepmc_printer(io.WriterAsciiHepMC2(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
 
     def print_events_to_hepmc3(self, filename=None, hep_unweight=False, unweighted_hep_events=100):
         # HEPevt file name
@@ -344,34 +350,34 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             hep_path = filename
         else:
             hep_path = Path(f"{self.out_file_name}/hep_ascii.hepmc3").__str__()
-        self._pyhepmc_printer(hep.WriterAscii(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
+        self._pyhepmc_printer(io.WriterAscii(hep_path), hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
 
     def _pyhepmc_printer(self, hep_writer, hep_unweight=False, unweighted_hep_events=100):
         """ Use pyhepmc to print events to standard HEP formats.
 
-		Args:
-			hep_writer (an instance of a hep writer bindings): of one of the following types: WriterHEPEVT, WriterAsciiHepMC2, WriterAscii
-			hep_unweight (bool, optional): if true, unweight events. Defaults to False.
-			unweighted_hep_events (int, optional): if hep_unweight is true, use this value to determine how many unweighted events to print. Defaults to 100.
+        Args:
+            hep_writer (an instance of a hep writer bindings): of one of the following types: WriterHEPEVT, WriterAsciiHepMC2, WriterAscii
+            hep_unweight (bool, optional): if true, unweight events. Defaults to False.
+            unweighted_hep_events (int, optional): if hep_unweight is true, use this value to determine how many unweighted events to print. Defaults to 100.
 
-		Events are printed using the numpy arrays that have obtained from the pandas dataframe. This speeds up the printing process
-		Four momenta are printed following the convention:
-			
-			px py pz e pdgid status_code
+        Events are printed using the numpy arrays that have obtained from the pandas dataframe. This speeds up the printing process
+        Four momenta are printed following the convention:
+            
+            px py pz e pdgid status_code
 
-			status_code is defined as:
-				0 Not defined (null entry) Not a meaningful status
-				1 Undecayed physical particle Recommended for all cases
-				2 Decayed physical particle Recommended for all cases
-				3 Documentation line Often used to indicate
-				in/out particles in hard process
-				4 Incoming beam particle Recommended for all cases
-				5-10 Reserved for future standards Should not be used
-				11-200 Generator-dependent For generator usage
-				201- Simulation-dependent For simulation software usage
-				
+            status_code is defined as:
+                0 Not defined (null entry) Not a meaningful status
+                1 Undecayed physical particle Recommended for all cases
+                2 Decayed physical particle Recommended for all cases
+                3 Documentation line Often used to indicate
+                in/out particles in hard process
+                4 Incoming beam particle Recommended for all cases
+                5-10 Reserved for future standards Should not be used
+                11-200 Generator-dependent For generator usage
+                201- Simulation-dependent For simulation software usage
+                
 
-		"""
+        """
 
         # pre-compute kinematics with numpy for faster index access
         self._prepare_kinematics(hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
@@ -454,34 +460,34 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
 
     def print_events_to_hepevt_legacy(self, filename=None, hep_unweight=False, unweighted_hep_events=100):
         """
-			Print events to HEPevt format.
+            Print events to HEPevt format.
 
-				The file start with the total number of events:
-					
-					'tot_events_to_print'
+                The file start with the total number of events:
+                    
+                    'tot_events_to_print'
 
-				On a new line, each event starts with a brief description of the event:
-					
-					'event_number number_of_particles (event_weight if it exists)'
+                On a new line, each event starts with a brief description of the event:
+                    
+                    'event_number number_of_particles (event_weight if it exists)'
 
-				On a new line, a new particle and its properties are added. Using string concatenation, 
-				we print each particle as follows:
-				
-				(	
-					f'0 '				  	# ignored = 0 or tracked = 1
-					f' {i}'				  	# particle PDG number
-					f' 0 0 0 0' 		  	# ????? (parentage)
-					f' {*list([px,py,pz])}'	# particle px py pz momenta
-					f' {E}' 				# particle energy
-					f' {m}'				  	# particle mass
-					f' {*list([x,y,z])}' 	# spatial x y z coords
-					f' {t}' 				# time coord
-					'\n'
-				)
+                On a new line, a new particle and its properties are added. Using string concatenation, 
+                we print each particle as follows:
+                
+                (	
+                    f'0 '				  	# ignored = 0 or tracked = 1
+                    f' {i}'				  	# particle PDG number
+                    f' 0 0 0 0' 		  	# ????? (parentage)
+                    f' {*list([px,py,pz])}'	# particle px py pz momenta
+                    f' {E}' 				# particle energy
+                    f' {m}'				  	# particle mass
+                    f' {*list([x,y,z])}' 	# spatial x y z coords
+                    f' {t}' 				# time coord
+                    '\n'
+                )
 
-				The last two steps repeat until the EOF.
+                The last two steps repeat until the EOF.
 
-		"""
+        """
 
         # pre-compute kinematics with numpy for faster index access
         self._prepare_kinematics(hep_unweight=hep_unweight, unweighted_hep_events=unweighted_hep_events)
@@ -610,7 +616,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
         if filename:
             hepevt_file_name = Path(filename).__str__()
         else:
-            hepevt_file_name = Path(f"{self.out_file_name}/HEPevt.dat").__str__()
+            hepevt_file_name = Path(f"{self.out_file_name}/HEPevt_legacy.dat").__str__()
 
         f = open(hepevt_file_name, "w+")
         # print events
