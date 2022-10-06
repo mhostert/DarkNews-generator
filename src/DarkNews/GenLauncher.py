@@ -1,4 +1,5 @@
 import logging
+import logging.handlers
 import sys
 import numpy as np
 import os
@@ -191,7 +192,7 @@ class GenLauncher:
     }
 
 
-    def __init__(self, param_file=None, **kwargs):
+    def __init__(self, index, param_file=None, **kwargs):
         """GenLauncher launches the generator with user-defined model parameters, experimental configs, and generation settings.
 
             It instantiates an object to that can run the generator for the user-defined settings.
@@ -232,6 +233,8 @@ class GenLauncher:
             raise ValueError(f"Could not determine what model type to use with kwargs.keys = {kwargs.keys()}")
 
         self._parameters = GENERATOR_ARGS + self._model_parameters
+
+        self.index = index
 
         # Scope parameters
         self.name = None
@@ -595,7 +598,7 @@ class GenLauncher:
 
         ############################################################################
         # Print events to file
-        self.dn_printer = dn.printer.Printer(self.df, sparse=self.sparse, print_to_float32=self.print_to_float32, decay_product=self.decay_product,)
+        self.dn_printer = dn.printer.Printer(self.df, sparse=self.sparse, print_to_float32=self.print_to_float32, decay_product=self.decay_product, index=self.index)
         if self.pandas:
             self.dn_printer.print_events_to_pandas()
         if self.parquet:

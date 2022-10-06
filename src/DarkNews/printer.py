@@ -21,7 +21,7 @@ def print_in_order(x):
 
 
 class Printer:
-    def __init__(self, df_gen, data_path=None, sparse=False, print_to_float32=False, decay_product="e+e-"):
+    def __init__(self, df_gen, data_path=None, sparse=False, print_to_float32=False, decay_product="e+e-", index = -1):
         """
         Main printer of DarkNews. Can print events contained in the pandas dataframe to files of various types.
 
@@ -41,6 +41,7 @@ class Printer:
 
         """
 
+        self.index = index
         # main DataFrame
         self.df_gen = df_gen
         self.decay_product = decay_product
@@ -166,7 +167,7 @@ class Printer:
             Using Dill to serialize the Model, Detector, and NuclearTarget classes to file.
 
         """
-        filename = Path(f"{self.out_file_name}/pandas_df.pckl").__str__()
+        filename = Path(f"{self.out_file_name}/pandas_df_{self.index}.pckl").__str__()
         if self.sparse:
             dill.dump(self.df_sparse, open(filename, "wb"), **kwargs)
             prettyprinter.info(f"Events in sparse pandas dataframe saved to file successfully:\n{filename}")
