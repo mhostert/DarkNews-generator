@@ -47,6 +47,13 @@ from DarkNews import geom
 
 from DarkNews import plot_tools
 
+# Check if user has pyarrow installed -- if not, no parquet output is available
+try:
+    import pyarrow.parquet as pq
+    import pyarrow as pa
+    HAS_PYARROW = True
+except ImportError:
+    HAS_PYARROW = False
 
 """
     And now making it easier to import the main DarkNews classes.
