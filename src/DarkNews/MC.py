@@ -262,6 +262,7 @@ class MC_events:
             weights["diff_event_rate"] * const.attobarn_to_cm2 / decay_rates * target_multiplicity * exposure * batch_f.norm["diff_event_rate"]
         )
 
+        '''
         # > flux averaged xsec weights (neglecting kinematics of decay)
         df_gen["w_flux_avg_xsec"] = weights["diff_flux_avg_xsec"] * const.attobarn_to_cm2 * target_multiplicity * exposure * batch_f.norm["diff_flux_avg_xsec"]
 
@@ -317,6 +318,7 @@ class MC_events:
         elif self.helicity == "flipping":
             df_gen["h_parent", ""] = -df_gen["h_projectile"]
 
+        '''
         # > saving the experiment class
         df_gen.attrs["experiment"] = self.experiment
 
@@ -326,6 +328,7 @@ class MC_events:
         # > saving the lifetime of the parent (upscattered) HNL
         df_gen.attrs[f"{self.nu_upscattered.name}_ctau0"] = const.get_decay_rate_in_cm(df_gen["w_decay_rate_0"].sum())
 
+        '''
         # #########################################################################
         # PROPAGATE PARENT PARTICLE
 
@@ -341,6 +344,7 @@ class MC_events:
                 df_gen, "P_decay_N_parent", l_decay_proper_cm=df_gen.attrs[f"{self.nu_upscattered.name}_ctau0"], label="pos_decay",
             )
 
+        '''
         # print final result
         logger.info(f"Predicted ({df_gen['w_event_rate'].sum():.3g} +/- {np.sqrt((df_gen['w_event_rate']**2).sum()):.3g}) events.\n")
 
@@ -353,7 +357,7 @@ def get_merged_MC_output(df1, df2):
     take two pandas dataframes with events and combine them.
     Resetting index to go from (0,n_1+n_2) where n_i is the number of events in dfi
     """
-    logger.debug(f"Appending {df2.underlying_process[0]}")
+    #logger.debug(f"Appending {df2.underlying_process[0]}")
     if df1.attrs['model'] != df2.attrs['model']:
         logger.warning("Beware! Merging generation cases with different df.attrs['models']! Discarting the second (newest) case.")
     if df1.attrs['experiment'] != df2.attrs['experiment']:
