@@ -452,10 +452,10 @@ def miniboone_dirt_geometry(df):
     y0 = r * np.sin(phi)
     z0 = h
     
-    mask_truncate_cone = (z0 <= l_cone_MB)
+    mask_truncate_cone = (z0 >= l_cone_excluded)
     x0 = x0[mask_truncate_cone][:length_events]
     y0 = y0[mask_truncate_cone][:length_events]
-    z0 = -1 * (z0[mask_truncate_cone][:length_events]) + end_point_cone_MB
+    z0 = (z0[mask_truncate_cone][:length_events]) - a + end_point_cone_MB
     
     df["pos_scatt", "0"] = (z0 - start_point_cone_MB + booster_decay_tunnel)/const.c_LIGHT
     df["pos_scatt", "1"] = x0
@@ -510,10 +510,10 @@ def microboone_dirt_geometry(df):
     y0 = r * np.sin(phi)
     z0 = h
     
-    mask_truncate_cone = (z0 <= l_cone_muB)
+    mask_truncate_cone = (z0 >= l_cone_excluded_muB)
     x0 = x0[mask_truncate_cone][:length_events]
     y0 = y0[mask_truncate_cone][:length_events]
-    z0 = -1 * (z0[mask_truncate_cone][:length_events]) + end_point_cone_muB
+    z0 = (z0[mask_truncate_cone][:length_events]) - a + end_point_cone_muB
     
     df["pos_scatt", "0"] = (z0 - start_point_cone_muB + booster_decay_tunnel)/const.c_LIGHT
     df["pos_scatt", "1"] = x0
