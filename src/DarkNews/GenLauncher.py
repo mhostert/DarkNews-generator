@@ -596,6 +596,8 @@ class GenLauncher:
             f"Generation successful\n\nTotal events predicted:\n({np.sum(self.df['w_event_rate']):.3g} +/- {np.sqrt(np.sum(self.df['w_event_rate']**2)):.3g}) events."
         )
 
+        self.df.attrs["version"] = "DarkNews_v" + dn.__version__
+
         ############################################################################
         # Print events to file
         self.dn_printer = dn.printer.Printer(self.df, sparse=self.sparse, print_to_float32=self.print_to_float32, decay_product=self.decay_product, index=self.index)
