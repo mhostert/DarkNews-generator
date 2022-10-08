@@ -408,7 +408,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
             # PZ', pe-, pe+
             P1LAB_decayZ, P2LAB_decayZ, P3LAB_decayZ = phase_space.two_body_decay(Z_decay_samples, boost=boost_Z, **masses_decay)
 
-  #          four_momenta["P_decay_N_parent"] = P1LAB_decay
+            four_momenta["P_decay_N_parent"] = P1LAB_decay
   #          four_momenta["P_decay_N_daughter"] = P2LAB_decay
             four_momenta["P_decay_ell_minus"] = P2LAB_decayZ
             four_momenta["P_decay_ell_plus"] = P3LAB_decayZ
@@ -434,27 +434,27 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
             # Phnl, pe-, pe+, pnu
             (P1LAB_decay, P2LAB_decay, P3LAB_decay, P4LAB_decay,) = phase_space.three_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
 
-            #four_momenta["P_decay_N_parent"] = P1LAB_decay
+            four_momenta["P_decay_N_parent"] = P1LAB_decay
             four_momenta["P_decay_ell_minus"] = P2LAB_decay
             four_momenta["P_decay_ell_plus"] = P3LAB_decay
             #four_momenta["P_decay_N_daughter"] = P4LAB_decay
 
-#    elif MC_case.decays_to_singlephoton:
-#        mf = MC_case.decay_case.m_daughter
-#
-#        ########################
-#        ### HNL decay
-#        N_decay_samples = {"unit_cost": np.array(vsamples[2])}
-#        # Ni (k1) --> Nj (k2)  gamma (k3)
-#        masses_decay = {
-#            "m1": mh,  # Ni
-#            "m2": mf,  # Nj
-#            "m3": 0.0,  # gamma
-#        }
-#        # Phnl, Phnl', Pgamma
-#        P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
-#
-#        four_momenta["P_decay_N_parent"] = P1LAB_decay
+    elif MC_case.decays_to_singlephoton:
+        mf = MC_case.decay_case.m_daughter
+
+        ########################
+        ### HNL decay
+        N_decay_samples = {"unit_cost": np.array(vsamples[2])}
+        # Ni (k1) --> Nj (k2)  gamma (k3)
+        masses_decay = {
+            "m1": mh,  # Ni
+            "m2": mf,  # Nj
+            "m3": 0.0,  # gamma
+        }
+        # Phnl, Phnl', Pgamma
+        P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
+
+        four_momenta["P_decay_N_parent"] = P1LAB_decay
 #        four_momenta["P_decay_N_daughter"] = P2LAB_decay
 #        four_momenta["P_decay_photon"] = P3LAB_decay
 #
