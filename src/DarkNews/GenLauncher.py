@@ -274,6 +274,7 @@ class GenLauncher:
         self.print_to_float32 = False
         self.path = "."
 
+
         ####################################################
         # Loading parameters
 
@@ -374,6 +375,26 @@ class GenLauncher:
         ####################################################
         # Create all MC cases
         self._create_all_MC_cases()
+
+        # save a string with all the parameters as an attribute of the dataframe
+        self.param_string = ""
+        for par in GENERATOR_ARGS+COMMON_MODEL_ARGS+THREE_PORTAL_ARGS+GENERIC_MODEL_ARGS:
+            self.param_string += par + " = "
+            print(par)
+            value = getattr(self,par,None)
+            if isinstance(value,list):
+                self.param_string += "["
+                for i,el in enumerate(value):
+                    self.param_string += "\"" + str(el) + "\"" if isinstance(el,str) else el
+                    self.param_string += "," if i < len(value)-1 else ""
+                self.param_string += "]"
+            elif value is None:
+                self.param_string += "None"
+            elif isinstance(value,str) or isinstance(value,dn.detector.Detector):
+                self.param_string += "\"" + str(value) + "\""
+            else:
+                self.param_string += f"{value:g}"
+            self.param_string += "\n"
 
     def _load_file(self, file):
         parser = AssignmentParser({})
@@ -600,6 +621,7 @@ class GenLauncher:
         self.df.attrs["m5"] = self.m5
         self.df.attrs["mzprime"] = self.mzprime
         self.df.attrs["version"] = "DarkNews_v" + dn.__version__
+        self.df.attrs["parameters"] = self.param_string
 
         ############################################################################
         # Print events to file
