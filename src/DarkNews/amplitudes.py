@@ -83,21 +83,14 @@ def upscattering_dxsec_dQ2_dx(x_phase_space, x, process, TheoryModel,  diagrams=
     y = Q2/( x*2*M*Enu) 
     ds1 = 0.5*y**2 *x2F1_Z2 +(1-y-x*y*M/(2*Enu))*F2_Z2 
     ds2 = y*(1-y*0.5)*xF3_Z2
-    couple = Vhad
-    Vert = TheoryModel.d_ij
-    
+    Vij = process.Vij
+    Vji = process.Vji
     #couple = g_Z2_V_H*g_Z2_V_D
     #couple = e*g_X_c*c_B**2 *c_W *t_X/c_X
     anti =1
-    ds = (Vert[2, 4]*couple)**2  *M*Enu/(np.pi*(mzprime**2+Q2)**2) *(ds1+anti*ds2)
-    return(ds**2)
+    ds = (Vij*Vji)*(Vhad*Vhad) *M*Enu/(np.pi*(mzprime**2+Q2)**2) *(ds1+anti*ds2)
+    return(ds)#**2?
     
-    
-    
-    
-    
-    
-    return 
 
 
 
