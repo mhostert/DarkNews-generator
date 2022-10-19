@@ -15,6 +15,8 @@ from ToyAnalysis import analysis_decay
 from ToyAnalysis import fourvec as fv
 from ToyAnalysis import toy_logger
 
+import importlib.resources as resources
+
 ###########################
 
 def plot_all_rates(df, case_name, Nevents=None, truth_plots=False, title=None, path=None, loc=''):
@@ -220,8 +222,8 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
     if varplot=='reco_Evis':
 
         # miniboone nu data
-        bin_c, data_MB_enu_nue = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Evis/data_Evis.dat"), unpack=True)
-        _, data_MB_bkg = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Evis/bkg_Evis.dat"), unpack=True)
+        bin_c, data_MB_enu_nue = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", "Evis_data.dat"), unpack=True)
+        _, data_MB_bkg = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", "Evis_bkg.dat"), unpack=True)
         bin_c *= 1e-3
         bin_w = 0.05*bin_c/bin_c
         bin_e = np.append(0.1, bin_w/2.0 + bin_c)
@@ -237,10 +239,10 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
     elif varplot=='reco_Enu':
 
         # miniboone nu data 2020
-        _, data_MB = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Enu/data.dat"), unpack=True)
-        _, data_MB_bkg = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Enu/constrained_bkg.dat"), unpack=True)
-        _, MB_bkg_lower_error_bar = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Enu/lower_error_bar_constrained_bkg.dat"), unpack=True)
-        bin_e = np.loadtxt(Path(loc+"aux_data/miniboone_2020/Enu/bin_edges.dat"))
+        _, data_MB = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", "Enu_data.dat"), unpack=True)
+        _, data_MB_bkg = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", "Enu_constrained_bkg.dat"), unpack=True)
+        _, MB_bkg_lower_error_bar = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", "Enu_lower_error_bar_constrained_bkg.dat"), unpack=True)
+        bin_e = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", "Enu_bin_edges.dat"))
         
         
         data_MB = data_MB[:-1]
@@ -267,8 +269,8 @@ def histogram1D_data_stacked(plotname, df, XLABEL, TITLE, varplot='reco_costheta
     elif varplot=='reco_costheta_beam':
 
         # miniboone nu data
-        bin_c, data_MB_cost_nue = np.loadtxt(Path(loc+"aux_data/miniboone_2020/cos_Theta/data_cosTheta.dat"), unpack=True)
-        _, data_MB_bkg = np.loadtxt(Path(loc+"aux_data/miniboone_2020/cos_Theta/bkg_cosTheta.dat"), unpack=True)
+        bin_c, data_MB_cost_nue = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", "cosTheta_data.dat"), unpack=True)
+        _, data_MB_bkg = np.genfromtxt(resources.open_text("ToyAnalysis.include.miniboone_2020", "cosTheta_bkg.dat"), unpack=True)
         bin_w = np.ones(len(bin_c))*0.1
         bin_e = np.linspace(-1,1,21)
         units = 1
