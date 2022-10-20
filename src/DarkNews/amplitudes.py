@@ -70,26 +70,58 @@ def upscattering_dxsec_dQ2_dx(x_phase_space, x, process, TheoryModel,  diagrams=
     
     g_Z2_V = np.zeros(f_half)
     g_Z2_A = np.zeros(f_half)
+    
+    g_Z1_V = np.zeros(f_half)
+    g_Z1_A = np.zeros(f_half)
+    
     g_Z2_V[0] =  g_Z2_V[2] = TheoryModel.ddV #down vectorial
     g_Z2_V[1] = g_Z2_V[3] =TheoryModel.duV #up vectorial
     g_Z2_A[0] =g_Z2_A[2]  = TheoryModel.ddA #down axial
     g_Z2_A[1] =g_Z2_A[3]=  TheoryModel.duA #up axial
     
-    xf = np.array(p.xfxQ2(flavs, x, Q2))
-    F2_Z2 = np.sum((g_Z2_V**2+g_Z2_A**2) *(xf[f_half:]+xf[:f_half]))
-    xF3_Z2 = np.sum(2*g_Z2_V*g_Z2_A *(xf[f_half:]-xf[:f_half]))
-    FL_Z2= (R_1+1)*F2_Z2 
-    x2F1_Z2 = F2_Z2*(1+4*M**2 * x**2 /Q2)/(1+FL_Z2)
-    y = Q2/( x*2*M*Enu) 
-    ds1 = 0.5*y**2 *x2F1_Z2 +(1-y-x*y*M/(2*Enu))*F2_Z2 
-    ds2 = y*(1-y*0.5)*xF3_Z2
-    Vij = process.Vij
-    Vji = process.Vji
-    #couple = g_Z2_V_H*g_Z2_V_D
-    #couple = e*g_X_c*c_B**2 *c_W *t_X/c_X
-    anti =1
-    ds = (Vij*Vji)*(Vhad*Vhad) *M*Enu/(np.pi*(mzprime**2+Q2)**2) *(ds1+anti*ds2)
-    return(ds)#**2?
+    g_Z1_V[0] =  g_Z1_V[2] = TheoryModel.cdV #down vectorial
+    g_Z1_V[1] = g_Z1_V[3] =TheoryModel.cuV #up vectorial
+    g_Z1_A[0] =g_Z1_A[2]  = TheoryModel.cdA #down axial
+    g_Z1_A[1] =g_Z1_A[3]=  TheoryModel.cuA #up axial
+    
+    
+    def Lmunu_Hmunu_DC_SQR_DIS():
+        xf = np.array(p.xfxQ2(flavs, x, Q2))
+        F2_Z2 = np.sum((g_Z2_V**2+g_Z2_A**2) *(xf[f_half:]+xf[:f_half]))
+        xF3_Z2 = np.sum(2*g_Z2_V*g_Z2_A *(xf[f_half:]-xf[:f_half]))
+        FL_Z2= (R_1+1)*F2_Z2 
+        x2F1_Z2 = F2_Z2*(1+4*M**2 * x**2 /Q2)/(1+FL_Z2)
+        y = Q2/( x*2*M*Enu) 
+        ds1 = 0.5*y**2 *x2F1_Z2 +(1-y-x*y*M/(2*Enu))*F2_Z2 
+        ds2 = y*(1-y*0.5)*xF3_Z2
+        anti =1
+        ds = (Vij*Vji)*(Vhad*Vhad) *M*Enu/(np.pi*(mzprime**2+Q2)**2) *(ds1+anti*ds2)
+        return(ds)#**2?
+    
+    def Lmunu_Hmunu_NC_SQR_DIS():
+        xf = np.array(p.xfxQ2(flavs, x, Q2))
+        F2_Z1 = np.sum((g_Z1_V**2+g_Z1_A**2) *(xf[f_half:]+xf[:f_half]))
+        xF3_Z1 = np.sum(2*g_Z1_V*g_Z1_A *(xf[f_half:]-xf[:f_half]))
+        FL_Z1= (R_1+1)*F2_Z1 
+        x2F1_Z1 = F2_Z1*(1+4*M**2 * x**2 /Q2)/(1+FL_Z1)
+        y = Q2/( x*2*M*Enu) 
+        ds1 = 0.5*y**2 *x2F1_Z1 +(1-y-x*y*M/(2*Enu))*F2_Z1 
+        ds2 = y*(1-y*0.5)*xF3_Z1
+        anti =1
+        ds = (Vij*Vji)*(Vhad*Vhad) *M*Enu/(np.pi*(mzprime**2+Q2)**2) *(ds1+anti*ds2)
+        return(ds)#**2?
+    def Lmunu_Hmunu_NC_DC_int_SQR(): #up for discussion if this is correct
+        xf = np.array(p.xfxQ2(flavs, x, Q2))
+        F2_Z1_Z2 = np.sum((2*g_Z1_V*g_Z2_V) *(xf[f_half:]+xf[:f_half]))
+        xF3_Z1_Z2 = np.sum(2*g_Z1_V*g_Z2_V *(xf[f_half:]-xf[:f_half]))
+        FL_Z1_Z2= (R_1+1)*F2_Z1_Z2 
+        x2F1_Z1_Z2 = F2_Z1_Z2*(1+4*M**2 * x**2 /Q2)/(1+FL_Z1_Z2)
+        y = Q2/( x*2*M*Enu) 
+        ds1 = 0.5*y**2 *x2F1_Z1_Z2 +(1-y-x*y*M/(2*Enu))*F2_Z1_Z2 
+        ds2 = y*(1-y*0.5)*xF3_Z1_Z2
+        anti =1
+        ds = (Vij*Vji)*(Vhad*Vhad) *M*Enu/(np.pi*(mzprime**2+Q2)**2) *(ds1+anti*ds2)
+        return(ds)#**2?
     
 
 
