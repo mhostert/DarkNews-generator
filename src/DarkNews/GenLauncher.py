@@ -380,7 +380,6 @@ class GenLauncher:
         self.param_string = ""
         for par in GENERATOR_ARGS+COMMON_MODEL_ARGS+THREE_PORTAL_ARGS+GENERIC_MODEL_ARGS:
             self.param_string += par + " = "
-            print(par)
             value = getattr(self,par,None)
             if isinstance(value,list):
                 self.param_string += "["
