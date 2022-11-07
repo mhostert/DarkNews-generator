@@ -155,8 +155,11 @@ def get_decay_length_in_lab(p, l_decay_proper_cm):
     np.ndarray
         lab frame decay length in cm
     """
+    print('momentum: {}'.format(p))
     M = np.sqrt(dot4(p.T, p.T))
+    print(M)
     gammabeta = (np.sqrt(p[:,0]**2 -  M**2))/M
+    #print(gammabeta)
     return l_decay_proper_cm*gammabeta
 
 def get_distances(p0, phat, experiment):
@@ -315,17 +318,15 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         probabilities = expon.cdf(dist2,0, l_decay_lab_cm) - expon.cdf(dist1,0, l_decay_lab_cm)
 
 
-        # in this method, no well-defined decay position, so we take the mean of entry and exit points
-        df['pos_decay', '0'] = df['pos_scatt', '0'] + (dist2 + dist1)/2 / const.c_LIGHT / get_beta(pN)
-        df['pos_decay', '1'] = df['pos_scatt', '1'] + (dist2 + dist1)/2 * phat[0]
-        df['pos_decay', '2'] = df['pos_scatt', '2'] + (dist2 + dist1)/2 * phat[1]
-        df['pos_decay', '3'] = df['pos_scatt', '3'] + (dist2 + dist1)/2 * phat[2]
-
-
-    #else:
-    #    raise NotImplementedError("This experiment is not implemented")
-
+        d_decay = np.random.exponential(scale=l_decay_lab_cm) + dist1
+        #print(dist1, d_decay) #, dist1, dist2) 
         
+        # in this method, no well-defined decay position, so we take the mean of entry and exit points
+        df['pos_decay', '0'] = df['pos_scatt', '0'] + d_decay / const.c_LIGHT / get_beta(pN)
+        df['pos_decay', '1'] = df['pos_scatt', '1'] + d_decay * phat[0]
+        df['pos_decay', '2'] = df['pos_scatt', '2'] + d_decay * phat[1]
+        df['pos_decay', '3'] = df['pos_scatt', '3'] + d_decay * phat[2]
+ 
     # new reconstructed weights
     df['w_pre_decay'] = df[weights].values
     #df.loc[:,weights] = df[weights].values * probabilities
