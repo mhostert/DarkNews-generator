@@ -595,7 +595,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                     f" {print_in_order(self.pvec_decay_ell_minus[i][1:])}"
                     f" {self.df_gen['P_decay_ell_minus','0'].to_numpy()[i]:.8E}"
                     f" {const.m_e:.8E}"
-                    f" {print_in_order(self.pvec_pos_scatt[i][1:]+fudge)}"
+                    f" {print_in_order(self.pvec_pos_decay[i][1:]+fudge)}"
                     f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
                     "\n"
                 )
@@ -609,7 +609,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                     f" {print_in_order(self.pvec_decay_ell_plus[i][1:])}"
                     f" {self.df_gen['P_decay_ell_plus','0'].to_numpy()[i]:.8E}"
                     f" {const.m_e:.8E}"
-                    f" {print_in_order(self.pvec_pos_scatt[i][1:]+fudge)}"
+                    f" {print_in_order(self.pvec_pos_decay[i][1:]+fudge)}"
                     f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
                     "\n"
                 )

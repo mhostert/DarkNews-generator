@@ -32,10 +32,16 @@ start_point_steal_MB = start_point_cyl_MB - z_steal_MB
 r_muB = 191.61
 l_muB  = 1086.49
 #detector
-z_muB = 1040.
-x_muB = 256.
-y_muB = 232.
+#z_muB = 1040.
+#x_muB = 256.
+#y_muB = 232.
+#mark added 
+z_muB = 1036.8
+x_muB = 256.35
+y_muB = 116.5*2
 dif_z = l_muB - z_muB
+
+
 #outer spheres
 r_s_muB = 305.250694958
 theta_lim_muB = 38.8816337686 * np.pi / 180.0
@@ -182,7 +188,7 @@ def get_distances(p0, phat, experiment):
     # positions of the 6 walls of the cryostat in order (2 for X, 2 for Y, 2 for Z)
     if experiment == 'microboone' or experiment == 'microboone_dirt':
         #planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,dif_z/2,z_muB + dif_z/2])
-        planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,-z_muB/2,+z_muB/2])
+        planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,-z_muB/2,z_muB/2])
     elif experiment == 'sbnd' or experiment == 'sbnd_dirt':
         planes = np.array([-x_sbnd/2,x_sbnd/2,-y_sbnd/2,y_sbnd/2,-z_sbnd/2,z_sbnd/2])
     elif experiment == 'icarus' or experiment == 'icarus_dirt':
@@ -205,14 +211,17 @@ def get_distances(p0, phat, experiment):
 
     # compute the distances from the previous calculations
     distances = np.zeros((n,2))
+
     for i in range(n):
         dist_temp = solutions[i][mask_inter[i]]
+        if ( len(dist_temp)==0):
         if len(dist_temp) == 2:
             distances[i] = [dist_temp.min(),dist_temp.max()]
         elif len(dist_temp) == 1:
             distances[i] = [0, dist_temp[0]]
         else:
             distances[i] = [0,0]
+
 
     # return the distances
     return distances
@@ -301,9 +310,10 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         # dist1 is the distance between the point of production and the entrance of the FIDUCIAL vol
         # dist2 is the distance between the point of production and the exit of the FIDUCIAL vol
         dist1, dist2 = get_distances(p0,phat, experiment).T
-        
+       
         # prob of decay inside the fiducial vol
         probabilities = expon.cdf(dist2,0, l_decay_lab_cm) - expon.cdf(dist1,0, l_decay_lab_cm)
+
 
         # in this method, no well-defined decay position, so we take the mean of entry and exit points
         df['pos_decay', '0'] = df['pos_scatt', '0'] + (dist2 + dist1)/2 / const.c_LIGHT / get_beta(pN)
