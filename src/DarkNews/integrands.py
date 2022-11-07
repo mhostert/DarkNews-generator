@@ -355,7 +355,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
         "phiP_LAB": np.arctan2(P3LAB.T[2], P3LAB.T[1]),
     }
 
-    #four_momenta["P_projectile"] = P1LAB
+    four_momenta["P_projectile"] = P1LAB
     #four_momenta["P_target"] = P2LAB
     #four_momenta["P_recoil"] = P4LAB
 
