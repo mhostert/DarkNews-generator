@@ -328,13 +328,14 @@ class MC_events:
         # > saving the lifetime of the parent (upscattered) HNL
         df_gen.attrs[f"{self.nu_upscattered.name}_ctau0"] = const.get_decay_rate_in_cm(df_gen["w_decay_rate_0"].sum())
 
-        '''
+        
         # #########################################################################
         # PROPAGATE PARENT PARTICLE
 
         self.experiment.set_geometry()
         self.experiment.place_scatters(df_gen)
 
+        '''
         if self.scope["enforce_prompt"]:
             geom.place_decay(df_gen, "P_decay_N_parent", l_decay_proper_cm=0.0, label="pos_decay")
         else:
@@ -344,9 +345,10 @@ class MC_events:
                 df_gen, "P_decay_N_parent", l_decay_proper_cm=df_gen.attrs[f"{self.nu_upscattered.name}_ctau0"], label="pos_decay",
             )
 
-        '''
+        
         # print final result
         logger.info(f"Predicted ({df_gen['w_event_rate'].sum():.3g} +/- {np.sqrt((df_gen['w_event_rate']**2).sum()):.3g}) events.\n")
+        '''
 
         return df_gen
 
