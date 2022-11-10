@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from scipy.stats import expon
+import scipy.stats 
 
 from DarkNews import const
 
@@ -149,11 +150,8 @@ def get_decay_length_in_lab(p, l_decay_proper_cm):
     np.ndarray
         lab frame decay length in cm
     """
-    print('momentum: {}'.format(p))
     M = np.sqrt(dot4(p.T, p.T))
-    print(M)
     gammabeta = (np.sqrt(p[:,0]**2 -  M**2))/M
-    #print(gammabeta)
     return l_decay_proper_cm*gammabeta
 
 def get_distances(p0, phat, experiment):
@@ -303,12 +301,14 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         # dist1 is the distance between the point of production and the entrance of the FIDUCIAL vol
         # dist2 is the distance between the point of production and the exit of the FIDUCIAL vol
         dist1, dist2 = get_distances(p0,phat, experiment).T
-        
+
         # prob of decay inside the fiducial vol
         probabilities = expon.cdf(dist2,0, l_decay_lab_cm) - expon.cdf(dist1,0, l_decay_lab_cm)
-        d_decay = np.random.exponential(scale=l_decay_lab_cm) + dist1
-        print(dist1, d_decay) #, dist1, dist2) 
-        # in this method, no well-defined decay position, so we take the mean of entry and exit points
+        #now compute decay distance sampled from truncated exponential
+        d_decay = np.zeros(len(dist1)) 
+        mask = np.where(dist2!=0) 
+        X = scipy.stats.truncexpon(b=(dist2[mask]-dist1[mask])/l_decay_lab_cm[mask], loc=dist1[mask], scale=l_decay_lab_cm[mask])
+        d_decay[mask] = (X.rvs() + dist1[mask])
         df['pos_decay', '0'] = df['pos_scatt', '0'] + d_decay / const.c_LIGHT / get_beta(pN)
         df['pos_decay', '1'] = df['pos_scatt', '1'] + d_decay * phat[0]
         df['pos_decay', '2'] = df['pos_scatt', '2'] + d_decay * phat[1]
