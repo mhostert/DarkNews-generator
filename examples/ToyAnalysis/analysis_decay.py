@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import scipy.stats 
+from scipy.stats import expon
 
 from DarkNews import const
 
