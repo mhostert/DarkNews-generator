@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import scipy.stats 
 from scipy.stats import expon
 
 from DarkNews import const
@@ -33,16 +32,10 @@ start_point_steal_MB = start_point_cyl_MB - z_steal_MB
 r_muB = 191.61
 l_muB  = 1086.49
 #detector
-#z_muB = 1040.
-#x_muB = 256.
-#y_muB = 232.
-#mark added 
-z_muB = 1036.8
-x_muB = 256.35
-y_muB = 116.5*2
+z_muB = 1040.
+x_muB = 256.
+y_muB = 232.
 dif_z = l_muB - z_muB
-
-
 #outer spheres
 r_s_muB = 305.250694958
 theta_lim_muB = 38.8816337686 * np.pi / 180.0
@@ -188,7 +181,6 @@ def get_distances(p0, phat, experiment):
 
     # positions of the 6 walls of the cryostat in order (2 for X, 2 for Y, 2 for Z)
     if experiment == 'microboone' or experiment == 'microboone_dirt':
-        #planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,dif_z/2,z_muB + dif_z/2])
         planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,-z_muB/2,z_muB/2])
     elif experiment == 'sbnd' or experiment == 'sbnd_dirt':
         planes = np.array([-x_sbnd/2,x_sbnd/2,-y_sbnd/2,y_sbnd/2,-z_sbnd/2,z_sbnd/2])
@@ -212,7 +204,6 @@ def get_distances(p0, phat, experiment):
 
     # compute the distances from the previous calculations
     distances = np.zeros((n,2))
-
     for i in range(n):
         dist_temp = solutions[i][mask_inter[i]]
         if len(dist_temp) == 2:
@@ -221,7 +212,6 @@ def get_distances(p0, phat, experiment):
             distances[i] = [0, dist_temp[0]]
         else:
             distances[i] = [0,0]
-
 
     # return the distances
     return distances
@@ -310,24 +300,21 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         # dist1 is the distance between the point of production and the entrance of the FIDUCIAL vol
         # dist2 is the distance between the point of production and the exit of the FIDUCIAL vol
         dist1, dist2 = get_distances(p0,phat, experiment).T
+        
+        #now sample a random distance inside the detector
+        frac = np.random.uniform(size=len(df))
+        decay_dist = (dist2 - dist1)*frac
+        probabilities = expon.cdf(decay_dist, 0, l_decay_lab_cm)
 
-        # prob of decay inside the fiducial vol
-        probabilities = expon.cdf(dist2,0, l_decay_lab_cm) - expon.cdf(dist1,0, l_decay_lab_cm)
-        #now compute decay distance sampled from truncated exponential
-        d_decay = np.zeros(len(dist1)) 
-        mask = np.where(dist2!=0) 
-        X = scipy.stats.truncexpon(b=(dist2[mask]-dist1[mask])/l_decay_lab_cm[mask], loc=dist1[mask], scale=l_decay_lab_cm[mask])
-        d_decay[mask] = (X.rvs() + dist1[mask])
-
-        df['pos_decay', '0'] = df['pos_scatt', '0'] + d_decay / const.c_LIGHT / get_beta(pN)
-        df['pos_decay', '1'] = df['pos_scatt', '1'] + d_decay * phat[0]
-        df['pos_decay', '2'] = df['pos_scatt', '2'] + d_decay * phat[1]
-        df['pos_decay', '3'] = df['pos_scatt', '3'] + d_decay * phat[2]
- 
+        # in this method, no well-defined decay position, so we take the mean of entry and exit points
+        df['pos_decay', '0'] = df['pos_scatt', '0'] + decay_dist / const.c_LIGHT / get_beta(pN)
+        df['pos_decay', '1'] = df['pos_scatt', '1'] + decay_dist * phat[0]
+        df['pos_decay', '2'] = df['pos_scatt', '2'] + decay_dist * phat[1]
+        df['pos_decay', '3'] = df['pos_scatt', '3'] + decay_dist * phat[2]
+        
     # new reconstructed weights
     df['w_pre_decay'] = df[weights].values
-    #df.loc[:,weights] = df[weights].values * probabilities
-    df[weights] = df[weights].values * probabilities
+    df.loc[:,weights] = df[weights].values * probabilities
 
     return df
 
