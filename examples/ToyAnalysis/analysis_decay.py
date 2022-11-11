@@ -217,7 +217,6 @@ def get_distances(p0, phat, experiment):
 
     for i in range(n):
         dist_temp = solutions[i][mask_inter[i]]
-        if ( len(dist_temp)==0):
         if len(dist_temp) == 2:
             distances[i] = [dist_temp.min(),dist_temp.max()]
         elif len(dist_temp) == 1:
