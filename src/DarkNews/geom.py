@@ -237,14 +237,15 @@ x_icarus = 3.6e2*2
 y_icarus = 3.9e2
 z_icarus = 19.6e2
 
-l_dirt_icarus = 400e2
+# geometry of cone_icarus for dirt
+l_cone_icarus = 400e2
 icarus_gap = 1e2
-x_icarus_dirt_min = -1100.
-x_icarus_dirt_max = 1100.
-y_icarus_dirt_min = -1600.
-y_icarus_dirt_max = 600.
-z_icarus_dirt_max = - icarus_gap - z_icarus/2.
-z_icarus_dirt_min = - l_dirt_icarus + z_icarus_dirt_max
+end_point_cone_icarus = - icarus_gap - z_icarus/2.
+radius_cone_outer_icarus = 1.5 * x_icarus
+radius_cone_inner_icarus = 346.79
+
+l_cone_excluded_icarus = 18919
+start_point_cone_icarus = end_point_cone_icarus - l_cone_icarus
 
 # distribute events in df accross the pre-defined MicroBooNE (cryostat) volume
 def microboone_geometry(df):
@@ -537,14 +538,30 @@ def microboone_dirt_geometry(df):
 
 def icarus_dirt_geometry(df):
 
-    # geometry of cylinder_MB for dirt
+    # geometry of cylinder_icarus for dirt
     length_events = len(df)
-    z0 = np.random.random(length_events)*(z_icarus_dirt_max - z_icarus_dirt_min)  + z_icarus_dirt_min
-
-    time = MicroBooNEGlobalTimeOffset + (MicroBooNERandomTimeOffset) * np.random.rand(length_events)
-    df["pos_scatt", "0"] = time + (z0)/const.c_LIGHT*1e9 # z0 is negative
-    df["pos_scatt", "1"] = np.random.random(length_events)*(x_icarus_dirt_max - x_icarus_dirt_min)  + x_icarus_dirt_min
-    df["pos_scatt", "2"] = np.random.random(length_events)*(y_icarus_dirt_max - y_icarus_dirt_min)  + y_icarus_dirt_min
+    a = l_cone_icarus + l_cone_excluded_icarus # height of the cone
+    b = radius_cone_outer_icarus # base of the cone
+    fraction_dirt = ((a * b**2) - (l_cone_excluded_icarus * radius_cone_inner_icarus**2)) / (a * b**2)
+    correction_fraction = 2.  # just to be sure we produce more than we need
+    n_sample = int(length_events / fraction_dirt * correction_fraction)
+    
+    h = a * np.random.random(n_sample)**(1./3.)
+    r = (b / a) * h * np.sqrt(np.random.random(n_sample))
+    phi = np.random.random(n_sample) * 2. * np.pi
+    
+    x0 = r * np.cos(phi)
+    y0 = r * np.sin(phi)
+    z0 = h
+    
+    mask_truncate_cone = (z0 >= l_cone_excluded_icarus)
+    x0 = x0[mask_truncate_cone][:length_events]
+    y0 = y0[mask_truncate_cone][:length_events]
+    z0 = (z0[mask_truncate_cone][:length_events]) - a + end_point_cone_icarus
+    
+    df["pos_scatt", "0"] = (z0 - start_point_cone_icarus + booster_decay_tunnel)/const.c_LIGHT
+    df["pos_scatt", "1"] = x0
+    df["pos_scatt", "2"] = y0
     df["pos_scatt", "3"] = z0
     
     # Compute the mean position where the pions decayed
@@ -571,22 +588,6 @@ def icarus_dirt_geometry(df):
     # rescale the weights with respect to the distance
     distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
     df.w_event_rate *= ((l_baseline_icarus - origin) / distances)**2
-    # rescaling with respect to angle
-    theta_nu = np.arccos((df["pos_scatt", "3"] - df["pos_prod", "3"]) / np.sqrt(((df["pos_scatt", "1"] - df["pos_prod", "1"]))**2 + ((df["pos_scatt", "2"] - df["pos_prod", "2"]))**2 + ((df["pos_scatt", "3"] - df["pos_prod", "3"]))**2))
-    
-    e_bins = np.searchsorted(BNB_e_bins_angle, E_nu, side='right')-1
-    n_ebins = len(BNB_fluxes)
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    th_bins = np.searchsorted(BNB_th_bins_angle, theta_nu, side='right')-1
-    n_ebins = len(BNB_fluxes[0])
-    if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
-        th_bins[mask] = n_ebins - 1
-    
-    renorm_flux_angle = np.array([BNB_fluxes[e_bins[i],th_bins[i]] for i in range(length_events)])
-    df.w_event_rate *= renorm_flux_angle
     
     # rotate momenta
     df = rotate_dataframe(df)
