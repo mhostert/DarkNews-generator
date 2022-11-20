@@ -98,8 +98,14 @@ def two_to_two_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0):
     p3CM = np.sqrt(E3CM ** 2 - m3 ** 2)
     p4CM = np.sqrt(E4CM ** 2 - m4 ** 2)
 
-    Q2min = -(m1 ** 2 + m3 ** 2 - 2 * (E1CM * E3CM - p1CM * p3CM))
-    Q2max = -(m1 ** 2 + m3 ** 2 - 2 * (E1CM * E3CM + p1CM * p3CM))
+    # if massless proj and elastic in one, watch out for cancellations
+    if m1 == 0 and m2 == m4:
+        Q2min = upscattering_Q2min(Enu = (s - m2**2)/2/m2, mHNL = m3, M = m2)
+        Q2max = upscattering_Q2max(Enu = (s - m2**2)/2/m2, mHNL = m3, M = m2)
+    else:
+    # general case
+        Q2min = -(m1 ** 2 + m3 ** 2 - 2 * (E1CM * E3CM - p1CM * p3CM))
+        Q2max = -(m1 ** 2 + m3 ** 2 - 2 * (E1CM * E3CM + p1CM * p3CM))
 
     if "unit_Q2" in samples.keys():
         Q2l = (np.log(Q2max) - np.log(Q2min)) * samples["unit_Q2"] + np.log(Q2min)

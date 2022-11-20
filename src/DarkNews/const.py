@@ -45,8 +45,10 @@ attobarn_to_cm2 = 1e-42
 
 invGeV2_to_attobarn = invGeV2_to_cm2 * cm2_to_attobarn
 
+# cosmo definitions
 GeV2_to_cm3s = invGeV2_to_cm2 * c_LIGHT
 invcm3_to_eV3 = invGeV2_to_cm2 ** (3 / 2) * 1e27
+Mplanck = 1.22e19 # GeV
 
 g_to_eV = 5.6095886031e32  # eV
 kg_to_eV = 5.6095886031e35  # eV

@@ -352,9 +352,6 @@ class ThreePortalModel(HNLModel):
         # Now assign parameters based on user input
         self.__dict__.update(user_input)
 
-        # Now assign parameters based on user input
-        self.__dict__.update(user_input)
-
         # initialize spectrum of HNLs
         self._initialize_spectrum()
 

@@ -3,6 +3,7 @@ plots/*
 examples/plots/*
 examples/test_*
 test_script_*
+examples/microboone_study.ipynb
 
 # profiler
 stats

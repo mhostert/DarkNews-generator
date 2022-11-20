@@ -322,15 +322,17 @@ def nuclear_F1_Fsym_EM(Q2, A):
     Q = np.sqrt(Q2)
     a = 0.523 * const.fm_to_GeV  # GeV^-1
     r0 = 1.03 * (A ** (1.0 / 3.0)) * const.fm_to_GeV  # GeV^-1
-    tolerance = Q > 0.0
-    clean_FF = ma.masked_array(
-        data=3.0 * np.pi * a / (r0 ** 2 + np.pi ** 2 * a ** 2) * 
-            (np.pi * a * (1.0 / np.tanh(np.pi * a * Q)) * np.sin(Q * r0) - r0 * np.cos(Q * r0)) /
-            (Q * r0 * np.sinh(np.pi * Q * a)),
-        mask=~tolerance,
-        fill_value=1.0,
-    )
-    return clean_FF.filled()
+    # tolerance = Q < 5
+    # clean_FF = ma.masked_array(
+    #     data=3.0 * np.pi * a / (r0 ** 2 + np.pi ** 2 * a ** 2) * 
+    #         (np.pi * a * (1.0 / np.tanh(np.pi * a * Q)) * np.sin(Q * r0) - r0 * np.cos(Q * r0)) /
+    #         (Q * r0 * np.sinh(np.pi * Q * a)),
+    #     mask=~tolerance,
+    #     fill_value=0.0,
+    # )
+    # return clean_FF.filled()
+    f = lambda Q: 3.0 * np.pi * a / (r0 ** 2 + np.pi ** 2 * a ** 2) * (np.pi * a * (1.0 / np.tanh(np.pi * a * Q)) * np.sin(Q * r0) - r0 * np.cos(Q * r0)) / (Q * r0 * np.sinh(np.pi * Q * a))
+    return np.piecewise(Q, [Q<5, Q>=5], [f, lambda Q: 0.0*Q])
 
 
 def j1(z):
