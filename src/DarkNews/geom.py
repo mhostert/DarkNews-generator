@@ -216,7 +216,6 @@ end_point_cone_MB = -1320.
 start_point_cone_MB = end_point_cone_MB - l_cone_MB
 
 # SBND - FIX ME, are SBND and MicroBooNE centered along the same Z axis?
-# No, but close enough?
 booster_decay_tunnel = 50e2
 l_baseline_sbnd = 110e2
 gap_sbnd_wall_TPC = 1e2
@@ -230,6 +229,16 @@ y_sbnd_dirt_min = -1600.
 y_sbnd_dirt_max = 600.
 z_sbnd_dirt_max = - dz_sbnd/2 - gap_sbnd_wall_TPC
 z_sbnd_dirt_min = -l_baseline_sbnd + booster_decay_tunnel
+
+# geometry of cone_sbnd for dirt
+l_cone_sbnd = 56.5e2
+sbnd_gap = 1e2
+end_point_cone_sbnd = - sbnd_gap - dz_sbnd/2.
+radius_cone_outer_sbnd = 1. * dx_sbnd
+radius_cone_inner_sbnd = 1.87793e2
+
+l_cone_excluded_sbnd = 50e2
+start_point_cone_sbnd = end_point_cone_sbnd - l_cone_sbnd
 
 # Icarus
 l_baseline_icarus = 600e2
@@ -535,6 +544,63 @@ def microboone_dirt_geometry(df):
     
     # rotate momenta
     df = rotate_dataframe(df)
+
+def sbnd_dirt_cone_geometry(df):
+
+    # geometry of cone_sbnd for dirt
+    length_events = len(df)
+    a = l_cone_sbnd + l_cone_excluded_sbnd # height of the cone
+    b = radius_cone_outer_sbnd # base of the cone
+    fraction_dirt = ((a * b**2) - (l_cone_excluded_sbnd * radius_cone_inner_sbnd**2)) / (a * b**2)
+    correction_fraction = 2.  # just to be sure we produce more than we need
+    n_sample = int(length_events / fraction_dirt * correction_fraction)
+    
+    h = a * np.random.random(n_sample)**(1./3.)
+    r = (b / a) * h * np.sqrt(np.random.random(n_sample))
+    phi = np.random.random(n_sample) * 2. * np.pi
+    
+    x0 = r * np.cos(phi)
+    y0 = r * np.sin(phi)
+    z0 = h
+    
+    mask_truncate_cone = (z0 >= l_cone_excluded_sbnd)
+    x0 = x0[mask_truncate_cone][:length_events]
+    y0 = y0[mask_truncate_cone][:length_events]
+    z0 = (z0[mask_truncate_cone][:length_events]) - a + end_point_cone_sbnd
+    
+    df["pos_scatt", "0"] = (z0 - start_point_cone_sbnd + booster_decay_tunnel)/const.c_LIGHT
+    df["pos_scatt", "1"] = x0
+    df["pos_scatt", "2"] = y0
+    df["pos_scatt", "3"] = z0
+    
+    # Compute the mean position where the pions decayed
+    n_ebins = 99
+    E_nu = df["P_projectile","0"].values
+    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
+    if (n_ebins in e_bins):
+        mask = e_bins >= n_ebins
+        e_bins[mask] = n_ebins - 1
+    probs_distance = np.ones_like(BNB_e_vs_z_dist)
+    for i in range(len(probs_distance)):
+        if BNB_e_vs_z_dist[e_bins[i],:].sum() != 0:
+            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i],:]
+    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    
+    u_normal = np.random.random(length_events)
+    phi_normal = np.random.random(length_events) * 2. * np.pi
+    r_normal = radius_decay_pipe * np.sqrt(u_normal)
+    df["pos_prod", "1"] = r_normal * np.cos(phi_normal)
+    df["pos_prod", "2"] = r_normal * np.sin(phi_normal)
+    df["pos_prod", "3"] = origin - l_baseline_sbnd
+    
+    # RESCALE WEIGHTS
+    # rescale the weights with respect to the distance
+    distances = np.sqrt(df["pos_scatt", "1"].values**2 + df["pos_scatt", "2"].values**2 + (df["pos_scatt", "3"].values - df["pos_prod", "3"].values)**2)
+    df.w_event_rate *= ((l_baseline_sbnd - origin) / distances)**2
+    
+    # rotate momenta
+    df = rotate_dataframe(df)
+    
 
 def icarus_dirt_geometry(df):
 

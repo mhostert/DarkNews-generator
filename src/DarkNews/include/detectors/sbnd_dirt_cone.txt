@@ -1,0 +1,21 @@
+# fluxes digitized from Marco Del Tutto
+# On behalf of the SBND Collaboration NuFACT 2022 Conference 4th August 2022
+# https://indico.fnal.gov/event/53004/contributions/244480/
+# and POTs read by eye from Mark Ross Lonergan's talk at NuFACT 2022.
+name = "sbnd_dirt_cone"
+fluxfile = "sbnd_fhc.dat"
+flux_norm = 1.0
+erange = [
+    0.05, 
+    3
+]
+nuclear_targets = [
+    'Si28',
+    'O16'
+]
+fiducial_mass = 3439.51 # tons, density:  2.15 g/cm3, vol = 1.59977e9 cm3, R = 400 cm, r = 187.793 cm, L = 5650 cm
+fiducial_mass_per_target = [
+    fiducial_mass*28/60, 
+    fiducial_mass*32/60
+] # tons
+POTs = 15.6e20 # roughly ~22 - 6.6 = 15.6
