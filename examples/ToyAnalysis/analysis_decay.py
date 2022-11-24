@@ -8,7 +8,7 @@ from DarkNews import const
 precision = 1e-10
 
 # baselines
-baselines = {'miniboone': 541e2, 'miniboone_dirt': 541e2, 'microboone': 470e2, 'microboone_dirt': 470e2, 'sbnd': 110e2, 'sbnd_dirt': 110e2, 'icarus': 600e2, 'icarus_dirt': 600e2}
+baselines = {'miniboone': 541e2, 'miniboone_dirt': 541e2, 'microboone': 470e2, 'microboone_dirt': 470e2, 'sbnd': 110e2, 'sbnd_dirt': 110e2, 'sbnd_dirt_cone': 110e2, 'icarus': 600e2, 'icarus_dirt': 600e2}
 
 # radius of MB
 radius_MB = 610 #cm
@@ -182,7 +182,7 @@ def get_distances(p0, phat, experiment):
     # positions of the 6 walls of the cryostat in order (2 for X, 2 for Y, 2 for Z)
     if experiment == 'microboone' or experiment == 'microboone_dirt':
         planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,-z_muB/2,z_muB/2])
-    elif experiment == 'sbnd' or experiment == 'sbnd_dirt':
+    elif experiment == 'sbnd' or experiment == 'sbnd_dirt' or experiment == 'sbnd_dirt_cone':
         planes = np.array([-x_sbnd/2,x_sbnd/2,-y_sbnd/2,y_sbnd/2,-z_sbnd/2,z_sbnd/2])
     elif experiment == 'icarus' or experiment == 'icarus_dirt':
         planes = np.array([-x_icarus/2,x_icarus/2,-y_icarus/2,y_icarus/2,-z_icarus/2,z_icarus/2])

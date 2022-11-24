@@ -1,7 +1,7 @@
 # MicroBooNE (Wire-Cell PRD https://arxiv.org/abs/2110.13978)
 name = "icarus"
 fluxfile = "MicroBooNE_BNB_fullflux.txt"
-flux_norm = 1.0/0.05 # units in file are nu/POT/bin/cm2, with bin size 50 MeV.
+flux_norm = 1.0/0.05 * 47 * 47 / 60 / 60 # units in file are nu/POT/bin/cm2, with bin size 50 MeV. Renormalized with respect to MicroBooNE.
 erange = [
     0.05,
     7
