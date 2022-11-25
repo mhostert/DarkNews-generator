@@ -12,7 +12,7 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
 
     Args:
         x_phase_space (list): a list of arrays with [s,t,u] variables
-        process (DarkNews.model.UpscatteringProcess): object reprensenting a given upscattering process.
+        process (DarkNews.processes.UpscatteringProcess): object reprensenting a given upscattering process.
         diagrams (list, optional): specify what diagrams to include. 
                                     all -- returns a dictionary with all the separate contributions to the xsecs
                                     separating diagrams with Z', Z, S, etc.

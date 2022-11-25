@@ -721,7 +721,7 @@ def miniboone_geometry(df):
     E_nu = df["P_projectile","0"].values
     e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side='right')-1
     if (n_ebins in e_bins):
-        mask = e_bins >= n_ebins
+        mask = (e_bins >= n_ebins)
         e_bins[mask] = n_ebins - 1
     probs_distance = np.ones_like(BNB_e_vs_z_dist)
     for i in range(len(probs_distance)):

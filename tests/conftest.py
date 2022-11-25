@@ -119,8 +119,8 @@ def light_DP_gen_all_outputs_sparse():
         hepevt_legacy=True,
         hepmc2=True,
         hepmc3=True,
-        sparse=True,
-        print_to_float32=True,
+        sparse=3,
+        print_to_float32=False,
         **MODEL_KWARGS
     )
     return gen.run()

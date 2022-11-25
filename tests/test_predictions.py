@@ -80,7 +80,7 @@ def test_MB_rates_of_BPs(
     assert close_enough(df_1.w_event_rate.sum(), expect), "seeded light dark photon to muons has changed!"
 
     # check seeded generation
-    expect = 204.64030497933084
+    expect = 32.76684839561704
     assert close_enough(df_2.w_event_rate.sum(), expect), "seeded heavy dark photon to muons has changed!"
 
     # check seeded generation

@@ -325,7 +325,7 @@ Parameters marked as *internal* can not be specified as they are automatically c
 | **hepmc3** | `bool`   | If true, prints events to HepMC3 format. | `False` |
 | **hep_unweight** | `bool`   | Unweigh events when printing in HEPEVT format (needs large statistics) | `False` |
 | **unweighted_hep_events** | `int`   | number of unweighted events to accept in any of the standard HEP formats. Has to be much smaller than neval for unweight procedure to work. | 100 |
-| **sparse**        | `bool`   | if True, save only the neutrino energy, charged lepton or photon momenta, and weights. Not supported for HEPevt. | `False`  |
+| **sparse**        | `int`   | Specify the level of sparseness of the internal dataframe and output. Not supported for HEPevt. Allowed values are 0--3, where: </br> `0`: keep all information, including event-by-event descriptions; </br> `1`: keep all particle momenta, scattering and decay positions, and all weights; </br> `2`: keep only neutrino energy (or 4-momentum in HEPMC/EVT), visible decay products and unstable particle momenta, scattering and decay positions, and all weights; </br> `3`: keep only neutrino energy (or 4-momentum in HEPMC/EVT), visible decay products and unstable particle momenta, and all weights; </br> `4`: keep only neutrino energy (or 4-momentum in HEPMC/EVT), unstable particle momenta, visible decay products momenta, and w_event_rate. </br> Metadata is always kept if output is pickled. | `0`  |
 | **path**          | `string` | Path where to save run's outputs                                       | `"./"`  |
 | **make_summary_plots** | `bool` | if True, generates summary plots of kinematics in the `path` | `False`  |
 

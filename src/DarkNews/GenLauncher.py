@@ -268,7 +268,7 @@ class GenLauncher:
         self.hepmc3 = False
         self.hep_unweight = False
         self.unweighted_hep_events = 100
-        self.sparse = False
+        self.sparse = 0
         self.print_to_float32 = False
         self.path = "."
 
@@ -314,49 +314,61 @@ class GenLauncher:
 
         # get the initial projectiles
         self.projectiles = [getattr(lp, nu) for nu in self.nu_flavors]
+        
+        # decide which helicities to use
+        self.helicities = []
+        if not self.noHC:
+            self.helicities.append('conserving')
+        if not self.noHF:
+            self.helicities.append('flipping')
 
         ####################################################
         # Default data path based on model and experimental definitioons
 
         # set the path of the experiment name (needed in the case of custom experiment path)
-        # it uses the name of the detector object (don't use the path otherwise it could include
-        # the full directory tree inside the data_path if the file picked is not in the same
-        # directory)
-        exp_path_part = os.path.basename(str(self.experiment)).rsplit(".", maxsplit=1)[0]
-
+        # it uses the name of the detector object
+        _exp_path_part = os.path.basename(str(self.experiment)).rsplit(".", maxsplit=1)[0]
+        
         _boson_string = ""
+        # append vector mediator mass
         if self.bsm_model.mzprime is not None:
-            _boson_string += f"_mzprime_{self.bsm_model.mzprime:.4g}"
+            _boson_string += f"mzprime_{self.bsm_model.mzprime:.4g}_"
+        # append scalar mediator mass
         if self.bsm_model.mhprime is not None:
-            _boson_string += f"_mhprime_{self.bsm_model.mhprime:.4g}"
-
+            _boson_string += f"mhprime_{self.bsm_model.mhprime:.4g}_"
+        # append all transition magnetic moments
+        _TMMs = [ f'{x}_{getattr(self.bsm_model, x):.4g}_' for x in self.bsm_model.__dict__.keys() if ('mu_tr_' in x and getattr(self.bsm_model, x) != 0)]
+        if len(_TMMs) > 0:
+            _boson_string = _boson_string.join(_TMMs)
+            
+        # HNL masses
+        _mass_strings = [f'{m}_{getattr(self.bsm_model, m)}_' for m in ['m6', 'm5', 'm4'] if getattr(self.bsm_model, m) is not None]
+        _top_path = f"{''.join(_mass_strings)}{_boson_string}{self.bsm_model.HNLtype}"
+        
+        # if path name is too long, replace by current asci time
+        if len(_top_path) > 200:
+            import time
+            _top_path = time.asctime().replace(" ","_")
+        
+        ## final path
+        self.data_path = Path(f"{self.path}/data/{_exp_path_part}/3plus{len(_mass_strings)}/{_top_path}/")
+        
+        ####################################################
+        ## Determine scope of upscattering given the heavy nu spectrum
         # 3+1
-        if self.bsm_model.m4 is not None and self.bsm_model.m5 is None and self.bsm_model.m6 is None:
+        if len(_mass_strings) == 1:
             self.upscattered_nus = [dn.pdg.neutrino4]
             self.outgoing_nus = [dn.pdg.nulight]
-            self.data_path = Path(f"{self.path}/data/{exp_path_part}/3plus1/m4_{self.bsm_model.m4:.4g}{_boson_string}_{self.bsm_model.HNLtype}/")
-
         # 3+2
-        elif self.bsm_model.m4 is not None and self.bsm_model.m5 is not None and self.bsm_model.m6 is None:
+        elif len(_mass_strings) == 2:
             ## FIXING 3+2 process chain to be nualpha --> N5 --> N4
             self.upscattered_nus = [dn.pdg.neutrino5]
             self.outgoing_nus = [dn.pdg.neutrino4]
-            self.data_path = Path(
-                f"{self.path}/data/{exp_path_part}/3plus2/m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}{_boson_string}_{self.bsm_model.HNLtype}/"
-            )
-
         # 3+3
-        elif self.bsm_model.m4 is not None and self.bsm_model.m5 is not None and self.bsm_model.m6 is not None:
-            self.upscattered_nus = [
-                dn.pdg.neutrino4,
-                dn.pdg.neutrino5,
-                dn.pdg.neutrino6,
+        elif len(_mass_strings) == 3:
+            self.upscattered_nus = [dn.pdg.neutrino4, dn.pdg.neutrino5, dn.pdg.neutrino6,
             ]
             self.outgoing_nus = [dn.pdg.nulight, dn.pdg.neutrino4, dn.pdg.neutrino5]
-            self.data_path = Path(
-                f"{self.path}/data/{exp_path_part}/3plus3/m6_{self.bsm_model.m6:.4g}_m5_{self.bsm_model.m5:.4g}_m4_{self.bsm_model.m4:.4g}{_boson_string}_{self.bsm_model.HNLtype}/"
-            )
-
         else:
             logger.error("Error! Mass spectrum not allowed (m4,m5,m6) = ({self.bsm_model.m4:.4g},{self.bsm_model.m5:.4g},{self.bsm_model.m6:.4g}) GeV.")
             raise ValueError("Could not find a heavy neutrino spectrum from user input.")
@@ -372,6 +384,8 @@ class GenLauncher:
         ####################################################
         # Create all MC cases
         self._create_all_MC_cases()
+        
+        # end __init__
 
     def _load_file(self, file):
         parser = AssignmentParser({})
@@ -436,8 +450,7 @@ class GenLauncher:
             "NO_COH": self.nocoh,
             "NO_PELASTIC": self.nopelastic,
             "INCLUDE_NELASTIC": self.include_nelastic,
-            "INCLUDE_HC": not self.noHC,
-            "INCLUDE_HF": not self.noHF,
+            "HELICITIES": self.helicities,
             "FLAVORS": self.projectiles,
             "UPSCATTERED_NUS": self.upscattered_nus,
             "OUTGOING_NUS": self.outgoing_nus,
@@ -447,16 +460,16 @@ class GenLauncher:
         # override default with kwargs
         scope.update(kwargs)
 
-        if not scope["SCATTERING_REGIMES"]:
+        if len(scope["SCATTERING_REGIMES"]) == 0:
             logger.error("No scattering regime found -- please specify at least one.")
             raise ValueError
-        if not scope["DECAY_PRODUCTS"]:
+        if len(scope["DECAY_PRODUCTS"]) == 0:
             logger.error("No visible decay products found -- please specify at least one final state (e+e-, mu+mu- or photon).")
             raise ValueError
-        if not scope["INCLUDE_HC"] and not scope["INCLUDE_HF"]:
+        if len(scope["HELICITIES"]) == 0:
             logger.error("No helicity structure was allowed -- please allow at least one type: HC or HF.")
             raise ValueError
-        if not scope["FLAVORS"]:
+        if len(scope["FLAVORS"]) == 0:
             logger.error("No projectile neutrino flavors specified -- please specify at least one.")
             raise ValueError
 
@@ -478,6 +491,7 @@ class GenLauncher:
                         for nuclear_target in self.experiment.NUCLEAR_TARGETS:
                             # scattering regime to use
                             for scattering_regime in scope["SCATTERING_REGIMES"]:
+                                
                                 # skip disallowed regimes
                                 if ((scattering_regime in ["n-el"]) and (nuclear_target.N < 1)) or (  # no neutrons
                                     (scattering_regime in ["coherent"]) and (not nuclear_target.is_nucleus)
@@ -491,23 +505,18 @@ class GenLauncher:
                                 ):
                                     continue
                                 else:
-                                    # bundle arguments of MC_events here
-                                    args = {
-                                        "nuclear_target": nuclear_target,
-                                        "scattering_regime": scattering_regime,
-                                        "nu_projectile": flavor,
-                                        "nu_upscattered": nu_upscattered,
-                                        "nu_outgoing": nu_outgoing,
-                                        "decay_product": decay_product,
-                                        "enforce_prompt": self.enforce_prompt,
-                                    }
-
-                                    if scope["INCLUDE_HC"]:  # helicity conserving scattering
-                                        mc_case = dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, **args, helicity="conserving",)
-                                        self.gen_cases.append(mc_case)
-
-                                    if scope["INCLUDE_HF"]:  # helicity flipping scattering
-                                        mc_case = dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, **args, helicity="flipping",)
+                                    for helicity in scope['HELICITIES']:
+                                        # bundle arguments of MC_events here
+                                        args = {
+                                            "nuclear_target": nuclear_target,
+                                            "scattering_regime": scattering_regime,
+                                            "nu_projectile": flavor,
+                                            "nu_upscattered": nu_upscattered,
+                                            "nu_outgoing": nu_outgoing,
+                                            "decay_product": decay_product,
+                                            "helicity": helicity,
+                                        }
+                                        mc_case = dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, enforce_prompt=self.enforce_prompt, sparse=self.sparse, **args)
                                         self.gen_cases.append(mc_case)
                                     
                                     logger.debug(f"Created an MC instance of {self.gen_cases[-1].underl_process_name}.")
@@ -596,7 +605,7 @@ class GenLauncher:
 
         ############################################################################
         # Print events to file
-        self.dn_printer = dn.printer.Printer(self.df, sparse=self.sparse, print_to_float32=self.print_to_float32, decay_product=self.decay_product,)
+        self.dn_printer = dn.printer.Printer(self.df, print_to_float32=self.print_to_float32, decay_product=self.decay_product, sparse=self.sparse)
         if self.pandas:
             self.dn_printer.print_events_to_pandas()
         if self.parquet:
