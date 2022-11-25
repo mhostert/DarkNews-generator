@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from scipy.stats import expon
 
 from DarkNews import const
@@ -7,7 +8,7 @@ from DarkNews import const
 precision = 1e-10
 
 # baselines
-baselines = {'miniboone': 541e2, 'miniboone_dirt': 541e2, 'microboone': 470e2, 'microboone_dirt': 470e2, 'sbnd': 110e2, 'sbnd_dirt': 110e2, 'sbnd_dirt_cone': 110e2, 'icarus': 600e2, 'icarus_dirt': 600e2}
+baselines = {'miniboone': 541e2, 'miniboone_dirt': 541e2, 'microboone': 470e2, 'microboone_dirt': 470e2, 'sbnd': 110e2, 'sbnd_dirt': 110e2, 'icarus': 600e2, 'icarus_dirt': 600e2}
 
 # radius of MB
 radius_MB = 610 #cm
@@ -181,7 +182,7 @@ def get_distances(p0, phat, experiment):
     # positions of the 6 walls of the cryostat in order (2 for X, 2 for Y, 2 for Z)
     if experiment == 'microboone' or experiment == 'microboone_dirt':
         planes = np.array([-x_muB/2,x_muB/2,-y_muB/2,y_muB/2,-z_muB/2,z_muB/2])
-    elif experiment == 'sbnd' or experiment == 'sbnd_dirt' or experiment == 'sbnd_dirt_cone':
+    elif experiment == 'sbnd' or experiment == 'sbnd_dirt':
         planes = np.array([-x_sbnd/2,x_sbnd/2,-y_sbnd/2,y_sbnd/2,-z_sbnd/2,z_sbnd/2])
     elif experiment == 'icarus' or experiment == 'icarus_dirt':
         planes = np.array([-x_icarus/2,x_icarus/2,-y_icarus/2,y_icarus/2,-z_icarus/2,z_icarus/2])
@@ -300,19 +301,16 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         # dist2 is the distance between the point of production and the exit of the FIDUCIAL vol
         dist1, dist2 = get_distances(p0,phat, experiment).T
         
-        # prob of decay inside the fiducial vol
-        probabilities = expon.cdf(dist2,0, l_decay_lab_cm) - expon.cdf(dist1,0, l_decay_lab_cm)
+        #now sample a random distance inside the detector
+        frac = np.random.uniform(size=len(df))
+        decay_dist = (dist2 - dist1)*frac
+        probabilities = expon.cdf(decay_dist, 0, l_decay_lab_cm)
 
         # in this method, no well-defined decay position, so we take the mean of entry and exit points
-        df['pos_decay', '0'] = df['pos_scatt', '0'] + (dist2 + dist1)/2 / const.c_LIGHT / get_beta(pN)
-        df['pos_decay', '1'] = df['pos_scatt', '1'] + (dist2 + dist1)/2 * phat[0]
-        df['pos_decay', '2'] = df['pos_scatt', '2'] + (dist2 + dist1)/2 * phat[1]
-        df['pos_decay', '3'] = df['pos_scatt', '3'] + (dist2 + dist1)/2 * phat[2]
-
-
-    #else:
-    #    raise NotImplementedError("This experiment is not implemented")
-
+        df['pos_decay', '0'] = df['pos_scatt', '0'] + decay_dist / const.c_LIGHT / get_beta(pN)
+        df['pos_decay', '1'] = df['pos_scatt', '1'] + decay_dist * phat[0]
+        df['pos_decay', '2'] = df['pos_scatt', '2'] + decay_dist * phat[1]
+        df['pos_decay', '3'] = df['pos_scatt', '3'] + decay_dist * phat[2]
         
     # new reconstructed weights
     df['w_pre_decay'] = df[weights].values

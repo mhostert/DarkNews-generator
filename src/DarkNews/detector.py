@@ -37,6 +37,7 @@ class Detector:
         "dune_nd_rhc": "dune_nd_rhc.txt",
         "sbnd": "sbnd.txt",
         "sbnd_dirt": "sbnd_dirt.txt",
+        "sbnd_dirt_cone": "sbnd_dirt_cone.txt",
         "microboone": "microboone.txt",
         "microboone_tpc": "microboone_tpc.txt",
         "microboone_dirt": "microboone_dirt.txt",
@@ -148,6 +149,7 @@ class Detector:
         geometries = {}
         geometries["microboone_dirt"] = geom.microboone_dirt_geometry
         geometries["sbnd_dirt"] = geom.sbnd_dirt_geometry
+        geometries["sbnd_dirt_cone"] = geom.sbnd_dirt_cone_geometry
         geometries["icarus_dirt"] = geom.icarus_dirt_geometry
         geometries["miniboone_fhc_dirt"] = geom.miniboone_dirt_geometry
         geometries["microboone"] = geom.microboone_geometry
