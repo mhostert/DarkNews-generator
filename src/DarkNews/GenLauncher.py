@@ -339,7 +339,7 @@ class GenLauncher:
         # append all transition magnetic moments
         _TMMs = [ f'{x}_{getattr(self.bsm_model, x):.4g}_' for x in self.bsm_model.__dict__.keys() if ('mu_tr_' in x and getattr(self.bsm_model, x) != 0)]
         if len(_TMMs) > 0:
-            _boson_string = _boson_string.join(_TMMs)
+            _boson_string += ''.join(_TMMs)
             
         # HNL masses
         _mass_strings = [f'{m}_{getattr(self.bsm_model, m)}_' for m in ['m6', 'm5', 'm4'] if getattr(self.bsm_model, m) is not None]
