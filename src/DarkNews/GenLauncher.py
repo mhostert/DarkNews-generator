@@ -188,9 +188,9 @@ class GenLauncher:
     _choices = {
         "HNLtype": ["dirac", "majorana"],
         "decay_product": ["e+e-", "mu+mu-", "photon"],
-        "nu_flavors": ["nu_e", "nu_mu", "nu_tau", "nu_e_bar", "nu_mu_bar", "nu_tau_bar",],
+        "nu_flavors": ["nu_e", "nu_mu", "nu_tau", "nu_e_bar", "nu_mu_bar", "nu_tau_bar"],
+        "sparse": [0,1,2,3,4],
     }
-
 
     def __init__(self, param_file=None, **kwargs):
         """GenLauncher launches the generator with user-defined model parameters, experimental configs, and generation settings.

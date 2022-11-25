@@ -48,7 +48,7 @@ def test_(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
                 df_for_numpy = df_pandas.drop([col for col in drop_list if col in df_pandas.columns.levels[0]], axis=1, level=0).to_numpy(dtype=np.float64)
             else:
                 df_for_numpy = df_pandas.to_numpy(dtype=np.float64)
-            assert (df_for_numpy[nda != 0] / nda[nda != 0] != 1).sum() == 0, "pandas dataframe and numpy array seem to contain different data."
+            assert np.allclose(df_for_numpy, nda, rtol=1e-05, equal_nan=True), "pandas dataframe and numpy array seem to contain different data."
 
         oss_hepevt = Path(f"{gen_path}/HEPevt.dat").__str__()
         oss_hepmc2 = Path(f"{gen_path}/hep_ascii.hepmc2").__str__()

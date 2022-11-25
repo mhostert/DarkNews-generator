@@ -44,7 +44,7 @@ class Printer:
         self.df_gen = df_gen
         self.decay_product = decay_product
         self.sparse = int(sparse) # backwards compatibility
-
+        self.print_to_float32 = print_to_float32
 
         self.unweighted_entries = None
         # sample size (# of events)
@@ -58,10 +58,6 @@ class Printer:
         # file name and path (without extension)
         self.out_file_name = self.create_dir()
 
-        self._print_to_float32 = print_to_float32
-        if self._print_to_float32:
-            self.print_to_float32 = self._print_to_float32
-
         self._kinematics_in_np_arrays = False
 
         self.particles_per_event = 7
@@ -71,19 +67,6 @@ class Printer:
             self.particles_per_event -= 3
         if self.sparse == 4: # lose parent HNL
             self.particles_per_event -= 1
-
-    @property
-    def print_to_float32(self):
-        return self._print_to_float32
-
-    @print_to_float32.setter
-    def print_to_float32(self, new_value):
-        self._print_to_float32 = new_value
-        if self._print_to_float32:
-            if self.sparse >= 1:
-                self.df_gen = self.df_gen.apply(pd.to_numeric, downcast="float")
-            else:
-                raise ValueError("Can only downgrade dataframe to float32 when sparse >= 1.")
 
     # Create target directory if it doesn't exist
     def create_dir(self):
@@ -96,7 +79,6 @@ class Printer:
             Print to numpy array file (.npy)
         
         """
-        kwargs["allow_pickle"] = kwargs.get("allow_pickle", False)
 
         if self.sparse >= 1:
             if self.print_to_float32:
@@ -105,6 +87,9 @@ class Printer:
                 self.array_gen = self.df_gen.to_numpy(dtype=np.float64)
             # cols = [f"{v[0]}_{v[1]}" if v[1] else f"{v[0]}" for v in self.df_gen.columns.values]
         else:
+            if self.print_to_float32:    
+                logger.warning("WARNING! Can only downgrade dataframe to float32 when sparse >= 1. Proceeding with float64 instead.")
+                
             # convert to numeric values
             self.df_gen = self.df_gen.replace(to_replace="conserving", value="+1")
             self.df_gen = self.df_gen.replace(to_replace="flipping", value="-1")
@@ -115,7 +100,7 @@ class Printer:
             self.array_gen = self.df_for_numpy.to_numpy(dtype=np.float64)
 
         filename = Path(f"{self.out_file_name}/ndarray.npy").__str__()
-        np.save(filename, self.array_gen, **kwargs)
+        np.save(filename, self.array_gen, allow_pickle=False, **kwargs)
         prettyprinter.info(f"Events in numpy array saved to file successfully:\n{filename}")
         return self.array_gen
 
@@ -135,7 +120,7 @@ class Printer:
         dn.pq.write_table(dn.pa.Table.from_pandas(self.df_gen), filename, **kwargs)
         prettyprinter.info(f"Events in pandas dataframe (sparse = {self.sparse}) saved to parquet file successfully:\n{filename}")            
         return self.df_gen
-    
+
     def print_events_to_pandas(self, **kwargs):
         """ 
             Print to pandas DataFrame pickle file (.pckl)
@@ -145,15 +130,25 @@ class Printer:
 
         """
         filename = Path(f"{self.out_file_name}/pandas_df.pckl").__str__()
+
+        if self.print_to_float32:
+            if self.sparse >= 1:
+                df = self.df_gen.apply(pd.to_numeric, downcast="float")
+            else:
+                df = self.df_gen
+                logger.warning("WARNING! Can only downgrade dataframe to float32 when sparse >= 1. Proceeding with float64 instead.")
+        else:
+            df = self.df_gen
+
         # pickles DarkNews classes with support for lambda functions
-        dill.dump(self.df_gen, open(filename, "wb"), **kwargs)
+        dill.dump(df, open(filename, "wb"), **kwargs)
         prettyprinter.info(f"Events in pandas dataframe saved to file successfully:\n{filename}")
-        return self.df_gen
+        return df
 
     def get_unweighted_events(self, nevents, prob_col="w_event_rate", **kwargs):
         """
             Unweigh events in dataframe down to "nevents" using accept-reject method with the weights in "prob_col" of dataframe.
-                
+
             Do this only once, unless nevents changes. 
 
             Fails if nevents is smaller than the total number of unweighted events.
@@ -407,16 +402,16 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             Print events to HEPevt format.
 
                 The file start with the total number of events:
-                    
+
                     'tot_events_to_print'
 
                 On a new line, each event starts with a brief description of the event:
-                    
+
                     'event_number number_of_particles (event_weight if it exists)'
 
                 On a new line, a new particle and its properties are added. Using string concatenation, 
                 we print each particle as follows:
-                
+
                 (	
                     f'0 '				  	# ignored = 0 or tracked = 1
                     f' {i}'				  	# particle PDG number

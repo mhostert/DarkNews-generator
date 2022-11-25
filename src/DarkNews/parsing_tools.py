@@ -1,6 +1,5 @@
 import argparse
 
-
 def add_common_bsm_arguments(parser, DEFAULTS):
 
     #### name of the generation and model
@@ -230,9 +229,8 @@ def add_mc_arguments(parser, DEFAULTS):
         help="number of unweighted events to accept in any of the standard HEP formats. Has to be much smaller than neval for unweight procedure to work.",
     )
 
-    parser.add_argument("--sparse", help="drop all information in the event except for visible particle momenta, neutrino energy, and weights.", action="store_true"
-    )
-    parser.add_argument("--print_to_float32", help="Use float32 instead of default float64 when printing output to save storage space.", action="store_true")
+    parser.add_argument("--sparse", type=int, help="Specify the level of sparseness of the internal dataframe and output. Not supported for HEPevt. Allowed values are 0--4, from most to least saved information.", choices=DEFAULTS._choices["sparse"])
+    parser.add_argument("--print_to_float32", help="Use float32 instead of default float64 when printing output to save storage space. Requires sparse >= 1.", action="store_true")
 
     parser.add_argument("--path", type=str, help="path where to save run's outputs")
     parser.add_argument("--seed", type=int, help="numpy seed to be used by vegas.")

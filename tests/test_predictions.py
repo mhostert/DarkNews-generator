@@ -77,19 +77,19 @@ def test_MB_rates_of_BPs(
     df_1, df_2, df_3, df_4 = gen_dirt_cases
     # check seeded generation
     expect = 77791.02852083213
-    assert close_enough(df_1.w_event_rate.sum(), expect), "seeded light dark photon to muons has changed!"
+    assert close_enough(df_1.w_event_rate.sum(), expect), "seeded sbnd dirt generation has changed!"
 
     # check seeded generation
     expect = 32.76684839561704
-    assert close_enough(df_2.w_event_rate.sum(), expect), "seeded heavy dark photon to muons has changed!"
+    assert close_enough(df_2.w_event_rate.sum(), expect), "seeded microboone dirt generation has changed!"
 
     # check seeded generation
-    expect = 2849.3695799331485
-    assert close_enough(df_3.w_event_rate.sum(), expect), "seeded light dark photon to muons has changed!"
+    expect = 267.9440511293012
+    assert close_enough(df_3.w_event_rate.sum(), expect), "seeded icarus dirt generation has changed!"
 
     # check seeded generation
-    expect = 3648.2531261721588
-    assert close_enough(df_4.w_event_rate.sum(), expect), "seeded heavy dark photon to muons has changed!"
+    expect = 404.9325841822879
+    assert close_enough(df_4.w_event_rate.sum(), expect), "seeded miniboone dirt generation has changed!"
 
 
 def test_portal_vs_simplified(portal_vs_simplified):
