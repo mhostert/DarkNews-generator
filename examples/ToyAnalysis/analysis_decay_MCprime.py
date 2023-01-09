@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from scipy.stats import expon
+from scipy.stats import truncexpon
 
 from DarkNews import const
 
@@ -32,9 +33,10 @@ start_point_steal_MB = start_point_cyl_MB - z_steal_MB
 r_muB = 191.61
 l_muB  = 1086.49
 #detector
-z_muB = 1040.
-x_muB = 256.
-y_muB = 232.
+z_muB = 1036.8
+x_muB = 256.35
+y_muB = 116.5*2
+
 dif_z = l_muB - z_muB
 #outer spheres
 r_s_muB = 305.250694958
@@ -116,6 +118,7 @@ def rotate_dataframe(df):
             continue
     
     return df
+
 
 def get_beta(p):
     """get_beta get the velocity in Lab frame
@@ -301,17 +304,19 @@ def decay_selection(df, l_decay_proper_cm, experiment, weights='w_event_rate'):
         # dist2 is the distance between the point of production and the exit of the FIDUCIAL vol
         dist1, dist2 = get_distances(p0,phat, experiment).T
         
+        #The probability that the particle survives to enter the detector (d1) but doensn't survive to exit (d2)
+        probabilities = expon.pdf(dist1/l_decay_lab_cm)*(1.0-expon.pdf(dist2/l_decay_lab_cm))
+        
         #now sample a random distance inside the detector
-        frac = np.random.uniform(size=len(df))
-        decay_dist = (dist2 - dist1)*frac
-        probabilities = expon.cdf(decay_dist, 0, l_decay_lab_cm)
+        decay_dist = np.array([ 0.0 if d2==0 else truncexpon.rvs((d2-d1)/li,size=1,loc=0,scale=li)[0] for (d1,d2,li) in zip(dist1,dist2,l_decay_lab_cm)])+dist1
+        #print("Prob Mean ",np.mean(probabilities)," DistMean ",np.mean(decay_dist), np.size(decay_dist), np.size(probabilities),np.size(l_decay_lab_cm))
 
-        # in this method, no well-defined decay position, so we take the mean of entry and exit points
         df['pos_decay', '0'] = df['pos_scatt', '0'] + decay_dist / const.c_LIGHT / get_beta(pN)
         df['pos_decay', '1'] = df['pos_scatt', '1'] + decay_dist * phat[0]
         df['pos_decay', '2'] = df['pos_scatt', '2'] + decay_dist * phat[1]
         df['pos_decay', '3'] = df['pos_scatt', '3'] + decay_dist * phat[2]
-        
+    
+#        print(df['pos_scatt', '3'],decay_dist,phat[2],dist2,dist1,probabilities)
     # new reconstructed weights
     df['w_pre_decay'] = df[weights].values
     df.loc[:,weights] = df[weights].values * probabilities
