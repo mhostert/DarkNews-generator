@@ -1,0 +1,33 @@
+#km3net orca dimensions 
+
+name = "orca"
+fluxfile = "km3net_honda_flux.txt"
+#flux_norm = 
+#erange = [
+    ]
+nuclear_targets = [
+    'H2O'
+]
+fiducial_mass = 26085021.2 # tons
+#fiducial_mass_per_target = [
+    fiducial_mass
+]
+
+
+
+
+
+
+
+# dimensions m
+#X        =    -7.5 m
+#Y        =    -1.2 m
+#Zmin     =    37.9 m
+#Zmax     =   196.5m
+#Radius   =   141.9m
+#Depth    = -2425.0m
+#Detec_h  = 158.6m
+#Vol      =  10032700.5 m^3 
+#rho      =  2.6 * g / cm3
+#Detec_m = 26085021232440.8 g
+#detec_m_t = 26085021.2 t

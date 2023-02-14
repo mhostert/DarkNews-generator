@@ -169,6 +169,17 @@ class Chisel:
 
 
 # @dataclass
+# class orca:
+# geometry of tpc in meters
+x_orca = -7.5 
+y_orca = -1.2 
+z_min_orca = 37.9
+r_orca = 141.9
+enlarged_can_height = 200 #both range 160-280
+enlarged_can_r = 180
+depth_orca = -2425.0
+
+# @dataclass
 # class MicroBooNE:
 # geometry of tpc
 z_muB = 1040.
