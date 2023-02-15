@@ -1,8 +1,12 @@
 #km3net orca dimensions 
 
 name = "orca"
-fluxfile = "km3net_honda_flux.txt"
-#flux_norm = 
+fluxfile = "test_20-01-solmax_single_angle.dat" #units nu/m^2 /GeV/sr/s
+
+#fluxfile is azimuth averaged but altitude specific
+# perhaps get some weighting from it to implement for the rotation into full sky?
+#"km3net_honda_flux.txt"
+flux_norm = 1/10000 #to convert /m^2 -> /cm^2
 #erange = [
     ]
 nuclear_targets = [
