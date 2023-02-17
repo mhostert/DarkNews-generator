@@ -1,25 +1,26 @@
 #km3net orca dimensions 
 
-name = "orca"
-fluxfile = "test_20-01-solmax_single_angle.dat" #units nu/m^2 /GeV/sr/s
+name = "km3net_orca"
+fluxfile = "../fluxes/KM3NET_ORCA_max.dat" #units nu/m^2 /GeV/sr/s
 
 #fluxfile is azimuth averaged but altitude specific
 # perhaps get some weighting from it to implement for the rotation into full sky?
-#"km3net_honda_flux.txt"
-flux_norm = 1/10000 #to convert /m^2 -> /cm^2
-#erange = [
-    ]
+
+flux_norm =1  #is one year of data nus/GeV/cm^2/sr 
+erange = [1,
+   50 ]  #GeV energy range
 nuclear_targets = [
-    'H2O'
+    'H1','O16'
 ]
 fiducial_mass = 26085021.2 # tons
-#fiducial_mass_per_target = [
-    fiducial_mass
+fiducial_mass_per_target = [
+    2/18*fiducial_mass, 16/18*fiducial_mass
 ]
 
+POTs = 1 #already in flux incorporated
 
-
-
+# 5 up to 100 GeVs of HNL energy (so energy deposited), really very min is 1 GeV
+#exclude single showers, upscattering inside detector volume
 
 
 
