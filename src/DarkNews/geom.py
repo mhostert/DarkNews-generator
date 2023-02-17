@@ -169,17 +169,6 @@ class Chisel:
 
 
 # @dataclass
-# class orca:
-# geometry of tpc in meters
-x_orca = -7.5 
-y_orca = -1.2 
-z_min_orca = 37.9
-r_orca = 141.9
-enlarged_can_height = 200 #both range 160-280
-enlarged_can_r = 180
-depth_orca = -2425.0
-
-# @dataclass
 # class MicroBooNE:
 # geometry of tpc
 z_muB = 1040.
@@ -266,6 +255,21 @@ radius_cone_inner_icarus = 346.79
 
 l_cone_excluded_icarus = 18919
 start_point_cone_icarus = end_point_cone_icarus - l_cone_icarus
+
+
+# @dataclass
+# class orca:
+# geometry in centimeters
+x_orca = -7.5e2
+y_orca = -1.2e2
+z_min_orca = 37.9e2
+z_max_orca = 196.5e2
+h_orca = z_max_orca-z_min_orca
+r_orca = 141.9e2
+enlarged_can_height = 200e2 #both range 160-280
+enlarged_can_r = 180e2
+depth_orca = -2425.0e2
+
 
 # distribute events in df accross the pre-defined MicroBooNE (cryostat) volume
 def microboone_geometry(df):
@@ -862,3 +866,36 @@ def place_decay(df, df_column, l_decay_proper_cm, label="decay_pos"):
     df[label, "1"] = df["pos_scatt", "1"] + Cfv.get_3direction(p)[:, 0] * d_decay
     df[label, "2"] = df["pos_scatt", "2"] + Cfv.get_3direction(p)[:, 1] * d_decay
     df[label, "3"] = df["pos_scatt", "3"] + Cfv.get_3direction(p)[:, 2] * d_decay
+
+
+
+
+
+
+
+
+def km3net_orca_geometry(df):
+    nsamples = len(df.index)
+
+    detector_box = np.array([[-300e2, 300e2], [-300e2, 300e2], [-300e2, 300e2]]) #icarus change? 
+
+    tries = 0
+    npoints = 0
+    events = np.array(3 * [[]]) #what is this for?
+    while npoints < nsamples:
+
+        new_detector = Chisel(nsamples=nsamples, box=detector_box)
+        new_events = new_detector.events[:, new_detector.cylinder(radius = r_orca,height=h_orca,origin=np.array([x_orca,y_orca,z_min_orca]))]
+        events = np.concatenate((events, new_events), axis=1)
+
+        npoints += np.shape(new_events)[1]
+        tries += nsamples
+        if tries > 1e3 * nsamples:
+            raise ValueError(f"Geometry sampled too inefficiently, tries = {tries} and npoints = {npoints}. Wrong setup?")
+
+    # guarantee that array has number of samples asked (nsamples)
+    df["pos_scatt", "0"] = 1 # energies, I do not quite understand, every experiment is diff?
+    df["pos_scatt", "1"] = events[0, :nsamples]
+    df["pos_scatt", "2"] = events[1, :nsamples]
+    df["pos_scatt", "3"] = events[2, :nsamples]
+    
