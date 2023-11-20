@@ -1,5 +1,3 @@
-## Hello There
-
 <h1 align="center"> DarkNews </h1> <br>
 
 <img align="left" src="https://raw.githubusercontent.com/mhostert/DarkNews-generator/main/src/DarkNews/include/assets/logo.svg" width="180" title="DarkNews-logo">
