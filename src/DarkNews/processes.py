@@ -10,6 +10,7 @@ from DarkNews import MC
 from DarkNews import model
 from DarkNews import amplitudes as amps
 from DarkNews import phase_space as ps
+from DarkNews import decay_rates as dr
 
 
 class UpscatteringProcess:
@@ -263,6 +264,18 @@ class FermionSinglePhotonDecay:
         else:
             self.Tih = self.TheoryModel.t_aj[pdg.get_HNL_index(nu_daughter), pdg.get_HNL_index(nu_parent)]
 
+    def total_width(self):
+        return dr.gamma_Ni_to_Nj_gamma(self.Tih,
+                                       self.m_parent,
+                                       self.m_daughter,
+                                       HNLType=self.HNLtype)
+    
+    def differential_width(self, cost):
+        return dr.diff_gamma_Ni_to_Nj_gamma(cost,
+                                            self.Tih,
+                                            self.m_parent,
+                                            self.m_daughter,
+                                            HNLType=self.HNLtype)
 
 def find_calculable_diagrams(bsm_model):
     """ 
