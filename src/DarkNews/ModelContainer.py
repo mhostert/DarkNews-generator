@@ -10,6 +10,7 @@ from particle import literals as lp
 import DarkNews as dn
 from DarkNews import logger, prettyprinter
 from DarkNews.AssignmentParser import AssignmentParser
+from DarkNews.nuclear_tools import NuclearTarget
 
 GENERATOR_ARGS = [
     # scope
@@ -24,6 +25,7 @@ GENERATOR_ARGS = [
     "sample_geometry",
     "make_summary_plots",
     "enforce_prompt",
+    "nuclear_targets",
     #
     # generator
     "loglevel",
@@ -368,7 +370,7 @@ class ModelContainer:
 
 
     def _create_all_model_cases(self, **kwargs):
-        """Create MC_events objects and run the MC computations
+        """Create ups_case and decay_case objects
 
         Args:
             **kwargs:
@@ -395,7 +397,7 @@ class ModelContainer:
             "OUTGOING_NUS": self.outgoing_nus,
             "DECAY_PRODUCTS": [self.decay_product],
             "SCATTERING_REGIMES": ["coherent", "p-el"],  # , 'n-el'],
-            "NUCLEAR_TARGETS": self.nuclear_targets,
+            "NUCLEAR_TARGETS": [NuclearTarget(_t) for _t in self.nuclear_targets],
         }
         # override default with kwargs
         scope.update(kwargs)
@@ -456,6 +458,7 @@ class ModelContainer:
                                             "nu_upscattered": nu_upscattered,
                                             "helicity": helicity,
                                         }
+                                        ups_key = tuple(ups_args.values())
                                         ups_case = dn.processes.UpscatteringProcess(
                                             nu_projectile=ups_args["nu_projectile"],
                                             nu_upscattered=ups_args["nu_upscattered"],
@@ -464,8 +467,8 @@ class ModelContainer:
                                             helicity=ups_args["helicity"],
                                             TheoryModel=self.bsm_model,
                                         )
-                                        if ups_args not in self.ups_cases.keys():
-                                            self.ups_cases[ups_args] = ups_case
+                                        if ups_key not in self.ups_cases.keys():
+                                            self.ups_cases[ups_key] = ups_case
 
                                         # Decay process
                                         decay_args = {
@@ -474,6 +477,7 @@ class ModelContainer:
                                             "h_parent": ups_case.h_upscattered,
                                             "decay_product": decay_product,
                                         }
+                                        dec_key = tuple(decay_args.values())
                                         if decay_product == "e+e-":
                                             decay_pdg = dn.pdg.electron
                                             decays_to_dilepton = True
@@ -508,8 +512,8 @@ class ModelContainer:
                                         else:
                                             logger.error("Error! Could not determine what type of decay class to use.")
                                             raise ValueError
-                                        if decay_args not in self.dec_cases.keys():
-                                            self.dec_cases[decay_args] = decay_case
+                                        if dec_key not in self.dec_cases.keys():
+                                            self.dec_cases[dec_key] = decay_case
                                     
         return self.ups_cases,self.dec_cases
     
