@@ -437,7 +437,7 @@ def get_samples(integ, batch_integrand, return_jac=False):
         return np.array(unit_samples), weights
 
 
-def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=1000, **kwargs):
+def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=1000, savestr=None, **kwargs):
     """
     Function that calls vegas evaluations. This function defines the vegas parameters used by
     DarkNews throughout.
@@ -461,4 +461,4 @@ def run_vegas(batch_f, integ, NINT=10, NEVAL=1000, NINT_warmup=10, NEVAL_warmup=
     logger.debug("VEGAS warm-up completed.")
 
     # sample again, now saving result and turning off further adaption
-    return integ(batch_f, nitn=NINT, neval=NEVAL, uses_jac=True, **kwargs)
+    return integ(batch_f, nitn=NINT, neval=NEVAL, uses_jac=True, saveall=savestr, **kwargs)

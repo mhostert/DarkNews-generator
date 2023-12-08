@@ -1,5 +1,6 @@
 import numpy as np
 import vegas as vg
+import json
 
 from DarkNews import logger, prettyprinter
 
@@ -98,11 +99,11 @@ class UpscatteringProcess:
         self.Ethreshold = self.m_ups ** 2 / 2.0 / self.MA + self.m_ups
 
         # vectorize total cross section calculator using vegas integration
-        self.vectorized_total_xsec = np.vectorize(self.scalar_total_xsec, excluded=["self", "diagram", "NINT", "NEVAL", "NINT_warmup", "NEVAL_warmup"])
+        self.vectorized_total_xsec = np.vectorize(self.scalar_total_xsec, excluded=["self", "diagram", "NINT", "NEVAL", "NINT_warmup", "NEVAL_warmup", "savedir"])
 
         self.calculable_diagrams = find_calculable_diagrams(TheoryModel)
 
-    def scalar_total_xsec(self, Enu, diagram="total", NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup):
+    def scalar_total_xsec(self, Enu, diagram="total", NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, savefile_xsec=None, savefile_norm=None):
         # below threshold
         if Enu < (self.Ethreshold):
             return 0.0
@@ -111,12 +112,16 @@ class UpscatteringProcess:
             batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=Enu, ups_case=self, diagram=diagram)
             integ = vg.Integrator(DIM * [[0.0, 1.0]])  # unit hypercube
 
-            integrals = MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
+            if savefile_norm is not None:
+                # Save normalization information
+                with open(savefile_norm,'w') as f:
+                    json.dump(batch_f.norm, f)
+            integrals = MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup, savestr=savefile_xsec)
             logger.debug("Main VEGAS run completed.")
 
             return integrals["diff_xsec"].mean * batch_f.norm["diff_xsec"]
 
-    def total_xsec(self, Enu, diagrams=["total"], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, seed=None):
+    def total_xsec(self, Enu, diagrams=["total"], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, seed=None, savestr=None):
         """
             Returns the total upscattering xsec for a fixed neutrino energy in cm^2
         """
@@ -128,7 +133,7 @@ class UpscatteringProcess:
         all_xsecs = 0.0
         for diagram in diagrams:
             if diagram in self.calculable_diagrams or diagram == "total":
-                tot_xsec = self.vectorized_total_xsec(Enu, diagram=diagram, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
+                tot_xsec = self.vectorized_total_xsec(Enu, diagram=diagram, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup, savestr=savestr)
             else:
                 logger.warning(f"Warning: Diagram not found. Either not implemented or misspelled. Setting tot xsec it to zero: {diagram}")
                 tot_xsec = 0.0 * Enu
@@ -159,6 +164,11 @@ class FermionDileptonDecay:
         self.TheoryModel = TheoryModel
         self.HNLtype = TheoryModel.HNLtype
         self.h_parent = h_parent
+
+        self.nu_parent = nu_parent
+        self.nu_daughter = nu_daughter
+        self.secondaries = [final_lepton1,
+                            final_lepton2]
 
         # particle masses
         self.mzprime = TheoryModel.mzprime if TheoryModel.mzprime is not None else 1e10
@@ -237,6 +247,10 @@ class FermionSinglePhotonDecay:
         self.HNLtype = TheoryModel.HNLtype
         self.h_parent = h_parent
 
+        self.nu_parent = nu_parent
+        self.nu_daughter = nu_daughter
+        self.secondaries = [pdg.photon]
+
         # mass of the HNLs
         if nu_daughter == pdg.neutrino4:
             self.m_daughter = TheoryModel.m4
@@ -268,14 +282,14 @@ class FermionSinglePhotonDecay:
         return dr.gamma_Ni_to_Nj_gamma(self.Tih,
                                        self.m_parent,
                                        self.m_daughter,
-                                       HNLType=self.HNLtype)
+                                       HNLtype=self.HNLtype)
     
     def differential_width(self, cost):
         return dr.diff_gamma_Ni_to_Nj_gamma(cost,
                                             self.Tih,
                                             self.m_parent,
                                             self.m_daughter,
-                                            HNLType=self.HNLtype)
+                                            HNLtype=self.HNLtype)
 
 def find_calculable_diagrams(bsm_model):
     """ 
