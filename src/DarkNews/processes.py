@@ -140,7 +140,7 @@ class UpscatteringProcess:
 
             #############
             # integrated xsec coverted to cm^2
-            all_xsecs += tot_xsec * const.attobarn_to_cm2 * self.target_multiplicity
+            all_xsecs += tot_xsec * self.target_multiplicity
             logger.debug(f"Total cross section for {diagram} calculated.")
 
         return all_xsecs
