@@ -156,7 +156,7 @@ class UpscatteringProcess:
         if type(diff_xsecs) is dict:
             return {key: diff_xsecs[key] * physical for key in diff_xsecs.keys()}
         else:
-            return diff_xsecs * physical * const.attobarn_to_cm2 * self.target_multiplicity
+            return diff_xsecs * physical * self.target_multiplicity
 
 
 class FermionDileptonDecay:
@@ -293,12 +293,10 @@ class FermionSinglePhotonDecay:
                 # Save normalization information
                 with open(savefile_norm,'w') as f:
                     json.dump(batch_f.norm, f)
-            integrals = MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup, savestr=savefile_xsec)
+            MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup, savestr=savefile_dec)
             logger.debug("Main VEGAS run completed.")
             existing_integrator = integ
-        samples = MC.get_samples(existing_integrator, batch_f)
-        return samples
-        
+        return MC.get_samples(existing_integrator, batch_f)
 
     
     def total_width(self):
