@@ -265,7 +265,7 @@ class MC_events:
 
         # > differential rate weights
         df_gen["w_event_rate"] = (
-            weights["diff_event_rate"] * const.attobarn_to_cm2 / decay_rates * target_multiplicity * exposure * batch_f.norm["diff_event_rate"]
+            weights["diff_event_rate"] / decay_rates * target_multiplicity * exposure * batch_f.norm["diff_event_rate"]
         )
         
         if self.sparse <= 1:
@@ -283,7 +283,7 @@ class MC_events:
 
         if self.sparse < 4:
             # > flux averaged xsec weights (neglecting kinematics of decay)
-            df_gen["w_flux_avg_xsec"] = weights["diff_flux_avg_xsec"] * const.attobarn_to_cm2 * target_multiplicity * exposure * batch_f.norm["diff_flux_avg_xsec"]
+            df_gen["w_flux_avg_xsec"] = weights["diff_flux_avg_xsec"] * target_multiplicity * exposure * batch_f.norm["diff_flux_avg_xsec"]
 
 
         # Event-by-event descriptors 

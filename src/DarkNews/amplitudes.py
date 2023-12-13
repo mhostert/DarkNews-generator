@@ -8,7 +8,7 @@ from DarkNews import logger
 
 def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
     """ 
-    Computes the differential cross section for upscattering in attobarns
+    Computes the differential cross section for upscattering in cm2
 
     Args:
         x_phase_space (list): a list of arrays with [s,t,u] variables
