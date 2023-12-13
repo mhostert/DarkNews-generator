@@ -1,6 +1,7 @@
 import numpy as np
 import vegas as vg
 import json
+import os
 
 from DarkNews import logger, prettyprinter
 
@@ -278,6 +279,28 @@ class FermionSinglePhotonDecay:
         else:
             self.Tih = self.TheoryModel.t_aj[pdg.get_HNL_index(nu_daughter), pdg.get_HNL_index(nu_parent)]
 
+    def SamplePS(self, NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, existing_integrator=None, savefile_norm=None, savefile_dec=None):
+        """
+        Samples the phase space of the differential decay width in the rest frame of the HNL
+        """
+        if existing_integrator is None:
+            # need to define a new integrator
+            DIM = 1
+            batch_f = integrands.HNLDecay(dim=DIM, dec_case=self)
+            integ = vg.Integrator(DIM * [[0.0, 1.0]])  # unit hypercube
+
+            if savefile_norm is not None:
+                # Save normalization information
+                with open(savefile_norm,'w') as f:
+                    json.dump(batch_f.norm, f)
+            integrals = MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup, savestr=savefile_xsec)
+            logger.debug("Main VEGAS run completed.")
+            existing_integrator = integ
+        samples = MC.get_samples(existing_integrator, batch_f)
+        return samples
+        
+
+    
     def total_width(self):
         return dr.gamma_Ni_to_Nj_gamma(self.Tih,
                                        self.m_parent,

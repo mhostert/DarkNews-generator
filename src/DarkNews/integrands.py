@@ -97,6 +97,26 @@ class UpscatteringXsec(vg.BatchIntegrand):
 
         return self.int_dic
 
+class HNLDecay(vg.BatchIntegrand):
+    def __init__(self, dim, dec_case, diagram="total"):
+        """
+        Vegas integrand for diff decay width of HNL decay.
+
+        Args:
+                dim (int): integration dimensions
+                dec_case (DarkNews.processes.DecayProcess): the decay class of DarkNews
+                diagram (str, optional): _description_. Defaults to 'total'.
+
+        Raises:
+                ValueError: if cannot find diagrams to be computed
+        """
+        self.dim = dim
+        self.dec_case = dec_case
+        self.diagram = diagram
+        if not isinstance(self.diagram, str):
+            logger.error(f"ERROR. Cannot calculate total decay width for more than one diagram at a time. Passed diagram={self.diagram}.")
+            raise ValueError
+        
 
 class UpscatteringHNLDecay(vg.BatchIntegrand):
     def __init__(self, dim, Emin, Emax, MC_case):
