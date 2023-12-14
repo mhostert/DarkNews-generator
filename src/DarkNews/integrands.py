@@ -627,3 +627,134 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
         four_momenta["P_decay_photon"] = P3LAB_decay
 
     return four_momenta
+
+def get_decay_momenta_from_vegas_samples(vsamples, decay_case, PN_LAB):
+    """
+    Construct the four momenta of all final state particles in the decay process from the
+    vegas weights.
+
+    Args:
+            vsamples (np.ndarray): integration samples obtained from vegas
+                            as hypercube coordinates. Always in the interval [0,1].
+
+            MC_case (DarkNews.process.dec_case): the decay class of DarkNews
+
+            PN_LAB (np.ndarray): four-momentum of the upscattered N in the lab frame: [E, pX, pY, pZ]
+
+    Returns:
+            dict: each key corresponds to a set of four momenta for a given particle involved,
+                    so the values are 2D np.ndarrays with each row a different event and each column a different
+                    four momentum component. Contains also the weights.
+    """
+
+    four_momenta = {}
+
+    # N boost parameters
+    boost_scattered_N = {
+        "EP_LAB": PN_LAB[0],
+        "costP_LAB": PN_LAB[3]/np.sqrt(np.sum(PN_LAB[1:3]**2)),
+        "phiP_LAB": np.arctan2(PN_LAB[2], PN_LAB[1]),
+    }
+
+    #######################
+    # DECAY PROCESSES
+
+    if type(decay_case) == proc.FermionSinglePhotonDecay:
+
+        mh = decay_case.m_parent
+        mf = decay_case.m_daughter
+        mm = decay_case.mm
+        mp = decay_case.mm
+
+        if decay_case.vector_on_shell or decay_case.scalar_on_shell:
+
+            if decay_case.vector_on_shell and decay_case.scalar_off_shell:
+                m_mediator = decay_case.mzprime
+            elif decay_case.vector_off_shell and decay_case.scalar_on_shell:
+                m_mediator = decay_case.mhprime
+            else:
+                raise NotImplementedError("Both mediators on-shell is not yet implemented.")
+
+            ########################
+            ### HNL decay
+            N_decay_samples = {"unit_cost": np.array(vsamples[0])}
+            # Ni (k1) --> Nj (k2)  Z' (k3)
+            masses_decay = {
+                "m1": mh,  # Ni
+                "m2": mf,  # Nj
+                "m3": m_mediator,  # Z'
+            }
+            # Phnl, Phnl_daughter, Pz'
+            P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
+
+            # Z' boost parameters
+            boost_Z = {
+                "EP_LAB": P3LAB_decay.T[0],
+                "costP_LAB": Cfv.get_cosTheta(P3LAB_decay),
+                "phiP_LAB": np.arctan2(P3LAB_decay.T[2], P3LAB_decay.T[1]),
+            }
+
+            ########################
+            ### Z' decay
+            Z_decay_samples = {}  # all uniform
+            # Z'(k1) --> ell- (k2)  ell+ (k3)
+            masses_decay = {
+                "m1": m_mediator,  # Ni
+                "m2": mp,  # \ell+
+                "m3": mm,  # \ell-
+            }
+            # PZ', pe-, pe+
+            P1LAB_decayZ, P2LAB_decayZ, P3LAB_decayZ = phase_space.two_body_decay(Z_decay_samples, boost=boost_Z, **masses_decay)
+
+            four_momenta["P_decay_N_parent"] = P1LAB_decay
+            four_momenta["P_decay_N_daughter"] = P2LAB_decay
+            four_momenta["P_decay_ell_minus"] = P2LAB_decayZ
+            four_momenta["P_decay_ell_plus"] = P3LAB_decayZ
+
+        elif decay_case.vector_off_shell and decay_case.scalar_off_shell:
+
+            ########################
+            # HNL decay
+            N_decay_samples = {
+                "unit_t": vsamples[0],
+                "unit_u": vsamples[1],
+                "unit_c3": vsamples[2],
+                "unit_phi34": vsamples[3],
+            }
+
+            # Ni (k1) --> ell-(k2)  ell+(k3)  Nj(k4)
+            masses_decay = {
+                "m1": mh,  # Ni
+                "m2": mm,  # ell-
+                "m3": mp,  # ell+
+                "m4": mf,
+            }  # Nj
+            # Phnl, pe-, pe+, pnu
+            (P1LAB_decay, P2LAB_decay, P3LAB_decay, P4LAB_decay,) = phase_space.three_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
+
+            four_momenta["P_decay_N_parent"] = P1LAB_decay
+            four_momenta["P_decay_ell_minus"] = P2LAB_decay
+            four_momenta["P_decay_ell_plus"] = P3LAB_decay
+            four_momenta["P_decay_N_daughter"] = P4LAB_decay
+
+    elif type(decay_case) == proc.FermionSinglePhotonDecay:
+
+        mf = decay_case.m_daughter
+
+        ########################
+        ### HNL decay
+        N_decay_samples = {"unit_cost": np.array(vsamples[0])}
+        # Ni (k1) --> Nj (k2)  gamma (k3)
+        masses_decay = {
+            "m1": mh,  # Ni
+            "m2": mf,  # Nj
+            "m3": 0.0,  # gamma
+        }
+        # Phnl, Phnl', Pgamma
+        P1LAB_decay, P2LAB_decay, P3LAB_decay = phase_space.two_body_decay(N_decay_samples, boost=boost_scattered_N, **masses_decay)
+
+        four_momenta["P_decay_N_parent"] = P1LAB_decay
+        four_momenta["P_decay_N_daughter"] = P2LAB_decay
+        four_momenta["P_decay_photon"] = P3LAB_decay
+
+    return four_momenta

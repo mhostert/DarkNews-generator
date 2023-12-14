@@ -279,7 +279,7 @@ class FermionSinglePhotonDecay:
         else:
             self.Tih = self.TheoryModel.t_aj[pdg.get_HNL_index(nu_daughter), pdg.get_HNL_index(nu_parent)]
 
-    def SamplePS(self, NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, existing_integrator=None, savefile_norm=None, savefile_dec=None):
+    def SamplePS(self, NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, NINT_sample=1, NEVAL_sample=10_000, savefile_norm=None, savefile_dec=None, existing_integrator=None):
         """
         Samples the phase space of the differential decay width in the rest frame of the HNL
         """
@@ -293,8 +293,12 @@ class FermionSinglePhotonDecay:
                 # Save normalization information
                 with open(savefile_norm,'w') as f:
                     json.dump(batch_f.norm, f)
-            MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup, savestr=savefile_dec)
-            logger.debug("Main VEGAS run completed.")
+            # run the integrator
+            MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
+            logger.debug("Main VEGAS run completed for decay sampler.")
+            # Run one more time without adaptation to fix integration points to sample
+            # Save the resulting integrator to a pickle file
+            integ(batch_f,integ,adapt=False,NINT=NINT_sample,NEVAL=NEVAL_sample,saveall=savefile_dec)
             existing_integrator = integ
         return MC.get_samples(existing_integrator, batch_f)
 
