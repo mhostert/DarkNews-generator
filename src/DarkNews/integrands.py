@@ -9,7 +9,7 @@ from DarkNews import const
 from DarkNews import phase_space
 from DarkNews import decay_rates as dr
 from DarkNews import amplitudes as amps
-from DarkNews import process as proc
+from DarkNews import processes as proc
 
 
 class UpscatteringXsec(vg.BatchIntegrand):
@@ -652,14 +652,14 @@ def get_decay_momenta_from_vegas_samples(vsamples, decay_case, PN_LAB):
     # N boost parameters
     boost_scattered_N = {
         "EP_LAB": PN_LAB[0],
-        "costP_LAB": PN_LAB[3]/np.sqrt(np.sum(PN_LAB[1:3]**2)),
+        "costP_LAB": PN_LAB[3]/np.sqrt(np.sum(PN_LAB[1:]**2)),
         "phiP_LAB": np.arctan2(PN_LAB[2], PN_LAB[1]),
     }
 
     #######################
     # DECAY PROCESSES
 
-    if type(decay_case) == proc.FermionSinglePhotonDecay:
+    if type(decay_case) == proc.FermionDileptonDecay:
 
         mh = decay_case.m_parent
         mf = decay_case.m_daughter
@@ -739,6 +739,7 @@ def get_decay_momenta_from_vegas_samples(vsamples, decay_case, PN_LAB):
 
     elif type(decay_case) == proc.FermionSinglePhotonDecay:
 
+        mh = decay_case.m_parent
         mf = decay_case.m_daughter
 
         ########################

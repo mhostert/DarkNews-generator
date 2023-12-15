@@ -283,10 +283,10 @@ class FermionSinglePhotonDecay:
         """
         Samples the phase space of the differential decay width in the rest frame of the HNL
         """
+        DIM = 1
+        batch_f = integrands.HNLDecay(dim=DIM, dec_case=self)
         if existing_integrator is None:
             # need to define a new integrator
-            DIM = 1
-            batch_f = integrands.HNLDecay(dim=DIM, dec_case=self)
             integ = vg.Integrator(DIM * [[0.0, 1.0]])  # unit hypercube
 
             if savefile_norm is not None:
@@ -298,7 +298,7 @@ class FermionSinglePhotonDecay:
             logger.debug("Main VEGAS run completed for decay sampler.")
             # Run one more time without adaptation to fix integration points to sample
             # Save the resulting integrator to a pickle file
-            integ(batch_f,integ,adapt=False,NINT=NINT_sample,NEVAL=NEVAL_sample,saveall=savefile_dec)
+            integ(batch_f,adapt=False,nitn=NINT_sample,neval=NEVAL_sample,saveall=savefile_dec)
             existing_integrator = integ
         return MC.get_samples(existing_integrator, batch_f)
 
