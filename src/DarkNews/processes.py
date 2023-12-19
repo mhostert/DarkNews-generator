@@ -14,6 +14,8 @@ from DarkNews import amplitudes as amps
 from DarkNews import phase_space as ps
 from DarkNews import decay_rates as dr
 
+from . import Cfourvec as Cfv
+
 
 class UpscatteringProcess:
     """
@@ -240,6 +242,115 @@ class FermionDileptonDecay:
         ## does it have transition magnetic moment?
         self.TMM = TheoryModel.has_TMM
 
+    def SamplePS(self, NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, NINT_sample=1, NEVAL_sample=10_000, savefile_norm=None, savefile_dec=None, existing_integrator=None):
+        """
+        Samples the phase space of the differential decay width in the rest frame of the HNL
+        """
+        if self.vector_on_shell and self.scalar_on_shell:
+            logger.error("Vector and scalar simultaneously on shell is not implemented.")
+            raise NotImplementedError("Feature not implemented.")
+        elif (self.vector_off_shell and self.scalar_on_shell) or \
+             (self.vector_off_shell and self.scalar_on_shell):
+            DIM = 1
+        elif self.vector_off_shell and self.scalar_off_shell:
+            DIM = 4
+        batch_f = integrands.HNLDecay(dim=DIM, dec_case=self)
+        if existing_integrator is None:
+            # need to define a new integrator
+            integ = vg.Integrator(DIM * [[0.0, 1.0]])  # unit hypercube
+
+            if savefile_norm is not None:
+                # Save normalization information
+                with open(savefile_norm,'w') as f:
+                    json.dump(batch_f.norm, f)
+            # run the integrator
+            MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup, savestr=savefile_dec)
+            logger.debug("Main VEGAS run completed for decay sampler.")
+            # Run one more time without adaptation to fix integration points to sample
+            # Save the resulting integrator to a pickle file
+            existing_integrator = integ
+        existing_integrator(batch_f,adapt=False,nitn=NINT_sample,neval=NEVAL_sample)
+        return MC.get_samples(existing_integrator, batch_f)
+
+    
+    def total_width(self, NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, savefile_norm=None, savefile_dec=None):
+        if self.vector_on_shell and self.scalar_on_shell:
+            logger.error("Vector and scalar simultaneously on shell is not implemented.")
+            raise NotImplementedError("Feature not implemented.")
+        elif (self.vector_on_shell and self.scalar_off_shell):
+            return dr.gamma_Ni_to_Nj_V(vertex_ij=self.Dih,
+                                       mi=self.m_parent,
+                                       mj=self.m_daughter,
+                                       mV=self.mzprime,
+                                       HNLtype=self.HNLtype) * \
+                   dr.gamma_V_to_ell_ell(vertex=self.TheoryModel.deV,
+                                         mV=self.mzprime,
+                                         m_ell=self.mm)
+        elif (self.vector_off_shell and self.scalar_on_shell):
+            return dr.gamma_Ni_to_Nj_S(vertex_ij=self.Sih,
+                                       mi=self.m_parent,
+                                       mj=self.m_daughter,
+                                       mS=self.mhprime,
+                                       HNLtype=self.HNLtype) * \
+                   dr.gamma_S_to_ell_ell(vertex=self.TheoryModel.deS,
+                                         mS=self.mhprime,
+                                         m_ell=self.mm)
+        elif self.vector_off_shell and self.scalar_off_shell:
+            
+            # We need to integraate the differential cross section
+            batch_f = integrands.HNLDecay(dim=4, dec_case=self)
+            
+            integ = vg.Integrator(4 * [[0.0, 1.0]])  # unit hypercube
+            if savefile_norm is not None:
+                # Save normalization information
+                with open(savefile_norm,'w') as f:
+                    json.dump(batch_f.norm, f)
+            # run the integrator
+            integrals = MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
+            logger.debug("Main VEGAS run completed for decay total width calculation.")
+            return integrals["diff_decay_rate_0"].mean * batch_f.norm["diff_decay_rate_0"] 
+    
+    def differential_width(self, momenta):
+        if self.vector_on_shell and self.scalar_on_shell:
+            logger.error("Vector and scalar simultaneously on shell is not implemented.")
+            raise NotImplementedError("Feature not implemented.")
+        elif (self.vector_on_shell and self.scalar_off_shell):
+            return dr.diff_gamma_Ni_to_Nj_V(cost=PS,
+                                            vertex_ij=self.Dih,
+                                            mi=self.m_parent,
+                                            mj=self.m_daughter,
+                                            mV=self.mzprime,
+                                            HNLtype=self.HNLtype,
+                                            h=self.h_parent) * \
+                    dr.gamma_V_to_ell_ell(vertex=self.TheoryModel.deV,
+                                          mV=self.mzprime,
+                                          m_ell=self.mm)
+        elif (self.vector_off_shell and self.scalar_on_shell):
+            return dr.diff_gamma_Ni_to_Nj_S(cost=PS,
+                                            vertex_ij=self.Sih,
+                                            mi=self.m_parent,
+                                            mj=self.m_daughter,
+                                            mS=self.mhprime,
+                                            HNLtype=self.HNLtype,
+                                            h=self.h_parent) * \
+                    dr.gamma_S_to_ell_ell(vertex=self.TheoryModel.deS,
+                                          mS=self.mhprime,
+                                          m_ell=self.mm)
+        elif self.vector_off_shell and self.scalar_off_shell:
+            
+            t,u,c3,phi34 = PS
+
+            m1 = self.m_parent
+            m2 = self.mm
+            m3 = self.mp
+            m4 = self.m_daughter
+            masses = np.array([m1, m2, m3, m4])
+
+            v = np.sum(masses ** 2) - u - t
+
+            return dr.diff_gamma_Ni_to_Nj_ell_ell([t, u, v, c3, phi34], self)
+        
+
 
 class FermionSinglePhotonDecay:
     def __init__(self, nu_parent, nu_daughter, TheoryModel, h_parent=-1):
@@ -304,17 +415,28 @@ class FermionSinglePhotonDecay:
 
     
     def total_width(self):
-        return dr.gamma_Ni_to_Nj_gamma(self.Tih,
-                                       self.m_parent,
-                                       self.m_daughter,
+        return dr.gamma_Ni_to_Nj_gamma(vertex_ij=self.Tih,
+                                       mi=self.m_parent,
+                                       mj=self.m_daughter,
                                        HNLtype=self.HNLtype)
     
-    def differential_width(self, cost):
-        return dr.diff_gamma_Ni_to_Nj_gamma(cost,
-                                            self.Tih,
-                                            self.m_parent,
-                                            self.m_daughter,
-                                            HNLtype=self.HNLtype)
+    def differential_width(self, momenta):
+        PN_LAB, Pgamma_LAB = momenta
+        # Calculate kinematics of HNL
+        CosThetaPNLab = Cfv.get_cosTheta(PN_LAB)
+        PhiPNLab = np.arctan2(PN_LAB.T[2],PN_LAB.T[1])
+        pN_LAB = np.sqrt(PN_LAB.T[0]**2 - self.m_parent**2)
+        # Boost gamma to the HNL rest frame
+        Pgamma_CM = Cfv.T(Pgamma_LAB, -pN_LAB/PN_LAB.T[0], np.arccos(CosThetaPNLab), PhiPNLab)
+        PN_CM = Cfv.T(PN_LAB, -pN_LAB/PN_LAB.T[0], np.arccos(CosThetaPNLab), PhiPNLab)
+        # CosTheta of gamma in HNL rest frame
+        PS = Cfv.get_cosTheta(Pgamma_CM)
+        return dr.diff_gamma_Ni_to_Nj_gamma(cost=PS,
+                                            vertex_ij=self.Tih,
+                                            mi=self.m_parent,
+                                            mj=self.m_daughter,
+                                            HNLtype=self.HNLtype,
+                                            h=self.h_parent)
 
 def find_calculable_diagrams(bsm_model):
     """ 
