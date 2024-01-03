@@ -250,7 +250,7 @@ class FermionDileptonDecay:
             logger.error("Vector and scalar simultaneously on shell is not implemented.")
             raise NotImplementedError("Feature not implemented.")
         elif (self.vector_off_shell and self.scalar_on_shell) or \
-             (self.vector_off_shell and self.scalar_on_shell):
+             (self.vector_on_shell and self.scalar_off_shell):
             DIM = 1
         elif self.vector_off_shell and self.scalar_off_shell:
             DIM = 4
