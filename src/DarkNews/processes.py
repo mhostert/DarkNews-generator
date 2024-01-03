@@ -311,10 +311,21 @@ class FermionDileptonDecay:
             return integrals["diff_decay_rate_0"].mean * batch_f.norm["diff_decay_rate_0"] 
     
     def differential_width(self, momenta):
+        PN_LAB, Plepminus_LAB, Plepplus_LAB, Pnu_LAB = momenta
+        # Calculate kinematics of HNL
+        CosThetaPNLab = Cfv.get_cosTheta(PN_LAB)
+        PhiPNLab = np.arctan2(PN_LAB.T[2],PN_LAB.T[1])
+        pN_LAB = np.sqrt(PN_LAB.T[0]**2 - self.m_parent**2)
         if self.vector_on_shell and self.scalar_on_shell:
             logger.error("Vector and scalar simultaneously on shell is not implemented.")
             raise NotImplementedError("Feature not implemented.")
         elif (self.vector_on_shell and self.scalar_off_shell):
+            # Find vector boson four momentum in lab frame
+            PV_LAB = Plepminus_LAB + Plepplus_LAB
+            # Boost vector boson to the HNL rest frame
+            PV_CM = Cfv.T(PV_LAB, -pN_LAB/PN_LAB.T[0], np.arccos(CosThetaPNLab), PhiPNLab)
+            # CosTheta of vector boson in HNL rest frame
+            PS = Cfv.get_cosTheta(PV_CM)
             return dr.diff_gamma_Ni_to_Nj_V(cost=PS,
                                             vertex_ij=self.Dih,
                                             mi=self.m_parent,
@@ -326,6 +337,12 @@ class FermionDileptonDecay:
                                           mV=self.mzprime,
                                           m_ell=self.mm)
         elif (self.vector_off_shell and self.scalar_on_shell):
+            # Find scalar boson four momentum in lab frame
+            PS_LAB = Plepminus_LAB + Plepplus_LAB
+            # Boost scalar boson to the HNL rest frame
+            PS_CM = Cfv.T(PS_LAB, -pN_LAB/PN_LAB.T[0], np.arccos(CosThetaPNLab), PhiPNLab)
+            # CosTheta of vector boson in HNL rest frame
+            PS = Cfv.get_cosTheta(PS_CM)
             return dr.diff_gamma_Ni_to_Nj_S(cost=PS,
                                             vertex_ij=self.Sih,
                                             mi=self.m_parent,
@@ -337,9 +354,26 @@ class FermionDileptonDecay:
                                           mS=self.mhprime,
                                           m_ell=self.mm)
         elif self.vector_off_shell and self.scalar_off_shell:
+            # Ni (k1) --> ell-(k2)  ell+(k3)  Nj(k4)
             
-            t,u,c3,phi34 = PS
+            # t = m23^2
+            t = Cfv.dot4(Plepminus_LAB,Plepplus_LAB)
 
+            # u = m24^2
+            u = Cfv.dot4(Plepminus_LAB,Pnu_LAB)
+
+            # c3 = cosine of polar angle of k3
+            # Boost ell+ to HNL rest frame
+            Plepplus_CM = Cfv.T(Plepplus_LAB, -pN_LAB/PN_LAB.T[0], np.arccos(CosThetaPNLab), PhiPNLab)
+            c3 = Cfv.get_cosTheta(Plepplus_CM)
+
+            # phi34 = azimuthal angle of k4 wrt k3
+            # Boost Nj to HNL rest frame
+            Pnu_CM = Cfv.T(Pnu_LAB, -pN_LAB/PN_LAB.T[0], np.arccos(CosThetaPNLab), PhiPNLab)
+            PhiPnuCM = np.arctan2(Pnu_CM.T[2],Pnu_CM.T[1])
+            PhiPlepplusCM = np.arctan2(Plepplus_CM.T[2],Plepplus_CM.T[1])
+            phi34 = PhiPnuCM - PhiPlepplusCM
+            
             m1 = self.m_parent
             m2 = self.mm
             m3 = self.mp
@@ -428,7 +462,7 @@ class FermionSinglePhotonDecay:
         pN_LAB = np.sqrt(PN_LAB.T[0]**2 - self.m_parent**2)
         # Boost gamma to the HNL rest frame
         Pgamma_CM = Cfv.T(Pgamma_LAB, -pN_LAB/PN_LAB.T[0], np.arccos(CosThetaPNLab), PhiPNLab)
-        PN_CM = Cfv.T(PN_LAB, -pN_LAB/PN_LAB.T[0], np.arccos(CosThetaPNLab), PhiPNLab)
+        #PN_CM = Cfv.T(PN_LAB, -pN_LAB/PN_LAB.T[0], np.arccos(CosThetaPNLab), PhiPNLab)
         # CosTheta of gamma in HNL rest frame
         PS = Cfv.get_cosTheta(Pgamma_CM)
         return dr.diff_gamma_Ni_to_Nj_gamma(cost=PS,
