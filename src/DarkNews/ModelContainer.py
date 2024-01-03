@@ -498,7 +498,7 @@ class ModelContainer:
                                                 nu_parent=decay_args["nu_parent"],
                                                 nu_daughter=decay_args["nu_daughter"],
                                                 final_lepton1=decay_pdg,
-                                                final_lepton2=decay_pdg,
+                                                final_lepton2=-decay_pdg,
                                                 h_parent=decay_args["h_parent"],
                                                 TheoryModel=self.bsm_model,
                                             )
