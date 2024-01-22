@@ -490,7 +490,7 @@ class ThreePortalModel(HNLModel):
 
         # Mixing matrices
         # if PMNS, use dtype=complex
-        self.Ulep = np.diag(np.full_like(self.Ue, np.float128(1)))
+        self.Ulep = np.diag(np.full_like(self.Ue, np.longdouble(1)))
         # self.Ulep = np.diag(np.full(self.n_nus,1,dtype=complex))
         # self.Ulep[:3,:3] = const.UPMNS # massless light neutrinos
 
