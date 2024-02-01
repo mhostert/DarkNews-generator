@@ -295,6 +295,13 @@ class GenLauncher:
         dn.MC.NEVAL = self.neval
         dn.MC.NINT = self.nint
 
+        # random number generator to be used by vegas
+        if self.seed is not None:
+            np.random.seed(self.seed)
+            self.rng = np.random.default_rng(self.seed).random
+        else:
+            self.rng = np.random.random  # defaults to vegas' default
+
         # get the initial projectiles
         self.projectiles = [getattr(lp, nu) for nu in self.nu_flavors]
 
@@ -536,7 +543,12 @@ class GenLauncher:
                                             "helicity": helicity,
                                         }
                                         mc_case = dn.MC.MC_events(
-                                            self.experiment, bsm_model=self.bsm_model, enforce_prompt=self.enforce_prompt, sparse=self.sparse, **args
+                                            self.experiment,
+                                            bsm_model=self.bsm_model,
+                                            enforce_prompt=self.enforce_prompt,
+                                            sparse=self.sparse,
+                                            rng=self.rng,
+                                            **args,
                                         )
                                         self.gen_cases.append(mc_case)
 
@@ -605,9 +617,6 @@ class GenLauncher:
         # Set theory params and run generation of events
 
         prettyprinter.info("Generating Events using the neutrino-nucleus upscattering engine")
-        # numpy set used by vegas
-        if self.seed:
-            np.random.seed(self.seed)
 
         self.df = self.gen_cases[0].get_MC_events()
         for mc in self.gen_cases[1:]:

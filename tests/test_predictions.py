@@ -12,77 +12,80 @@ def close_enough(x, y, tol=1e-3):
 
 
 @pytest.mark.skipif("Linux" in platform.system(), reason="Linux appears to misbehave with seeded random numbers on GitHub actions")
-def test_MB_rates_of_BPs(SM_gen, gen_simplest_benchmarks, gen_other_final_states, gen_most_generic_model, gen_dirt_cases):
-    #######
-    expect = 0.038363091541911774
+def test_MB_SM(SM_gen):
+    expect = 0.03666960244288936
     assert close_enough(SM_gen.w_event_rate.sum(), expect), "seeded SM generation has changed!"
 
-    #######
+
+def test_MB_benchmarks(gen_simplest_benchmarks):
     df_light, df_heavy, df_TMM = gen_simplest_benchmarks
     # check seeded generation
-    expect = 13180.463971429017
+    expect = 13607.917925196376
     assert close_enough(df_light.w_event_rate.sum(), expect), "seeded light dark photon has changed!"
 
     # check seeded generation
-    expect = 5.516596808396571
+    expect = 5.490449133362185
     assert close_enough(df_heavy.w_event_rate.sum(), expect), "seeded heavy dark photon has changed!"
 
     # check seeded generation
-    expect = 52620.678472114305
+    expect = 52246.996516303276
     assert close_enough(df_TMM.w_event_rate.sum(), expect), "seeded TMM has changed!"
 
-    #######
+
+def test_MB_other_final_states(gen_other_final_states):
     df_light, df_heavy, df_TMM_mumu, df_TMM_photon = gen_other_final_states
     # check seeded generation
-    expect = 202.14258392685633
+    expect = 203.35903851291818
     assert close_enough(df_light.w_event_rate.sum(), expect), "seeded light dark photon to muons has changed!"
 
     # check seeded generation
-    expect = 2.3258916609020366
+    expect = 2.326728225953212
     assert close_enough(df_heavy.w_event_rate.sum(), expect), "seeded heavy dark photon to muons has changed!"
 
     # check seeded generation
-    expect = 3458.8436785760227
-    assert close_enough(df_TMM_mumu.w_event_rate.sum(), expect), "seeded light dark photon to muons has changed!"
+    expect = 3425.7711399143527
+    assert close_enough(df_TMM_mumu.w_event_rate.sum(), expect), "seeded TMM to muons has changed!"
     assert "P_decay_ell_plus" in df_TMM_mumu.columns
     assert df_TMM_mumu["P_decay_ell_plus", "0"].min() > dn.const.m_mu, "Mu+ energy smaller than its mass? Not generating for muons?"
     assert df_TMM_mumu["P_decay_ell_minus", "0"].min() > dn.const.m_mu, "Mu- energy smaller than its mass? Not generating for muons?"
 
     # check seeded generation
-    expect = 3411.9684811051043
+    expect = 3450.618873090897
     assert close_enough(df_TMM_photon.w_event_rate.sum(), expect), "seeded heavy dark photon to muons has changed!"
     assert "P_decay_photon" in df_TMM_photon.columns
 
-    #######
+
+def test_MB_generic_model(gen_most_generic_model):
     df_light, df_heavy, df_photon = gen_most_generic_model
     # check seeded generation
-    expect = 23222307.376793236
+    expect = 23279598.68188055
     assert close_enough(df_light.w_event_rate.sum(), expect), "seeded light dark photon to muons has changed!"
 
     # check seeded generation
-    expect = 178964.05762603838
+    expect = 179795.4844049769
     assert close_enough(df_heavy.w_event_rate.sum(), expect), "seeded heavy most-generic model has changed!"
 
     # check seeded generation
-    expect = 179580.3899866729
+    expect = 179488.15926133815
     assert close_enough(df_photon.w_event_rate.sum(), expect), "seeded heavy most-generic model has changed!"
 
-    #######
+
+def test_MB_dirt(gen_dirt_cases):
     df_1, df_2, df_3, df_4 = gen_dirt_cases
     # check seeded generation
-    expect = 77791.02852083213
+    expect = 82089.91508629762
     assert close_enough(df_1.w_event_rate.sum(), expect), "seeded sbnd dirt generation has changed!"
 
     # check seeded generation
-    expect = 32.76684839561704
+    expect = 31.809474146527283
     assert close_enough(df_2.w_event_rate.sum(), expect), "seeded microboone dirt generation has changed!"
 
     # check seeded generation
-    expect = 267.9440511293012
+    expect = 274.96427582452174
     assert close_enough(df_3.w_event_rate.sum(), expect), "seeded icarus dirt generation has changed!"
 
     # check seeded generation
-    expect = 404.9325841822879
+    expect = 402.99035914458227
     assert close_enough(df_4.w_event_rate.sum(), expect), "seeded miniboone dirt generation has changed!"
 
 
