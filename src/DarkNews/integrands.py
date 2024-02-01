@@ -2,10 +2,11 @@ import numpy as np
 import vegas as vg
 from collections import OrderedDict
 
-from DarkNews import logger, prettyprinter
+import logging
+logger = logging.getLogger('logger.' + __name__)
+prettyprinter = logging.getLogger('prettyprinter.' + __name__)
 
 from DarkNews import Cfourvec as Cfv
-from DarkNews import const
 from DarkNews import phase_space
 from DarkNews import decay_rates as dr
 from DarkNews import amplitudes as amps
@@ -203,7 +204,6 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
                 )
                 self.int_dic["diff_decay_rate_0"] *= 2  # hypercube jacobian
 
-
                 # mediator decay M --> ell+ ell-
                 self.int_dic["diff_decay_rate_1"] = dr.gamma_V_to_ell_ell(vertex=decay_case.TheoryModel.deV, mV=decay_case.mzprime, m_ell=decay_case.mm) * np.full_like(
                     self.int_dic["diff_decay_rate_0"], 1.0
@@ -311,13 +311,13 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
         return self.int_dic
 
 
-def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
+def get_momenta_from_vegas_samples(vsamples, MC_case):
     """
     Construct the four momenta of all particles in the upscattering+decay process from the
     vegas weights.
 
     Args:
-            vsamples (np.ndarray, optional): integration samples obtained from vegas
+            vsamples (np.ndarray): integration samples obtained from vegas
                             as hypercube coordinates. Always in the interval [0,1].
 
             MC_case (DarkNews.MC.MC_events): the main Monte-Carlo class of DarkNews
@@ -331,8 +331,9 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
     four_momenta = {}
 
     ########################
-    ### upscattering
+    # upscattering
     # Ni(k1) target(k2) -->  Nj(k3) target(k4)
+
     mh = MC_case.ups_case.m_ups
     MA = MC_case.ups_case.MA
 
@@ -360,7 +361,7 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
     four_momenta["P_recoil"] = P4LAB
 
     #######################
-    # DECAY PROCESSES
+    # decay processes
 
     if MC_case.decays_to_dilepton:
 
@@ -378,8 +379,9 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
                 raise NotImplementedError("Both mediators on-shell is not yet implemented.")
 
             ########################
-            ### HNL decay
+            # HNL decay
             N_decay_samples = {"unit_cost": np.array(vsamples[2])}
+            
             # Ni (k1) --> Nj (k2)  Z' (k3)
             masses_decay = {
                 "m1": mh,  # Ni
@@ -397,7 +399,8 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
             }
 
             ########################
-            ### Z' decay
+            # Z' decay
+
             Z_decay_samples = {}  # all uniform
             # Z'(k1) --> ell- (k2)  ell+ (k3)
             masses_decay = {
@@ -444,8 +447,9 @@ def get_momenta_from_vegas_samples(vsamples=None, MC_case=None):
         mf = MC_case.decay_case.m_daughter
 
         ########################
-        ### HNL decay
+        # HNL decay
         N_decay_samples = {"unit_cost": np.array(vsamples[2])}
+
         # Ni (k1) --> Nj (k2)  gamma (k3)
         masses_decay = {
             "m1": mh,  # Ni

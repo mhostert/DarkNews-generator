@@ -1,7 +1,8 @@
 import numpy as np
 import numpy.ma as ma
 
-from DarkNews import logger
+import logging
+logger = logging.getLogger('logger.' + __name__)
 
 from . import Cfourvec as Cfv
 

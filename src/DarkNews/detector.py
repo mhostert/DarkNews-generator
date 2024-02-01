@@ -4,8 +4,10 @@ import os.path
 import os
 import importlib.resources as resources
 
+import logging
+logger = logging.getLogger('logger.' + __name__)
+prettyprinter = logging.getLogger('prettyprinter.' + __name__)
 
-from DarkNews import logger, prettyprinter
 from DarkNews import pdg
 from DarkNews import geom
 from DarkNews import const
@@ -50,6 +52,7 @@ class Detector:
         "icarus_dirt": "icarus_dirt.txt",
         "miniboone_fhc_steel": "miniboone_fhc_steel.txt",
         "miniboone_rhc": "miniboone_rhc.txt",
+        "miniboone_rhc_dirt": "miniboone_rhc_dirt.txt",
         "minos_le_fhc": "minos_le_fhc.txt",
         "nd280_fhc": "nd280_fhc.txt",
         "nova_le_fhc": "nova_le_fhc.txt",
@@ -152,6 +155,7 @@ class Detector:
         geometries["sbnd_dirt_cone"] = geom.sbnd_dirt_cone_geometry
         geometries["icarus_dirt"] = geom.icarus_dirt_geometry
         geometries["miniboone_fhc_dirt"] = geom.miniboone_dirt_geometry
+        geometries["miniboone_rhc_dirt"] = geom.miniboone_dirt_geometry
         geometries["microboone"] = geom.microboone_geometry
         geometries["microboone_tpc"] = geom.microboone_tpc_geometry
         geometries["sbnd"] = geom.sbnd_geometry

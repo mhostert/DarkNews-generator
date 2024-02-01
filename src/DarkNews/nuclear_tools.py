@@ -5,7 +5,8 @@ from itertools import islice
 
 from particle import literals as lp
 
-from DarkNews import logger
+import logging
+logger = logging.getLogger('logger.' + __name__)
 
 from DarkNews.const_dics import fourier_bessel_dic
 from DarkNews import const

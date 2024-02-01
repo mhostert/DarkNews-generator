@@ -1,6 +1,4 @@
 # These are the parameters definitions for the first example
-hbar = 6.582119569e-25 # GeV s
-c = 299792458.0 # m s^-1
 
 ##############################
 ### COMMON ARGS
@@ -10,6 +8,7 @@ m4 = 0.140
 # m5 = 
 # m6 = 
 mzprime = 1.25
+# mhprime = 
 HNLtype = "dirac"
 # mu_tr_e4 = 
 # mu_tr_e5 = 
@@ -40,8 +39,6 @@ HNLtype = "dirac"
 # s_55 = 
 # s_56 = 
 # s_66 = 
-# mhprime = 
-# theta = 
 # decay_product = 
 # experiment = 
 # nopelastic = 
@@ -82,6 +79,7 @@ neval = 1000
 # epsilon2 = 
 # chi = 
 # alpha_epsilon2 = 
+# theta = 
 # Ue4 = 
 # Ue5 = 
 # Ue6 = 

@@ -1,5 +1,6 @@
 import numpy as np
-from DarkNews import logger
+import logging
+logger = logging.getLogger('logger.' + __name__)
 
 #####################################
 # particle names and props
@@ -112,7 +113,7 @@ As advised by the PDG, we start the new particle system with 59. The full identi
 
 
 def new_particle(name, pdgid, charge=0, mass=0, **kwargs):
-    return Particle(pdg_name=name, pdgid=pdgid, three_charge=charge, mass=mass, **kwargs)
+    return Particle(pdg_name=name, pdgid=pdgid, three_charge=3*charge, mass=mass, **kwargs)
     """ 
         Particle class definition:
             https://github.com/scikit-hep/particle/blob/dd3c71e0b4319f729533ff0fc2e1e8cfa49684dd/src/particle/particle/particle.py#L91

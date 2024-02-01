@@ -2,7 +2,9 @@ import numpy as np
 import pandas as pd
 import vegas as vg
 
-from DarkNews import logger, prettyprinter
+import logging
+logger = logging.getLogger('logger.' + __name__)
+prettyprinter = logging.getLogger('prettyprinter.' + __name__)
 
 from collections import defaultdict
 from functools import partial
@@ -211,7 +213,7 @@ class MC_events:
         logger.debug(f"Vegas results for diff_event_rate: {weights['diff_event_rate'].sum()}")
         logger.debug(f"Vegas results for diff_flux_avg_xsec: {weights['diff_flux_avg_xsec'].sum()}")
 
-        four_momenta = integrands.get_momenta_from_vegas_samples(samples, MC_case=self)
+        four_momenta = integrands.get_momenta_from_vegas_samples(vsamples=samples, MC_case=self)
         ##########################################################################
 
         ##########################################################################
@@ -229,7 +231,7 @@ class MC_events:
 
         # differential weights
         for column in df_gen:
-            if "w_" in column:
+            if "w_" in str(column):
                 df_gen[column, ""] = df_gen[column]
 
         # add a single column for neutrino energy if sparse = 2 or 3
@@ -369,9 +371,9 @@ def get_merged_MC_output(df1, df2):
     Resetting index to go from (0,n_1+n_2) where n_i is the number of events in dfi
     """
     if df1.attrs['model'] != df2.attrs['model']:
-        logger.warning("Beware! Merging generation cases with different df.attrs['models']! Discarting the second (newest) case.")
+        logger.warning("Beware! Merging generation cases with different df.attrs['models']! Merging events, but discarting the 'attrs' of the second (latest) dataframe.")
     if df1.attrs['experiment'] != df2.attrs['experiment']:
-        logger.warning("Beware! Merging generation cases with different df.attrs['experiment']! Discarting the second (newest) case.")
+        logger.warning("Beware! Merging generation cases with different df.attrs['experiment']! Merging events, but discarting the 'attrs' of the second (latest) dataframe.")
 
     df = pd.concat([df1, df2], axis=0).reset_index(drop=True)
 

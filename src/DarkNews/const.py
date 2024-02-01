@@ -7,10 +7,8 @@ We use PDG2020 values for constants and SM masses.
 Some low-level auxiliary functions are defined.
 
 """
-import subprocess
 import numpy as np
 from numpy import sqrt
-import math
 from scipy import interpolate
 
 import importlib.resources as resources
@@ -35,7 +33,7 @@ rad_to_deg = 180.0 / np.pi
 deg_to_rad = 1 / rad_to_deg
 
 invGeV_to_cm = hb * c_LIGHT  # hbar c = 197.3269804e-16 GeV.cm
-invGeV2_to_cm2 = invGeV_to_cm ** 2
+invGeV2_to_cm2 = invGeV_to_cm**2
 
 fm_to_GeV = 1 / invGeV_to_cm * 1e-15 * 1e2
 invGeV_to_s = invGeV_to_cm / c_LIGHT
@@ -48,7 +46,7 @@ invGeV2_to_attobarn = invGeV2_to_cm2 * cm2_to_attobarn
 # cosmo definitions
 GeV2_to_cm3s = invGeV2_to_cm2 * c_LIGHT
 invcm3_to_eV3 = invGeV2_to_cm2 ** (3 / 2) * 1e27
-Mplanck = 1.22e19 # GeV
+Mplanck = 1.22e19  # GeV
 
 g_to_eV = 5.6095886031e32  # eV
 kg_to_eV = 5.6095886031e35  # eV
@@ -117,14 +115,13 @@ alphaQED = 1.0 / 137.03599908421  # Fine structure constant at q2 -> 0
 eQED = np.sqrt((4 * np.pi) * alphaQED)
 
 # get running alphaQED
-Q, inv_alphaQED = np.genfromtxt(resources.open_text("DarkNews.include.aux_data","alpha_QED_running_posQ2.dat"),
-                                 unpack=True)
+Q, inv_alphaQED = np.genfromtxt(resources.open_text("DarkNews.include.aux_data", "alpha_QED_running_posQ2.dat"), unpack=True)
 runningAlphaQED = interpolate.interp1d(Q, 1.0 / inv_alphaQED)
 
 ################################################
 # Weak sector
 Gf = 1.16637876e-5  # Fermi constant (GeV^-2)
-gweak = np.sqrt(Gf * m_W ** 2 * 8 / np.sqrt(2))
+gweak = np.sqrt(Gf * m_W**2 * 8 / np.sqrt(2))
 s2w = 0.22343  # On-shell
 sw = np.sqrt(s2w)
 cw = np.sqrt(1.0 - s2w)
@@ -134,7 +131,7 @@ cw = np.sqrt(1.0 - s2w)
 vev_EW = 1 / np.sqrt(np.sqrt(2) * Gf)
 m_H = 125.10
 lamb_quartic = (m_H / vev_EW) ** 2 / 2
-m_h_potential = -lamb_quartic * vev_EW ** 2
+m_h_potential = -lamb_quartic * vev_EW**2
 
 ################################################
 # Mesons
@@ -168,16 +165,16 @@ rhoCKM = rhoBARCKM / (1 - lamCKM * lamCKM / 2.0)
 etaCKM = etaBARCKM / (1 - lamCKM * lamCKM / 2.0)
 
 s12 = lamCKM
-s23 = ACKM * lamCKM ** 2
+s23 = ACKM * lamCKM**2
 s13e = (
     ACKM
-    * lamCKM ** 3
+    * lamCKM**3
     * (rhoCKM + 1j * etaCKM)
-    * np.sqrt(1.0 - ACKM ** 2 * lamCKM ** 4)
-    / (np.sqrt(1.0 - lamCKM ** 2) * (1.0 - ACKM ** 2 * lamCKM ** 4 * (rhoCKM + 1j * etaCKM)))
+    * np.sqrt(1.0 - ACKM**2 * lamCKM**4)
+    / (np.sqrt(1.0 - lamCKM**2) * (1.0 - ACKM**2 * lamCKM**4 * (rhoCKM + 1j * etaCKM)))
 )
-c12 = np.sqrt(1 - s12 ** 2)
-c23 = np.sqrt(1 - s23 ** 2)
+c12 = np.sqrt(1 - s12**2)
+c23 = np.sqrt(1 - s23**2)
 c13 = np.sqrt(1 - abs(s13e) ** 2)
 Vud = c12 * c13
 Vus = s12 * c13
@@ -188,7 +185,7 @@ Vcb = s23 * c13
 Vtd = s12 * s23 - c12 * c23 * s13e
 Vts = -c12 * s23 - s12 * c23 * s13e
 Vtb = c23 * c13
-
+UCKM = np.matrix([[Vud, Vus, Vub], [Vcd, Vcs, Vcb], [Vtd, Vts, Vtb]], dtype=complex)
 
 ################################################
 # PMNS parameters
@@ -197,9 +194,9 @@ Vtb = c23 * c13
 s12 = np.sqrt(0.304)
 s23 = np.sqrt(0.450)
 s13 = np.sqrt(0.02246)
-c12 = np.sqrt(1 - s12 ** 2)
-c23 = np.sqrt(1 - s23 ** 2)
-c13 = np.sqrt(1 - s13 ** 2)
+c12 = np.sqrt(1 - s12**2)
+c23 = np.sqrt(1 - s23**2)
+c13 = np.sqrt(1 - s13**2)
 delta = 230 * deg_to_rad
 
 Ue1 = c12 * c13
@@ -234,11 +231,11 @@ def kallen_sqrt(a, b, c):
     return np.sqrt(kallen(a, b, c))
 
 
-#### aliases used in MATHEMATICA copy-paste
+# aliases used in MATHEMATICA copy-paste
 MZBOSON = m_Z
 MW = m_W
 
 # from CForm to pythonic syntax
-Power = lambda x, n: x ** n
+Power = lambda x, n: x**n
 Sqrt = lambda x: sqrt(x)
 Pi = np.pi

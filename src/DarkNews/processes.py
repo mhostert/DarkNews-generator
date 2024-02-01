@@ -1,7 +1,8 @@
 import numpy as np
 import vegas as vg
 
-from DarkNews import logger, prettyprinter
+import logging
+logger = logging.getLogger('logger.' + __name__)
 
 from DarkNews import const
 from DarkNews import pdg

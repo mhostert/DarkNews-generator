@@ -6,14 +6,17 @@ import dill
 from pathlib import Path
 from particle import literals as lp
 
+import logging
+logger = logging.getLogger('logger.' + __name__)
+prettyprinter = logging.getLogger('prettyprinter.' + __name__)
+
 import DarkNews as dn
-from DarkNews import logger, prettyprinter
 from DarkNews import const
 from DarkNews import pdg
 from DarkNews import Cfourvec as Cfv
 
 import pyhepmc as hep
-import pyhepmc.io as io
+from pyhepmc import io
 
 
 def print_in_order(x):

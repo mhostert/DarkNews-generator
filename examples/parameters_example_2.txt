@@ -1,6 +1,5 @@
 # These are the parameters definitions for the second example
-hbar = 6.582119569e-25 # GeV s
-c = 299792458.0 # m s^-1
+
 
 ##############################
 ### COMMON ARGS
@@ -10,6 +9,7 @@ m4 = 0.080
 m5 = 0.140
 # m6 = 
 mzprime = 1.25
+# mhprime = 
 HNLtype = "majorana"
 # mu_tr_e4 = 
 # mu_tr_e5 = 
@@ -40,8 +40,6 @@ HNLtype = "majorana"
 # s_55 = 
 # s_56 = 
 # s_66 = 
-# mhprime = 
-# theta = 
 # decay_product = 
 # experiment = 
 # nopelastic = 
@@ -81,6 +79,7 @@ gD = 2.0
 # alphaD = 
 # epsilon2 = 
 chi = 0.0031
+# theta = 
 # alpha_epsilon2 = 
 # Ue4 = 
 # Ue5 = 

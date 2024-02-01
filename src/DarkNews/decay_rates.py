@@ -1,9 +1,12 @@
 import numpy as np
-from scipy.integrate import dblquad
 
-from DarkNews import logger
+import logging
+
+logger = logging.getLogger("logger." + __name__)
+
 from DarkNews import const
 from DarkNews.const import Pi, MZBOSON, MW, gweak, eQED
+
 
 def tau_GeV_to_s(decay_rate):
     try:
@@ -14,6 +17,7 @@ def tau_GeV_to_s(decay_rate):
 
 def L_GeV_to_cm(decay_rate):
     return tau_GeV_to_s(decay_rate) * const.c_LIGHT
+
 
 # #################################################
 # Special functions for phase space integrals
@@ -290,29 +294,29 @@ def gamma_Ni_to_Nj_gamma(vertex_ij, mi, mj, HNLtype = 'majorana'):
 # fmt: on
 
 
-# 
+#
 def diff_gamma_Ni_to_Nj_ell_ell(PS, process, diagrams=["total"]):
-    """ 
-        diff_gamma_Ni_to_Nj_ell_ell 
-        
+    """
+        diff_gamma_Ni_to_Nj_ell_ell
+
         d(gamma)/dPS_3 (Ni (k1) --> ell-(k2)  ell+(k3)  Nj(k4))
-        
+
         the differential decay rate in GeV for HNL decays to dileptons under all interactions assumptions.
         Phase space is parametrized as
-        
-            dPS_3 = (dm23^2 dm24^2 dOmega_4 dphi_34)/(32 m1^2 (2pi)^5) 
-        
+
+            dPS_3 = (dm23^2 dm24^2 dOmega_4 dphi_34)/(32 m1^2 (2pi)^5)
+
         where dm23 == t and dm24 == u. Note that phi_4 can be integrated over trivially.
-        
+
 
     Parameters
     ----------
     PS : list
         [t,u,v,c3,phi34] with mandelstam and angular phase space variables
-    
+
     process : DarkNews.processes.FermionDileptonDecay()
         the main decay rate class with all model and scope parameters.
-    
+
     diagrams : list, optional
         Diagrams to include when calculating the decay rate.
         If ["All"], returns a dictionary with all the rates for non-zero diagrams.
@@ -341,7 +345,7 @@ def diff_gamma_Ni_to_Nj_ell_ell(PS, process, diagrams=["total"]):
     Returns
     -------
     float, np.ndarray, dict
-        depending on the diagrams chosen and whether PS is a list of floats or np.ndarrays 
+        depending on the diagrams chosen and whether PS is a list of floats or np.ndarrays
         containing the differential decay rate in GeV.
 
     """
@@ -355,11 +359,11 @@ def diff_gamma_Ni_to_Nj_ell_ell(PS, process, diagrams=["total"]):
     m4 = process.m_daughter
 
     cphi34 = np.cos(phi34)
-    E3CM_decay = (m1 ** 2 + m3 ** 2 - u) / 2.0 / m1
-    E4CM_decay = (m1 ** 2 + m4 ** 2 - t) / 2.0 / m1
-    k3CM = const.kallen_sqrt(m1 ** 2, u, m3 ** 2) / 2.0 / m1
-    k4CM = const.kallen_sqrt(m1 ** 2, t, m4 ** 2) / 2.0 / m1
-    c34 = (t + u - m2 ** 2 - m1 ** 2 + 2 * E3CM_decay * E4CM_decay) / (2 * k3CM * k4CM)
+    E3CM_decay = (m1**2 + m3**2 - u) / 2.0 / m1
+    E4CM_decay = (m1**2 + m4**2 - t) / 2.0 / m1
+    k3CM = const.kallen_sqrt(m1**2, u, m3**2) / 2.0 / m1
+    k4CM = const.kallen_sqrt(m1**2, t, m4**2) / 2.0 / m1
+    c34 = (t + u - m2**2 - m1**2 + 2 * E3CM_decay * E4CM_decay) / (2 * k3CM * k4CM)
     #
     c4 = c3 * c34 - np.sqrt(1.0 - c3 * c3) * np.sqrt(1.0 - c34 * c34) * cphi34
 
@@ -390,9 +394,9 @@ def diff_gamma_Ni_to_Nj_ell_ell(PS, process, diagrams=["total"]):
     # k1k2 = (-v + m1**2 + m2**2)/2
     # k1k3 = -(u - m1**2 - m3**2)/2
     # k1k4 = (-t + m1**2 + m4**2)/2
-    k2k3 = (t - m2 ** 2 - m3 ** 2) / 2
-    k2k4 = (u - m4 ** 2 - m2 ** 2) / 2
-    k3k4 = (v - m4 ** 2 - m3 ** 2) / 2
+    k2k3 = (t - m2**2 - m3**2) / 2
+    k2k4 = (u - m4**2 - m2**2) / 2
+    k3k4 = (v - m4**2 - m3**2) / 2
 
     # fmt: off
     # Dirac
@@ -499,25 +503,25 @@ def diff_gamma_Ni_to_Nj_ell_ell(PS, process, diagrams=["total"]):
         Amp["KinMix_SQR"] = Amp_KinMix_SQR
         Amp["KinMix_NC_inter"] = Amp_KinMix_NC_inter
         Amp["CC_KinMix_inter"] = Amp_CC_KinMix_inter
-        
+
         if process.TheoryModel.has_scalar_coupling:
             Amp["KinMix_Scalar_inter"] = Amp_KinMix_Scalar_inter
-    
+
     if process.TheoryModel.has_scalar_coupling:
         Amp["Scalar_SQR"] = Amp_Scalar_SQR
         Amp["Scalar_NC_inter"] = Amp_Scalar_NC_inter
         Amp["CC_Scalar_inter"] = Amp_CC_Scalar_inter
         # Amp['Scalar_TMM_inter'] = Amp_Scalar_TMM_inter
-    
+
     if process.TheoryModel.has_TMM:
         Amp["TMM_SQR"] = Amp_TMM_SQR
         Amp["TMM_NC_inter"] = Amp_TMM_NC_inter
-        
+
         if process.TheoryModel.has_vector_coupling:
             Amp["TMM_KinMix_inter"] = Amp_TMM_KinMix_inter
 
     # phase space is trivially integrated over phi4, but not over c4 and phi34.
-    phase_space = 1 / (32 * m1 ** 2 * (2 * np.pi) ** 4)
+    phase_space = 1 / (32 * m1**2 * (2 * np.pi) ** 4)
     flux_factor = 1 / (2 * m1)
 
     # note that there is no spin average factor for polarized decay.

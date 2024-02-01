@@ -9,7 +9,7 @@ import shutil
 from pathlib import Path
 
 def dn_gen():
-    DEFAULTS = GenLauncher(loglevel="error")
+    DEFAULTS = GenLauncher(loglevel="ERROR")
 
     # --------------
     # use argument_default=argparse.SUPPRESS so no defaults attributes are instantiated in the final Namespace
