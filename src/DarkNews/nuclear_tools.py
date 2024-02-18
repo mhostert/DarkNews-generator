@@ -2,6 +2,7 @@ import numpy as np
 import numpy.ma as ma
 import importlib.resources as resources
 from itertools import islice
+from functools import partial
 
 from particle import literals as lp
 
@@ -10,6 +11,9 @@ from DarkNews import logger
 from DarkNews.const_dics import fourier_bessel_dic
 from DarkNews import const
 
+# to replace certain lambda functions
+def zero_func(x): 
+    return 0.0
 
 class NuclearTarget:
     def __init__(self, name):
@@ -162,33 +166,33 @@ def assign_form_factors(target):
     if target.is_nucleus:
         try:
             a = fourier_bessel_dic[target.name.lower()]  ## stored with lower case formatting
-            fcoh = lambda x: nuclear_F1_fourier_bessel_EM(x, a)
+            fcoh = partial(nuclear_F1_fourier_bessel_EM,array_coeff=a)
         except KeyError:
             logger.warning(f"Warning: nuclear density for {target.name} not tabulated in Nuclear Data Table. Using symmetrized Fermi form factor instead.")
-            fcoh = lambda x: nuclear_F1_Fsym_EM(x, target.A)
+            fcoh = partial(nuclear_F1_Fsym_EM, A=target.A)
         except:
             logger.warning(f"Warning: could not compute the nuclear form factor for {target.name}. Taking it to be vanishing.")
-            fcoh = lambda x: 0
+            fcoh = zero_func
 
         ### FIX ME -- No nuclear magnetic moments so far
         target.F1_EM = fcoh  # Dirac FF
-        target.F2_EM = lambda x: 0.0  # Pauli FF
+        target.F2_EM = zero_func  # Pauli FF
 
         ### FIX ME -- need to find the correct NC form factor
-        # target.F1_NC = lambda x: nuclear_F1_FHelmz_NC(x, target.A) # Dirac FF
+        # target.F1_NC = partial(nuclear_F1_FHelmz_NC, target.A) # Dirac FF
         target.F1_NC = fcoh  # Dirac FF
-        target.F2_NC = lambda x: 0.0  # Pauli FF
-        target.F3_NC = lambda x: 0.0  # Axial FF
+        target.F2_NC = zero_func  # Pauli FF
+        target.F3_NC = zero_func  # Axial FF
 
     # Nucleons
     elif target.is_nucleon:
 
-        target.F1_EM = lambda x: nucleon_F1_EM(x, target.tau3)  # Dirac FF
-        target.F2_EM = lambda x: nucleon_F2_EM(x, target.tau3)  # Pauli FF
+        target.F1_EM = partial(nucleon_F1_EM, tau3=target.tau3)  # Dirac FF
+        target.F2_EM = partial(nucleon_F2_EM, tau3=target.tau3)  # Pauli FF
 
-        target.F1_NC = lambda x: nucleon_F1_NC(x, target.tau3)  # Dirac FF
-        target.F2_NC = lambda x: nucleon_F2_NC(x, target.tau3)  # Pauli FF
-        target.F3_NC = lambda x: nucleon_F3_NC(x, target.tau3)  # Axial FF
+        target.F1_NC = partial(nucleon_F1_NC, tau3=target.tau3)  # Dirac FF
+        target.F2_NC = partial(nucleon_F2_NC, tau3=target.tau3)  # Pauli FF
+        target.F3_NC = partial(nucleon_F3_NC, tau3=target.tau3)  # Axial FF
 
     else:
         logger.error(f"Could not find hadronic target {target.name}.")
@@ -318,6 +322,9 @@ def nucleon_F3_NC(Q2, tau3):
 
 
 ## symmetrized fermi nuclear
+def f(Q,a,r0):
+    return 3.0 * np.pi * a / (r0 ** 2 + np.pi ** 2 * a ** 2) * (np.pi * a * (1.0 / np.tanh(np.pi * a * Q)) * np.sin(Q * r0) - r0 * np.cos(Q * r0)) / (Q * r0 * np.sinh(np.pi * Q * a))
+
 def nuclear_F1_Fsym_EM(Q2, A):
     Q = np.sqrt(Q2)
     a = 0.523 * const.fm_to_GeV  # GeV^-1
@@ -331,8 +338,8 @@ def nuclear_F1_Fsym_EM(Q2, A):
     #     fill_value=0.0,
     # )
     # return clean_FF.filled()
-    f = lambda Q: 3.0 * np.pi * a / (r0 ** 2 + np.pi ** 2 * a ** 2) * (np.pi * a * (1.0 / np.tanh(np.pi * a * Q)) * np.sin(Q * r0) - r0 * np.cos(Q * r0)) / (Q * r0 * np.sinh(np.pi * Q * a))
-    return np.piecewise(Q, [Q<5, Q>=5], [f, lambda Q: 0.0*Q])
+    return np.piecewise(Q, [Q<5, Q>=5], [partial(f,a=a,r0=r0), zero_func])
+
 
 
 def j1(z):
