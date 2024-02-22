@@ -35,11 +35,11 @@ class MC_events:
         decay_product:          visible decay products in the detector
         helicity:               helicity of the up-scattered neutrino
         enforce_prompt:         If True, forces all decays to be prompt, so that pos_scatt == pos_decay
-        sparse:                 Specify the level of sparseness of the internal dataframe and output. Not supported for HEPevt. 
-                                Allowed values are 0--3, where: 
-                                    `0`: keep all information; 
-                                    `1`: keep neutrino energy, visible and unstable particle momenta, scattering and decay positions, and all weights; 
-                                    `2`: keep neutrino energy, visible and unstable particle momenta, and all weights; 
+        sparse:                 Specify the level of sparseness of the internal dataframe and output. Not supported for HEPevt.
+                                Allowed values are 0--3, where:
+                                    `0`: keep all information;
+                                    `1`: keep neutrino energy, visible and unstable particle momenta, scattering and decay positions, and all weights;
+                                    `2`: keep neutrino energy, visible and unstable particle momenta, and all weights;
                                     `3`: visible particle momenta and all weights.
     """
 
@@ -54,10 +54,10 @@ class MC_events:
             "decay_product": ["e+e-"],
             "helicity": "conserving",
         }
-        
+
         self.enforce_prompt = enforce_prompt
         self.sparse = sparse
-        
+
         scope.update(kwargs)
         self.scope = scope
         self.experiment = experiment
@@ -123,7 +123,10 @@ class MC_events:
         elif self.decays_to_singlephoton:
             # scope for decay process
             self.decay_case = processes.FermionSinglePhotonDecay(
-                nu_parent=self.nu_upscattered, nu_daughter=self.nu_outgoing, h_parent=self.ups_case.h_upscattered, TheoryModel=bsm_model,
+                nu_parent=self.nu_upscattered,
+                nu_daughter=self.nu_outgoing,
+                h_parent=self.ups_case.h_upscattered,
+                TheoryModel=bsm_model,
             )
         else:
             logger.error("Error! Could not determine what type of decay class to use.")
@@ -141,8 +144,7 @@ class MC_events:
             raise ValueError
 
         # process being considered
-        self.underl_process_name = \
-            f"{self.nu_projectile.name} {self.ups_case.target.name} --> \
+        self.underl_process_name = f"{self.nu_projectile.name} {self.ups_case.target.name} --> \
 {self.nu_upscattered.name}  {self.ups_case.target.name} --> \
 {self.nu_outgoing.name} {DECAY_PRODUCTS} {self.ups_case.target.name}"
 
@@ -196,7 +198,14 @@ class MC_events:
         logger.debug(f"Running VEGAS for DIM={DIM}")
         batch_f = integrand_type(dim=DIM, Emin=self.EMIN, Emax=self.EMAX, MC_case=self)
         integ = vg.Integrator(DIM * [[0.0, 1.0]])  # unit hypercube
-        result = run_vegas(batch_f, integ, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup,)
+        result = run_vegas(
+            batch_f,
+            integ,
+            NINT=NINT,
+            NEVAL=NEVAL,
+            NINT_warmup=NINT_warmup,
+            NEVAL_warmup=NEVAL_warmup,
+        )
         logger.debug("Main VEGAS run completed.")
 
         logger.debug(f"Vegas results for the integrals: {result.summary()}")
@@ -218,9 +227,9 @@ class MC_events:
         # SAVE ALL EVENTS AS A PANDAS DATAFRAME
         particles = list(four_momenta.keys())
 
-        if self.sparse >= 2: # keep visible, and parent momenta -- Enu to be added later
+        if self.sparse >= 2:  # keep visible, and parent momenta -- Enu to be added later
             particles = [x for x in particles if "target" not in x and "recoils" not in x and "daughter" not in x]
-        if self.sparse == 4: # keep only visible momenta
+        if self.sparse == 4:  # keep only visible momenta
             particles = [x for x in particles if "w_decay" not in x]
 
         columns_index = pd.MultiIndex.from_product([particles, ["0", "1", "2", "3"]])
@@ -264,20 +273,22 @@ class MC_events:
         exposure = self.experiment.NUMBER_OF_TARGETS[self.nuclear_target.name] * self.experiment.POTS
 
         # > differential rate weights
-        df_gen["w_event_rate"] = (
-            weights["diff_event_rate"] / decay_rates * target_multiplicity * exposure * batch_f.norm["diff_event_rate"]
-        )
-        
+        df_gen["w_event_rate"] = weights["diff_event_rate"] / decay_rates * target_multiplicity * exposure * batch_f.norm["diff_event_rate"]
+
         if self.sparse <= 1:
             # > target pdgid
             df_gen.insert(
-                loc=len(df_gen.columns), column="target_pdgid", value=self.ups_case.target.pdgid,
+                loc=len(df_gen.columns),
+                column="target_pdgid",
+                value=self.ups_case.target.pdgid,
             )
             df_gen["target_pdgid"] = df_gen["target_pdgid"].astype("int")
             # > projectile pdgid
 
         df_gen.insert(
-            loc=len(df_gen.columns), column="projectile_pdgid", value=self.ups_case.nu_projectile.pdgid,
+            loc=len(df_gen.columns),
+            column="projectile_pdgid",
+            value=self.ups_case.nu_projectile.pdgid,
         )
         df_gen["projectile_pdgid"] = df_gen["projectile_pdgid"].astype("int")
 
@@ -285,41 +296,52 @@ class MC_events:
             # > flux averaged xsec weights (neglecting kinematics of decay)
             df_gen["w_flux_avg_xsec"] = weights["diff_flux_avg_xsec"] * target_multiplicity * exposure * batch_f.norm["diff_flux_avg_xsec"]
 
-
-        # Event-by-event descriptors 
+        # Event-by-event descriptors
         if self.sparse == 0:
             # > target name
             df_gen.insert(
-                loc=len(df_gen.columns), column="target", value=np.full(tot_nevents, self.ups_case.target.name),
+                loc=len(df_gen.columns),
+                column="target",
+                value=np.full(tot_nevents, self.ups_case.target.name),
             )
             df_gen["target"] = df_gen["target"].astype("string")
-            
+
             # > scattering regime
             df_gen.insert(
-                loc=len(df_gen.columns), column="scattering_regime", value=np.full(tot_nevents, self.ups_case.scattering_regime),
+                loc=len(df_gen.columns),
+                column="scattering_regime",
+                value=np.full(tot_nevents, self.ups_case.scattering_regime),
             )
             df_gen["scattering_regime"] = df_gen["scattering_regime"].astype("string")
-            
+
             # > heliciy
             df_gen.insert(
-                loc=len(df_gen.columns), column="helicity", value=np.full(tot_nevents, self.helicity),
+                loc=len(df_gen.columns),
+                column="helicity",
+                value=np.full(tot_nevents, self.helicity),
             )
             df_gen["helicity"] = df_gen["helicity"].astype("string")
-            
+
             # > underlying process string
             df_gen.insert(
-                loc=len(df_gen.columns), column="underlying_process", value=np.full(tot_nevents, self.underl_process_name),
+                loc=len(df_gen.columns),
+                column="underlying_process",
+                value=np.full(tot_nevents, self.underl_process_name),
             )
             df_gen["underlying_process"] = df_gen["underlying_process"].astype("string")
 
             # > Helicity of incoming neutrino
             if self.nu_projectile.pdgid < 0:
                 df_gen.insert(
-                    loc=len(df_gen.columns), column="h_projectile", value=np.full(tot_nevents, +1),
+                    loc=len(df_gen.columns),
+                    column="h_projectile",
+                    value=np.full(tot_nevents, +1),
                 )
             elif self.nu_projectile.pdgid > 0:
                 df_gen.insert(
-                    loc=len(df_gen.columns), column="h_projectile", value=np.full(tot_nevents, -1),
+                    loc=len(df_gen.columns),
+                    column="h_projectile",
+                    value=np.full(tot_nevents, -1),
                 )
 
             # > Helicity of outgoing HNL
@@ -327,7 +349,7 @@ class MC_events:
                 df_gen["h_parent", ""] = df_gen["h_projectile"]
             elif self.helicity == "flipping":
                 df_gen["h_parent", ""] = -df_gen["h_projectile"]
-        
+
         # #########################################################################
         # Metadata
 
@@ -338,12 +360,11 @@ class MC_events:
         df_gen.attrs["model"] = self.bsm_model
 
         # > saving the lifetime of the parent (upscattered) HNL
-        df_gen.attrs[f"{self.nu_upscattered.name}_ctau0"] = const.get_decay_rate_in_cm((weights['diff_decay_rate_0'] * batch_f.norm['diff_decay_rate_0']).sum())
-
+        df_gen.attrs[f"{self.nu_upscattered.name}_ctau0"] = const.get_decay_rate_in_cm((weights["diff_decay_rate_0"] * batch_f.norm["diff_decay_rate_0"]).sum())
 
         # #########################################################################
         # PROPAGATE PARENT PARTICLE
-        if self.sparse <=2:
+        if self.sparse <= 2:
             self.experiment.set_geometry()
             self.experiment.place_scatters(df_gen)
 
@@ -353,7 +374,10 @@ class MC_events:
                 # decay only the first mother (typically the HNL produced)
                 logger.info(f"Parent {self.ups_case.nu_upscattered.name} proper decay length: {df_gen.attrs[f'{self.nu_upscattered.name}_ctau0']:.3E} cm.\n")
                 geom.place_decay(
-                    df_gen, "P_decay_N_parent", l_decay_proper_cm=df_gen.attrs[f"{self.nu_upscattered.name}_ctau0"], label="pos_decay",
+                    df_gen,
+                    "P_decay_N_parent",
+                    l_decay_proper_cm=df_gen.attrs[f"{self.nu_upscattered.name}_ctau0"],
+                    label="pos_decay",
                 )
 
         # print final result
@@ -368,9 +392,9 @@ def get_merged_MC_output(df1, df2):
     take two pandas dataframes with events and combine them.
     Resetting index to go from (0,n_1+n_2) where n_i is the number of events in dfi
     """
-    if df1.attrs['model'] != df2.attrs['model']:
+    if df1.attrs["model"] != df2.attrs["model"]:
         logger.warning("Beware! Merging generation cases with different df.attrs['models']! Discarting the second (newest) case.")
-    if df1.attrs['experiment'] != df2.attrs['experiment']:
+    if df1.attrs["experiment"] != df2.attrs["experiment"]:
         logger.warning("Beware! Merging generation cases with different df.attrs['experiment']! Discarting the second (newest) case.")
 
     df = pd.concat([df1, df2], axis=0).reset_index(drop=True)

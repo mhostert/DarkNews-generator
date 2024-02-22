@@ -2,8 +2,6 @@ import logging
 import logging.handlers
 import sys
 import numpy as np
-import os
-from pathlib import Path
 from particle import literals as lp
 
 # Dark Neutrino and MC stuff
@@ -176,6 +174,7 @@ GENERIC_MODEL_ARGS = [
     "dneutronP",
 ]
 
+
 class ModelContainer:
 
     banner = r"""   ______           _        _   _                     
@@ -190,7 +189,7 @@ class ModelContainer:
         "HNLtype": ["dirac", "majorana"],
         "decay_product": ["e+e-", "mu+mu-", "photon"],
         "nu_flavors": ["nu_e", "nu_mu", "nu_tau", "nu_e_bar", "nu_mu_bar", "nu_tau_bar"],
-        "sparse": [0,1,2,3,4],
+        "sparse": [0, 1, 2, 3, 4],
     }
 
     def __init__(self, param_file=None, **kwargs):
@@ -248,7 +247,7 @@ class ModelContainer:
         self.sample_geometry = False
         self.make_summary_plots = False
         self.enforce_prompt = False
-        
+
         # Generator parameters
         self.loglevel = "INFO"
         self.verbose = False
@@ -276,7 +275,11 @@ class ModelContainer:
         # Set up loggers
         self.prettyprinter = prettyprinter
         self.configure_logger(
-            logger=logger, loglevel=self.loglevel, prettyprinter=self.prettyprinter, verbose=self.verbose, logfile=self.logfile,
+            logger=logger,
+            loglevel=self.loglevel,
+            prettyprinter=self.prettyprinter,
+            verbose=self.verbose,
+            logfile=self.logfile,
         )
         prettyprinter.info(self.banner)
 
@@ -284,7 +287,7 @@ class ModelContainer:
         # Choose the model to be used in this generation
         self.bsm_model = self._model_class(**self.model_args_dict)
 
-       ####################################################
+        ####################################################
         # MC evaluations and iterations
         dn.MC.NEVAL_warmup = self.neval_warmup
         dn.MC.NINT_warmup = self.nint_warmup
@@ -293,17 +296,17 @@ class ModelContainer:
 
         # get the initial projectiles
         self.projectiles = [getattr(lp, nu) for nu in self.nu_flavors]
-        
+
         # decide which helicities to use
         self.helicities = []
         if not self.noHC:
-            self.helicities.append('conserving')
+            self.helicities.append("conserving")
         if not self.noHF:
-            self.helicities.append('flipping')
+            self.helicities.append("flipping")
 
         ####################################################
         ## Determine scope of upscattering given the heavy nu spectrum
-        _mass_strings = [f'{m}_{getattr(self.bsm_model, m)}_' for m in ['m6', 'm5', 'm4'] if getattr(self.bsm_model, m) is not None]
+        _mass_strings = [f"{m}_{getattr(self.bsm_model, m)}_" for m in ["m6", "m5", "m4"] if getattr(self.bsm_model, m) is not None]
         # 3+1
         if len(_mass_strings) == 1:
             self.upscattered_nus = [dn.pdg.neutrino4]
@@ -315,7 +318,10 @@ class ModelContainer:
             self.outgoing_nus = [dn.pdg.neutrino4]
         # 3+3
         elif len(_mass_strings) == 3:
-            self.upscattered_nus = [dn.pdg.neutrino4, dn.pdg.neutrino5, dn.pdg.neutrino6,
+            self.upscattered_nus = [
+                dn.pdg.neutrino4,
+                dn.pdg.neutrino5,
+                dn.pdg.neutrino6,
             ]
             self.outgoing_nus = [dn.pdg.nulight, dn.pdg.neutrino4, dn.pdg.neutrino5]
         else:
@@ -325,7 +331,7 @@ class ModelContainer:
         ####################################################
         # Create all model cases
         self._create_all_model_cases()
-        
+
         # end __init__
 
     def _load_file(self, file):
@@ -346,10 +352,13 @@ class ModelContainer:
                 value = kwargs.pop(parameter)
             except KeyError:
                 continue
-            
+
             # check the value within the choices
             # if parameter in self._choices.keys() and value not in self._choices[parameter]:
-            if parameter in self._choices.keys() and [*parameter, *self._choices[parameter],] == set([*parameter, *self._choices[parameter]]):
+            if parameter in self._choices.keys() and [
+                *parameter,
+                *self._choices[parameter],
+            ] == set([*parameter, *self._choices[parameter]]):
                 raise ValueError(
                     f"Parameter '{parameter}', invalid choice: {value}, (choose among " + ", ".join([f"{el}" for el in self._choices[parameter]]) + ")"
                 )
@@ -367,7 +376,6 @@ class ModelContainer:
                 raise AttributeError("Parameters " + ", ".join(kwargs.keys()) + " were unused. Either not supported or misspelled.")
             else:
                 logger.warning("Parameters " + ", ".join(kwargs.keys()) + " will not be used.")
-
 
     def _create_all_model_cases(self, **kwargs):
         """Create ups_case and decay_case objects
@@ -434,22 +442,22 @@ class ModelContainer:
                         for nuclear_target in scope["NUCLEAR_TARGETS"]:
                             # scattering regime to use
                             for scattering_regime in scope["SCATTERING_REGIMES"]:
-                                
+
                                 # skip disallowed regimes
                                 if ((scattering_regime in ["n-el"]) and (nuclear_target.N < 1)) or (  # no neutrons
                                     (scattering_regime in ["coherent"]) and (not nuclear_target.is_nucleus)
                                 ):  # coherent = p-el for hydrogen
                                     continue
                                 elif (
-                                    (scattering_regime in ["coherent"] and scope["NO_COH"])\
-                                    or (scattering_regime in ["p-el"] and scope["NO_PELASTIC"])\
-                                    or (scattering_regime in ["n-el"])\
+                                    (scattering_regime in ["coherent"] and scope["NO_COH"])
+                                    or (scattering_regime in ["p-el"] and scope["NO_PELASTIC"])
+                                    or (scattering_regime in ["n-el"])
                                     and (not scope["INCLUDE_NELASTIC"])  # do not include n-el
                                 ):
                                     continue
                                 else:
-                                    for helicity in scope['HELICITIES']:
-                                        
+                                    for helicity in scope["HELICITIES"]:
+
                                         # Upscattering process
                                         ups_args = {
                                             "nuclear_target": nuclear_target,
@@ -514,12 +522,16 @@ class ModelContainer:
                                             raise ValueError
                                         if dec_key not in self.dec_cases.keys():
                                             self.dec_cases[dec_key] = decay_case
-                                    
-        return self.ups_cases,self.dec_cases
-    
+
+        return self.ups_cases, self.dec_cases
 
     def configure_logger(
-        self, logger, loglevel=logging.INFO, prettyprinter=None, logfile=None, verbose=False,
+        self,
+        logger,
+        loglevel=logging.INFO,
+        prettyprinter=None,
+        logfile=None,
+        verbose=False,
     ):
         """
         Configure the DarkNews logger
@@ -572,7 +584,12 @@ class ModelContainer:
 
         handler.setLevel(loglevel)
         if verbose:
-            handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(name)s:\n\t%(message)s\n", datefmt="%H:%M:%S",))
+            handler.setFormatter(
+                logging.Formatter(
+                    "%(asctime)s - %(levelname)s - %(name)s:\n\t%(message)s\n",
+                    datefmt="%H:%M:%S",
+                )
+            )
         else:
             handler.setFormatter(logging.Formatter("%(message)s"))
 
