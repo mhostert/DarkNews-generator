@@ -1,4 +1,4 @@
-__version__ = "0.3.0"
+__version__ = "0.4.2"
 
 import sys
 
@@ -6,19 +6,76 @@ import sys
     Initializing loggers
 """
 import logging
+import logging.handlers
 
-# for debug and error handling
-logger = logging.getLogger(__name__ + ".logger")
 
-# for pretty printing
-prettyprinter = logging.getLogger(__name__ + ".pretty_printer")
-prettyprinter.setLevel(logging.INFO)
-handler = logging.StreamHandler(stream=sys.stdout)
-handler.setLevel(logging.INFO)
-if not prettyprinter.hasHandlers():
-    prettyprinter.addHandler(handler)
-logger.propagate = False
-prettyprinter.propagate = False
+def configure_loggers(loglevel="WARNING", logfile=None, verbose=False):
+    """
+    Configure the DarkNews loggers:
+
+    1) logger (logging.Logger): main DarkNews logger to be configured. It handles all debug, info, warning, and error messages
+
+    2) prettyprinter (logging.Logger): for pretty printing INFO messages. It is used to print the progress of the generation.
+
+    Args:
+
+        loglevel (str, optional): what logging level to use.
+                                Can be logging.(DEBUG, INFO, WARNING, or ERROR). Defaults to logging.INFO.
+
+        logfile (str, optional): path to file where to log the output. Defaults to None.
+
+        verbose (bool, optional): If true, keep date and time in the logger format. Defaults to False.
+
+    Raises:
+        ValueError: _description_
+    """
+
+    # Access or create the loggers
+    logger = logging.getLogger("logger." + __name__)
+    prettyprinter = logging.getLogger("prettyprinter." + __name__)
+
+    loglevel = loglevel.upper()
+    _numeric_level = getattr(logging, loglevel, None)
+    if not isinstance(_numeric_level, int):
+        raise ValueError("Invalid log level: %s" % loglevel)
+
+    logger.setLevel(_numeric_level)
+    prettyprinter.setLevel(_numeric_level)
+
+    # Create handlers
+    if logfile is not None:
+        # log to files with max 1 MB with up to 4 files of backup
+        handler = logging.handlers.RotatingFileHandler(f"{logfile}", maxBytes=1000000, backupCount=4)
+    else:
+        # stdout only
+        handler = logging.StreamHandler(stream=sys.stdout)
+
+        delimiter = "---------------------------------------------------------"
+        pretty_formatter = logging.Formatter(delimiter + "\n%(message)s\n")
+
+        pretty_handler = logging.StreamHandler(stream=sys.stdout)
+        pretty_handler.setFormatter(pretty_formatter)
+        pretty_handler.setLevel(_numeric_level)
+
+        # update pretty printer
+        if prettyprinter.hasHandlers():
+            prettyprinter.handlers.clear()
+        prettyprinter.addHandler(pretty_handler)
+
+    if verbose:
+        main_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(name)s:\n\t%(message)s\n", datefmt="%H:%M:%S")
+    else:
+        main_formatter = logging.Formatter("%(message)s")
+
+    handler.setFormatter(main_formatter)
+    handler.setLevel(_numeric_level)
+    if logger.hasHandlers():
+        logger.handlers.clear()
+    logger.addHandler(handler)
+
+
+configure_loggers()
+
 
 """
     Making it easier to import modules
@@ -51,6 +108,7 @@ from DarkNews import plot_tools
 try:
     import pyarrow.parquet as pq
     import pyarrow as pa
+
     HAS_PYARROW = True
 except ImportError:
     HAS_PYARROW = False

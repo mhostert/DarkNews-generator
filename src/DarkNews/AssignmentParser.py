@@ -196,6 +196,8 @@ class AssignmentParser:
             return math.pi  # 3.1415926535
         elif op == "E":
             return math.e  # 2.718281828
+        elif op.lower() == "none":
+            return None
         elif op.lower() == "true":
             return True
         elif op.lower() == "false":

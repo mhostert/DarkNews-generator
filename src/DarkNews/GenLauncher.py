@@ -1,14 +1,16 @@
-import logging
-import logging.handlers
-import sys
-import numpy as np
 import os
+import numpy as np
 from pathlib import Path
 from particle import literals as lp
 
-# Dark Neutrino and MC stuff
+import logging
+
+logger = logging.getLogger("logger.DarkNews")
+prettyprinter = logging.getLogger("prettyprinter.DarkNews")
+
 import DarkNews as dn
-from DarkNews import logger, prettyprinter
+from DarkNews import configure_loggers
+
 from DarkNews.AssignmentParser import AssignmentParser
 
 GENERATOR_ARGS = [
@@ -176,7 +178,6 @@ GENERIC_MODEL_ARGS = [
 
 
 class GenLauncher:
-
     banner = r"""   ______           _        _   _                     
    |  _  \         | |      | \ | |                    
    | | | |__ _ _ __| | __   |  \| | _____      _____   
@@ -189,7 +190,7 @@ class GenLauncher:
         "HNLtype": ["dirac", "majorana"],
         "decay_product": ["e+e-", "mu+mu-", "photon"],
         "nu_flavors": ["nu_e", "nu_mu", "nu_tau", "nu_e_bar", "nu_mu_bar", "nu_tau_bar"],
-        "sparse": [0,1,2,3,4],
+        "sparse": [0, 1, 2, 3, 4],
     }
 
     def __init__(self, param_file=None, **kwargs):
@@ -213,9 +214,173 @@ class GenLauncher:
             ValueError: when model, experiment, or generation parameters are not well defined.
         """
 
+        # Scope parameters
+        self.name = None
+        self.nu_flavors = ["nu_mu"]
+        self.decay_product = "e+e-"
+        self.experiment = "miniboone_fhc"
+        self.nopelastic = False
+        self.include_nelastic = False
+        self.nocoh = False
+        self.noHC = False
+        self.noHF = False
+        self.sample_geometry = False
+        self.make_summary_plots = False
+        self.enforce_prompt = False
+
+        # Generator parameters
+        self.loglevel = kwargs.get("loglevel", "INFO")
+        self.verbose = kwargs.get("verbose", False)
+        self.logfile = kwargs.get("logfile", None)
+        self.neval = int(1e4)
+        self.nint = 20
+        self.neval_warmup = int(1e3)
+        self.nint_warmup = 10
+        self.seed = None
+
+        # Output parameters
+        self.pandas = True
+        self.parquet = False
+        self.numpy = False
+        self.hepevt = False
+        self.hepevt_legacy = False
+        self.hepmc2 = False
+        self.hepmc3 = False
+        self.hep_unweight = False
+        self.unweighted_hep_events = 100
+        self.sparse = 0
+        self.print_to_float32 = False
+        self.path = "."
+
+        ####################################################
+        # Set up loggers --- log parameters set above ahead of all others
+        configure_loggers(
+            loglevel=self.loglevel,
+            verbose=self.verbose,
+            logfile=self.logfile,
+        )
+        prettyprinter.info(self.banner)
+
+        ####################################################
+        # Loading parameters
+
+        # the argument dictionaries (will contain valid arguments extracted from **kwargs)
+
+        # load file if not None
+        if param_file is not None:
+            self._load_file(param_file, kwargs)
+
+        self.model_args_dict = {}
+        self._determine_model(kwargs)
+
+        # load constructor parameters
+        self._load_parameters(raise_errors=True, **kwargs)
+
+        if self.parquet and not dn.HAS_PYARROW:
+            logger.error("Error: pyarrow is not installed.")
+            raise ModuleNotFoundError("pyarrow is not installed.")
+
+        ####################################################
+        # Choose the model to be used in this generation
+        self.bsm_model = self._model_class(**self.model_args_dict)
+
+        ####################################################
+        # Choose experiment and scope of simulation
+        self.experiment = dn.detector.Detector(self.experiment)
+
+        ####################################################
+        # MC evaluations and iterations
+        dn.MC.NEVAL_warmup = self.neval_warmup
+        dn.MC.NINT_warmup = self.nint_warmup
+        dn.MC.NEVAL = self.neval
+        dn.MC.NINT = self.nint
+
+        # random number generator to be used by vegas
+        if self.seed is not None:
+            np.random.seed(self.seed)
+            self.rng = np.random.default_rng(self.seed).random
+        else:
+            self.rng = np.random.random  # defaults to vegas' default
+
+        # get the initial projectiles
+        self.projectiles = [getattr(lp, nu) for nu in self.nu_flavors]
+
+        # decide which helicities to use
+        self.helicities = []
+        if not self.noHC:
+            self.helicities.append("conserving")
+        if not self.noHF:
+            self.helicities.append("flipping")
+
+        ####################################################
+        # Default data path based on model and experimental definitioons
+
+        # set the path of the experiment name (needed in the case of custom experiment path)
+        # it uses the name of the detector object
+        _exp_path_part = os.path.basename(str(self.experiment)).rsplit(".", maxsplit=1)[0]
+
+        _boson_string = ""
+        # append vector mediator mass
+        if self.bsm_model.mzprime is not None:
+            _boson_string += f"mzprime_{self.bsm_model.mzprime:.4g}_"
+        # append scalar mediator mass
+        if self.bsm_model.mhprime is not None:
+            _boson_string += f"mhprime_{self.bsm_model.mhprime:.4g}_"
+        # append all transition magnetic moments
+        _TMMs = [f"{x}_{getattr(self.bsm_model, x):.4g}_" for x in self.bsm_model.__dict__.keys() if ("mu_tr_" in x and getattr(self.bsm_model, x) != 0)]
+        if len(_TMMs) > 0:
+            _boson_string += "".join(_TMMs)
+
+        # HNL masses
+        _mass_strings = [f"{m}_{getattr(self.bsm_model, m)}_" for m in ["m6", "m5", "m4"] if getattr(self.bsm_model, m) is not None]
+        _top_path = f"{''.join(_mass_strings)}{_boson_string}{self.bsm_model.HNLtype}"
+
+        # if path name is too long, replace by current asci time
+        if len(_top_path) > 200:
+            import time
+
+            _top_path = time.asctime().replace(" ", "_")
+
+        ## final path
+        self.data_path = Path(f"{self.path}/data/{_exp_path_part}/3plus{len(_mass_strings)}/{_top_path}/")
+
+        ####################################################
+        ## Determine scope of upscattering given the heavy nu spectrum
+        # 3+1
+        if len(_mass_strings) == 1:
+            self.upscattered_nus = [dn.pdg.neutrino4]
+            self.outgoing_nus = [dn.pdg.nulight]
+        # 3+2
+        elif len(_mass_strings) == 2:
+            ## FIXING 3+2 process chain to be nualpha --> N5 --> N4
+            self.upscattered_nus = [dn.pdg.neutrino5]
+            self.outgoing_nus = [dn.pdg.neutrino4]
+        # 3+3
+        elif len(_mass_strings) == 3:
+            self.upscattered_nus = [dn.pdg.neutrino4, dn.pdg.neutrino5, dn.pdg.neutrino6]
+            self.outgoing_nus = [dn.pdg.nulight, dn.pdg.neutrino4, dn.pdg.neutrino5]
+        else:
+            logger.error("Error! Mass spectrum not allowed (m4,m5,m6) = ({self.bsm_model.m4:.4g},{self.bsm_model.m5:.4g},{self.bsm_model.m6:.4g}) GeV.")
+            raise ValueError("Could not find a heavy neutrino spectrum from user input.")
+
+        ####################################################
+        # Miscellaneous checks
+        if self.hep_unweight:
+            logger.warning(
+                f"Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hep-formatted events. Currently: n_unweighted/n_eval = {self.unweighted_hep_events/self.neval*100}%."
+            )
+
+        ####################################################
+        # Create all MC cases
+        self._create_all_MC_cases()
+
+        # end __init__
+
+    def _determine_model(self, kwargs):
         # Choose what model to initialize
         captured_3portal_args = set(THREE_PORTAL_ARGS).intersection(kwargs.keys())
         captured_generic_args = set(GENERIC_MODEL_ARGS).intersection(kwargs.keys())
+
         if len(captured_3portal_args) >= 0 and len(captured_generic_args) == 0:
             logger.info("Initializing the three-portal model.")
             self._model_parameters = COMMON_MODEL_ARGS + THREE_PORTAL_ARGS
@@ -234,168 +399,28 @@ class GenLauncher:
 
         self._parameters = GENERATOR_ARGS + self._model_parameters
 
-        # Scope parameters
-        self.name = None
-        self.nu_flavors = ["nu_mu"]
-        self.decay_product = "e+e-"
-        self.experiment = "miniboone_fhc"
-        self.nopelastic = False
-        self.include_nelastic = False
-        self.nocoh = False
-        self.noHC = False
-        self.noHF = False
-        self.sample_geometry = False
-        self.make_summary_plots = False
-        self.enforce_prompt = False
-        
-        # Generator parameters
-        self.loglevel = "INFO"
-        self.verbose = False
-        self.logfile = None
-        self.neval = int(1e4)
-        self.nint = 20
-        self.neval_warmup = int(1e3)
-        self.nint_warmup = 10
-        self.seed = None
-        
-        # Output parameters
-        self.pandas = True
-        self.parquet = False
-        self.numpy = False
-        self.hepevt = False
-        self.hepevt_legacy = False
-        self.hepmc2 = False
-        self.hepmc3 = False
-        self.hep_unweight = False
-        self.unweighted_hep_events = 100
-        self.sparse = 0
-        self.print_to_float32 = False
-        self.path = "."
-
-        ####################################################
-        # Loading parameters
-
-        # the argument dictionaries (will contain valid arguments extracted from **kwargs)
-        self.model_args_dict = {}
-
-        # load file if not None
-        if param_file is not None:
-            self._load_file(param_file)
-
-        # load constructor parameters
-        self._load_parameters(raise_errors=True, **kwargs)
-
-        if self.parquet and not dn.HAS_PYARROW:
-            logger.error("Error: pyarrow is not installed.")
-            raise ModuleNotFoundError("pyarrow is not installed.")
-
-        ####################################################
-        # Set up loggers
-        self.prettyprinter = prettyprinter
-        self.configure_logger(
-            logger=logger, loglevel=self.loglevel, prettyprinter=self.prettyprinter, verbose=self.verbose, logfile=self.logfile,
-        )
-        prettyprinter.info(self.banner)
-
-        ####################################################
-        # Choose the model to be used in this generation
-        self.bsm_model = self._model_class(**self.model_args_dict)
-
-        ####################################################
-        # Choose experiment and scope of simulation
-        self.experiment = dn.detector.Detector(self.experiment)
-
-        ####################################################
-        # MC evaluations and iterations
-        dn.MC.NEVAL_warmup = self.neval_warmup
-        dn.MC.NINT_warmup = self.nint_warmup
-        dn.MC.NEVAL = self.neval
-        dn.MC.NINT = self.nint
-
-        # get the initial projectiles
-        self.projectiles = [getattr(lp, nu) for nu in self.nu_flavors]
-        
-        # decide which helicities to use
-        self.helicities = []
-        if not self.noHC:
-            self.helicities.append('conserving')
-        if not self.noHF:
-            self.helicities.append('flipping')
-
-        ####################################################
-        # Default data path based on model and experimental definitioons
-
-        # set the path of the experiment name (needed in the case of custom experiment path)
-        # it uses the name of the detector object
-        _exp_path_part = os.path.basename(str(self.experiment)).rsplit(".", maxsplit=1)[0]
-        
-        _boson_string = ""
-        # append vector mediator mass
-        if self.bsm_model.mzprime is not None:
-            _boson_string += f"mzprime_{self.bsm_model.mzprime:.4g}_"
-        # append scalar mediator mass
-        if self.bsm_model.mhprime is not None:
-            _boson_string += f"mhprime_{self.bsm_model.mhprime:.4g}_"
-        # append all transition magnetic moments
-        _TMMs = [ f'{x}_{getattr(self.bsm_model, x):.4g}_' for x in self.bsm_model.__dict__.keys() if ('mu_tr_' in x and getattr(self.bsm_model, x) != 0)]
-        if len(_TMMs) > 0:
-            _boson_string += ''.join(_TMMs)
-            
-        # HNL masses
-        _mass_strings = [f'{m}_{getattr(self.bsm_model, m)}_' for m in ['m6', 'm5', 'm4'] if getattr(self.bsm_model, m) is not None]
-        _top_path = f"{''.join(_mass_strings)}{_boson_string}{self.bsm_model.HNLtype}"
-        
-        # if path name is too long, replace by current asci time
-        if len(_top_path) > 200:
-            import time
-            _top_path = time.asctime().replace(" ","_")
-        
-        ## final path
-        self.data_path = Path(f"{self.path}/data/{_exp_path_part}/3plus{len(_mass_strings)}/{_top_path}/")
-        
-        ####################################################
-        ## Determine scope of upscattering given the heavy nu spectrum
-        # 3+1
-        if len(_mass_strings) == 1:
-            self.upscattered_nus = [dn.pdg.neutrino4]
-            self.outgoing_nus = [dn.pdg.nulight]
-        # 3+2
-        elif len(_mass_strings) == 2:
-            ## FIXING 3+2 process chain to be nualpha --> N5 --> N4
-            self.upscattered_nus = [dn.pdg.neutrino5]
-            self.outgoing_nus = [dn.pdg.neutrino4]
-        # 3+3
-        elif len(_mass_strings) == 3:
-            self.upscattered_nus = [dn.pdg.neutrino4, dn.pdg.neutrino5, dn.pdg.neutrino6,
-            ]
-            self.outgoing_nus = [dn.pdg.nulight, dn.pdg.neutrino4, dn.pdg.neutrino5]
-        else:
-            logger.error("Error! Mass spectrum not allowed (m4,m5,m6) = ({self.bsm_model.m4:.4g},{self.bsm_model.m5:.4g},{self.bsm_model.m6:.4g}) GeV.")
-            raise ValueError("Could not find a heavy neutrino spectrum from user input.")
-
-        ####################################################
-        # Miscellaneous checks 
-        if self.hep_unweight:
-            logger.warning(
-                f"Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hep-formatted events. Currently: n_unweighted/n_eval = {self.unweighted_hep_events/self.neval*100}%."
-            )
-        
-
-        ####################################################
-        # Create all MC cases
-        self._create_all_MC_cases()
-        
-        # end __init__
-
-    def _load_file(self, file):
+    def _load_file(self, file, user_input_dict={}):
+        logger.info(f"Reading input file: {file}")
         parser = AssignmentParser({})
         try:
             parser.parse_file(file=file, comments="#")
         except FileNotFoundError:
             logger.error(f"Error! File '{file}' not found.")
             raise
-        # store variables
-        self._load_parameters(raise_errors=False, **parser.parameters)
+
+        # Used to load parameters directly, but this bypasses determination of model type
+        # self._load_parameters(raise_errors=False, **parser.parameters)
+
+        # Update user
+        for key in parser.parameters:
+            if key in user_input_dict:
+                logger.warning(
+                    f"Warning! The keyword argument '{key} = {user_input_dict[key]}' was passed to GenLauncher but also appears in input file ('{key} = {parser.parameters[key]}'). Overridding file with keyword argument."
+                )
+                continue
+            user_input_dict[key] = parser.parameters[key]
+
+        return user_input_dict
 
     def _load_parameters(self, raise_errors=True, **kwargs):
         # start from the list of parameters available
@@ -405,10 +430,13 @@ class GenLauncher:
                 value = kwargs.pop(parameter)
             except KeyError:
                 continue
-            
+
             # check the value within the choices
             # if parameter in self._choices.keys() and value not in self._choices[parameter]:
-            if parameter in self._choices.keys() and [*parameter, *self._choices[parameter],] == set([*parameter, *self._choices[parameter]]):
+            if parameter in self._choices.keys() and [
+                *parameter,
+                *self._choices[parameter],
+            ] == set([*parameter, *self._choices[parameter]]):
                 raise ValueError(
                     f"Parameter '{parameter}', invalid choice: {value}, (choose among " + ", ".join([f"{el}" for el in self._choices[parameter]]) + ")"
                 )
@@ -426,7 +454,6 @@ class GenLauncher:
                 raise AttributeError("Parameters " + ", ".join(kwargs.keys()) + " were unused. Either not supported or misspelled.")
             else:
                 logger.warning("Parameters " + ", ".join(kwargs.keys()) + " will not be used.")
-
 
     def _create_all_MC_cases(self, **kwargs):
         """Create MC_events objects and run the MC computations
@@ -491,21 +518,20 @@ class GenLauncher:
                         for nuclear_target in self.experiment.NUCLEAR_TARGETS:
                             # scattering regime to use
                             for scattering_regime in scope["SCATTERING_REGIMES"]:
-                                
                                 # skip disallowed regimes
                                 if ((scattering_regime in ["n-el"]) and (nuclear_target.N < 1)) or (  # no neutrons
                                     (scattering_regime in ["coherent"]) and (not nuclear_target.is_nucleus)
                                 ):  # coherent = p-el for hydrogen
                                     continue
                                 elif (
-                                    (scattering_regime in ["coherent"] and scope["NO_COH"])\
-                                    or (scattering_regime in ["p-el"] and scope["NO_PELASTIC"])\
-                                    or (scattering_regime in ["n-el"])\
+                                    (scattering_regime in ["coherent"] and scope["NO_COH"])
+                                    or (scattering_regime in ["p-el"] and scope["NO_PELASTIC"])
+                                    or (scattering_regime in ["n-el"])
                                     and (not scope["INCLUDE_NELASTIC"])  # do not include n-el
                                 ):
                                     continue
                                 else:
-                                    for helicity in scope['HELICITIES']:
+                                    for helicity in scope["HELICITIES"]:
                                         # bundle arguments of MC_events here
                                         args = {
                                             "nuclear_target": nuclear_target,
@@ -516,9 +542,16 @@ class GenLauncher:
                                             "decay_product": decay_product,
                                             "helicity": helicity,
                                         }
-                                        mc_case = dn.MC.MC_events(self.experiment, bsm_model=self.bsm_model, enforce_prompt=self.enforce_prompt, sparse=self.sparse, **args)
+                                        mc_case = dn.MC.MC_events(
+                                            self.experiment,
+                                            bsm_model=self.bsm_model,
+                                            enforce_prompt=self.enforce_prompt,
+                                            sparse=self.sparse,
+                                            rng=self.rng,
+                                            **args,
+                                        )
                                         self.gen_cases.append(mc_case)
-                                    
+
                                     logger.debug(f"Created an MC instance of {self.gen_cases[-1].underl_process_name}.")
 
         return self.gen_cases
@@ -558,6 +591,14 @@ class GenLauncher:
                 setattr(self, attr, args[attr])
 
         ############
+        # superseed original logger configuration
+        configure_loggers(
+            loglevel=self.loglevel,
+            verbose=self.verbose,
+            logfile=self.logfile,
+        )
+
+        ############
         # temporarily overwrite path
         if overwrite_path:
             old_path = self.data_path
@@ -570,21 +611,12 @@ class GenLauncher:
         except OSError:
             logger.warning("Directory tree for this run already exists. Overriding it.")
 
-        ############
-        # superseed original logger configuration
-        self.configure_logger(
-            logger=logger, prettyprinter=self.prettyprinter, loglevel=self.loglevel, verbose=self.verbose, logfile=self.logfile,
-        )
-
         ######################################
         # run generator
         logger.debug("Now running the generator for each instance.")
         # Set theory params and run generation of events
 
         prettyprinter.info("Generating Events using the neutrino-nucleus upscattering engine")
-        # numpy set used by vegas
-        if self.seed:
-            np.random.seed(self.seed)
 
         self.df = self.gen_cases[0].get_MC_events()
         for mc in self.gen_cases[1:]:
@@ -639,65 +671,3 @@ class GenLauncher:
             self.data_path = old_path
 
         return self.df
-
-    def configure_logger(
-        self, logger, loglevel=logging.INFO, prettyprinter=None, logfile=None, verbose=False,
-    ):
-        """
-        Configure the DarkNews logger
-
-            logger -->
-
-            prettyprint --> secondary logger for pretty-print messages.
-
-        Args:
-            logger (logging.Logger): main DarkNews logger to be configured.
-                                    It handles all debug, info, warning, and error messages
-
-            loglevel (int, optional): what logging level to use.
-                                    Can be logging.(DEBUG, INFO, WARNING, or ERROR). Defaults to logging.INFO.
-
-            prettyprinter (logging.Logger, optional): if passed, configures this logger for the prettyprint.
-                                                    Cannot override the main logger levelCannot override the main logger level.
-                                                    Defaults to None.
-
-            logfile (str, optional): path to file where to log the output. Defaults to None.
-
-            verbose (bool, optional): If true, keep date and time in the logger format. Defaults to False.
-
-        Raises:
-            ValueError: _description_
-        """
-
-        loglevel = loglevel.upper()
-        _numeric_level = getattr(logging, loglevel, None)
-        if not isinstance(_numeric_level, int):
-            raise ValueError("Invalid log level: %s" % self.loglevel)
-        logger.setLevel(_numeric_level)
-
-        if logfile:
-            # log to files with max 1 MB with up to 4 files of backup
-            handler = logging.handlers.RotatingFileHandler(f"{logfile}", maxBytes=1000000, backupCount=4)
-
-        else:
-            # stdout only
-            handler = logging.StreamHandler(stream=sys.stdout)
-            if prettyprinter:
-                pretty_handler = logging.StreamHandler(stream=sys.stdout)
-                pretty_handler.setLevel(loglevel)
-                delimiter = "---------------------------------------------------------"
-                pretty_handler.setFormatter(logging.Formatter(delimiter + "\n%(message)s\n"))
-                # update pretty printer
-                if prettyprinter.hasHandlers():
-                    prettyprinter.handlers.clear()
-                prettyprinter.addHandler(pretty_handler)
-
-        handler.setLevel(loglevel)
-        if verbose:
-            handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(name)s:\n\t%(message)s\n", datefmt="%H:%M:%S",))
-        else:
-            handler.setFormatter(logging.Formatter("%(message)s"))
-
-        if logger.hasHandlers():
-            logger.handlers.clear()
-        logger.addHandler(handler)

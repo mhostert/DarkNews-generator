@@ -63,7 +63,7 @@ DarkNews is available on PyPI so from your python3.7+ (virtual environment or ot
 python3 -m pip install DarkNews
 ```
 
-or if your pip version is already set to your preferred python version, simply ```pip install DarkNews```. This should install all dependencies for you.
+or if your pip version is already set to your preferred python version, simply ```pip install DarkNews```. This should install all dependencies for you. Installing DarkNews on a virtual environment (using `conda` for instance) can avoid several pitfalls, including issues with the `Cython` extension.
 
 **troubleshooting**: If you have any problems, try creating a brand new (conda or pyenv) environment, install the latest version of ```pip```, then pip install numpy first, and only then try to install pip install DarkNews.
 
@@ -422,19 +422,31 @@ numpy = false
 The experiment to use can be specified in two ways through the `experiment` argument (or `--experiment` option accordingly):
 
 1. specifying a keyword for a pre-defined experiment among:
-    - DUNE FHC ND (`"dune_nd_fhc"`)
-    - DUNE RHC ND (`"dune_nd_rhc"`)
-    - SBND (`"sbnd"`)
-    - MicroBooNE (`"microboone"`)
-    - MINERVA FHC LE (`"minerva_le_fhc"`)
-    - MINERVA FHC ME (`"minerva_me_fhc"`)
-    - MiniBooNE FHC (`"miniboone_fhc"`)
-    - NUMI FHC ME (`"minos_le_fhc"`)
-    - NUMI FHC LE (`"minos_me_fhc"`)
-    - ND280 FHC (`"nd280_fhc"`)
-    - NOva FHC LE (`"nova_le_fhc"`)
-    - FASERnu (`"fasernu"`)
-1. specifying the file path of an experiment file: every file should be specified using the same rules as for the parameters file, listed in [the previous section](#specify-parameters-via-a-file).
+    - DUNE near detector FHC (`"dune_nd_fhc"`)
+    - DUNE near detector RHC (`"dune_nd_rhc"`)
+    - SBND detector (`"sbnd"`)
+    - SBND dirt-cylinder (`"sbnd_dirt"`)
+    - SBND dirt-cone (`"sbnd_dirt_cone"`)
+    - MicroBooNE detector (`"microboone"`)
+    - MicroBooNE detector TPC volume only (`"microboone_tpc"`)
+    - MicroBooNE dirt-cone (`"microboone_dirt"`)
+    - MINERvA detector low-energy NuMI FHC (`"minerva_le_fhc"`)
+    - MINERvA detector medium-energy NuMI FHC (`"minerva_me_fhc"`)
+    - MINERvA detector medium-energy NuMI RHC (`"minerva_me_rhc"`)
+    - MiniBooNE detector FHC (`"miniboone_fhc"`)
+    - MiniBooNE dirt-cone FHC (`"miniboone_fhc_dirt"`)
+    - ICARUS detector (`"icarus"`)
+    - ICARUS dirt-cone (`"icarus_dirt"`)
+    - MiniBooNE detector RHC (`"miniboone_rhc"`)
+    - MiniBooNE dirt-cone RHC (`"miniboone_rhc_dirt"`)
+    - MINOS low-energy NuMI FHC (`"minos_le_fhc"`)
+    - T2K ND280 detector FHC (`"nd280_fhc"`)
+    - NOVA low-energy NuMI FHC (`"nova_le_fhc"`)
+    - FASERnu detector (`"fasernu"`)
+    - NuTeV FHC (`"nutev_fhc"`)
+
+
+2. specifying the file path of an experiment file: every file should be specified using the same rules as for the parameters file, listed in [the previous section](#specify-parameters-via-a-file).
 A template file [`template_custom_experiment.txt`](examples/template_custom_experiment.txt) can be found in [in the `examples` directory](examples/).
 The following parameters must be present (in general it is possible to specify any number of parameters, but only the ones below would be relevant).
 
@@ -464,7 +476,6 @@ Times of interactions are always set to 0, and any additional delay due to the N
 DarkNews relies on vegas to integrate and sample differential cross sections and decay rates.
 The main point of contact with vegas is through the ```vegas.Integrator``` class, which will receive the DarkNews integrands (e.g. ```DarkNews.integrands.UpscatteringHNLDecay()```), whose ```__call__()``` method will compute the differential rates.
 
-It is possible to set a seed for numpy's random number with the ```--seed``` argument, which accepts integer values. This integer seed is then passed to numpy.seed().
-By default, vegas uses numpy's random number generator, which is based on the Mersenne Twister pseudo-random number generator method.
+It is possible to set a seed for numpy's random number with the ```--seed``` argument, which accepts integer values. This integer seed is then passed to ```numpy.random.default_rng()```, which will then be used by ```vegas``` as its random number generator. By default, vegas uses numpy's random number generator ``numpy.random.random()```, which is based on the Mersenne Twister pseudo-random number generator method.
 
 The reproducibility of the generator output (i.e., same vegas samples) is only guaranteed for the same parameters and number of integrand evaluations, which effectively means that the user has to specify the same scope, model parameters, as well as the same number of neval, nint, neval_warmup and nint_warmup.

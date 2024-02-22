@@ -8,8 +8,9 @@ import subprocess
 import shutil
 from pathlib import Path
 
+
 def dn_gen():
-    DEFAULTS = GenLauncher(loglevel="error")
+    DEFAULTS = GenLauncher(loglevel="ERROR")
 
     # --------------
     # use argument_default=argparse.SUPPRESS so no defaults attributes are instantiated in the final Namespace
@@ -39,7 +40,7 @@ def dn_gen():
 
 
 def dn_get_examples():
-    
+
     REPO_NAME = "DarkNews-generator"
     REPO_URL = f"https://github.com/mhostert/{REPO_NAME}.git"
     EXAMPLES_FOLDER = Path("examples")
@@ -55,7 +56,7 @@ def dn_get_examples():
     print("git clone successful...")
 
     os.chdir(f"{Path(REPO_NAME)}")
-    
+
     with subprocess.Popen([checkout_cmd], stdout=subprocess.PIPE, shell=True) as proc:
         print(checkout_cmd)
         print(proc.stdout.read())

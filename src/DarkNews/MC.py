@@ -2,7 +2,10 @@ import numpy as np
 import pandas as pd
 import vegas as vg
 
-from DarkNews import logger, prettyprinter
+import logging
+
+logger = logging.getLogger("logger." + __name__)
+prettyprinter = logging.getLogger("prettyprinter." + __name__)
 
 from collections import defaultdict
 from functools import partial
@@ -35,6 +38,7 @@ class MC_events:
         decay_product:          visible decay products in the detector
         helicity:               helicity of the up-scattered neutrino
         enforce_prompt:         If True, forces all decays to be prompt, so that pos_scatt == pos_decay
+        rng:                    Random number generator (default: None) and can be set as np.random.default_rng(seed)
         sparse:                 Specify the level of sparseness of the internal dataframe and output. Not supported for HEPevt.
                                 Allowed values are 0--3, where:
                                     `0`: keep all information;
@@ -43,8 +47,7 @@ class MC_events:
                                     `3`: visible particle momenta and all weights.
     """
 
-    def __init__(self, experiment, bsm_model, sparse=0, enforce_prompt=False, **kwargs):
-
+    def __init__(self, experiment, bsm_model, enforce_prompt=False, rng=None, sparse=0, **kwargs):
         # default parameters
         scope = {
             "nu_projectile": pdg.numu,
@@ -57,6 +60,7 @@ class MC_events:
 
         self.enforce_prompt = enforce_prompt
         self.sparse = sparse
+        self.rng = rng
 
         scope.update(kwargs)
         self.scope = scope
@@ -171,7 +175,6 @@ class MC_events:
         self.EMAX = self.experiment.ERANGE[1]
 
         if self.decays_to_dilepton:
-
             if self.decay_case.vector_on_shell and self.decay_case.scalar_off_shell:
                 DIM = 3
                 logger.info(f"{self.nu_upscattered.name} decays via on-shell Z'.")
@@ -197,7 +200,7 @@ class MC_events:
         # BATCH SAMPLE INTEGRAND OF INTEREST
         logger.debug(f"Running VEGAS for DIM={DIM}")
         batch_f = integrand_type(dim=DIM, Emin=self.EMIN, Emax=self.EMAX, MC_case=self)
-        integ = vg.Integrator(DIM * [[0.0, 1.0]])  # unit hypercube
+        integ = vg.Integrator(DIM * [[0.0, 1.0]], ran_array_generator=self.rng)
         result = run_vegas(
             batch_f,
             integ,
@@ -220,7 +223,7 @@ class MC_events:
         logger.debug(f"Vegas results for diff_event_rate: {weights['diff_event_rate'].sum()}")
         logger.debug(f"Vegas results for diff_flux_avg_xsec: {weights['diff_flux_avg_xsec'].sum()}")
 
-        four_momenta = integrands.get_momenta_from_vegas_samples(samples, MC_case=self)
+        four_momenta = integrands.get_momenta_from_vegas_samples(vsamples=samples, MC_case=self)
         ##########################################################################
 
         ##########################################################################
@@ -238,7 +241,7 @@ class MC_events:
 
         # differential weights
         for column in df_gen:
-            if "w_" in column:
+            if "w_" in str(column):
                 df_gen[column, ""] = df_gen[column]
 
         # add a single column for neutrino energy if sparse = 2 or 3
@@ -437,7 +440,6 @@ def get_samples(integ, batch_integrand, return_jac=False):
     weights = defaultdict(partial(np.ndarray, 0))
 
     for x, y, wgt in integ.random_batch(yield_y=True, fcn=batch_integrand):
-
         # compute integrand on samples including jacobian factors
         if integ.uses_jac:
             jac = integ.map.jac1d(y)

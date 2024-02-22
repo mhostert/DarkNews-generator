@@ -1,11 +1,9 @@
 import numpy as np
-import pandas as pd
 from DarkNews import const
 from DarkNews import Cfourvec as Cfv
 from numpy.random import choice
 
 import importlib.resources as resources
-
 
 ################## ROTATION FUNCTIONS ######################
 def dot3(p1, p2):

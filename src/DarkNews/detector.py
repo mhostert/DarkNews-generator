@@ -4,8 +4,11 @@ import os.path
 import os
 import importlib.resources as resources
 
+import logging
 
-from DarkNews import logger, prettyprinter
+logger = logging.getLogger("logger." + __name__)
+prettyprinter = logging.getLogger("prettyprinter." + __name__)
+
 from DarkNews import pdg
 from DarkNews import geom
 from DarkNews import const
@@ -32,6 +35,7 @@ class Detector:
         KeyError: if a required field is not specified in the detector file
 
     """
+
     KEYWORDS = {
         "dune_nd_fhc": "dune_nd_fhc.txt",
         "dune_nd_rhc": "dune_nd_rhc.txt",
@@ -48,8 +52,8 @@ class Detector:
         "miniboone_fhc_dirt": "miniboone_fhc_dirt.txt",
         "icarus": "icarus.txt",
         "icarus_dirt": "icarus_dirt.txt",
-        "miniboone_fhc_steel": "miniboone_fhc_steel.txt",
         "miniboone_rhc": "miniboone_rhc.txt",
+        "miniboone_rhc_dirt": "miniboone_rhc_dirt.txt",
         "minos_le_fhc": "minos_le_fhc.txt",
         "nd280_fhc": "nd280_fhc.txt",
         "nova_le_fhc": "nova_le_fhc.txt",
@@ -114,7 +118,7 @@ class Detector:
                 _enu, *_fluxes = np.genfromtxt(file, unpack=True)
             except FileNotFoundError:
                 raise FileNotFoundError(f"Fluxes file {self.FLUXFILE} not found in current experiment file path nor in config file path.")
-            
+
         self.FLUX_FUNCTIONS = 6 * [[]]
         for i in range(len(_fluxes)):
             self.FLUX_FUNCTIONS[i] = interpolate.interp1d(_enu, _fluxes[i] * self.FLUX_NORM, fill_value=0.0, bounds_error=False)
@@ -132,26 +136,28 @@ class Detector:
     def __eq__(self, other):
         if not isinstance(other, type(self)):
             return NotImplemented
-        return (self.NAME == other.NAME) and\
-                (self.FLUXFILE == other.FLUXFILE) and\
-                (self.FLUX_NORM == other.FLUX_NORM) and\
-                (self.ERANGE == other.ERANGE) and\
-                (self.NUCLEAR_TARGETS == other.NUCLEAR_TARGETS) and\
-                (self.POTS == other.POTS) and\
-                (self.FIDUCIAL_MASS_PER_TARGET == other.FIDUCIAL_MASS_PER_TARGET)
+        return (
+            (self.NAME == other.NAME)
+            and (self.FLUXFILE == other.FLUXFILE)
+            and (self.FLUX_NORM == other.FLUX_NORM)
+            and (self.ERANGE == other.ERANGE)
+            and (self.NUCLEAR_TARGETS == other.NUCLEAR_TARGETS)
+            and (self.POTS == other.POTS)
+            and (self.FIDUCIAL_MASS_PER_TARGET == other.FIDUCIAL_MASS_PER_TARGET)
+        )
 
     def neutrino_flux(self, projectile):
         _flux_index = pdg.get_doublet(projectile) + 3 * pdg.is_antiparticle(projectile)
         return self.FLUX_FUNCTIONS[_flux_index]
 
     def set_geometry(self):
-
         geometries = {}
         geometries["microboone_dirt"] = geom.microboone_dirt_geometry
         geometries["sbnd_dirt"] = geom.sbnd_dirt_geometry
         geometries["sbnd_dirt_cone"] = geom.sbnd_dirt_cone_geometry
         geometries["icarus_dirt"] = geom.icarus_dirt_geometry
         geometries["miniboone_fhc_dirt"] = geom.miniboone_dirt_geometry
+        geometries["miniboone_rhc_dirt"] = geom.miniboone_dirt_geometry
         geometries["microboone"] = geom.microboone_geometry
         geometries["microboone_tpc"] = geom.microboone_tpc_geometry
         geometries["sbnd"] = geom.sbnd_geometry

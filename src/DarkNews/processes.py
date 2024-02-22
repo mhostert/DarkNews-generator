@@ -3,7 +3,8 @@ import vegas as vg
 import json
 import os
 
-from DarkNews import logger, prettyprinter
+import logging
+logger = logging.getLogger('logger.' + __name__)
 
 from DarkNews import const
 from DarkNews import pdg

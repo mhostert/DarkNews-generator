@@ -1,10 +1,10 @@
 import numpy as np
 
+import logging
+logger = logging.getLogger('logger.' + __name__)
+
 from DarkNews import const
 from DarkNews.const import Sqrt, MZBOSON, eQED
-
-from DarkNews import logger
-
 
 def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
     """ 
@@ -99,7 +99,7 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
     Tij = process.Tij
     # Tji = process.Tji
     # legacy!
-    mu_tr = process.Tij
+    dip = process.Tij
 
     h = process.h_upscattered
 
@@ -496,7 +496,7 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
         # transition magnetic moment
         def Lmunu_Hmunu_TMM_SQR():
             return (
-                (mu_tr) ** (2)
+                (dip) ** (2)
                 * (eQED) ** (2)
                 * (M) ** (-2)
                 * (((M) ** (4) + ((((mHNL) ** (2) + -1 * s)) ** (2) + -2 * (M) ** (2) * ((mHNL) ** (2) + s)))) ** (-1 / 2)

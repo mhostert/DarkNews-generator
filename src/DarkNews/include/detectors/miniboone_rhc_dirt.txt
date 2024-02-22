@@ -1,0 +1,18 @@
+# Data Released with A.A. Aguilar-Arevalo et al., “The Neutrino Flux Prediction at MiniBooNE”, arXiv:0806.1449[hep-ex], Phys. Rev. D. 79, 072002 (2009).
+name = "miniboone_rhc_dirt"
+fluxfile = "MiniBooNE_RHC.dat"
+flux_norm = 1
+erange = [
+    0.1,
+    9
+]
+nuclear_targets = [
+    'Si28',
+    'O16'
+]
+fiducial_mass = 55626.5 # tons, density:  2.15 g/cm3, volume: 2.58728e10 cm3
+fiducial_mass_per_target = [
+    fiducial_mass*28/60, 
+    fiducial_mass*32/60
+] # tons
+POTs = 11.27e20
