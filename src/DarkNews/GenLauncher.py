@@ -94,6 +94,7 @@ COMMON_MODEL_ARGS = [
 THREE_PORTAL_ARGS = [
     "gD",
     "epsilon",
+    "epsilonZ",
     "alphaD",
     "epsilon2",
     "chi",
@@ -482,7 +483,7 @@ class GenLauncher:
             "UPSCATTERED_NUS": self.upscattered_nus,
             "OUTGOING_NUS": self.outgoing_nus,
             "DECAY_PRODUCTS": [self.decay_product],
-            "SCATTERING_REGIMES": ["coherent", "p-el"],  # , 'n-el'],
+            "SCATTERING_REGIMES": ["coherent", "p-el", "n-el"],
         }
         # override default with kwargs
         scope.update(kwargs)

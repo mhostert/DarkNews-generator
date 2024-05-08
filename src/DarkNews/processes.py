@@ -20,9 +20,35 @@ from . import Cfourvec as Cfv
 
 
 class UpscatteringProcess:
-    """
-    Describes the process of upscattering with arbitrary vertices and masses
+   """
+    A class to describe the process of neutrino upscattering, which involves a neutrino scattering off a target and gaining energy in the process. 
+    This class supports various scattering regimes (coherent, proton elastic, and neutron elastic), and allows for the calculation of total and differential cross sections for these processes.
 
+    Attributes:
+        nuclear_target (object): The nuclear target involved in the scattering process.
+        scattering_regime (str): The regime of scattering, e.g., 'coherent', 'p-el' (proton elastic), 'n-el' (neutron elastic).
+        target (object): The actual target of the scattering, which could be the whole nucleus, a constituent nucleon, or constituent quarks, depending on the scattering regime.
+        target_multiplicity (int): The number of targets involved in the scattering process, relevant for calculating cross sections.
+        nu_projectile (object): The incoming neutrino involved in the upscattering process.
+        nu_upscattered (object): The upscattered neutrino resulting from the scattering process.
+        TheoryModel (object): The theoretical model used to describe the interactions in the upscattering process.
+        helicity (str): The helicity configuration of the upscattering process, either 'conserving' or 'flipping'.
+        MA (float): The mass of the target involved in the scattering.
+        mzprime (float): The mass of the Z' boson in the theory model, if applicable.
+        mhprime (float): The mass of the H' boson in the theory model, if applicable.
+        m_ups (float): The mass of the upscattered neutrino.
+        Cij, Cji, Vij, Vji, Sij, Sji, Tij, Tji (float): Coupling constants for the interaction vertices involved in the upscattering process.
+        Chad, Vhad, Shad (float): Hadronic coupling constants for the interaction vertices.
+        Cprimehad (float): Mass-mixed vertex coupling constant for the hadronic interaction.
+        Ethreshold (float): The minimum energy threshold for the upscattering process to occur.
+        vectorized_total_xsec (function): A vectorized function to calculate the total cross section for the upscattering process.
+        calculable_diagrams (list): A list of diagrams that can be calculated for the upscattering process.
+
+    Methods:
+        __init__(self, nu_projectile, nu_upscattered, nuclear_target, scattering_regime, TheoryModel, helicity): Initializes the upscattering process with specified parameters.
+        scalar_total_xsec(self, Enu, diagram="total", NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, savefile_xsec=None, savefile_norm=None): Calculates the scalar total cross section for a given neutrino energy and diagram.
+        total_xsec(self, Enu, diagrams=["total"], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, seed=None, savestr=None): Calculates the total cross section for the upscattering process for a fixed neutrino energy.
+        diff_xsec_Q2(self, Enu, Q2, diagrams=["total"]): Calculates the differential cross section for the upscattering process as a function of the squared momentum transfer Q2.
     """
 
     def __init__(self, nu_projectile, nu_upscattered, nuclear_target, scattering_regime, TheoryModel, helicity):

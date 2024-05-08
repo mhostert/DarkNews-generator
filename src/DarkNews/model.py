@@ -128,7 +128,7 @@ class HNLModel:
     def _update_spectrum(self):
         # mass mixing between Z' and Z
         # NOT YET FUNCTIONAL
-        self.is_mass_mixed = False  # (self.epsilonZ != 0.0)
+        self.is_mass_mixed = hasattr(self, "epsilonZ") and self.epsilonZ != 0.0
 
         self.has_Zboson_coupling = np.any(self.c_aj[3:, :] != 0)
         if self.has_Zboson_coupling:
@@ -409,11 +409,17 @@ class ThreePortalModel(HNLModel):
         self.s2chi = (1.0 - self.cosof2chi) / 2.0
         self.c2chi = 1 - self.s2chi
 
-        entry_22 = self.c2chi - const.s2w * self.s2chi - (self.mzprime / const.m_Z) ** 2
-        self.tanof2beta = const.sw * self.sinof2chi / (entry_22)
-        self.beta = const.sw * self.chi
-        self.sinof2beta = const.sw * self.sinof2chi / np.sqrt(entry_22**2 + self.sinof2chi**2 * const.s2w)
-        self.cosof2beta = entry_22 / np.sqrt(entry_22**2 + self.sinof2chi**2 * const.s2w)
+        # entry_22 = self.c2chi - const.s2w * self.s2chi - (self.mzprime / const.m_Z) ** 2
+        # self.tanof2beta = const.sw * self.sinof2chi / (entry_22)
+
+        # Mass mixing and kinetic mixing
+        entry_11 = const.sw * self.sinof2chi + 2 * self.epsilonZ * np.sqrt(self.c2chi)
+        entry_22 = self.c2chi - const.s2w * self.s2chi - (self.mzprime / const.m_Z) ** 2 - 2 * self.epsilonZ * const.sw * np.sqrt(self.s2chi)
+        self.tanof2beta = entry_11 / entry_22
+
+        # self.beta = const.sw * self.chi
+        self.sinof2beta = entry_11 / np.sqrt(entry_22**2 + entry_11**2)
+        self.cosof2beta = entry_22 / np.sqrt(entry_22**2 + entry_11**2)
 
         # #####################
         if self.tanof2beta != 0:

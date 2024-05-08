@@ -1,5 +1,6 @@
 import argparse
 
+
 def add_common_bsm_arguments(parser, DEFAULTS):
 
     #### name of the generation and model
@@ -85,10 +86,12 @@ def add_three_portal_arguments(parser, DEFAULTS):
     parser.add_argument("--alphaD", type=float, help="U(1)_d  alpha_dark = (g_dark^2 /4 pi)")
 
     ##### kinetic mixing options
-    parser.add_argument("--epsilon", type=float, help="epsilon")
+    parser.add_argument("--epsilon", type=float, help="epsilon (kinetic mixing)")
     parser.add_argument("--epsilon2", type=float, help="epsilon^2")
     parser.add_argument("--alpha_epsilon2", type=float, help="alpha_QED*epsilon^2")
     parser.add_argument("--chi", type=float, help="chi")
+
+    parser.add_argument("--epsilonZ", type=float, help="epsilonZ (Z-Z' mass mixing)")
 
     parser.add_argument("--theta", type=float, help="Scalar mixing angle between h-h'")
 
@@ -218,19 +221,31 @@ def add_mc_arguments(parser, DEFAULTS):
     parser.add_argument("--parquet", help="If true, prints pandas dataframe to .parquet files. Loses metadata in attrs.", action="store_true")
     parser.add_argument("--numpy", help="If true, prints events as ndarrays in a .npy file", action="store_true")
     parser.add_argument("--hepevt", help="If true, print events to HEPEVT-formatted text files (does not save event weights)", action="store_true")
-    parser.add_argument("--hepevt_legacy",
+    parser.add_argument(
+        "--hepevt_legacy",
         help="If true, print events to a legacy HEPEVT format (saving weights next to the number of particle in the event and without linebreaks in particle entries)",
         action="store_true",
     )
     parser.add_argument("--hepmc2", help="If true, prints events to HepMC2 format.", action="store_true")
     parser.add_argument("--hepmc3", help="If true, prints events to HepMC3 format.", action="store_true")
     parser.add_argument("--hep_unweight", help="unweight events when printing in standard HEP formats (needs large neval)", action="store_true")
-    parser.add_argument("--unweighted_hep_events",type=int,
+    parser.add_argument(
+        "--unweighted_hep_events",
+        type=int,
         help="number of unweighted events to accept in any of the standard HEP formats. Has to be much smaller than neval for unweight procedure to work.",
     )
 
-    parser.add_argument("--sparse", type=int, help="Specify the level of sparseness of the internal dataframe and output. Not supported for HEPevt. Allowed values are 0--4, from most to least saved information.", choices=DEFAULTS._choices["sparse"])
-    parser.add_argument("--print_to_float32", help="Use float32 instead of default float64 when printing output to save storage space. Requires sparse >= 1.", action="store_true")
+    parser.add_argument(
+        "--sparse",
+        type=int,
+        help="Specify the level of sparseness of the internal dataframe and output. Not supported for HEPevt. Allowed values are 0--4, from most to least saved information.",
+        choices=DEFAULTS._choices["sparse"],
+    )
+    parser.add_argument(
+        "--print_to_float32",
+        help="Use float32 instead of default float64 when printing output to save storage space. Requires sparse >= 1.",
+        action="store_true",
+    )
 
     parser.add_argument("--path", type=str, help="path where to save run's outputs")
     parser.add_argument("--seed", type=int, help="numpy seed to be used by vegas.")

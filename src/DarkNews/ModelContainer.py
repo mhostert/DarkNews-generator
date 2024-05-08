@@ -92,6 +92,7 @@ COMMON_MODEL_ARGS = [
 THREE_PORTAL_ARGS = [
     "gD",
     "epsilon",
+    "epsilonZ",
     "alphaD",
     "epsilon2",
     "chi",
@@ -404,7 +405,7 @@ class ModelContainer:
             "UPSCATTERED_NUS": self.upscattered_nus,
             "OUTGOING_NUS": self.outgoing_nus,
             "DECAY_PRODUCTS": [self.decay_product],
-            "SCATTERING_REGIMES": ["coherent", "p-el"],  # , 'n-el'],
+            "SCATTERING_REGIMES": ["coherent", "p-el", "n-el"],
             "NUCLEAR_TARGETS": [NuclearTarget(_t) for _t in self.nuclear_targets],
         }
         # override default with kwargs

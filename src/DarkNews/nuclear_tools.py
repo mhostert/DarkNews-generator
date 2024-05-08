@@ -7,21 +7,24 @@ from functools import partial
 from particle import literals as lp
 
 import logging
-logger = logging.getLogger('logger.' + __name__)
+
+logger = logging.getLogger("logger." + __name__)
 
 from DarkNews.const_dics import fourier_bessel_dic
 from DarkNews import const
 
+
 # to replace certain lambda functions
-def zero_func(x): 
+def zero_func(x):
     return 0.0
+
 
 class NuclearTarget:
     def __init__(self, name):
         """
         Main DarkNews class for the nucleus to be used in a neutrino scattering event.
 
-        It contains target properties like number of protons, neutrons, informations on the mass, as well 
+        It contains target properties like number of protons, neutrons, informations on the mass, as well
         as all the Nuclear Data Table information on:
             nuclear_Eb,
             atomic_Eb,
@@ -101,7 +104,7 @@ class NuclearTarget:
         return self.BoundNucleon(self, name)
 
     class BoundNucleon:
-        """ for scattering on bound nucleon in the nuclear target
+        """for scattering on bound nucleon in the nuclear target
 
         Inner Class
 
@@ -144,30 +147,30 @@ class NuclearTarget:
 
 def assign_form_factors(target):
     """
-        Here we define nuclear form factors following:
-        http://discovery.phys.virginia.edu/research/groups/ncd/index.html
+    Here we define nuclear form factors following:
+    http://discovery.phys.virginia.edu/research/groups/ncd/index.html
 
-        When available, we use data from Nuclear Data Tables (74, 87, and 95), stored in "include/aux_data/mass20.txt":
-            "The Ame2020 atomic mass evaluation (I)"   by W.J.Huang, M.Wang, F.G.Kondev, G.Audi and S.Naimi
-                Chinese Physics C45, 030002, March 2021.
-            "The Ame2020 atomic mass evaluation (II)"  by M.Wang, W.J.Huang, F.G.Kondev, G.Audi and S.Naimi
-                Chinese Physics C45, 030003, March 2021.
+    When available, we use data from Nuclear Data Tables (74, 87, and 95), stored in "include/aux_data/mass20.txt":
+        "The Ame2020 atomic mass evaluation (I)"   by W.J.Huang, M.Wang, F.G.Kondev, G.Audi and S.Naimi
+            Chinese Physics C45, 030002, March 2021.
+        "The Ame2020 atomic mass evaluation (II)"  by M.Wang, W.J.Huang, F.G.Kondev, G.Audi and S.Naimi
+            Chinese Physics C45, 030003, March 2021.
 
-        Element properties are stored in elements_dic.To access individual elements we use the format:
+    Element properties are stored in elements_dic.To access individual elements we use the format:
 
-            key = 'name+A', e.g. key = 'Pb208' or 'C12'.
+        key = 'name+A', e.g. key = 'Pb208' or 'C12'.
 
-        All units in GeV, except otherwise specified.
+    All units in GeV, except otherwise specified.
 
-        Args:
-            target (DarkNews.nuclear_tools.Target): instance of main DarkNews target object.
+    Args:
+        target (DarkNews.nuclear_tools.Target): instance of main DarkNews target object.
     """
 
     # Nucleus
     if target.is_nucleus:
         try:
             a = fourier_bessel_dic[target.name.lower()]  ## stored with lower case formatting
-            fcoh = partial(nuclear_F1_fourier_bessel_EM,array_coeff=a)
+            fcoh = partial(nuclear_F1_fourier_bessel_EM, array_coeff=a)
         except KeyError:
             logger.warning(f"Warning: nuclear density for {target.name} not tabulated in Nuclear Data Table. Using symmetrized Fermi form factor instead.")
             fcoh = partial(nuclear_F1_Fsym_EM, A=target.A)
@@ -211,12 +214,12 @@ def sph_bessel_0(x):
 # all units in fm
 def fourier_bessel_form_factor_terms(q, R, n):
     x = q * R
-    return sph_bessel_0(x) * R ** 3 / ((n * np.pi) ** 2 - x ** 2) * (-1) ** n
+    return sph_bessel_0(x) * R**3 / ((n * np.pi) ** 2 - x**2) * (-1) ** n
 
 
 # all units in fm
 def fourier_bessel_integral_terms(R, n):
-    return R ** 3 * (-1) ** n / np.pi ** 2 / n ** 2
+    return R**3 * (-1) ** n / np.pi**2 / n**2
 
 
 # Q2 in GeV^2 and other units in fm
@@ -238,7 +241,7 @@ def nuclear_F1_fourier_bessel_EM(Q2, array_coeff):
 # Nested dic containing all elements
 # approximate formula in D. Lunney, J.M. Pearson and C. Thibault, Rev. Mod. Phys.75, 1021 (2003)
 def electron_binding_energy(Z):
-    return (14.4381 * Z ** 2.39 + 1.55468e-6 * Z ** 5.35) * 1e-9  # GeV
+    return (14.4381 * Z**2.39 + 1.55468e-6 * Z**5.35) * 1e-9  # GeV
 
 
 elements_dic = {}
@@ -282,35 +285,37 @@ with resources.open_text("DarkNews.include.aux_data", "mass20_1.txt") as ame:
 # NUCLEAR AND NUCLEON FORM FACTORS
 MAG_N = -1.913
 MAG_P = 2.792
+
+
 ## dipole parametrization
 def D(Q2):
     MV = 0.843  # GeV
-    return 1.0 / ((1 + Q2 / MV ** 2) ** 2)
+    return 1.0 / ((1 + Q2 / MV**2) ** 2)
 
 
 ## nucleon
 def nucleon_F1_EM(Q2, tau3):
     # pick nucleon mag moment
     MAG = (MAG_P + MAG_N + tau3 * (MAG_P - MAG_N)) / 2.0
-    tau = -Q2 / 4.0 / const.m_proton ** 2
+    tau = -Q2 / 4.0 / const.m_proton**2
     return (D(Q2) - tau * MAG * D(Q2)) / (1 - tau)
 
 
 def nucleon_F2_EM(Q2, tau3):
     # pick nucleon mag moment
     MAG = (MAG_P + MAG_N + tau3 * (MAG_P - MAG_N)) / 2.0
-    tau = -Q2 / 4.0 / const.m_proton ** 2
+    tau = -Q2 / 4.0 / const.m_proton**2
     return (MAG * D(Q2) - D(Q2)) / (1 - tau)
 
 
 def nucleon_F1_NC(Q2, tau3):
-    tau = -Q2 / 4.0 / const.m_proton ** 2
+    tau = -Q2 / 4.0 / const.m_proton**2
     f = (0.5 - const.s2w) * (tau3) * (1 - tau * (1 + MAG_P - MAG_N)) / (1 - tau) - const.s2w * (1 - tau * (1 + MAG_P + MAG_N)) / (1 - tau)
     return f * D(Q2)
 
 
 def nucleon_F2_NC(Q2, tau3):
-    tau = -Q2 / 4.0 / const.m_proton ** 2
+    tau = -Q2 / 4.0 / const.m_proton**2
     f = (0.5 - const.s2w) * (tau3) * (MAG_P - MAG_N) / (1 - tau) - const.s2w * (MAG_P + MAG_N) / (1 - tau)
     return f * D(Q2)
 
@@ -318,13 +323,21 @@ def nucleon_F2_NC(Q2, tau3):
 def nucleon_F3_NC(Q2, tau3):
     MA = 1.02  # GeV
     gA = 1.26
-    f = gA * tau3 / 2.0 / (1 + Q2 / MA ** 2) ** 2
+    f = gA * tau3 / 2.0 / (1 + Q2 / MA**2) ** 2
     return f
 
 
-## symmetrized fermi nuclear
-def f(Q,a,r0):
-    return 3.0 * np.pi * a / (r0 ** 2 + np.pi ** 2 * a ** 2) * (np.pi * a * (1.0 / np.tanh(np.pi * a * Q)) * np.sin(Q * r0) - r0 * np.cos(Q * r0)) / (Q * r0 * np.sinh(np.pi * Q * a))
+# symmetrized fermi nuclear
+def f(Q, a, r0):
+    return (
+        3.0
+        * np.pi
+        * a
+        / (r0**2 + np.pi**2 * a**2)
+        * (np.pi * a * (1.0 / np.tanh(np.pi * a * Q)) * np.sin(Q * r0) - r0 * np.cos(Q * r0))
+        / (Q * r0 * np.sinh(np.pi * Q * a))
+    )
+
 
 def nuclear_F1_Fsym_EM(Q2, A):
     Q = np.sqrt(Q2)
@@ -332,15 +345,14 @@ def nuclear_F1_Fsym_EM(Q2, A):
     r0 = 1.03 * (A ** (1.0 / 3.0)) * const.fm_to_GeV  # GeV^-1
     # tolerance = Q < 5
     # clean_FF = ma.masked_array(
-    #     data=3.0 * np.pi * a / (r0 ** 2 + np.pi ** 2 * a ** 2) * 
+    #     data=3.0 * np.pi * a / (r0 ** 2 + np.pi ** 2 * a ** 2) *
     #         (np.pi * a * (1.0 / np.tanh(np.pi * a * Q)) * np.sin(Q * r0) - r0 * np.cos(Q * r0)) /
     #         (Q * r0 * np.sinh(np.pi * Q * a)),
     #     mask=~tolerance,
     #     fill_value=0.0,
     # )
     # return clean_FF.filled()
-    return np.piecewise(Q, [Q<5, Q>=5], [partial(f,a=a,r0=r0), zero_func])
-
+    return np.piecewise(Q, [Q < 5, Q >= 5], [partial(f, a=a, r0=r0), zero_func])
 
 
 def j1(z):
