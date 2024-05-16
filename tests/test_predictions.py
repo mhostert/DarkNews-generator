@@ -58,15 +58,15 @@ def test_MB_other_final_states(gen_other_final_states):
 def test_MB_generic_model(gen_most_generic_model):
     df_light, df_heavy, df_photon = gen_most_generic_model
     # check seeded generation
-    expect = 23279598.68188055
+    expect = 24883913.24697555
     assert close_enough(df_light.w_event_rate.sum(), expect), "seeded light dark photon to muons has changed!"
 
     # check seeded generation
-    expect = 179795.4844049769
+    expect = 219891.69339439517
     assert close_enough(df_heavy.w_event_rate.sum(), expect), "seeded heavy most-generic model has changed!"
 
     # check seeded generation
-    expect = 179488.15926133815
+    expect = 219436.76877259254
     assert close_enough(df_photon.w_event_rate.sum(), expect), "seeded heavy most-generic model has changed!"
 
 

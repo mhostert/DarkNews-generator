@@ -398,7 +398,9 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 
                 # mediator decay M --> ell+ ell-
                 self.int_dic["diff_decay_rate_1"] = dr.gamma_V_to_ell_ell(
-                    vertex=np.sqrt(self.decay_case.TheoryModel.deV**2 + self.decay_case.TheoryModel.deA**2), mV=decay_case.mzprime, m_ell=decay_case.mm
+                    vertex=np.sqrt(decay_case.TheoryModel.deV**2 + decay_case.TheoryModel.deA**2),
+                    mV=decay_case.mzprime,
+                    m_ell=decay_case.mm,
                 ) * np.full_like(self.int_dic["diff_decay_rate_0"], 1.0)
 
             elif decay_case.vector_off_shell and decay_case.scalar_on_shell:

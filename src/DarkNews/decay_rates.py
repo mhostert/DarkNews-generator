@@ -76,11 +76,11 @@ def gamma_S_to_ell_ell(vertex, mS, m_ell):
     r = m_ell/mS
     gamma = np.abs(vertex)**2*mS/(8*np.pi) * np.sqrt(1-4*r**2)**(3./2.)
     return gamma
-    
+
 # V -> ell ell
 def gamma_V_to_ell_ell(vertex, mV, m_ell):
     r = m_ell/mV
-    gamma = np.abs(vertex)**2*mV/(12*np.pi) * np.sqrt(1-4*r**2)*(1 + 2*r**2)        
+    gamma = np.abs(vertex)**2*mV/(12*np.pi) * np.sqrt(1-4*r**2)*(1 + 2*r**2)
     return gamma
 
 
