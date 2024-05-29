@@ -6,7 +6,8 @@ from particle import literals as lp
 
 # Dark Neutrino and MC stuff
 import DarkNews as dn
-from DarkNews import logger, prettyprinter
+logger = logging.getLogger("logger." + __name__)
+prettyprinter = logging.getLogger("prettyprinter." + __name__)
 from DarkNews.AssignmentParser import AssignmentParser
 from DarkNews.nuclear_tools import NuclearTarget
 
