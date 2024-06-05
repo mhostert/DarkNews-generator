@@ -351,11 +351,11 @@ class FermionDileptonDecay:
             logger.error("Vector and scalar simultaneously on shell is not implemented.")
             raise NotImplementedError("Feature not implemented.")
         elif self.vector_on_shell and self.scalar_off_shell:
-            ret dr.gamma_Ni_to_Nj_V(vertex_ij=self.Dih, mi=self.m_parent, mj=self.m_daughter, mV=self.mzprime, HNLtype=self.HNLtype) * dr.gamma_V_to_ell_ell(
+            ret = dr.gamma_Ni_to_Nj_V(vertex_ij=self.Dih, mi=self.m_parent, mj=self.m_daughter, mV=self.mzprime, HNLtype=self.HNLtype) * dr.gamma_V_to_ell_ell(
                 vertex=self.TheoryModel.deV, mV=self.mzprime, m_ell=self.mm
             )
         elif self.vector_off_shell and self.scalar_on_shell:
-            ret dr.gamma_Ni_to_Nj_S(vertex_ij=self.Sih, mi=self.m_parent, mj=self.m_daughter, mS=self.mhprime, HNLtype=self.HNLtype) * dr.gamma_S_to_ell_ell(
+            ret = dr.gamma_Ni_to_Nj_S(vertex_ij=self.Sih, mi=self.m_parent, mj=self.m_daughter, mS=self.mhprime, HNLtype=self.HNLtype) * dr.gamma_S_to_ell_ell(
                 vertex=self.TheoryModel.deS, mS=self.mhprime, m_ell=self.mm
             )
         elif self.vector_off_shell and self.scalar_off_shell:
@@ -369,7 +369,7 @@ class FermionDileptonDecay:
             # run the integrator
             integrals = MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
             logger.debug("Main VEGAS run completed for decay total width calculation.")
-            ret integrals["diff_decay_rate_0"].mean * batch_f.norm["diff_decay_rate_0"]
+            ret = integrals["diff_decay_rate_0"].mean * batch_f.norm["diff_decay_rate_0"]
 
         if return_norm + return_dec == 0:
             return ret
