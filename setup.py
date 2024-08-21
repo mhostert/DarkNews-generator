@@ -29,21 +29,19 @@ def no_cythonize(extensions, **_ignore):
 
 
 extensions = [
-    Extension("DarkNews.Cfourvec", ["src/DarkNews/Cfourvec.pyx"]),
+    Extension("DarkNews.Cfourvec", ["src/DarkNews/Cfourvec.pyx"], include_dirs=[np.get_include()]),
 ]
 CYTHONIZE = cythonize is not None
-print("Cythonize env var:", CYTHONIZE)
 if CYTHONIZE:
     compiler_directives = {"language_level": 3, "embedsignature": True}
     extensions = cythonize(extensions, compiler_directives=compiler_directives)
 else:
     extensions = no_cythonize(extensions)
 
-
 setup_args = dict(
-    # ext_modules=cythonize(["src/DarkNews/Cfourvec.pyx"]),
-    ext_modules=extensions,
-    include_dirs=np.get_include(),
+    ext_modules=cythonize(["src/DarkNews/Cfourvec.pyx"]),
+    # ext_modules=extensions,
+    include_dirs=[np.get_include()],
 )
 
 
