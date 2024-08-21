@@ -7,11 +7,15 @@ We use PDG2020 values for constants and SM masses.
 Some low-level auxiliary functions are defined.
 
 """
+
 import numpy as np
 from numpy import sqrt
 from scipy import interpolate
 
-import importlib.resources as resources
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files
 
 ################################################
 # constants of light cm/s
@@ -115,7 +119,7 @@ alphaQED = 1.0 / 137.03599908421  # Fine structure constant at q2 -> 0
 eQED = np.sqrt((4 * np.pi) * alphaQED)
 
 # get running alphaQED
-Q, inv_alphaQED = np.genfromtxt(resources.open_text("DarkNews.include.aux_data", "alpha_QED_running_posQ2.dat"), unpack=True)
+Q, inv_alphaQED = np.genfromtxt(files("DarkNews.include.aux_data").joinpath("alpha_QED_running_posQ2.dat").open(), unpack=True)
 runningAlphaQED = interpolate.interp1d(Q, 1.0 / inv_alphaQED)
 
 ################################################
@@ -229,6 +233,10 @@ def kallen(a, b, c):
 
 def kallen_sqrt(a, b, c):
     return np.sqrt(kallen(a, b, c))
+
+
+def rng_interval(size, a, b, rng):
+    return rng(size) * (a - b) + b
 
 
 # aliases used in MATHEMATICA copy-paste

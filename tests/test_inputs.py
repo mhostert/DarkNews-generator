@@ -5,6 +5,24 @@ import math
 
 from DarkNews import AssignmentParser
 from DarkNews import GenLauncher
+from DarkNews.ModelContainer import ModelContainer
+
+from .helpers import assert_all, soft_assert
+
+
+def test_ModelContainer_default():
+    mc = vars(ModelContainer(loglevel="error"))
+    gl = vars(GenLauncher(loglevel="error"))
+
+    with assert_all() as assertions:
+        for key, val in mc.items():
+            if key in gl.keys():
+                assertions.append(
+                    soft_assert(
+                        mc[key] == gl[key] or isinstance(mc[key], list),
+                        f"Different values between GenLauncher and ModelContainer: {key}: ModelContainer={mc[key]}, GenLauncher={gl[key]}",
+                    )
+                )
 
 
 def test_input_parameter_files():

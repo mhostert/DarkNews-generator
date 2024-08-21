@@ -5,7 +5,8 @@ import logging
 
 logger = logging.getLogger("logger." + __name__)
 
-from . import Cfourvec as Cfv
+from DarkNews import Cfourvec as Cfv
+from DarkNews.const import rng_interval
 
 ########################################################
 # Kinematical limits
@@ -99,7 +100,7 @@ def three_body_tmin(m1, m2, m3, m4):
 # ######################
 # 2 -> 2 scattering
 # Ni(k1) target(k2) -->  Nj(k3) target(k4)
-def two_to_two_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0):
+def two_to_two_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0, rng=np.random.random):
 
     if "Eprojectile" in samples.keys():
         Eprojectile = samples["Eprojectile"]
@@ -134,7 +135,7 @@ def two_to_two_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0):
         Q2 = samples["Q2"]
     else:
         logger.debug("DEBUG: Could not find Q2 samples, using uniform distribution instead.")
-        Q2 = Cfv.random_generator(sample_size, Q2min, Q2max)
+        Q2 = rng_interval(sample_size, Q2min, Q2max, rng=rng)
 
     # KINEMATICS TO LAB FRAME
     costN = (-Q2 - m1**2 - m3**2 + 2 * E1CM * E3CM) / (2 * p1CM * p3CM)
@@ -146,7 +147,7 @@ def two_to_two_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0):
     elif "phi3" in samples.keys():
         phi3 = samples["phi3"]
     else:
-        phi3 = Cfv.random_generator(sample_size, 0.0, 2 * np.pi)
+        phi3 = rng_interval(sample_size, 0.0, 2 * np.pi, rng=rng)
 
     P1CM = Cfv.build_fourvec(E1CM, p1CM, np.full_like(costN, 1.0), np.full_like(phi3, 0))
     P2CM = Cfv.build_fourvec(E2CM, -p1CM, np.full_like(costN, 1.0), np.full_like(phi3, 0))
@@ -167,7 +168,7 @@ def two_to_two_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0):
 
 # Two body decay
 # p1 (k1) --> p2(k2) p3(k3)
-def two_body_decay(samples, boost=False, m1=1, m2=0, m3=0):
+def two_body_decay(samples, boost=False, m1=1, m2=0, m3=0, rng=np.random.random):
 
     if not samples:
         logger.debug("DEBUG: No samples were passed to two_body_decay. Assuming uniform phase space.")
@@ -183,7 +184,7 @@ def two_body_decay(samples, boost=False, m1=1, m2=0, m3=0):
         cost = samples["cost"]
     else:
         logger.debug("DEBUG: Could not find cost samples, using uniform distribution instead.")
-        cost = Cfv.random_generator(sample_size, -1, 1)
+        cost = rng_interval(sample_size, -1, 1, rng=rng)
 
     E1CM_decay = np.full_like(cost, m1)
     E2CM_decay = np.full_like(cost, (m1**2 + m2**2 - m3**2) / 2.0 / m1)
@@ -199,7 +200,7 @@ def two_body_decay(samples, boost=False, m1=1, m2=0, m3=0):
         phiz = samples["phiz"]
     else:
         logger.debug("DEBUG: Could not find phiz samples, using uniform distribution instead.")
-        phiz = Cfv.random_generator(sample_size, 0.0, 2 * np.pi)
+        phiz = rng_interval(sample_size, 0.0, 2 * np.pi, rng=rng)
 
     P1CM_decay = Cfv.build_fourvec(E1CM_decay, p2CM_decay * 0.0, cost / cost, phiz * 0)
     P2CM_decay = Cfv.build_fourvec(E2CM_decay, p2CM_decay, cost, phiz)
@@ -227,7 +228,7 @@ def two_body_decay(samples, boost=False, m1=1, m2=0, m3=0):
 
 # Three body decay
 # p1 (k1) --> p2(k2) p3(k3) p4(k4)
-def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0):
+def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0, rng=np.random.random):
 
     if not samples:
         logger.error("Error! No samples were passed to three_body_decay.")
@@ -244,7 +245,7 @@ def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0):
         t = samples["t"]
     else:
         logger.debug("DEBUG: Could not find t samples, using uniform distribution instead.")
-        t = Cfv.random_generator(sample_size, tminus, tplus)
+        t = rng_interval(sample_size, tminus, tplus, rng=rng)
 
     # Mandelstam u = m_24^2
     # from MATHEMATICA
@@ -267,7 +268,7 @@ def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0):
         u = samples["u"]
     else:
         logger.debug("DEBUG: Could not find u samples, using uniform distribution instead.")
-        u = Cfv.random_generator(sample_size, uminus, uplus)
+        u = rng_interval(sample_size, uminus, uplus, rng=rng)
 
     # Mandelstam v = m_34^2
     v = m1**2 + m2**2 + m3**2 + m4**2 - u - t
@@ -287,9 +288,9 @@ def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0):
         c_theta3 = samples["c3"]
     else:
         logger.debug("DEBUG: Could not find c3 samples, using uniform distribution instead.")
-        c_theta3 = Cfv.random_generator(sample_size, -1, 1)
+        c_theta3 = rng_interval(sample_size, -1, 1, rng=rng)
 
-    phi3 = Cfv.random_generator(sample_size, 0.0, 2 * np.pi)
+    phi3 = rng_interval(sample_size, 0.0, 2 * np.pi, rng=rng)
 
     # Azimuthal angle of P_4 wrt to P_3 (phi_34)
     if "unit_phi34" in samples.keys():
@@ -298,7 +299,7 @@ def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0):
         phi34 = samples["phi34"]
     else:
         logger.debug("DEBUG: Could not find phi34 samples, using uniform distribution instead.")
-        phi34 = Cfv.random_generator(sample_size, 0, 2 * np.pi)
+        phi34 = rng_interval(sample_size, 0, 2 * np.pi, rng=rng)
 
     # polar angle of P_4 wrt to P_3 is a known function of u and v
     c_theta34 = (t + u - m2**2 - m1**2 + 2 * E3CM_decay * E4CM_decay) / (2 * p3CM_decay * p4CM_decay)

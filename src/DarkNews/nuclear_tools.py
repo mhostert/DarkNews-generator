@@ -1,8 +1,12 @@
 import numpy as np
 import numpy.ma as ma
-import importlib.resources as resources
 from itertools import islice
 from functools import partial
+
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files
 
 from particle import literals as lp
 
@@ -248,7 +252,7 @@ elements_dic = {}
 hydrogen_Eb = 13.5981e-9  # GeV
 atomic_unit = 0.9314941024228  # mass of Carbon12 in GeV / 12
 
-with resources.files("DarkNews.include.aux_data").joinpath("mass20_1.txt").open() as ame:
+with files("DarkNews.include.aux_data").joinpath("mass20_1.txt").open() as ame:
     # Read lines in file starting at line 36
     for line in islice(ame, 36, None):
 

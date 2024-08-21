@@ -9,7 +9,7 @@ import numpy as np
 import pyhepmc.io as io
 
 
-def test_(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
+def test_output(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
     """Test all output formats of DarkNews"""
 
     for df in [light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse]:
