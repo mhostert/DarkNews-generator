@@ -3,7 +3,10 @@ from DarkNews import const
 from DarkNews import Cfourvec as Cfv
 from numpy.random import choice
 
-import importlib.resources as resources
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files
 
 
 ################## ROTATION FUNCTIONS ######################
@@ -65,8 +68,8 @@ def rotate_dataframe(df):
 # get flux angle normalization and decay position of pions for BNB
 n_ebins = 99
 BNB_enu_max = 4.245909093808516  # GeV
-BNB_fluxes = np.genfromtxt(resources.files("DarkNews.include.fluxes").joinpath("BNB_angle_energy_normalization.dat").open("r"))
-BNB_energies_positions = np.genfromtxt(resources.files("DarkNews.include.fluxes").joinpath("BNB_energy_distances.dat").open("r"))
+BNB_fluxes = np.genfromtxt(files("DarkNews.include.fluxes").joinpath("BNB_angle_energy_normalization.dat").open("r"))
+BNB_energies_positions = np.genfromtxt(files("DarkNews.include.fluxes").joinpath("BNB_energy_distances.dat").open("r"))
 BNB_energy_nu = BNB_energies_positions[1:, 0]
 BNB_energy_nu_bins = np.linspace(0, BNB_enu_max, n_ebins + 1)
 BNB_e_bins_angle = np.linspace(0, BNB_enu_max, 100)
@@ -75,6 +78,37 @@ BNB_distances_nu = BNB_energies_positions[0, 1:]
 BNB_e_vs_z_dist = BNB_energies_positions[1:, 1:]
 
 radius_decay_pipe = 35.0  # cm
+
+
+def sample_neutrino_origin_at_MiniBooNE(E_nu):
+    # Define number of E bins in MiniBooNE flux simulation
+    n_ebins = 99
+
+    # Creating e_bins using np.searchsorted and np.clip
+    e_bins = np.clip(np.searchsorted(BNB_energy_nu_bins, E_nu, side="right") - 1, 0, n_ebins - 1)
+
+    # Ensure probs_distance is correctly normalized
+    probs_distance = np.where(
+        np.sum(BNB_e_vs_z_dist, axis=1, keepdims=True) != 0, BNB_e_vs_z_dist / (np.sum(BNB_e_vs_z_dist, axis=1, keepdims=True) + 1e-18), BNB_e_vs_z_dist
+    )
+
+    # Flattened choice to handle vectorized approach more efficiently
+    choices = np.random.random(size=len(e_bins))
+
+    # Cumulative distribution for more efficient sampling
+    cumulative_probs = np.cumsum(probs_distance, axis=1)
+
+    # Allocating space for results
+    origin = np.zeros(len(e_bins))
+
+    # Vectorized sampling using cumulative probabilities
+    for i, e in enumerate(e_bins):
+        if cumulative_probs[e, -1] > 0:  # Ensure it’s not an all-zero row
+            origin[i] = BNB_distances_nu[np.searchsorted(cumulative_probs[e], choices[i])]
+        else:
+            origin[i] = np.random.choice(BNB_distances_nu)
+
+    return origin * 1e2
 
 
 class Chisel:
@@ -349,18 +383,7 @@ def sbnd_geometry(df):
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
 
-    # Compute the mean position where the pions decayed
-    n_ebins = 99
-    E_nu = df["P_projectile", "0"].values
-    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side="right") - 1
-    if n_ebins in e_bins:
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    probs_distance = np.ones_like(BNB_e_vs_z_dist)
-    for i in range(len(probs_distance)):
-        if BNB_e_vs_z_dist[e_bins[i], :].sum() != 0:
-            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i], :]
-    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    origin = sample_neutrino_origin_at_MiniBooNE(df["P_projectile", "0"].values)
 
     length_events = len(df)
     u_normal = np.random.random(length_events)
@@ -405,18 +428,7 @@ def icarus_geometry(df):
     df["pos_scatt", "2"] = events[1, :nsamples]
     df["pos_scatt", "3"] = events[2, :nsamples]
 
-    # Compute the mean position where the pions decayed
-    n_ebins = 99
-    E_nu = df["P_projectile", "0"].values
-    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side="right") - 1
-    if n_ebins in e_bins:
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    probs_distance = np.ones_like(BNB_e_vs_z_dist)
-    for i in range(len(probs_distance)):
-        if BNB_e_vs_z_dist[e_bins[i], :].sum() != 0:
-            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i], :]
-    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    origin = sample_neutrino_origin_at_MiniBooNE(df["P_projectile", "0"].values)
 
     length_events = len(df)
     u_normal = np.random.random(length_events)
@@ -464,18 +476,7 @@ def miniboone_dirt_geometry(df):
     df["pos_scatt", "2"] = y0
     df["pos_scatt", "3"] = z0
 
-    # Compute the mean position where the pions decayed
-    n_ebins = 99
-    E_nu = df["P_projectile", "0"].values
-    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side="right") - 1
-    if n_ebins in e_bins:
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    probs_distance = np.ones_like(BNB_e_vs_z_dist)
-    for i in range(len(probs_distance)):
-        if BNB_e_vs_z_dist[e_bins[i], :].sum() != 0:
-            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i], :]
-    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    origin = sample_neutrino_origin_at_MiniBooNE(df["P_projectile", "0"].values)
 
     length_events = len(df)
     u_normal = np.random.random(length_events)
@@ -522,18 +523,7 @@ def microboone_dirt_geometry(df):
     df["pos_scatt", "2"] = y0
     df["pos_scatt", "3"] = z0
 
-    # Compute the mean position where the pions decayed
-    n_ebins = 99
-    E_nu = df["P_projectile", "0"].values
-    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side="right") - 1
-    if n_ebins in e_bins:
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    probs_distance = np.ones_like(BNB_e_vs_z_dist)
-    for i in range(len(probs_distance)):
-        if BNB_e_vs_z_dist[e_bins[i], :].sum() != 0:
-            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i], :]
-    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    origin = sample_neutrino_origin_at_MiniBooNE(df["P_projectile", "0"].values)
 
     u_normal = np.random.random(length_events)
     phi_normal = np.random.random(length_events) * 2.0 * np.pi
@@ -579,18 +569,7 @@ def sbnd_dirt_cone_geometry(df):
     df["pos_scatt", "2"] = y0
     df["pos_scatt", "3"] = z0
 
-    # Compute the mean position where the pions decayed
-    n_ebins = 99
-    E_nu = df["P_projectile", "0"].values
-    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side="right") - 1
-    if n_ebins in e_bins:
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    probs_distance = np.ones_like(BNB_e_vs_z_dist)
-    for i in range(len(probs_distance)):
-        if BNB_e_vs_z_dist[e_bins[i], :].sum() != 0:
-            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i], :]
-    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    origin = sample_neutrino_origin_at_MiniBooNE(df["P_projectile", "0"].values)
 
     u_normal = np.random.random(length_events)
     phi_normal = np.random.random(length_events) * 2.0 * np.pi
@@ -636,18 +615,7 @@ def icarus_dirt_geometry(df):
     df["pos_scatt", "2"] = y0
     df["pos_scatt", "3"] = z0
 
-    # Compute the mean position where the pions decayed
-    n_ebins = 99
-    E_nu = df["P_projectile", "0"].values
-    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side="right") - 1
-    if n_ebins in e_bins:
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    probs_distance = np.ones_like(BNB_e_vs_z_dist)
-    for i in range(len(probs_distance)):
-        if BNB_e_vs_z_dist[e_bins[i], :].sum() != 0:
-            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i], :]
-    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    origin = sample_neutrino_origin_at_MiniBooNE(df["P_projectile", "0"].values)
 
     u_normal = np.random.random(length_events)
     phi_normal = np.random.random(length_events) * 2.0 * np.pi
@@ -677,18 +645,7 @@ def microboone_tpc_geometry(df):
     df["pos_scatt", "2"] = np.random.random(length_events) * (y_muB) - y_muB / 2.0
     df["pos_scatt", "3"] = z0
 
-    # Compute the mean position where the pions decayed
-    n_ebins = 99
-    E_nu = df["P_projectile", "0"].values
-    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side="right") - 1
-    if n_ebins in e_bins:
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    probs_distance = np.ones_like(BNB_e_vs_z_dist)
-    for i in range(len(probs_distance)):
-        if BNB_e_vs_z_dist[e_bins[i], :].sum() != 0:
-            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i], :]
-    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    origin = sample_neutrino_origin_at_MiniBooNE(df["P_projectile", "0"].values)
 
     u_normal = np.random.random(length_events)
     phi_normal = np.random.random(length_events) * 2.0 * np.pi
@@ -717,18 +674,8 @@ def sbnd_dirt_geometry(df):
     df["pos_scatt", "2"] = np.random.random(length_events) * (y_sbnd_dirt_max - y_sbnd_dirt_min) + y_sbnd_dirt_min
     df["pos_scatt", "3"] = z0
 
-    # Compute the mean position where the pions decayed
-    n_ebins = 99
     E_nu = df["P_projectile", "0"].values
-    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side="right") - 1
-    if n_ebins in e_bins:
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    probs_distance = np.ones_like(BNB_e_vs_z_dist)
-    for i in range(len(probs_distance)):
-        if BNB_e_vs_z_dist[e_bins[i], :].sum() != 0:
-            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i], :]
-    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    origin = sample_neutrino_origin_at_MiniBooNE(E_nu)
 
     u_normal = np.random.random(length_events)
     phi_normal = np.random.random(length_events) * 2.0 * np.pi
@@ -797,17 +744,7 @@ def miniboone_geometry(df):
     df["pos_scatt", "3"] = events[2, :nsamples]
 
     # Compute the mean position where the pions decayed
-    n_ebins = 99
-    E_nu = df["P_projectile", "0"].values
-    e_bins = np.searchsorted(BNB_energy_nu_bins, E_nu, side="right") - 1
-    if n_ebins in e_bins:
-        mask = e_bins >= n_ebins
-        e_bins[mask] = n_ebins - 1
-    probs_distance = np.ones_like(BNB_e_vs_z_dist)
-    for i in range(len(probs_distance)):
-        if BNB_e_vs_z_dist[e_bins[i], :].sum() != 0:
-            probs_distance[i] = BNB_e_vs_z_dist[e_bins[i], :]
-    origin = np.array([choice(BNB_distances_nu, 1, p=probs_distance[e_bins[i]] / probs_distance[e_bins[i]].sum())[0] * 1e2 for i in range(len(e_bins))])
+    origin = sample_neutrino_origin_at_MiniBooNE(df["P_projectile", "0"].values)
 
     length_events = len(df)
     u_normal = np.random.random(length_events)

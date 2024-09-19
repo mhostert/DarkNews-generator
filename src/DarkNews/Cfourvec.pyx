@@ -6,7 +6,10 @@
 
 import numpy as np
 cimport numpy as np
-from numpy cimport ndarray
+
+np.import_array()
+DTYPE = np.float64
+ctypedef np.float64_t DTYPE_t
 
 #######################################
 # C functions to be used
@@ -55,15 +58,15 @@ cdef double NormalRand(double mean, double stddev):
 
 #******************************
 def random_generator(int size, double min, double max):
-	cdef ndarray[double,ndim=1] s = np.empty((size))
+	cdef np.ndarray[DTYPE_t,ndim=1] s = np.empty((size), dtype=DTYPE)
 	for i in range(size):
 		s[i] = (max-min)*UniformRand()+min
 	return s
 
 #******************************
-def random_normal(ndarray[double, ndim=1] x, ndarray[double, ndim=1] sigma):
+def random_normal(np.ndarray[DTYPE_t, ndim=1] x, np.ndarray[DTYPE_t, ndim=1] sigma):
 	cdef int size = x.shape[0]
-	cdef ndarray[double,ndim=1] s = np.empty((size))
+	cdef np.ndarray[DTYPE_t,ndim=1] s = np.empty((size), dtype=DTYPE)
 	for i in range(size):
 		s[i] = NormalRand(x[i], sigma[i])
 	return s
@@ -74,11 +77,11 @@ def random_normal(ndarray[double, ndim=1] x, ndarray[double, ndim=1] sigma):
 #######################################
 
 #******************************
-def build_fourvec(ndarray[double, ndim=1] E, ndarray[double, ndim=1] p, ndarray[double, ndim=1] cost, ndarray[double, ndim=1] phi):
+def build_fourvec(np.ndarray[DTYPE_t, ndim=1] E, np.ndarray[DTYPE_t, ndim=1] p, np.ndarray[DTYPE_t, ndim=1] cost, np.ndarray[DTYPE_t, ndim=1] phi):
 
 	cdef int i,m
 	m = phi.shape[0]
-	cdef ndarray[double,ndim=2] s = np.empty((m,4))
+	cdef np.ndarray[DTYPE_t,ndim=2] s = np.empty((m,4), dtype=DTYPE)
 
 	with nogil:
 		for i in range(m):
@@ -90,11 +93,11 @@ def build_fourvec(ndarray[double, ndim=1] E, ndarray[double, ndim=1] p, ndarray[
 	return s
 
 #******************************
-def momentum_scalar(ndarray[double] E, double mass):
+def momentum_scalar(np.ndarray[DTYPE_t, ndim=1] E, double mass):
 
 	cdef int i,m
 	m = E.shape[0]
-	cdef ndarray[double,ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t,ndim=1] s = np.empty((m), dtype=DTYPE)
 
 	with nogil:
 		for i in range(m):
@@ -102,11 +105,11 @@ def momentum_scalar(ndarray[double] E, double mass):
 	return s
 
 #******************************
-def get_theta_3vec(ndarray[double, ndim=2] r):
+def get_theta_3vec(np.ndarray[DTYPE_t, ndim=2] r):
 
 	cdef int i,m
 	m = r.shape[0]
-	cdef ndarray[double, ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t, ndim=1] s = np.empty((m), dtype=DTYPE)
 
 	with nogil:
 		for i in range(m):
@@ -114,10 +117,10 @@ def get_theta_3vec(ndarray[double, ndim=2] r):
 	return s
 
 #******************************
-def mass(ndarray[double, ndim=2] x):
+def mass(np.ndarray[DTYPE_t, ndim=2] x):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double,ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t,ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] = x[i,0]*x[i,0] - x[i,1]*x[i,1] - x[i,2]*x[i,2] - x[i,3]*x[i,3]
@@ -128,10 +131,10 @@ def mass(ndarray[double, ndim=2] x):
 	return  s
 
 #******************************
-def inv_mass(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
+def inv_mass(np.ndarray[DTYPE_t, ndim=2] x, np.ndarray[DTYPE_t, ndim=2] y):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double,ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t,ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] = x[i,0]*y[i,0] - x[i,1]*y[i,1] - x[i,2]*y[i,2] - x[i,3]*y[i,3]
@@ -142,99 +145,99 @@ def inv_mass(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
 	return  s
 
 #******************************
-def dot4(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
+def dot4(np.ndarray[DTYPE_t, ndim=2] x, np.ndarray[DTYPE_t, ndim=2] y):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double,ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t,ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] = x[i,0]*y[i,0] - x[i,1]*y[i,1] - x[i,2]*y[i,2] - x[i,3]*y[i,3]
 	return  s
 
 #******************************
-def dot3(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
+def dot3(np.ndarray[DTYPE_t, ndim=2] x, np.ndarray[DTYPE_t, ndim=2] y):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double,ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t,ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] = x[i,1]*y[i,1] + x[i,2]*y[i,2] + x[i,3]*y[i,3]
 	return  s
 
 #******************************
-def dotXY(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
+def dotXY(np.ndarray[DTYPE_t, ndim=2] x, np.ndarray[DTYPE_t, ndim=2] y):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double,ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t,ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] =  x[i,1]*y[i,1] + x[i,2]*y[i,2]
 	return  s
 
 #******************************
-def dotXY_vec(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
+def dotXY_vec(np.ndarray[DTYPE_t, ndim=2] x, np.ndarray[DTYPE_t, ndim=2] y):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double,ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t,ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] =  x[i,0]*y[i,0] + x[i,1]*y[i,1]
 	return  s
 
 #******************************
-def getXYnorm(ndarray[double, ndim=2] x):
+def getXYnorm(np.ndarray[DTYPE_t, ndim=2] x):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double,ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t,ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] =  sqrt(x[i,1]*x[i,1] + x[i,2]*x[i,2])
 	return  s
 #******************************
-def getXYnorm_3vec(ndarray[double, ndim=2] x):
+def getXYnorm_3vec(np.ndarray[DTYPE_t, ndim=2] x):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double,ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t,ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] =  sqrt(x[i,0]*x[i,0] + x[i,1]*x[i,1])
 	return  s
 
 #******************************
-def get_vec_norm(ndarray[double, ndim=2] x):
+def get_vec_norm(np.ndarray[DTYPE_t, ndim=2] x):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double, ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t, ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] = sqrt(x[i,0]*x[i,0] + x[i,1]*x[i,1] + x[i,2]*x[i,2])
 	return s
 
 #******************************
-def get_3vec_norm(ndarray[double,ndim=2] x):
+def get_3vec_norm(np.ndarray[DTYPE_t,ndim=2] x):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double, ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t, ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] = sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])
 	return s
 
 #******************************
-def get_3norm_vec(ndarray[double,ndim=2] x):
+def get_3norm_vec(np.ndarray[DTYPE_t,ndim=2] x):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double, ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t, ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] = sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])
 	return s
 
 #******************************
-def get_3direction_3vec(ndarray[double, ndim=2] x):
+def get_3direction_3vec(np.ndarray[DTYPE_t, ndim=2] x):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double, ndim=2] s = np.empty((m,3))
+	cdef np.ndarray[DTYPE_t, ndim=2] s = np.empty((m,3), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i,0] = x[i,0]/sqrt(x[i,0]*x[i,0]+x[i,1]*x[i,1]+x[i,2]*x[i,2])
@@ -243,30 +246,30 @@ def get_3direction_3vec(ndarray[double, ndim=2] x):
 	return s
 
 #******************************
-def get_cosTheta(ndarray[double, ndim=2] x):
+def get_cosTheta(np.ndarray[DTYPE_t, ndim=2] x):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double, ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t, ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] = x[i,3]/sqrt(x[i,1]*x[i,1] + x[i,2]*x[i,2] + x[i,3]*x[i,3])
 	return s
 
 #******************************
-def get_cos_opening_angle(ndarray[double, ndim=2] x, ndarray[double, ndim=2] y):
+def get_cos_opening_angle(np.ndarray[DTYPE_t, ndim=2] x, np.ndarray[DTYPE_t, ndim=2] y):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double, ndim=1] s = np.empty((m))
+	cdef np.ndarray[DTYPE_t, ndim=1] s = np.empty((m), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i] = (x[i,1]*y[i,1] + x[i,2]*y[i,2] + x[i,3]*y[i,3])/sqrt(x[i,1]*x[i,1] + x[i,2]*x[i,2] + x[i,3]*x[i,3])/sqrt(y[i,1]*y[i,1] + y[i,2]*y[i,2] + y[i,3]*y[i,3])
 	return s
 
 #******************************
-def get_3direction(ndarray[double, ndim=2] x):
+def get_3direction(np.ndarray[DTYPE_t, ndim=2] x):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double, ndim=2] s = np.empty((m,3))
+	cdef np.ndarray[DTYPE_t, ndim=2] s = np.empty((m,3), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i,0] = x[i,1]/sqrt(x[i,1]*x[i,1]+x[i,2]*x[i,2]+x[i,3]*x[i,3])
@@ -275,10 +278,10 @@ def get_3direction(ndarray[double, ndim=2] x):
 	return s
 
 #******************************
-def put_in_z_axis(ndarray[double, ndim=1] x):
+def put_in_z_axis(np.ndarray[DTYPE_t, ndim=1] x):
 	cdef int i,m
 	m= x.shape[0]
-	cdef ndarray[double, ndim=2] s = np.empty((m,3))
+	cdef np.ndarray[DTYPE_t, ndim=2] s = np.empty((m,3), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			s[i,0] = 0.0
@@ -287,14 +290,14 @@ def put_in_z_axis(ndarray[double, ndim=1] x):
 	return s
 
 #******************************
-def rotationx(ndarray[double, ndim=2] v4, ndarray[double] theta):
+def rotationx(np.ndarray[DTYPE_t, ndim=2] v4, np.ndarray[DTYPE_t, ndim=1] theta):
 
 	cdef int i, m;
 
 	m = v4.shape[0]
 
-	cdef ndarray[double, ndim=2] res = np.empty((m,4))
-	cdef ndarray[double, ndim=3] R = np.empty((m,4,4))
+	cdef np.ndarray[DTYPE_t, ndim=2] res = np.empty((m,4), dtype=DTYPE)
+	cdef np.ndarray[DTYPE_t, ndim=3] R = np.empty((m,4,4), dtype=DTYPE)
 
 	with nogil:
 		for i in range(m):
@@ -326,11 +329,11 @@ def rotationx(ndarray[double, ndim=2] v4, ndarray[double] theta):
 	return res
 
 #******************************
-def rotationy(ndarray[double, ndim=2] v4, ndarray[double] theta):
+def rotationy(np.ndarray[DTYPE_t, ndim=2] v4, np.ndarray[DTYPE_t, ndim=1] theta):
 
 	cdef int i, m;
 	m = v4.shape[0]
-	cdef ndarray[double, ndim=2] res = np.empty((m,4))
+	cdef np.ndarray[DTYPE_t, ndim=2] res = np.empty((m,4), dtype=DTYPE)
 
 	with nogil:
 		for i in range(m):
@@ -341,11 +344,11 @@ def rotationy(ndarray[double, ndim=2] v4, ndarray[double] theta):
 		    
 	return res
 #******************************
-def rotationy_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):
+def rotationy_sin(np.ndarray[DTYPE_t, ndim=2] v4, np.ndarray[DTYPE_t, ndim=1] stheta):
 
 	cdef int i, m;
 	m = v4.shape[0]
-	cdef ndarray[double, ndim=2] res = np.empty((m,4))
+	cdef np.ndarray[DTYPE_t, ndim=2] res = np.empty((m,4), dtype=DTYPE)
 
 	with nogil:
 		for i in range(m):
@@ -356,11 +359,11 @@ def rotationy_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):
 		    
 	return res
 #******************************
-def rotationy_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign=1):
+def rotationy_cos(np.ndarray[DTYPE_t, ndim=2] v4, np.ndarray[DTYPE_t, ndim=1] ctheta, int sign=1):
 
 	cdef int i, m;
 	m = v4.shape[0]
-	cdef ndarray[double, ndim=2] res = np.empty((m,4))
+	cdef np.ndarray[DTYPE_t, ndim=2] res = np.empty((m,4), dtype=DTYPE)
 
 	with nogil:
 		for i in range(m):
@@ -372,11 +375,11 @@ def rotationy_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign=1
 	return res
 
 #******************************
-def rotationz(ndarray[double, ndim=2] v4, ndarray[double] theta):
+def rotationz(np.ndarray[DTYPE_t, ndim=2] v4, np.ndarray[DTYPE_t, ndim=1] theta):
 
 	cdef int i, m;
 	m = v4.shape[0]
-	cdef ndarray[double, ndim=2] res = np.empty((m,4))
+	cdef np.ndarray[DTYPE_t, ndim=2] res = np.empty((m,4), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			res[i,0] = v4[i,0]
@@ -386,11 +389,11 @@ def rotationz(ndarray[double, ndim=2] v4, ndarray[double] theta):
 		    
 	return res
 #******************************
-def rotationz_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):
+def rotationz_sin(np.ndarray[DTYPE_t, ndim=2] v4, np.ndarray[DTYPE_t, ndim=1] stheta):
 
 	cdef int i, m;
 	m = v4.shape[0]
-	cdef ndarray[double, ndim=2] res = np.empty((m,4))
+	cdef np.ndarray[DTYPE_t, ndim=2] res = np.empty((m,4), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			res[i,0] = v4[i,0]
@@ -400,11 +403,11 @@ def rotationz_sin(ndarray[double, ndim=2] v4, ndarray[double] stheta):
 		    
 	return res
 #******************************
-def rotationz_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign = 1):
+def rotationz_cos(np.ndarray[DTYPE_t, ndim=2] v4, np.ndarray[DTYPE_t, ndim=1] ctheta, int sign = 1):
 
 	cdef int i, m;
 	m = v4.shape[0]
-	cdef ndarray[double, ndim=2] res = np.empty((m,4))
+	cdef np.ndarray[DTYPE_t, ndim=2] res = np.empty((m,4), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			res[i,0] = v4[i,0]
@@ -415,10 +418,10 @@ def rotationz_cos(ndarray[double, ndim=2] v4, ndarray[double] ctheta, int sign =
 	return res
 
 #******************************
-def L(ndarray[double, ndim=2] v4, ndarray[double] beta):
+def L(np.ndarray[DTYPE_t, ndim=2] v4, np.ndarray[DTYPE_t, ndim=1] beta):
 	cdef int i, m;
 	m = beta.shape[0]
-	cdef ndarray[double, ndim=2] res = np.empty((m,4))
+	cdef np.ndarray[DTYPE_t, ndim=2] res = np.empty((m,4), dtype=DTYPE)
 	with nogil:
 		for i in range(m):
 			res[i,0] = 1.0/sqrt(1.0 - beta[i]*beta[i])*v4[i,0] - beta[i]/sqrt(1.0 - beta[i]*beta[i])*v4[i,3]
@@ -429,10 +432,10 @@ def L(ndarray[double, ndim=2] v4, ndarray[double] beta):
 	return res
 
 #******************************
-def T(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] theta, ndarray[double] phi):
+def T(np.ndarray[DTYPE_t, ndim=2] v4, np.ndarray[DTYPE_t, ndim=1] beta, np.ndarray[DTYPE_t, ndim=1] theta, np.ndarray[DTYPE_t, ndim=1] phi):
 	return L( rotationy( rotationz(v4,-phi), theta), -beta)
 
 #******************************
-def Tinv(ndarray[double, ndim=2] v4, ndarray[double] beta, ndarray[double] ctheta, ndarray[double] phi):
+def Tinv(np.ndarray[DTYPE_t, ndim=2] v4, np.ndarray[DTYPE_t, ndim=1] beta, np.ndarray[DTYPE_t, ndim=1] ctheta, np.ndarray[DTYPE_t, ndim=1] phi):
 	return rotationz( rotationy_cos( L(v4, beta), ctheta, sign=-1), phi)
 

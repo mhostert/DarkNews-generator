@@ -2,7 +2,11 @@ import numpy as np
 from scipy import interpolate
 import os.path
 import os
-import importlib.resources as resources
+
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files
 
 import logging
 
@@ -72,7 +76,7 @@ class Detector:
         except (OSError, IOError, FileNotFoundError) as err:
             # if no file is found, then it is interpreted as a keyword for a pre-defined experiment
             if experiment in self.KEYWORDS:
-                with resources.files(DET_MODULE).joinpath(self.KEYWORDS[experiment]).open(**kwargs) as f:
+                with files(DET_MODULE).joinpath(self.KEYWORDS[experiment]).open(**kwargs) as f:
                     parser.parse_file(file=f, comments="#")
             else:
                 raise err
@@ -114,7 +118,7 @@ class Detector:
             _enu, *_fluxes = np.genfromtxt(f"{exp_dir}/{self.FLUXFILE}", unpack=True)
         except (OSError, FileNotFoundError, TypeError):
             try:
-                file = resources.files("DarkNews.include.fluxes").joinpath(self.FLUXFILE).open()
+                file = files("DarkNews.include.fluxes").joinpath(self.FLUXFILE).open()
                 _enu, *_fluxes = np.genfromtxt(file, unpack=True)
             except FileNotFoundError:
                 raise FileNotFoundError(f"Fluxes file {self.FLUXFILE} not found in current experiment file path nor in config file path.")

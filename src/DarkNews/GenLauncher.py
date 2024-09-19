@@ -564,7 +564,7 @@ class GenLauncher:
         zero_entries = self.df["w_event_rate"] == 0
         if zero_entries.sum() / len(self.df.index) > 0.01:
             logger.warning(
-                f"Warning: number of entries with w_event_rate = 0 surpasses 1% of number of samples. Found: {zero_entries.sum()/len(self.df.index)}."
+                f"Warning: number of entries with w_event_rate = 0 surpasses 1% of number of samples. Found: {zero_entries.sum()/len(self.df.index)*100:.2f}%. Sampling is likely not convering or integrand is too sparse."
             )
         self.df = self.df.drop(self.df[zero_entries].index).reset_index(drop=True)
 
