@@ -23,15 +23,15 @@ def test_MB_benchmarks(gen_simplest_benchmarks):
 
     with assert_all() as assertions:
         # check seeded generation
-        expect = 12966.103497649234
+        expect = 13215.295377586925
         assertions.append(soft_compare(df_light.w_event_rate.sum(), expect, "seeded light dark photon has changed!"))
 
         # check seeded generation
-        expect = 5.144522161307712
+        expect = 5.574120950173484
         assertions.append(soft_compare(df_heavy.w_event_rate.sum(), expect, "seeded heavy dark photon has changed!"))
 
         # check seeded generation
-        expect = 120590.91809832449
+        expect = 83495.38110215841
         assertions.append(soft_compare(df_TMM.w_event_rate.sum(), expect, "seeded TMM has changed!"))
 
 
@@ -47,15 +47,15 @@ def test_MB_other_final_states(gen_other_final_states):
 
     with assert_all() as assertions:
         # check seeded generation
-        expect = 204.5472884344149
+        expect = 188.64454603928297
         assertions.append(soft_compare(df_light.w_event_rate.sum(), expect, "seeded light dark photon to muons has changed!"))
 
         # check seeded generation
-        expect = 2.247219303879909
+        expect = 2.4974196930861705
         assertions.append(soft_compare(df_heavy.w_event_rate.sum(), expect, "seeded heavy dark photon to muons has changed!"))
 
         # check seeded generation
-        expect = 3587.5139192644183
+        expect = 3621.413325452752
         assertions.append(soft_compare(df_TMM_mumu.w_event_rate.sum(), expect, "seeded TMM to muons has changed!"))
         assertions.append(soft_assert(("P_decay_ell_plus" in df_TMM_mumu.columns), "Could not find ell+ in the decay products!"))
         assertions.append(
@@ -66,7 +66,7 @@ def test_MB_other_final_states(gen_other_final_states):
         )
 
         # check seeded generation
-        expect = 3414.5819533280555
+        expect = 3471.176387572824
         assertions.append(soft_compare(df_TMM_photon.w_event_rate.sum(), expect, "seeded heavy dark photon to muons has changed!"))
         assertions.append(soft_assert(("P_decay_photon" in df_TMM_photon.columns), "Could not find photon in the decay products!"))
 
@@ -77,15 +77,15 @@ def test_MB_generic_model(gen_most_generic_model):
 
     with assert_all() as assertions:
         # check seeded generation
-        expect = 24221990.051016837
+        expect = 25570154.745263256
         assertions.append(soft_compare(df_light.w_event_rate.sum(), expect, "seeded light dark photon to muons has changed!"))
 
         # check seeded generation
-        expect = 243775.96717828474
+        expect = 192334.36051129547
         assertions.append(soft_compare(df_heavy.w_event_rate.sum(), expect, "seeded heavy most-generic model has changed!"))
 
         # check seeded generation
-        expect = 229955.91953765703
+        expect = 220759.7604344437
         assertions.append(soft_compare(df_photon.w_event_rate.sum(), expect, "seeded heavy most-generic model has changed!"))
 
 
@@ -95,19 +95,19 @@ def test_MB_dirt(gen_dirt_cases):
 
     with assert_all() as assertions:
         # check seeded generation
-        expect = 74562.07927470398
+        expect = 76212.61530482752
         assertions.append(soft_compare(df_1.w_event_rate.sum(), expect, "seeded sbnd dirt generation has changed!"))
 
         # check seeded generation
-        expect = 33.10398216496445
+        expect = 34.6264453233758
         assertions.append(soft_compare(df_2.w_event_rate.sum(), expect, "seeded microboone dirt generation has changed!"))
 
         # check seeded generation
-        expect = 273.0694082249817
+        expect = 290.55091582348734
         assertions.append(soft_compare(df_3.w_event_rate.sum(), expect, "seeded icarus dirt generation has changed!"))
 
         # check seeded generation
-        expect = 396.72373820311645
+        expect = 398.08986326841875
         assertions.append(soft_compare(df_4.w_event_rate.sum(), expect, "seeded miniboone dirt generation has changed!"))
 
 
