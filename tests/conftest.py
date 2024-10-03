@@ -1,6 +1,7 @@
 import pytest
 import random
 import numpy as np
+import os
 
 from DarkNews import const
 from DarkNews.GenLauncher import GenLauncher
@@ -56,41 +57,120 @@ MOST_GENERIC_MODEL_KWARGS = {
 
 
 @pytest.fixture(scope="session")
-def set_seeds():
-    seed = 42
-    random.seed(seed)
-    # os.environ('PYTHONHASHSEED') = str(seed)
+def gen_simplest_benchmarks():
+    np.random.seed(42)
+    gen = GenLauncher(
+        mzprime=0.03,
+        m4=0.420,
+        neval=100,
+        nint=1,
+        neval_warmup=100,
+        nint_warmup=1,
+        experiment="miniboone_fhc",
+        loglevel="ERROR",
+        seed=42,
+        HNLtype="dirac",
+        UD4=1.0,
+        alphaD=0.25,
+        Umu4=np.sqrt(9e-7),
+        epsilon=np.sqrt(2e-10 / const.alphaQED),
+    )
+    df_light = gen.run()
+
+    gen = GenLauncher(
+        mzprime=1.25,
+        m4=0.150,
+        neval=100,
+        nint=1,
+        neval_warmup=100,
+        nint_warmup=1,
+        experiment="miniboone_fhc",
+        loglevel="ERROR",
+        seed=42,
+        HNLtype="dirac",
+        UD4=1.0,
+        alphaD=0.25,
+        Umu4=np.sqrt(9e-7),
+        epsilon=np.sqrt(2e-10 / const.alphaQED),
+    )
+    df_heavy = gen.run()
+
+    gen = GenLauncher(
+        mu_tr_mu4=2e-6,
+        m4=0.150,
+        epsilon=0.0,
+        gD=0.0,
+        Umu4=0.0,
+        neval=100,
+        nint=1,
+        neval_warmup=100,
+        nint_warmup=1,
+        experiment="miniboone_fhc",
+        loglevel="ERROR",
+        seed=42,
+    )
+    df_TMM = gen.run()
+
+    return df_light, df_heavy, df_TMM
 
 
 # generate a specific set of events to be tested in a session
 @pytest.fixture(scope="session")
 def SM_gen():
     gen = GenLauncher(
-        gD=0.0, Umu4=1e-3, epsilon=0.0, m4=0.01, loglevel="ERROR", neval=100, nint=1, neval_warmup=100, nint_warmup=1, seed=42, make_summary_plots=True
+        gD=0.0,
+        Umu4=1e-3,
+        epsilon=0.0,
+        m4=0.01,
+        loglevel="ERROR",
+        neval=100,
+        nint=1,
+        neval_warmup=100,
+        nint_warmup=1,
+        seed=42,
     )
     return gen.run()
 
 
 @pytest.fixture(scope="session")
 def portal_vs_simplified():
-    EPSILON = 3.4e-4
-    common_kwargs = {
-        "loglevel": "ERROR",
-        "HNLtype": "majorana",
-        "neval": 100,
-        "nint": 1,
-        "neval_warmup": 100,
-        "nint_warmup": 1,
-        "m5": 0.15,
-        "m4": 0.1,
-        "mzprime": 1.25,
-    }
 
-    kwargs_1 = {"d_mu5": 1e-3, "d_45": 1 / 2, "dprotonV": EPSILON * const.eQED, "deV": EPSILON * const.eQED}
-    kwargs_2 = {"UD4": 1 / np.sqrt(2), "UD5": 1 / np.sqrt(2), "Umu5": 1e-3, "Umu4": 1e-3, "gD": 1, "epsilon": EPSILON}
-
-    gen_1 = GenLauncher(experiment="miniboone_fhc", seed=42, **kwargs_1, **common_kwargs)
-    gen_2 = GenLauncher(experiment="miniboone_fhc", seed=42, **kwargs_2, **common_kwargs)
+    gen_1 = GenLauncher(
+        experiment="miniboone_fhc",
+        seed=42,
+        loglevel="ERROR",
+        HNLtype="majorana",
+        neval=100,
+        nint=1,
+        neval_warmup=100,
+        nint_warmup=1,
+        m5=0.15,
+        m4=0.1,
+        mzprime=1.25,
+        d_mu5=1e-3,
+        d_45=1 / 2,
+        dprotonV=3.4e-4 * const.eQED,
+        deV=3.4e-4 * const.eQED,
+    )
+    gen_2 = GenLauncher(
+        experiment="miniboone_fhc",
+        seed=42,
+        loglevel="ERROR",
+        HNLtype="majorana",
+        neval=100,
+        nint=1,
+        neval_warmup=100,
+        nint_warmup=1,
+        m5=0.15,
+        m4=0.1,
+        mzprime=1.25,
+        UD4=1 / np.sqrt(2),
+        UD5=1 / np.sqrt(2),
+        Umu5=1e-3,
+        Umu4=1e-3,
+        gD=1,
+        epsilon=3.4e-4,
+    )
 
     return gen_1.run(), gen_2.run()
 
@@ -141,37 +221,6 @@ def light_DP_gen_all_outputs_sparse():
         **MODEL_KWARGS
     )
     return gen.run()
-
-
-@pytest.fixture(scope="session")
-def gen_simplest_benchmarks():
-    gen = GenLauncher(
-        mzprime=0.03, m4=0.420, neval=100, nint=1, neval_warmup=100, nint_warmup=1, experiment="miniboone_fhc", loglevel="ERROR", seed=42, **MODEL_KWARGS
-    )
-    df_light = gen.run()
-
-    gen = GenLauncher(
-        mzprime=1.25, m4=0.150, neval=100, nint=1, neval_warmup=100, nint_warmup=1, experiment="miniboone_fhc", loglevel="ERROR", seed=42, **MODEL_KWARGS
-    )
-    df_heavy = gen.run()
-
-    gen = GenLauncher(
-        mu_tr_mu4=2e-6,
-        m4=0.150,
-        epsilon=0.0,
-        gD=0.0,
-        Umu4=0.0,
-        neval=100,
-        nint=1,
-        neval_warmup=100,
-        nint_warmup=1,
-        experiment="miniboone_fhc",
-        loglevel="ERROR",
-        seed=42,
-    )
-    df_TMM = gen.run()
-
-    return df_light, df_heavy, df_TMM
 
 
 @pytest.fixture(scope="session")

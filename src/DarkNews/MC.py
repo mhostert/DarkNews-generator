@@ -2,11 +2,6 @@ import numpy as np
 import pandas as pd
 import vegas as vg
 
-import logging
-
-logger = logging.getLogger("logger." + __name__)
-prettyprinter = logging.getLogger("prettyprinter." + __name__)
-
 from collections import defaultdict
 from functools import partial
 
@@ -15,6 +10,11 @@ from DarkNews import integrands
 from DarkNews import const
 from DarkNews import pdg
 from DarkNews import geom
+
+import logging
+
+logger = logging.getLogger("logger." + __name__)
+prettyprinter = logging.getLogger("prettyprinter." + __name__)
 
 NINT = 10
 NEVAL = 1000
@@ -390,31 +390,80 @@ class MC_events:
 
 
 # merge all generation cases into one dictionary
-def get_merged_MC_output(df1, df2):
-    """
-    take two pandas dataframes with events and combine them.
-    Resetting index to go from (0,n_1+n_2) where n_i is the number of events in dfi
-    """
-    if df1.attrs["model"] != df2.attrs["model"]:
-        logger.warning("Beware! Merging generation cases with different df.attrs['models']! Discarting the second (newest) case.")
-    if df1.attrs["experiment"] != df2.attrs["experiment"]:
-        logger.warning("Beware! Merging generation cases with different df.attrs['experiment']! Discarting the second (newest) case.")
+# def get_merged_MC_output(df1, df2):
+#     """
+#     take two pandas dataframes with events and combine them.
+#     Resetting index to go from (0,n_1+n_2) where n_i is the number of events in dfi
+#     """
+#     if df1.attrs["model"] != df2.attrs["model"]:
+#         logger.warning("Beware! Merging generation cases with different df.attrs['models']! Discarting the second (newest) case.")
+#     if df1.attrs["experiment"] != df2.attrs["experiment"]:
+#         logger.warning("Beware! Merging generation cases with different df.attrs['experiment']! Discarting the second (newest) case.")
 
-    df = pd.concat([df1, df2], axis=0).reset_index(drop=True)
+#     df = pd.concat([df1, df2], axis=0, copy=False).reset_index(drop=True)
 
-    # for older versions of pandas, concat does not keep the attributes
-    #  -- if they disappear, force first dataframe.
+#     # for older versions of pandas, concat does not keep the attributes
+#     #  -- if they disappear, force first dataframe.
+#     if not df.attrs:
+#         logger.debug("DEBUG: Forcing the storage of the df.attrs using the first dataframe. This is done automatically for newer versions of pandas.")
+#         df.attrs = df1.attrs
+
+#     # Now we merge lifetimes
+#     for i in range(4, 7):
+#         this_ctau0 = f"N{i}_ctau0"
+#         if this_ctau0 in df1.attrs.keys() and this_ctau0 in df2.attrs.keys():
+#             # take the average
+#             df.attrs[this_ctau0] = 0.5 * (df1.attrs[this_ctau0] + df2.attrs[this_ctau0])
+
+#     # Explicitly delete the references to the original dataframes to save memory
+#     del df1
+#     del df2
+
+
+#     return df
+def get_merged_MC_output(dfs):
+    """
+    Take multiple pandas dataframes with events and combine them.
+    Resetting the index to go from 0 to the total number of events.
+    """
+    if not dfs:
+        raise ValueError("At least one DataFrame must be provided")
+
+    dfs = list(dfs)  # Ensure dfs is a list in case it was passed as other iterable types
+
+    # Check for model and experiment consistency
+    base_model = dfs[0].attrs.get("model")
+    base_experiment = dfs[0].attrs.get("experiment")
+
+    for df in dfs[1:]:
+        if df.attrs.get("model") != base_model:
+            logger.warning("Beware! Merging generation cases with different df.attrs['models']! Discarting the mismatched cases.")
+        if df.attrs.get("experiment") != base_experiment:
+            logger.warning("Beware! Merging generation cases with different df.attrs['experiment']! Discarting the mismatched cases.")
+
+    # Concatenate all dataframes
+    df = pd.concat(dfs, axis=0, copy=False).reset_index(drop=True)
+
+    # For older versions of pandas, concat does not keep the attributes
     if not df.attrs:
-        logger.debug("DEBUG: Forcing the storage of the df.attrs using the first dataframe. This is done automatically for newer versions of pandas.")
-        df.attrs = df1.attrs
+        logger.debug("DEBUG: Forcing the storage of the df.attrs using the first dataframe. " "This is done automatically for newer versions of pandas.")
+        df.attrs = dfs[0].attrs
 
     # Now we merge lifetimes
     for i in range(4, 7):
         this_ctau0 = f"N{i}_ctau0"
-        if this_ctau0 in df1.attrs.keys() and this_ctau0 in df2.attrs.keys():
-            # take the average
-            df.attrs[this_ctau0] = 0.5 * (df1.attrs[this_ctau0] + df2.attrs[this_ctau0])
 
+        # Sum the ctau0 values and calculate the average
+        ctau0_sum = sum(df.attrs.get(this_ctau0, 0) for df in dfs if this_ctau0 in df.attrs)
+        count = sum(1 for df in dfs if this_ctau0 in df.attrs)
+
+        if count > 0:
+            df.attrs[this_ctau0] = ctau0_sum / count
+
+    # Explicitly delete the references to the original dataframes to save memory
+    del dfs
+
+    # Return the merged dataframe
     return df
 
 

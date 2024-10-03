@@ -2,6 +2,7 @@
 
 import pytest
 import os
+import sys
 
 from DarkNews import scripts
 
@@ -26,6 +27,7 @@ def test_dn_gen():
 
 
 def test_python_call_to_dngen():
+    sys.argv = [sys.argv[0]]
     scripts.dn_gen()
 
 

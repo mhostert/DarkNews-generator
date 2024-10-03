@@ -3,15 +3,15 @@ import numpy as np
 from pathlib import Path
 from particle import literals as lp
 
+import DarkNews as dn
+from DarkNews import configure_loggers
+from DarkNews.AssignmentParser import AssignmentParser
+
 import logging
 
 logger = logging.getLogger("logger.DarkNews")
 prettyprinter = logging.getLogger("prettyprinter.DarkNews")
 
-import DarkNews as dn
-from DarkNews import configure_loggers
-
-from DarkNews.AssignmentParser import AssignmentParser
 
 GENERATOR_ARGS = [
     # scope
@@ -179,12 +179,14 @@ GENERIC_MODEL_ARGS = [
 
 
 class GenLauncher:
-    banner = r"""   ______           _        _   _                     
+    banner = r"""
+   ______           _        _   _                     
    |  _  \         | |      | \ | |                    
    | | | |__ _ _ __| | __   |  \| | _____      _____   
    | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|  
    | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \  
-   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  """
+   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  
+   """
 
     # handle parameters that can assume only certain values
     _choices = {
@@ -281,6 +283,10 @@ class GenLauncher:
             logger.error("Error: pyarrow is not installed.")
             raise ModuleNotFoundError("pyarrow is not installed.")
 
+        if (self.hepmc2 or self.hepmc3 or self.hepevt) and not dn.HAS_PYHEPMC3:
+            logger.error("Error: pyhepmc is not installed.")
+            raise ModuleNotFoundError("pyhepmc is not installed.")
+
         ####################################################
         # Choose the model to be used in this generation
         self.bsm_model = self._model_class(**self.model_args_dict)
@@ -342,18 +348,18 @@ class GenLauncher:
 
             _top_path = time.asctime().replace(" ", "_")
 
-        ## final path
+        # final path
         self.data_path = Path(f"{self.path}/data/{_exp_path_part}/3plus{len(_mass_strings)}/{_top_path}/")
 
         ####################################################
-        ## Determine scope of upscattering given the heavy nu spectrum
+        # Determine scope of upscattering given the heavy nu spectrum
         # 3+1
         if len(_mass_strings) == 1:
             self.upscattered_nus = [dn.pdg.neutrino4]
             self.outgoing_nus = [dn.pdg.nulight]
         # 3+2
         elif len(_mass_strings) == 2:
-            ## FIXING 3+2 process chain to be nualpha --> N5 --> N4
+            # FIXING 3+2 process chain to be nualpha --> N5 --> N4
             self.upscattered_nus = [dn.pdg.neutrino5]
             self.outgoing_nus = [dn.pdg.neutrino4]
         # 3+3
@@ -368,7 +374,11 @@ class GenLauncher:
         # Miscellaneous checks
         if self.hep_unweight:
             logger.warning(
-                f"Unweighted events requested. This feature requires a large number of weighted events with respect to the requested number of hep-formatted events. Currently: n_unweighted/n_eval = {self.unweighted_hep_events/self.neval*100}%."
+                f"""
+                Unweighted events requested.
+                This feature requires a large number of weighted events with respect to the requested number of hep-formatted events.
+                Currently: n_unweighted/n_eval = {self.unweighted_hep_events/self.neval*100}%.
+                """
             )
 
         ####################################################
@@ -416,7 +426,10 @@ class GenLauncher:
         for key in parser.parameters:
             if key in user_input_dict:
                 logger.warning(
-                    f"Warning! The keyword argument '{key} = {user_input_dict[key]}' was passed to GenLauncher but also appears in input file ('{key} = {parser.parameters[key]}'). Overridding file with keyword argument."
+                    f"""Warning! The keyword argument '{key} = {user_input_dict[key]}' was passed to GenLauncher
+                    but also appears in input file ('{key} = {parser.parameters[key]}').
+                    Overridding file with keyword argument.
+                    """
                 )
                 continue
             user_input_dict[key] = parser.parameters[key]
@@ -564,7 +577,11 @@ class GenLauncher:
         zero_entries = self.df["w_event_rate"] == 0
         if zero_entries.sum() / len(self.df.index) > 0.01:
             logger.warning(
-                f"Warning: number of entries with w_event_rate = 0 surpasses 1% of number of samples. Found: {zero_entries.sum()/len(self.df.index)*100:.2f}%. Sampling is likely not convering or integrand is too sparse."
+                f"""
+                Warning: number of entries with w_event_rate = 0 surpasses 1% of number of samples.
+                Found: {zero_entries.sum()/len(self.df.index)*100:.2f}%.
+                Sampling is likely not convering or integrand is too sparse.
+                """
             )
         self.df = self.df.drop(self.df[zero_entries].index).reset_index(drop=True)
 
@@ -619,9 +636,8 @@ class GenLauncher:
 
         prettyprinter.info("Generating Events using the neutrino-nucleus upscattering engine")
 
-        self.df = self.gen_cases[0].get_MC_events()
-        for mc in self.gen_cases[1:]:
-            self.df = dn.MC.get_merged_MC_output(self.df, mc.get_MC_events())
+        # Merge the simulation dataframes from each MC case
+        self.df = dn.MC.get_merged_MC_output([mc.get_MC_events() for mc in self.gen_cases])
 
         # scramble events for minimum bias
         self._drop_zero_weight_samples()
@@ -660,12 +676,12 @@ class GenLauncher:
             logger.info("Making summary plots of the kinematics of the process...")
             try:
                 import matplotlib
-            except ImportError as e:
+            except ImportError:
                 logger.warning("Warning! Could not find matplotlib -- stopping the making of summary plots.")
             else:
                 self.path_to_summary_plots = Path(self.data_path) / "summary_plots/"
                 dn.plot_tools.batch_plot(self.df, self.path_to_summary_plots, title=rf"{self.name}")
-            logger.info(f"Plots saved in {self.path_to_summary_plots}.")
+                logger.info(f"Plots saved in {self.path_to_summary_plots}.")
 
         # restore overwritten path
         if overwrite_path:

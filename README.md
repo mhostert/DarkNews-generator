@@ -44,14 +44,20 @@ The following dependencies (if missing) will be automatically installed during t
 
 - [scipy](https://scipy.org/)
 - [pandas](https://pandas.pydata.org/) 1.0 or above
-- [pyarrow](https://arrow.apache.org/docs/python/index.html)
 - [Cython](https://cython.org/)
 - [vegas](https://pypi.org/project/vegas/) 5.1.1 or above
 - [Particle](https://pypi.org/project/particle/)
-- [pyhepmc](https://github.com/scikit-hep/pyhepmc)
 - [pyparsing](https://github.com/pyparsing/pyparsing/)
 - [dill](https://pypi.org/project/dill/)
 - [matplotlib](https://matplotlib.org/)
+
+Additional optional dependencies for extras:
+
+DarkNews[parquet]
+- [pyarrow](https://arrow.apache.org/docs/python/index.html)
+
+DarkNews[pyhepmc]
+- [pyhepmc](https://github.com/scikit-hep/pyhepmc)
 
 ---
 
@@ -96,6 +102,8 @@ to install it in developer mode (similar to editable mode above).
 ##### Extras
 
 If you would like to output events to `.parquet` files, you can install the following ```pip install DarkNews[parquet]``` or ```pip install "DarkNews[parquet]"```.
+
+Similarly, to output events to any `hepmc2/3` or `hepevt` formtats, you can install both extras via ```pip install DarkNews[parquet,pyhepmc]``` or ```pip install "DarkNews[parquet,pyhepmc]"```.
 
 ---
 

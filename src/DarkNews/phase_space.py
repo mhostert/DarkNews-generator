@@ -1,12 +1,14 @@
 import numpy as np
-import numpy.ma as ma
+
+# import numpy.ma as ma
+
+from DarkNews import Cfourvec as Cfv
+from DarkNews.const import rng_interval
 
 import logging
 
 logger = logging.getLogger("logger." + __name__)
 
-from DarkNews import Cfourvec as Cfv
-from DarkNews.const import rng_interval
 
 ########################################################
 # Kinematical limits
@@ -35,15 +37,53 @@ def upscattering_Q2max(Enu, mHNL, M):
     )
 
 
-def upscattering_Q2min(Enu, mHNL, M):
+# def upscattering_Q2min(Enu, mHNL, M):
+#     s = 2 * Enu * M + M**2
+#     r = mHNL / np.sqrt(s)
+#     m = M / np.sqrt(s)
+
+#     # large cancellations at play -- expanding for small r
+#     q2min = ma.masked_array(
+#         data=1
+#         / 2
+#         * (
+#             1
+#             + (
+#                 (m) ** (4)
+#                 + (
+#                     -1 * (r) ** (2)
+#                     + (
+#                         -1 * ((((-1 + (m) ** (2))) ** (2) + (-2 * (1 + (m) ** (2)) * (r) ** (2) + (r) ** (4)))) ** (1 / 2)
+#                         + (m) ** (2) * (-2 + (-1 * (r) ** (2) + ((((-1 + (m) ** (2))) ** (2) + (-2 * (1 + (m) ** (2)) * (r) ** (2) + (r) ** (4)))) ** (1 / 2)))
+#                     )
+#                 )
+#             )
+#         )
+#         * s,
+#         mask=(r < 1e-3),
+#         fill_value=(m) ** (2) * ((-1 + (m) ** (2))) ** (-2) * (r) ** (4) * s,
+#     )
+#     return q2min.filled()
+
+
+# q2min = np.piecewise(r, [r>=1e-3, r<1e-3], \
+# 						[lambda r: 1/2 * ( 1 + ( ( m )**( 4 ) + ( -1 * ( r )**( 2 ) + ( -1 * ( ( ( ( -1 + ( m )**( 2 ) ) )**( 2 ) + ( -2 * ( 1 + ( m )**( 2 ) ) * ( r )**( 2 ) + ( r )**( 4 ) ) ) )**( 1/2 ) + ( m )**( 2 ) * ( -2 + ( -1 * ( r )**( 2 ) + ( ( ( ( -1 + ( m )**( 2 ) ) )**( 2 ) + ( -2 * ( 1 + ( m )**( 2 ) ) * ( r )**( 2 ) + ( r )**( 4 ) ) ) )**( 1/2 ) ) ) ) ) ) ) * s,\
+# 						 lambda r: ( m )**( 2 ) * ( ( -1 + ( m )**( 2 ) ) )**( -2 ) * ( r )**( 4 ) * s])
+# return q2min
+
+
+def upscattering_Q2min_s(Enu, mHNL, M):
     s = 2 * Enu * M + M**2
     r = mHNL / np.sqrt(s)
     m = M / np.sqrt(s)
 
-    small_r = r < 1e-3
-    # large cancellations at play -- expanding for small r
-    q2min = ma.masked_array(
-        data=1
+    # For small r values, expand using series
+    if r < 1e-3:
+        return (m) ** (2) * ((-1 + (m) ** (2))) ** (-2) * (r) ** (4) * s
+
+    # Otherwise, compute the full expression
+    q2min = (
+        1
         / 2
         * (
             1
@@ -58,16 +98,14 @@ def upscattering_Q2min(Enu, mHNL, M):
                 )
             )
         )
-        * s,
-        mask=small_r,
-        fill_value=(m) ** (2) * ((-1 + (m) ** (2))) ** (-2) * (r) ** (4) * s,
+        * s
     )
-    return q2min.filled()
 
-    # q2min = np.piecewise(r, [r>=1e-3, r<1e-3], \
-    # 						[lambda r: 1/2 * ( 1 + ( ( m )**( 4 ) + ( -1 * ( r )**( 2 ) + ( -1 * ( ( ( ( -1 + ( m )**( 2 ) ) )**( 2 ) + ( -2 * ( 1 + ( m )**( 2 ) ) * ( r )**( 2 ) + ( r )**( 4 ) ) ) )**( 1/2 ) + ( m )**( 2 ) * ( -2 + ( -1 * ( r )**( 2 ) + ( ( ( ( -1 + ( m )**( 2 ) ) )**( 2 ) + ( -2 * ( 1 + ( m )**( 2 ) ) * ( r )**( 2 ) + ( r )**( 4 ) ) ) )**( 1/2 ) ) ) ) ) ) ) * s,\
-    # 						 lambda r: ( m )**( 2 ) * ( ( -1 + ( m )**( 2 ) ) )**( -2 ) * ( r )**( 4 ) * s])
-    # return q2min
+    return q2min
+
+
+# Vectorize the function to handle arrays
+upscattering_Q2min = np.vectorize(upscattering_Q2min_s)
 
 
 # 1 --> 3 decays (decay mandelstam)
@@ -117,7 +155,7 @@ def two_to_two_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0, rng=np.random.ra
     p1CM = np.sqrt(E1CM**2 - m1**2)
     p2CM = np.sqrt(E2CM**2 - m2**2)
     p3CM = np.sqrt(E3CM**2 - m3**2)
-    p4CM = np.sqrt(E4CM**2 - m4**2)
+    # p4CM = np.sqrt(E4CM**2 - m4**2)
 
     # if massless proj and elastic in one, watch out for cancellations
     if m1 == 0 and m2 == m4:
@@ -140,7 +178,7 @@ def two_to_two_scatter(samples, m1=1.0, m2=0.0, m3=1.0, m4=0.0, rng=np.random.ra
     # KINEMATICS TO LAB FRAME
     costN = (-Q2 - m1**2 - m3**2 + 2 * E1CM * E3CM) / (2 * p1CM * p3CM)
     beta = -p2CM / E2CM  # MINUS SIGN -- from CM to LAB
-    gamma = 1.0 / np.sqrt(1.0 - beta * beta)
+    # gamma = 1.0 / np.sqrt(1.0 - beta * beta)
 
     if "unit_phi3" in samples.keys():
         phi3 = 2 * np.pi * samples["unit_phi3"]
@@ -191,7 +229,7 @@ def two_body_decay(samples, boost=False, m1=1, m2=0, m3=0, rng=np.random.random)
     E3CM_decay = np.full_like(cost, (m1**2 - m2**2 + m3**2) / 2.0 / m1)
 
     p2CM_decay = np.full_like(cost, np.sqrt(E2CM_decay**2 - m2**2))
-    p3CM_decay = np.full_like(cost, np.sqrt(E3CM_decay**2 - m3**2))
+    # p3CM_decay = np.full_like(cost, np.sqrt(E3CM_decay**2 - m3**2))
 
     # azimuthal angle of k2
     if "unit_phiz" in samples.keys():
@@ -213,7 +251,7 @@ def two_body_decay(samples, boost=False, m1=1, m2=0, m3=0, rng=np.random.random)
         costP_LAB = boost["costP_LAB"]
         phiP_LAB = boost["phiP_LAB"]
 
-        ### Transform P2_CM into the LAB frame (determined by the PN vector)
+        # Transform P2_CM into the LAB frame (determined by the PN vector)
 
         P1LAB_decay = Cfv.build_fourvec(EP_LAB, p1_LAB, costP_LAB, phiP_LAB)
 
@@ -271,13 +309,13 @@ def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0, rng=np.random
         u = rng_interval(sample_size, uminus, uplus, rng=rng)
 
     # Mandelstam v = m_34^2
-    v = m1**2 + m2**2 + m3**2 + m4**2 - u - t
+    # v = m1**2 + m2**2 + m3**2 + m4**2 - u - t
 
-    E2CM_decay = (m1**2 + m2**2 - v) / 2.0 / m1
+    # E2CM_decay = (m1**2 + m2**2 - v) / 2.0 / m1
     E3CM_decay = (m1**2 + m3**2 - u) / 2.0 / m1
     E4CM_decay = (m1**2 + m4**2 - t) / 2.0 / m1
 
-    p2CM_decay = np.sqrt(E2CM_decay * E2CM_decay - m2**2)
+    # p2CM_decay = np.sqrt(E2CM_decay * E2CM_decay - m2**2)
     p3CM_decay = np.sqrt(E3CM_decay * E3CM_decay - m3**2)
     p4CM_decay = np.sqrt(E4CM_decay * E4CM_decay - m4**2)
 
@@ -319,7 +357,7 @@ def three_body_decay(samples, boost=False, m1=1, m2=0, m3=0, m4=0, rng=np.random
         costN_LAB = boost["costP_LAB"]
         phiN_LAB = boost["phiP_LAB"]
 
-        ### Transform from CM into the LAB frame
+        # Transform from CM into the LAB frame
         # Decaying neutrino
         P1LAB_decay = Cfv.Tinv(P1CM_decay, -np.sqrt(EN_LAB**2 - m1**2) / EN_LAB, costN_LAB, phiN_LAB)
         # Outgoing neutrino

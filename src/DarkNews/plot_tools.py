@@ -1,7 +1,6 @@
 import os
 import os.path
 import numpy as np
-from scipy.interpolate import splprep, splev
 
 from DarkNews import const
 from DarkNews import fourvec as fv
@@ -11,7 +10,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import rc, rcParams
 
-# from matplotlib.pyplot import *
 from matplotlib.pyplot import cm
 
 ###########################
@@ -20,6 +18,7 @@ fsize_annotate = 10
 
 std_figsize = (1.2 * 3.7, 1.6 * 2.3617)
 std_axes_form = [0.16, 0.15, 0.81, 0.76]
+
 
 # standard figure
 def std_fig(ax_form=std_axes_form, figsize=std_figsize, rasterized=False):
@@ -63,13 +62,14 @@ def sci_notation(num, decimal_digits=1, precision=None, exponent=None):
     if num != 0:
         if exponent is None:
             exponent = int(np.floor(np.log10(abs(num))))
-        coeff = round(num / float(10 ** exponent), decimal_digits)
+        coeff = round(num / float(10**exponent), decimal_digits)
         if precision is None:
             precision = decimal_digits
 
         return r"${0:.{2}f}\cdot10^{{{1:d}}}$".format(coeff, exponent, precision)
     else:
         return r"0"
+
 
 def histogram1D(plotname, obs, w, XLABEL, TITLE, nbins, regime=None, colors=None, legends=None, rasterized=True, TMIN=None, TMAX=None):
 
@@ -98,19 +98,15 @@ def histogram1D(plotname, obs, w, XLABEL, TITLE, nbins, regime=None, colors=None
             h, bins = np.histogram(obs[case], weights=w[case], bins=bin_e)
 
             ax.bar(
-                bins[:-1], h, bottom=htotal, label=legends[i], width=bin_w,
-                ec=None, facecolor=colors[i], alpha=1, align="edge", lw=0.0,
-                rasterized=rasterized
+                bins[:-1], h, bottom=htotal, label=legends[i], width=bin_w, ec=None, facecolor=colors[i], alpha=1, align="edge", lw=0.0, rasterized=rasterized
             )
 
             htotal += h
-            ax.step(np.append(bins[:-1], 10e10), np.append(htotal, 0.0), where="post",
-            c="black", lw=0.25, rasterized=rasterized)
+            ax.step(np.append(bins[:-1], 10e10), np.append(htotal, 0.0), where="post", c="black", lw=0.25, rasterized=rasterized)
 
     else:
         h, bins = np.histogram(obs, weights=w, bins=nbins, range=(TMIN, TMAX))
         ax.bar(bins[:-1], h, width=bin_w, ec=None, fc="indigo", alpha=0.8, align="edge", lw=0.0, rasterized=rasterized)
-
 
     ax.set_title(TITLE, fontsize=0.8 * fsize)
     ax.legend(frameon=False, loc="best")
@@ -155,6 +151,7 @@ def histogram2D(plotname, obsx, obsy, w, xrange=None, yrange=None, xlabel="x", y
 
 
 def batch_plot(df, PATH, title="Dark News"):
+
     # regimes
     coherent = df["scattering_regime"] == "coherent"
     pel = df["scattering_regime"] == "p-el"
@@ -358,7 +355,7 @@ def batch_plot(df, PATH, title="Dark News"):
             df["theta_sum"],
             w,
             xrange=[0.0, 1.0],
-            yrange=[0.0, 40.],
+            yrange=[0.0, 40.0],
             xlabel=r"$|E_{\rm asy}|$",
             ylabel=r"$\theta_{(\ell \ell)\nu_{\rm proj}}$/GeV",
             **args_2d,

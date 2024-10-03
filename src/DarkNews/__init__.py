@@ -113,6 +113,15 @@ try:
 except ImportError:
     HAS_PYARROW = False
 
+# Check if user has pyhepmc3 installed -- if not, no HepMC output is available
+try:
+    import pyhepmc as hep
+
+    HAS_PYHEPMC3 = True
+except ImportError:
+    HAS_PYHEPMC3 = False
+
+
 """
     And now making it easier to import the main DarkNews classes.
     It allows DarkNews.XXXX instead of DarkNews.YYYY.XXXX

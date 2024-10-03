@@ -1,9 +1,17 @@
 from contextlib import contextmanager
 import traceback
+import numpy as np
+from numpy import random
 
 
 def close_enough(x, y, tol=1e-3):
     return abs(x - y) / y < tol
+
+
+def set_seeds():
+    seed = 42
+    random.seed(seed)
+    np.random.seed(seed)
 
 
 @contextmanager

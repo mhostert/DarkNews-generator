@@ -18,12 +18,6 @@ def is_macos_14():
 
 
 @pytest.mark.skipif(not is_macos_14(), reason="This test runs only on macOS 14.")
-def test_MB_SM(SM_gen):
-    expect = 0.03666960244288936
-    soft_compare(SM_gen.w_event_rate.sum(), expect, "seeded SM generation has changed!")
-
-
-@pytest.mark.skipif(not is_macos_14(), reason="This test runs only on macOS 14.")
 def test_MB_benchmarks(gen_simplest_benchmarks):
     df_light, df_heavy, df_TMM = gen_simplest_benchmarks
 
@@ -39,6 +33,12 @@ def test_MB_benchmarks(gen_simplest_benchmarks):
         # check seeded generation
         expect = 120590.91809832449
         assertions.append(soft_compare(df_TMM.w_event_rate.sum(), expect, "seeded TMM has changed!"))
+
+
+@pytest.mark.skipif(not is_macos_14(), reason="This test runs only on macOS 14.")
+def test_MB_SM(SM_gen):
+    expect = 0.03666960244288936
+    soft_compare(SM_gen.w_event_rate.sum(), expect, "seeded SM generation has changed!")
 
 
 @pytest.mark.skipif(not is_macos_14(), reason="This test runs only on macOS 14.")
