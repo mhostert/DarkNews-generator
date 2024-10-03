@@ -279,12 +279,12 @@ class FermionDileptonDecay:
 
         ## Is the mediator on shell?
         self.vector_on_shell = (
-            (TheoryModel.mzprime is not None) and (self.m_parent - self.m_daughter > TheoryModel.mzprime) and (TheoryModel.mzprime > self.mm + self.mp)
+            (TheoryModel.mzprime is not None) and (self.m_parent - self.m_daughter > TheoryModel.mzprime) and (TheoryModel.mzprime > self.mm + self.mp) and (self.Dih>0)
         )
         self.vector_off_shell = not self.vector_on_shell
 
         self.scalar_on_shell = (
-            (TheoryModel.mhprime is not None) and (self.m_parent - self.m_daughter > TheoryModel.mhprime) and (TheoryModel.mhprime > self.mm + self.mp)
+            (TheoryModel.mhprime is not None) and (self.m_parent - self.m_daughter > TheoryModel.mhprime) and (TheoryModel.mhprime > self.mm + self.mp) and (self.Sih>0)
         )
         self.scalar_off_shell = not self.scalar_on_shell
 
