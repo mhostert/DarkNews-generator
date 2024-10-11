@@ -47,8 +47,8 @@ class UpscatteringProcess:
 
         Methods:
             __init__(self, nu_projectile, nu_upscattered, nuclear_target, scattering_regime, TheoryModel, helicity): Initializes the upscattering process with specified parameters.
-            scalar_total_xsec(self, Enu, diagram="total", NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, savefile_xsec=None, savefile_norm=None): Calculates the scalar total cross section for a given neutrino energy and diagram.
-            total_xsec(self, Enu, diagrams=["total"], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, seed=None, savestr=None): Calculates the total cross section for the upscattering process for a fixed neutrino energy.
+            scalar_total_xsec(self, Enu, diagram="total", NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, return_xsec=False, return_norm=False): Calculates the scalar total cross section for a given neutrino energy and diagram.
+            total_xsec(self, Enu, diagrams=["total"], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, seed=None): Calculates the total cross section for the upscattering process for a fixed neutrino energy.
             diff_xsec_Q2(self, Enu, Q2, diagrams=["total"]): Calculates the differential cross section for the upscattering process as a function of the squared momentum transfer Q2.
         """
 
@@ -130,7 +130,7 @@ class UpscatteringProcess:
 
         # vectorize total cross section calculator using vegas integration
         self.vectorized_total_xsec = np.vectorize(
-            self.scalar_total_xsec, excluded=["self", "diagram", "NINT", "NEVAL", "NINT_warmup", "NEVAL_warmup", "savefile_xsec", "savefile_norm"]
+            self.scalar_total_xsec, excluded=["self", "diagram", "NINT", "NEVAL", "NINT_warmup", "NEVAL_warmup"]
         )
 
         self.calculable_diagrams = find_calculable_diagrams(TheoryModel)
@@ -143,30 +143,39 @@ class UpscatteringProcess:
         NEVAL=MC.NEVAL,
         NINT_warmup=MC.NINT_warmup,
         NEVAL_warmup=MC.NEVAL_warmup,
-        savefile_xsec=None,
-        savefile_norm=None,
+        return_xsec=False,
+        return_norm=False,
     ):
+        integ = None
+        norm = None
         # below threshold
         if Enu < (self.Ethreshold):
-            return 0.0
+            ret = 0.0
         else:
             DIM = 1
             batch_f = integrands.UpscatteringXsec(dim=DIM, Enu=Enu, ups_case=self, diagram=diagram)
             integ = vg.Integrator(DIM * [[0.0, 1.0]])  # unit hypercube
+            norm = batch_f.norm
 
-            if savefile_norm is not None:
-                # Save normalization information
-                with open(savefile_norm, "w") as f:
-                    json.dump(batch_f.norm, f)
             integrals = MC.run_vegas(
-                batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup, savestr=savefile_xsec
+                batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup
             )
             logger.debug("Main VEGAS run completed.")
 
-            return integrals["diff_xsec"].mean * batch_f.norm["diff_xsec"]
+            ret = integrals["diff_xsec"].mean * batch_f.norm["diff_xsec"]
+
+        if return_norm + return_xsec == 0:
+            return ret
+        else:
+            ret = [ret]
+            if return_norm:
+                ret.append(batch_f.norm)
+            if return_xsec:
+                ret.append(integ)
+            return ret
 
     def total_xsec(
-        self, Enu, diagrams=["total"], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, seed=None, savestr=None
+        self, Enu, diagrams=["total"], NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, seed=None
     ):
         """
         Returns the total upscattering xsec for a fixed neutrino energy in cm^2
@@ -180,7 +189,7 @@ class UpscatteringProcess:
         for diagram in diagrams:
             if diagram in self.calculable_diagrams or diagram == "total":
                 tot_xsec = self.vectorized_total_xsec(
-                    Enu, diagram=diagram, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup, savefile_xsec=savestr
+                    Enu, diagram=diagram, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup
                 )
             else:
                 logger.warning(f"Warning: Diagram not found. Either not implemented or misspelled. Setting tot xsec it to zero: {diagram}")
@@ -299,8 +308,8 @@ class FermionDileptonDecay:
         NEVAL_warmup=MC.NEVAL_warmup,
         NINT_sample=1,
         NEVAL_sample=10_000,
-        savefile_norm=None,
-        savefile_dec=None,
+        return_norm=False,
+        return_dec=False,
         existing_integrator=None,
     ):
         """
@@ -318,29 +327,35 @@ class FermionDileptonDecay:
             # need to define a new integrator
             integ = vg.Integrator(DIM * [[0.0, 1.0]])  # unit hypercube
 
-            if savefile_norm is not None:
-                # Save normalization information
-                with open(savefile_norm, "w") as f:
-                    json.dump(batch_f.norm, f)
             # run the integrator
-            MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup, savestr=savefile_dec)
+            MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
             logger.debug("Main VEGAS run completed for decay sampler.")
             # Run one more time without adaptation to fix integration points to sample
-            # Save the resulting integrator to a pickle file
             existing_integrator = integ
         existing_integrator(batch_f, adapt=False, nitn=NINT_sample, neval=NEVAL_sample)
-        return MC.get_samples(existing_integrator, batch_f)
+        ret = MC.get_samples(existing_integrator, batch_f)
+        if return_norm + return_dec == 0:
+            return ret
+        else:
+            ret = [ret]
+            if return_norm:
+                ret.append(batch_f.norm)
+            if return_dec:
+                ret.append(existing_integrator)
+            return ret
 
-    def total_width(self, NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, savefile_norm=None, savefile_dec=None):
+    def total_width(self, NINT=MC.NINT, NEVAL=MC.NEVAL, NINT_warmup=MC.NINT_warmup, NEVAL_warmup=MC.NEVAL_warmup, return_norm=False, return_dec=False):
+        integ = None
+        norm = None
         if self.vector_on_shell and self.scalar_on_shell:
             logger.error("Vector and scalar simultaneously on shell is not implemented.")
             raise NotImplementedError("Feature not implemented.")
         elif self.vector_on_shell and self.scalar_off_shell:
-            return dr.gamma_Ni_to_Nj_V(vertex_ij=self.Dih, mi=self.m_parent, mj=self.m_daughter, mV=self.mzprime, HNLtype=self.HNLtype) * dr.gamma_V_to_ell_ell(
+            ret = dr.gamma_Ni_to_Nj_V(vertex_ij=self.Dih, mi=self.m_parent, mj=self.m_daughter, mV=self.mzprime, HNLtype=self.HNLtype) * dr.gamma_V_to_ell_ell(
                 vertex=self.TheoryModel.deV, mV=self.mzprime, m_ell=self.mm
             )
         elif self.vector_off_shell and self.scalar_on_shell:
-            return dr.gamma_Ni_to_Nj_S(vertex_ij=self.Sih, mi=self.m_parent, mj=self.m_daughter, mS=self.mhprime, HNLtype=self.HNLtype) * dr.gamma_S_to_ell_ell(
+            ret = dr.gamma_Ni_to_Nj_S(vertex_ij=self.Sih, mi=self.m_parent, mj=self.m_daughter, mS=self.mhprime, HNLtype=self.HNLtype) * dr.gamma_S_to_ell_ell(
                 vertex=self.TheoryModel.deS, mS=self.mhprime, m_ell=self.mm
             )
         elif self.vector_off_shell and self.scalar_off_shell:
@@ -349,14 +364,23 @@ class FermionDileptonDecay:
             batch_f = integrands.HNLDecay(dim=4, dec_case=self)
 
             integ = vg.Integrator(4 * [[0.0, 1.0]])  # unit hypercube
-            if savefile_norm is not None:
-                # Save normalization information
-                with open(savefile_norm, "w") as f:
-                    json.dump(batch_f.norm, f)
+            norm = batch_f.norm
+
             # run the integrator
             integrals = MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
             logger.debug("Main VEGAS run completed for decay total width calculation.")
-            return integrals["diff_decay_rate_0"].mean * batch_f.norm["diff_decay_rate_0"]
+            ret = integrals["diff_decay_rate_0"].mean * batch_f.norm["diff_decay_rate_0"]
+
+        if return_norm + return_dec == 0:
+            return ret
+        else:
+            ret = [ret]
+            if return_norm:
+                ret.append(batch_f.norm)
+            if return_dec:
+                ret.append(existing_integrator)
+            return ret
+
 
     def differential_width(self, momenta):
         PN_LAB, Plepminus_LAB, Plepplus_LAB, Pnu_LAB = momenta
@@ -465,8 +489,8 @@ class FermionSinglePhotonDecay:
         NEVAL_warmup=MC.NEVAL_warmup,
         NINT_sample=1,
         NEVAL_sample=10_000,
-        savefile_norm=None,
-        savefile_dec=None,
+        return_norm=False,
+        return_dec=False,
         existing_integrator=None,
     ):
         """
@@ -478,18 +502,24 @@ class FermionSinglePhotonDecay:
             # need to define a new integrator
             integ = vg.Integrator(DIM * [[0.0, 1.0]])  # unit hypercube
 
-            if savefile_norm is not None:
-                # Save normalization information
-                with open(savefile_norm, "w") as f:
-                    json.dump(batch_f.norm, f)
             # run the integrator
             MC.run_vegas(batch_f, integ, adapt_to_errors=True, NINT=NINT, NEVAL=NEVAL, NINT_warmup=NINT_warmup, NEVAL_warmup=NEVAL_warmup)
             logger.debug("Main VEGAS run completed for decay sampler.")
             # Run one more time without adaptation to fix integration points to sample
-            # Save the resulting integrator to a pickle file
-            integ(batch_f, adapt=False, nitn=NINT_sample, neval=NEVAL_sample, saveall=savefile_dec)
+            integ(batch_f, adapt=False, nitn=NINT_sample, neval=NEVAL_sample)
             existing_integrator = integ
-        return MC.get_samples(existing_integrator, batch_f)
+
+        ret = MC.get_samples(existing_integrator, batch_f)
+
+        if return_norm + return_dec == 0:
+            return ret
+        else:
+            ret = [ret]
+            if return_norm:
+                ret.append(batch_f.norm)
+            if return_dec:
+                ret.append(existing_integrator)
+            return ret
 
     def total_width(self):
         return dr.gamma_Ni_to_Nj_gamma(vertex_ij=self.Tih, mi=self.m_parent, mj=self.m_daughter, HNLtype=self.HNLtype)
