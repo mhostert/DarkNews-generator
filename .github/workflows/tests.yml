@@ -27,12 +27,10 @@ jobs:
           pip install tox tox-gh-actions
       - name: Test generator and physics output
         run: tox
-      - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v2
-      # - name: Generate Report
-      #   run: |
-      #     pip install coverage
-      #     coverage run -m pytest
-      # - name: Setup tmate session
-      #   if: success() || failure()
-      #   uses: mxschmitt/action-tmate@v3
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4.2.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml  # Specify your coverage file location if needed
+          flags: unittests  # Optional: Helps to tag results for more detail
+          fail_ci_if_error: false  # Optional: Don't fail the CI if Codecov fails

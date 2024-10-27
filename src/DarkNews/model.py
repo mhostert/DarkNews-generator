@@ -1,15 +1,15 @@
 import numpy as np
 import math
 
-import logging
-
-logger = logging.getLogger("logger." + __name__)
-prettyprinter = logging.getLogger("prettyprinter." + __name__)
-
 from particle import literals as lp
 
 from DarkNews import const
 from DarkNews import pdg
+
+import logging
+
+logger = logging.getLogger("logger." + __name__)
+prettyprinter = logging.getLogger("prettyprinter." + __name__)
 
 
 class HNLModel:
@@ -413,26 +413,28 @@ class ThreePortalModel(HNLModel):
         # self.tanof2beta = const.sw * self.sinof2chi / (entry_22)
 
         # Mass mixing and kinetic mixing
-        entry_11 = const.sw * self.sinof2chi + 2 * self.epsilonZ * np.sqrt(self.c2chi)
-        entry_22 = self.c2chi - const.s2w * self.s2chi - (self.mzprime / const.m_Z) ** 2 - 2 * self.epsilonZ * const.sw * np.sqrt(self.s2chi)
-        self.tanof2beta = entry_11 / entry_22
+        self._entry_11 = const.sw * self.sinof2chi + 2 * self.epsilonZ * np.sqrt(self.c2chi)
+        self._entry_22 = self.c2chi - const.s2w * self.s2chi - (self.mzprime / const.m_Z) ** 2 - 2 * self.epsilonZ * const.sw * np.sqrt(self.s2chi)
+        self.tanof2beta = self._entry_11 / self._entry_22
 
         # self.beta = const.sw * self.chi
-        self.sinof2beta = entry_11 / np.sqrt(entry_22**2 + entry_11**2)
-        self.cosof2beta = entry_22 / np.sqrt(entry_22**2 + entry_11**2)
+        self.sinof2beta = self._entry_11 / np.sqrt(self._entry_22**2 + self._entry_11**2)
+        self.cosof2beta = self._entry_22 / np.sqrt(self._entry_22**2 + self._entry_11**2)
 
         # #####################
         if self.tanof2beta != 0:
             self.tbeta = self.sinof2beta / (1 + self.cosof2beta)
+            self.cbeta = math.sqrt((1 + self.cosof2beta) / 2.0)  # FIX ME -- works only for |beta| < pi/2
+            self.sbeta = math.sqrt(1 - self.cbeta**2)  # FIX ME -- works only for |beta| < pi/2
         else:
             self.tbeta = 0.0
-
-        self.sbeta = math.sqrt((1 - self.cosof2beta) / 2.0) * np.sign(self.sinof2beta)  # FIX ME -- works only for |beta| < pi/2
-        self.cbeta = math.sqrt((1 + self.cosof2beta) / 2.0)  # FIX ME -- works only for |beta| < pi/2
+            self.cbeta = 1.0
+            self.sbeta = 0.0
 
         # some abbreviations
         self._weak_vertex = const.gweak / const.cw / 2.0
         self._gschi = self.gD * self.sbeta
+
         # dark couplings acquired by Z boson
         self._g_weak_correction = self.cbeta + self.tanchi * const.sw * self.sbeta
         self._g_dark_correction = self.cbeta * self.tanchi * const.sw - self.sbeta
@@ -440,8 +442,8 @@ class ThreePortalModel(HNLModel):
         # Charged leptons
         self.ceV = self._weak_vertex * (self.cbeta * (2 * const.s2w - 0.5) + 3.0 / 2.0 * self.sbeta * const.sw * self.tanchi)
         self.ceA = self._weak_vertex * (-(self.cbeta + self.sbeta * const.sw * self.tanchi) / 2.0)
-        # self.ceV = weak_vertex*(const.gweak/(2*const.cw) * (2*const.s2w - 0.5))
-        # self.ceA = weak_vertex*(const.gweak/(2*const.cw) * (-1.0/2.0))
+        # self.ceV = self._weak_vertex * (const.gweak / (2 * const.cw) * (2 * const.s2w - 0.5))
+        # self.ceA = self._weak_vertex * (const.gweak / (2 * const.cw) * (-1.0 / 2.0))
 
         # quarks
         self.cuV = self._weak_vertex * (self.cbeta * (0.5 - 4 * const.s2w / 3.0) - 5.0 / 6.0 * self.sbeta * const.sw * self.tanchi)

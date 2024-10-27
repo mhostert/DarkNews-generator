@@ -36,6 +36,8 @@ NAvo = 6.02214076 * 1e23
 rad_to_deg = 180.0 / np.pi
 deg_to_rad = 1 / rad_to_deg
 
+s_in_year = 60 * 60 * 24 * 365.25
+
 invGeV_to_cm = hb * c_LIGHT  # hbar c = 197.3269804e-16 GeV.cm
 invGeV2_to_cm2 = invGeV_to_cm**2
 

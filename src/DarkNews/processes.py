@@ -1,11 +1,6 @@
 import numpy as np
 import vegas as vg
 import json
-import os
-
-import logging
-
-logger = logging.getLogger("logger." + __name__)
 
 from DarkNews import const
 from DarkNews import pdg
@@ -17,6 +12,10 @@ from DarkNews import phase_space as ps
 from DarkNews import decay_rates as dr
 
 from . import Cfourvec as Cfv
+
+import logging
+
+logger = logging.getLogger("logger." + __name__)
 
 
 class UpscatteringProcess:
@@ -270,14 +269,14 @@ class FermionDileptonDecay:
         else:
             self.CC_mixing1 = 0
             self.CC_mixing2 = 0
-        ## Minus sign important for interference!
+        # Minus sign important for interference!
         self.CC_mixing2 *= -1
 
         if self.m_parent - self.m_daughter - self.mm - self.mp < 0:
             logger.error(f"Error! Final states are above the mass of parent particle: mass excess = {self.m_parent - self.m_daughter - self.mm - self.mp}.")
             raise ValueError("Energy not conserved.")
 
-        ## Is the mediator on shell?
+        # Is the mediator on shell?
         self.vector_on_shell = (
             (TheoryModel.mzprime is not None) and (self.m_parent - self.m_daughter > TheoryModel.mzprime) and (TheoryModel.mzprime > self.mm + self.mp)
         )
@@ -288,7 +287,7 @@ class FermionDileptonDecay:
         )
         self.scalar_off_shell = not self.scalar_on_shell
 
-        ## does it have transition magnetic moment?
+        # does it have transition magnetic moment?
         self.TMM = TheoryModel.has_TMM
 
     def SamplePS(
@@ -336,13 +335,11 @@ class FermionDileptonDecay:
             logger.error("Vector and scalar simultaneously on shell is not implemented.")
             raise NotImplementedError("Feature not implemented.")
         elif self.vector_on_shell and self.scalar_off_shell:
-            return dr.gamma_Ni_to_Nj_V(vertex_ij=self.Dih, mi=self.m_parent, mj=self.m_daughter, mV=self.mzprime, HNLtype=self.HNLtype) * dr.gamma_V_to_ell_ell(
-                vertex=self.TheoryModel.deV, mV=self.mzprime, m_ell=self.mm
-            )
+            return dr.gamma_Ni_to_Nj_V(vertex_ij=self.Dih, mi=self.m_parent, mj=self.m_daughter, mV=self.mzprime, HNLtype=self.HNLtype)
+        # * dr.gamma_V_to_ell_ell(vertex=self.TheoryModel.deV, mV=self.mzprime, m_ell=self.mm)
         elif self.vector_off_shell and self.scalar_on_shell:
-            return dr.gamma_Ni_to_Nj_S(vertex_ij=self.Sih, mi=self.m_parent, mj=self.m_daughter, mS=self.mhprime, HNLtype=self.HNLtype) * dr.gamma_S_to_ell_ell(
-                vertex=self.TheoryModel.deS, mS=self.mhprime, m_ell=self.mm
-            )
+            return dr.gamma_Ni_to_Nj_S(vertex_ij=self.Sih, mi=self.m_parent, mj=self.m_daughter, mS=self.mhprime, HNLtype=self.HNLtype)
+            # * dr.gamma_S_to_ell_ell(vertex=self.TheoryModel.deS, mS=self.mhprime, m_ell=self.mm)
         elif self.vector_off_shell and self.scalar_off_shell:
 
             # We need to integraate the differential cross section
