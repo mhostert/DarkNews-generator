@@ -3,6 +3,7 @@ import random
 import numpy as np
 import os
 
+import DarkNews as dn
 from DarkNews import const
 from DarkNews.GenLauncher import GenLauncher
 
@@ -187,7 +188,7 @@ def light_DP_gen_all_outputs():
         experiment="miniboone_fhc",
         loglevel="ERROR",
         seed=42,
-        parquet=True,
+        parquet=dn.HAS_PYARROW,
         numpy=True,
         hepevt=True,
         hepevt_legacy=True,

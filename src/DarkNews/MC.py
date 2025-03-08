@@ -488,7 +488,7 @@ def get_samples(integ, batch_integrand, return_jac=False):
     unit_samples = batch_integrand.dim * [[]]
     weights = defaultdict(partial(np.ndarray, 0))
 
-    for x, y, wgt in integ.random_batch(yield_y=True, fcn=batch_integrand):
+    for x, y, wgt in integ.random_batch(yield_y=True):
         # compute integrand on samples including jacobian factors
         if integ.uses_jac:
             jac = integ.map.jac1d(y)

@@ -1,4 +1,4 @@
-__version__ = "0.4.7"
+__version__ = "0.4.8"
 
 import sys
 
@@ -76,6 +76,27 @@ def configure_loggers(loglevel="WARNING", logfile=None, verbose=False):
 
 configure_loggers()
 
+"""
+    Optional imports
+"""
+
+# Check if user has pyarrow installed -- if not, no parquet output is available
+try:
+    import pyarrow.parquet as pq
+    import pyarrow as pa
+
+    HAS_PYARROW = True
+except ImportError:
+    HAS_PYARROW = False
+
+# Check if user has pyhepmc3 installed -- if not, no HepMC output is available
+try:
+    import pyhepmc as hep
+
+    HAS_PYHEPMC3 = True
+except ImportError:
+    HAS_PYHEPMC3 = False
+
 
 """
     Making it easier to import modules
@@ -103,23 +124,6 @@ from DarkNews import printer
 from DarkNews import geom
 
 from DarkNews import plot_tools
-
-# Check if user has pyarrow installed -- if not, no parquet output is available
-try:
-    import pyarrow.parquet as pq
-    import pyarrow as pa
-
-    HAS_PYARROW = True
-except ImportError:
-    HAS_PYARROW = False
-
-# Check if user has pyhepmc3 installed -- if not, no HepMC output is available
-try:
-    import pyhepmc as hep
-
-    HAS_PYHEPMC3 = True
-except ImportError:
-    HAS_PYHEPMC3 = False
 
 
 """

@@ -6,7 +6,10 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 
-import pyhepmc.io as io
+from DarkNews import HAS_PYHEPMC3
+
+if HAS_PYHEPMC3:
+    import pyhepmc.io as io
 
 
 def test_output(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
@@ -52,26 +55,27 @@ def test_output(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
         oss_hepmc2 = Path(f"{gen_path}/hep_ascii.hepmc2").__str__()
         oss_hepmc3 = Path(f"{gen_path}/hep_ascii.hepmc3").__str__()
 
-        with io.ReaderHEPEVT(oss_hepevt) as r_hepevt, io.ReaderAsciiHepMC2(oss_hepmc2) as r_hepmc2, io.ReaderAscii(oss_hepmc3) as r_hepmc3:
-            # test three cases
-            for i in range(0, 3):
-                evtHEPEVT = r_hepevt.read()
-                evtHEPMC2 = r_hepmc2.read()
-                evtHEPMC3 = r_hepmc3.read()
+        if HAS_PYHEPMC3:
+            with io.ReaderHEPEVT(oss_hepevt) as r_hepevt, io.ReaderAsciiHepMC2(oss_hepmc2) as r_hepmc2, io.ReaderAscii(oss_hepmc3) as r_hepmc3:
+                # test three cases
+                for i in range(0, 3):
+                    evtHEPEVT = r_hepevt.read()
+                    evtHEPMC2 = r_hepmc2.read()
+                    evtHEPMC3 = r_hepmc3.read()
 
-                # event number comparison
-                assert evtHEPEVT.event_number == evtHEPMC2.event_number, f"{evtHEPEVT} \n\n {evtHEPMC2}"
-                assert evtHEPEVT.event_number == evtHEPMC3.event_number, f"{evtHEPEVT} \n\n {evtHEPMC3}"
+                    # event number comparison
+                    assert evtHEPEVT.event_number == evtHEPMC2.event_number, f"{evtHEPEVT} \n\n {evtHEPMC2}"
+                    assert evtHEPEVT.event_number == evtHEPMC3.event_number, f"{evtHEPEVT} \n\n {evtHEPMC3}"
 
-                assert evtHEPMC2.momentum_unit == evtHEPMC3.momentum_unit
-                assert evtHEPMC2.length_unit == evtHEPMC3.length_unit
-                assert evtHEPMC2.particles == evtHEPMC3.particles
-                assert evtHEPMC2.vertices == evtHEPMC3.vertices
-                assert evtHEPMC2.weight_names == evtHEPMC3.weight_names
-                assert evtHEPMC2.weights == evtHEPMC3.weights
+                    assert evtHEPMC2.momentum_unit == evtHEPMC3.momentum_unit
+                    assert evtHEPMC2.length_unit == evtHEPMC3.length_unit
+                    assert evtHEPMC2.particles == evtHEPMC3.particles
+                    assert evtHEPMC2.vertices == evtHEPMC3.vertices
+                    assert evtHEPMC2.weight_names == evtHEPMC3.weight_names
+                    assert evtHEPMC2.weights == evtHEPMC3.weights
 
-                for j in range(len(evtHEPMC3.weight_names)):
-                    wn = evtHEPMC3.weight_names[j]
-                    assert (
-                        df[wn, ""][i] == evtHEPMC3.weights[j]
-                    ), f'weight of type "{wn}" is {df[wn,""][i]} for dataframe and {evtHEPMC3.weights[j]} for HepMC3. They should be the same.'
+                    for j in range(len(evtHEPMC3.weight_names)):
+                        wn = evtHEPMC3.weight_names[j]
+                        assert (
+                            df[wn, ""][i] == evtHEPMC3.weights[j]
+                        ), f'weight of type "{wn}" is {df[wn,""][i]} for dataframe and {evtHEPMC3.weights[j]} for HepMC3. They should be the same.'
