@@ -122,7 +122,12 @@ class Printer:
         # import pyarrow.parquet as pq
         # import pyarrow as pa
         # kwargs['engine']=kwargs.get('engine','pyarrow')
-        dn.pq.write_table(dn.pa.Table.from_pandas(self.df_gen), filename, **kwargs)
+        # PyArrow will attempt to JSON-serialize pandas metadata (df.attrs) which can contain
+        # non-serializable objects (e.g. Detector, Model). Create a shallow copy and clear attrs
+        # so the conversion to a pyarrow Table does not fail. Note: parquet cannot save df.attrs.
+        df_to_write = self.df_gen.copy()
+        df_to_write.attrs = {}
+        dn.pq.write_table(dn.pa.Table.from_pandas(df_to_write), filename, **kwargs)
         prettyprinter.info(f"Events in pandas dataframe (sparse = {self.sparse}) saved to parquet file successfully:\n{filename}")
         return self.df_gen
 

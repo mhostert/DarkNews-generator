@@ -115,6 +115,7 @@ from DarkNews import nuclear_tools
 from DarkNews import decay_rates
 from DarkNews import processes
 from DarkNews import model
+from DarkNews import ModelContainer
 
 # Monte Carlo modules
 from DarkNews import MC

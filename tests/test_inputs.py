@@ -11,8 +11,8 @@ from .helpers import assert_all, soft_assert
 
 
 def test_ModelContainer_default():
-    mc = vars(ModelContainer(loglevel="error"))
-    gl = vars(GenLauncher(loglevel="error"))
+    mc = vars(ModelContainer(loglevel="error", param_file="tests/test_parameter_file_3portal.txt"))
+    gl = vars(GenLauncher(loglevel="error", param_file="tests/test_parameter_file_3portal.txt"))
 
     with assert_all() as assertions:
         for key, val in mc.items():
@@ -23,6 +23,10 @@ def test_ModelContainer_default():
                         f"Different values between GenLauncher and ModelContainer: {key}: ModelContainer={mc[key]}, GenLauncher={gl[key]}",
                     )
                 )
+
+    mc3p1 = ModelContainer(loglevel="error", m4=0.5)
+    mc3p2 = ModelContainer(loglevel="error", m4=0.5, m5=0.6)
+    mc3p3 = ModelContainer(loglevel="error", m4=0.5, m5=0.6, m6=0.7)
 
 
 def test_input_parameter_files():
