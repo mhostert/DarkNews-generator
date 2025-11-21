@@ -37,7 +37,7 @@ If you experience any problems or bugs, either open a new issue or contact <mhos
 
 Required dependencies:
 
-- [Python](http://www.python.org/) 3.8 or above
+- [Python](http://www.python.org/) 3.9 or above
 - [NumPy](http://www.numpy.org/)
 
 The following dependencies (if missing) will be automatically installed during the main installation of the package:
@@ -63,7 +63,7 @@ DarkNews[pyhepmc]
 
 ## Installation
 
-DarkNews is available on PyPI so from your python3.8+ (virtual environment or otherwise), run
+DarkNews is available on PyPI so from your python3.9+ (virtual environment or otherwise), run
 
 ```sh
 python3 -m pip install DarkNews
