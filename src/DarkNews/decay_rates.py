@@ -1,11 +1,11 @@
-import numpy as np
-
 import logging
+
+import numpy as np
 
 logger = logging.getLogger("logger." + __name__)
 
 from DarkNews import const
-from DarkNews.const import Pi, MZBOSON, MW, gweak, eQED
+from DarkNews.const import MW, MZBOSON, eQED, gweak
 
 
 def tau_GeV_to_s(decay_rate):
@@ -36,11 +36,11 @@ def L_GeV_to_cm(decay_rate):
 #             sbc = 1 - sab - sac + a**2 + b**2 + c**2
 #             I =  sab*(rtot - sab) + sac*(rtot - sac) + 2*(a+b*c)*(sbc - (a+b*c)) - (1+a)**2*(b+c)**2
 #             return 6*I
-        
+
 #         # check
 #         sab_min = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) - (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
 #         sab_max = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) + (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
-        
+
 #         integral, error = dblquad(  DGammaDuDt, (a+c)**2, (1-b)**2,  sab_min, sab_max, args=(a,b,c))
 #         return integral
 
@@ -56,11 +56,11 @@ def L_GeV_to_cm(decay_rate):
 #             sbc = 1 - sab - sac + a**2 + b**2 + c**2
 #             I = sab*(rtot+(c+a*b)-sab)+sbc*(a+b*c)(b+a*c)(sac-(b+a*c)) -(1+b)(1+c)(a+b)(a+c)
 #             return 12*I
-        
+
 #         # check
 #         sab_min = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) - (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
 #         sab_max = lambda sac: a**2 + b**2 - ((-1 + sac + b**2)*(a**2 + sac - c**2))/(2.*sac) + (np.sqrt((-1 + sac)**2 - 2*(1 + sac)*c**2 + b**4)*np.sqrt(a**4 + (sac - c**2)**2 - 2*(a**2)*(sac + c**2)))/(2.*sac)
-        
+
 #         integral, error = dblquad(  DGammaDuDt, (a+c)**2, (1-b)**2, sab_min, sab_max, args=(a,b,c))
 #         return integral
 
@@ -86,9 +86,9 @@ def gamma_V_to_ell_ell(vertex, mV, m_ell):
 
 
 # # S -> Ni Nj -- assuming ordering of i and j matters (S -> Ni Nj) != ( S -> Ni Nj)
-# # includes symmetry factor 
+# # includes symmetry factor
 # def gamma_S_to_Ni_Nj(vertex, mS, mi, mj, HNLtype = 'majorana'):
-    
+
 #     r1 = mi/mS
 #     r2 = mj/mS
 
@@ -96,74 +96,74 @@ def gamma_V_to_ell_ell(vertex, mV, m_ell):
 #     gamma *= const.kallen_sqrt(1, r1**2, r2**2)
 
 #     if HNLtype == 'majorana':
-#         # Majorana -- dependence real and imag part of vertex 
+#         # Majorana -- dependence real and imag part of vertex
 #         gamma *= r1*r2*( np.conjugate(vertex)**2 + vertex**2) + np.abs(vertex)**2*(1 - r1**2 - r2**2)
-    
+
 #     elif HNLtype == 'dirac':
 #         # Dirac -- dependence only on abs value of vertex
 #         gamma *=  np.abs(vertex)**2*(1 - r1**2 - r2**2)
-#     else: 
+#     else:
 #         logger.error(f"HNL type {HNLtype} not recognized.")
-#         return 0.0 
+#         return 0.0
 
 #     return gamma
 
 # # V -> Ni Nj -- assuming ordering of i and j matters (Z' -> Ni Nj) != ( Z' -> Ni Nj)
-# # includes symmetry factor 
+# # includes symmetry factor
 # def gamma_V_to_Ni_Nj(vertex, mV, mi, mj, HNLtype = 'majorana'):
-    
+
 #     r1 = mi/mV
-#     r2 = mj/mV  
+#     r2 = mj/mV
 
 #     gamma = mV/(48*np.pi)
 #     gamma *= const.kallen_sqrt(1, r1**2, r2**2)
 
 #     if HNLtype == 'majorana':
-#         # Majorana -- dependence real and imag part of vertex 
+#         # Majorana -- dependence real and imag part of vertex
 #         gamma *= 3*r1*r2*( np.conjugate(vertex)**2 + vertex**2) + np.abs(vertex)**2*(2 - r1**4 - (1 - 2*r2**2)*r1**2 - r2**4 - r2**2)
-    
+
 #     elif HNLtype == 'dirac':
 #         # Dirac -- dependence only on abs value of vertex
 #         gamma *=  np.abs(vertex)**2*(2 - r1**4 - (1 - 2*r2**2)*r1**2 - r2**4 - r2**2)
-#     else: 
+#     else:
 #         logger.error(f"HNL type {HNLtype} not recognized.")
-#         return 0.0 
+#         return 0.0
 
 #     return gamma
 
 
 # ###########################################
 '''
-Heavy neutral lepton decay rates -- polarized (h=+1 or -1). 
+Heavy neutral lepton decay rates -- polarized (h=+1 or -1).
 Averaged rates are found by summing (gamma_h=1 + gamma_h=-1)/2
 '''
 
 # d(gamma)/d(cos(theta))   Ni(k) -> Nj(k1) S(k2)
 def diff_gamma_Ni_to_Nj_S(cost, vertex_ij, mi, mj, mS, HNLtype = 'majorana', h = -1):
-    
+
     r1 = np.full_like(cost, mj/mi)
     r2 = np.full_like(cost, mS/mi)
-    
+
     diff_gamma = mi / 32 / np.pi
     diff_gamma *= const.kallen_sqrt(1, r1**2, r2**2)
 
     if HNLtype == 'majorana':
-        # Majorana -- independent of cost 
+        # Majorana -- independent of cost
         diff_gamma *= np.conjugate(vertex_ij)**2 * r1 - vertex_ij**2 *r1 + np.abs(vertex_ij)**2*(1 + r1**2-r2**2)
-    
+
     elif HNLtype == 'dirac':
         # Dirac -- helicity dependent
         kCM = mi*const.kallen_sqrt(1.0, r1**2, r2**2)/2.0
-        diff_gamma *= 1/2 * np.abs(vertex_ij)**2 *(2*cost*h*kCM/mi + (1 + r1**2-r2**2) ) 
-    else: 
+        diff_gamma *= 1/2 * np.abs(vertex_ij)**2 *(2*cost*h*kCM/mi + (1 + r1**2-r2**2) )
+    else:
         logger.error(f"HNL type {HNLtype} not recognized.")
-        return 0.0 
+        return 0.0
 
     return diff_gamma
 
 # gamma(Ni -> Nj V)  Ni(k) -> Nj(k1) S(k2)
 def gamma_Ni_to_Nj_S(vertex_ij, mi, mj, mS, HNLtype = 'majorana'):
-    
+
     r1 = mj/mi
     r2 = mS/mi
 
@@ -171,9 +171,9 @@ def gamma_Ni_to_Nj_S(vertex_ij, mi, mj, mS, HNLtype = 'majorana'):
     gamma *= const.kallen_sqrt(1, r1**2, r2**2)
 
     if HNLtype == 'majorana':
-        # Majorana -- dependence real and imag part of vertex 
+        # Majorana -- dependence real and imag part of vertex
         gamma *= np.conjugate(vertex_ij)**2 * r1 - vertex_ij**2 *r1 + np.abs(vertex_ij)**2*(1 + r1**2 - r2**2)
-    
+
     elif HNLtype == 'dirac':
         # Dirac -- dependence only on abs value of vertex
         gamma *= 1/2 *np.abs(vertex_ij)**2 *(1 + r1**2 - r2**2)
@@ -182,8 +182,8 @@ def gamma_Ni_to_Nj_S(vertex_ij, mi, mj, mS, HNLtype = 'majorana'):
 
 
 def diff_gamma_Ni_to_Nj_V(cost, vertex_ij, mi, mj, mV, HNLtype = 'majorana', h = -1):
-    """diff_gamma_Ni_to_Nj_V 
-        
+    """diff_gamma_Ni_to_Nj_V
+
         Differential decay rate
 
             dGamma/dcos(theta_V) (Ni(k) -> Nj(k1) V(k2))
@@ -212,28 +212,28 @@ def diff_gamma_Ni_to_Nj_V(cost, vertex_ij, mi, mj, mV, HNLtype = 'majorana', h =
     """
     r1 = np.full_like(cost, mj/mi)
     r2 = np.full_like(cost, mV/mi)
-    
+
     diff_gamma = mi**3 / mV**2 / 32 / np.pi
     diff_gamma *= const.kallen_sqrt(1, r1**2, r2**2)
 
     if HNLtype == 'majorana':
-        # Majorana -- independent of cost 
+        # Majorana -- independent of cost
         diff_gamma *=  3*r1*np.conjugate(vertex_ij)**2*r2**2 + 3*vertex_ij**2*r1*r2**2 + np.abs(vertex_ij)**2*(r1**4 + (r2**2-2)*r1**2 - 2*r2**4 + r2**2 + 1)
-    
+
     elif HNLtype == 'dirac':
         # Dirac -- helicity dependent
         kCM = mi*const.kallen_sqrt(1.0, r1**2, r2**2)/2.0
         diff_gamma *= 2*cost*h*kCM/mi*(r1**2 + 2*r2**2 - 1) + (r1**4 + (r2**2 - 2)*r1**2 - 2*r2**4 + r2**2 + 1)
         diff_gamma *= 1/2 * np.abs(vertex_ij)**2
-    else: 
+    else:
         logger.error(f"HNL type {HNLtype} not recognized.")
-        return 0.0 
+        return 0.0
 
     return diff_gamma
 
 # gamma(Ni -> Nj V)  Ni(k) -> Nj(k1) V(k2)
 def gamma_Ni_to_Nj_V(vertex_ij, mi, mj, mV, HNLtype = 'majorana'):
-    
+
     r1 = mj/mi
     r2 = mV/mi
 
@@ -241,9 +241,9 @@ def gamma_Ni_to_Nj_V(vertex_ij, mi, mj, mV, HNLtype = 'majorana'):
     gamma *= const.kallen_sqrt(1, r1**2, r2**2)
 
     if HNLtype == 'majorana':
-        # Majorana -- dependence real and imag part of vertex 
+        # Majorana -- dependence real and imag part of vertex
         gamma *= 3*r1*np.conjugate(vertex_ij)**2*r2**2 + 3*vertex_ij**2*r1*r2**2 + np.abs(vertex_ij)**2*(r1**4 + (r2**2-2)*r1**2 - 2*r2**4 + r2**2 + 1)
-    
+
     elif HNLtype == 'dirac':
         # Dirac -- dependence only on abs value of vertex
         gamma *= 1/2 *np.abs(vertex_ij)**2 * (r1**4 + (r2**2 - 2)*r1**2 - 2*r2**4 + r2**2 + 1)
@@ -253,42 +253,42 @@ def gamma_Ni_to_Nj_V(vertex_ij, mi, mj, mV, HNLtype = 'majorana'):
 
 # d(gamma)/d(cos(theta))   Ni(k) -> Nj(k1) gamma(k2)
 def diff_gamma_Ni_to_Nj_gamma(cost, vertex_ij, mi, mj, HNLtype = 'majorana', h = -1):
-    
+
     rj = np.full_like(cost, mj/mi)
     k1CM = mi/2.0 * const.kallen_sqrt(1, rj**2, 0.0)
-    
+
     diff_gamma = mi**3 / 16 / np.pi
     diff_gamma *= (1 - rj**2)**2
 
     if HNLtype == 'majorana':
-        # Majorana -- independent of cost 
+        # Majorana -- independent of cost
         diff_gamma *=  np.abs(vertex_ij)**2 * (1 - rj**2)
-    
+
     elif HNLtype == 'dirac':
         # Dirac -- helicity dependent
         diff_gamma *= np.abs(vertex_ij)**2 * (1 - rj**2 - h*cost*k1CM/(mi/2.0))
-    else: 
+    else:
         logger.error(f"HNL type {HNLtype} not recognized.")
-        return 0.0 
+        return 0.0
 
     return diff_gamma
 
 
 # gamma(Ni -> Nj V)  Ni(k) -> Nj(k1) gamma(k2)
 def gamma_Ni_to_Nj_gamma(vertex_ij, mi, mj, HNLtype = 'majorana'):
-    
+
     rj = mj/mi
 
     gamma = mi**3 / 8 / np.pi
     gamma *= (1-rj**2)**3
 
     if HNLtype == 'majorana':
-        # Majorana -- dependence real and imag part of vertex 
-        gamma *= 2 * np.abs(vertex_ij)**2 
+        # Majorana -- dependence real and imag part of vertex
+        gamma *= 2 * np.abs(vertex_ij)**2
 
     elif HNLtype == 'dirac':
         # Dirac -- dependence only on abs value of vertex
-        gamma *= np.abs(vertex_ij)**2 
+        gamma *= np.abs(vertex_ij)**2
 
     return gamma
 # fmt: on
@@ -435,7 +435,7 @@ def diff_gamma_Ni_to_Nj_ell_ell(PS, process, diagrams=["total"]):
         # transition magnetic moment and Z' interference
         def Amp_TMM_KinMix_inter():
             return 0.0
-        # scalar term SQR 
+        # scalar term SQR
         def Amp_Scalar_SQR():
             return (-4*(Ds*Ds*(-k2k3 + m2*m3) + Dp*Dp*(k2k3 + m2*m3))*(k2k4 + k3k4 + c4*h*k4CM*m1 + m4*m4)*(Sflag*Sflag)*(Sih*Sih))/((2*k2k3 + m2*m2 + m3*m3 - MSCALAR*MSCALAR)*(2*k2k3 + m2*m2 + m3*m3 - MSCALAR*MSCALAR))
         # scalar + SM NC term
@@ -443,10 +443,10 @@ def diff_gamma_Ni_to_Nj_ell_ell(PS, process, diagrams=["total"]):
             return (8*Cih*Cv*Ds*((k2k3 + k3k4 + c3*h*k3CM*m1)*m2 - (k2k3 + k2k4 - h*(c3*k3CM + c4*k4CM)*m1 + m2*m2)*m3 + m2*(m3*m3))*m4*NCflag*Sflag*Sih)/((2*k2k3 + m2*m2 + m3*m3 - MSCALAR*MSCALAR)*(2*k2k3 + m2*m2 + m3*m3 - MZBOSON*MZBOSON))
         # scalar + TMM interference
         # def Amp_Scalar_TMM_inter():
-            # return 
-            
+            # return
+
     elif process.HNLtype == "majorana":
-        
+
         # SM CC SQR
         def Amp_CC_SQR():
             return 2*(gweak*gweak*gweak*gweak)*((CCflag2*CCflag2*k2k3*(k2k4 + k3k4 - c4*h*k4CM*m1 + m4*m4))/((2*k2k4 + m2*m2 + m4*m4 - MW*MW)*(2*k2k4 + m2*m2 + m4*m4 - MW*MW)) + (CCflag1*CCflag1*k2k4*(k2k3 + k3k4 + c3*h*k3CM*m1 + m3*m3))/((2*k3k4 + m3*m3 + m4*m4 - MW*MW)*(2*k3k4 + m3*m3 + m4*m4 - MW*MW)) + (CCflag1*CCflag2*m2*(k3k4*m1 - c4*h*k4CM*(k2k3 + k3k4 + m3*m3) + c3*h*k3CM*(k2k4 + k3k4 + m4*m4)))/((2*k2k4 + m2*m2 + m4*m4 - MW*MW)*(2*k3k4 + m3*m3 + m4*m4 - MW*MW)))
@@ -480,7 +480,7 @@ def diff_gamma_Ni_to_Nj_ell_ell(PS, process, diagrams=["total"]):
         # transition magnetic moment and Z' interference
         def Amp_TMM_KinMix_inter():
             return 0.0 #(16*Dih*dij*DIP*eQED*h*(2*Da*(k2k4 + k3k4) + Dv*(-2*k2k4 + 2*k3k4 - m2*m2 + m3*m3))*NCflag*Eps(Momentum(k2),Momentum(k3),Momentum(k4),Momentum(s)))/((2*k2k3 + m2*m2 + m3*m3)*(2*k2k3 + m2*m2 + m3*m3 - MZPRIME*MZPRIME))
-        # scalar term SQR 
+        # scalar term SQR
         def Amp_Scalar_SQR():
             return (4*(Ds*Ds*(k2k3 - m2*m3) + Dp*Dp*(k2k3 + m2*m3))*(k2k4 + k3k4 + c4*h*k4CM*m1 + m4*m4)*(Sflag*Sflag)*(Sih*Sih))/((2*k2k3 + m2*m2 + m3*m3 - MSCALAR*MSCALAR)*(2*k2k3 + m2*m2 + m3*m3 - MSCALAR*MSCALAR))
         # scalar + SM NC term
@@ -488,7 +488,7 @@ def diff_gamma_Ni_to_Nj_ell_ell(PS, process, diagrams=["total"]):
             return (8*Cih*(m1*(Cv*Ds*(-(k3k4*m2) + k2k4*m3) + Ca*Dp*(k3k4*m2 + k2k4*m3)) - ((Ca*Dp - Cv*Ds)*(k2k3 + k3k4)*m2 + (Ca*Dp + Cv*Ds)*(k2k3 + k2k4 + m2*m2)*m3 + (Ca*Dp - Cv*Ds)*m2*(m3*m3))*m4 - c3*h*k3CM*(Ca*Dp*(m2 - m3) - Cv*Ds*(m2 + m3))*(k2k4 + k3k4 + m4*(m1 + m4)) + c4*h*k4CM*(Cv*Ds*(k2k3*(-m2 + m3) + k3k4*(-m2 + m3) + m3*(2*k2k4 + m2*(m2 - m3) + m4*(m1 + m4))) + Ca*Dp*(k2k3*(m2 + m3) + k3k4*(m2 + m3) + m3*(2*k2k4 + m2*(m2 + m3) + m4*(m1 + m4)))))*NCflag*Sflag*Sih)/((2*k2k3 + m2*m2 + m3*m3 - MSCALAR*MSCALAR)*(2*k2k3 + m2*m2 + m3*m3 - MZBOSON*MZBOSON))
         # scalar + TMM interference
         # def Amp_Scalar_TMM_inter():
-            # return 
+            # return
     # fmt: on
 
     # Dict with all amplitude terms of interest

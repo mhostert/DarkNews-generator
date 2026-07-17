@@ -1,4 +1,12 @@
-__version__ = "0.4.9"
+from importlib.metadata import PackageNotFoundError, version as _pkg_version
+
+try:
+    # Version is derived from git tags at build time via setuptools_scm and read
+    # back here from the installed package metadata.
+    __version__ = _pkg_version("DarkNews")
+except PackageNotFoundError:
+    # Running from an uninstalled source tree with no built metadata.
+    __version__ = "0.0.0+unknown"
 
 import sys
 
@@ -82,8 +90,8 @@ configure_loggers()
 
 # Check if user has pyarrow installed -- if not, no parquet output is available
 try:
-    import pyarrow.parquet as pq
     import pyarrow as pa
+    import pyarrow.parquet as pq
 
     HAS_PYARROW = True
 except ImportError:
@@ -99,7 +107,14 @@ except ImportError:
 
 
 """
-    Making it easier to import modules
+    Making it easier to import modules.
+
+    NOTE: the import order below is load-bearing. DarkNews has circular
+    dependencies between MC, processes, and integrands (e.g. processes.py uses
+    MC.NINT as a default argument at class-definition time). `processes` must be
+    imported before `MC` so that MC is fully initialized by the time its module
+    constants are referenced. Do not alphabetize/sort this block -- it is marked
+    `isort: skip_file`-style via a per-file-ignore for I001 in pyproject.toml.
 """
 from DarkNews import pdg
 from DarkNews import const

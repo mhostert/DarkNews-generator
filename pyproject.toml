@@ -1,17 +1,123 @@
 [build-system]
 requires = [
-    "setuptools>=42",
+    "setuptools>=77",
+    "setuptools-scm>=8",
     "wheel",
-    "numpy",
-    "cython>=3.0a6",
+    "Cython>=3.0.11",
+    "numpy>=2.0",
 ]
 build-backend = "setuptools.build_meta"
 
-[tool.pytest.ini_options]
-addopts = "--cov=DarkNews"
-testpaths = [
-    "tests",
+[project]
+name = "DarkNews"
+description = "A lightweight nu-A scattering generator for heavy neutral lepton production"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Asli Abdullahi" },
+    { name = "Jaime Hoefken" },
+    { name = "Matheus Hostert", email = "matheus-hostert@uiowa.edu" },
+    { name = "Daniele Massaro" },
+]
+classifiers = [
+    "Programming Language :: Cython",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "dill",
+    "numpy",
+    "scipy",
+    "pandas>=1.0",
+    "vegas>=5.1.1",
+    "Particle",
+    "pyparsing",
+    "matplotlib",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/mhostert/DarkNews-generator"
+Repository = "https://github.com/mhostert/DarkNews-generator"
+
+[project.optional-dependencies]
+parquet = ["pyarrow"]
+pyhepmc = ["pyhepmc>=2.7.1"]
+testing = [
+    "pytest>=6.0",
+    "pytest-cov>=2.0",
+    "tox>=3.24",
+    "pyarrow",
+    "pyhepmc>=2.7.1",
+]
+dev = [
+    "ruff>=0.6",
+    "pre-commit",
 ]
 
-[tool.black]
+[project.scripts]
+dn_gen = "DarkNews.scripts:dn_gen"
+dn_get_examples = "DarkNews.scripts:dn_get_examples"
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools_scm]
+# The version is derived from git tags (vX.Y.Z). Between tags, builds get a
+# dev version like 0.4.10.dev3+g1a2b3c4. `fallback_version` is used when git
+# metadata is unavailable (e.g. building from a source zip with no .git).
+fallback_version = "0.0.0"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = [
+    "include/*/*.dat",
+    "include/*/*.txt",
+    "include/*/*.py",
+    "include/assets/*",
+    "*.pyx",
+]
+"DarkNews" = ["py.typed"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=DarkNews"
+testpaths = ["tests"]
+
+[tool.ruff]
 line-length = 160
+target-version = "py310"
+src = ["src"]
+# Bundled data-release scripts and notebooks are not part of the library and
+# follow their own conventions (e.g. `from ROOT import *`); don't lint them.
+extend-exclude = ["src/DarkNews/include/**", "examples/**"]
+
+[tool.ruff.lint]
+# Conservative starting set: pyflakes (F), pycodestyle errors/warnings (E/W),
+# import sorting (I). Line length is handled by the formatter, so E501 is off.
+select = ["E", "F", "W", "I"]
+ignore = [
+    "E501", # line length is handled by the formatter
+    "E741", # ambiguous variable names (l, I) are common in physics notation
+    "E402", # modules deliberately define their logger before importing submodules
+    "E731", # terse `Power`/`Sqrt` lambda shims mirror the Mathematica CForm export
+]
+
+[tool.ruff.lint.per-file-ignores]
+# __init__.py deliberately re-exports the public API (F401) and configures the
+# loggers before importing submodules (E402). The import order is also
+# load-bearing due to circular dependencies (MC <-> processes <-> integrands),
+# so I001 (import sorting) must not touch it.
+"__init__.py" = ["F401", "E402", "I001"]
+
+[tool.ruff.format]
+# Ruff's formatter replaces black; the line-length above is respected.

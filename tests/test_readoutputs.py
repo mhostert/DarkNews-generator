@@ -3,8 +3,8 @@
 import os
 from pathlib import Path
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from DarkNews import HAS_PYHEPMC3
 
@@ -76,6 +76,6 @@ def test_output(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
 
                     for j in range(len(evtHEPMC3.weight_names)):
                         wn = evtHEPMC3.weight_names[j]
-                        assert (
-                            df[wn, ""][i] == evtHEPMC3.weights[j]
-                        ), f'weight of type "{wn}" is {df[wn,""][i]} for dataframe and {evtHEPMC3.weights[j]} for HepMC3. They should be the same.'
+                        assert df[wn, ""][i] == evtHEPMC3.weights[j], (
+                            f'weight of type "{wn}" is {df[wn, ""][i]} for dataframe and {evtHEPMC3.weights[j]} for HepMC3. They should be the same.'
+                        )

@@ -1,17 +1,12 @@
+import logging
+from collections import defaultdict
+from functools import partial
+
 import numpy as np
 import pandas as pd
 import vegas as vg
 
-from collections import defaultdict
-from functools import partial
-
-from DarkNews import processes
-from DarkNews import integrands
-from DarkNews import const
-from DarkNews import pdg
-from DarkNews import geom
-
-import logging
+from DarkNews import const, geom, integrands, pdg, processes
 
 logger = logging.getLogger("logger." + __name__)
 prettyprinter = logging.getLogger("prettyprinter." + __name__)
@@ -384,7 +379,7 @@ class MC_events:
                 )
 
         # print final result
-        logger.info(f"Predicted ({df_gen['w_event_rate'].sum():.3g} +/- {np.sqrt((df_gen['w_event_rate']**2).sum()):.3g}) events.\n")
+        logger.info(f"Predicted ({df_gen['w_event_rate'].sum():.3g} +/- {np.sqrt((df_gen['w_event_rate'] ** 2).sum()):.3g}) events.\n")
 
         return df_gen
 
@@ -446,7 +441,7 @@ def get_merged_MC_output(dfs):
 
     # For older versions of pandas, concat does not keep the attributes
     if not df.attrs:
-        logger.debug("DEBUG: Forcing the storage of the df.attrs using the first dataframe. " "This is done automatically for newer versions of pandas.")
+        logger.debug("DEBUG: Forcing the storage of the df.attrs using the first dataframe. This is done automatically for newer versions of pandas.")
         df.attrs = dfs[0].attrs
 
     # Now we merge lifetimes

@@ -1,21 +1,22 @@
+from functools import partial
+from itertools import islice
+
 import numpy as np
 import numpy.ma as ma
-from itertools import islice
-from functools import partial
 
 try:
     from importlib.resources import files
 except ImportError:
     from importlib_resources import files
 
-from particle import literals as lp
-
 import logging
+
+from particle import literals as lp
 
 logger = logging.getLogger("logger." + __name__)
 
-from DarkNews.const_dics import fourier_bessel_dic
 from DarkNews import const
+from DarkNews.const_dics import fourier_bessel_dic
 
 
 # to replace certain lambda functions
@@ -67,7 +68,6 @@ class NuclearTarget:
         #####################################
         # hadronic *nuclear* target
         else:
-
             # Using the global dictionary of elements defined in nuclear_tools
             # Set all items as attributes of the class
             for k, v in elements_dic[name].items():
@@ -178,7 +178,7 @@ def assign_form_factors(target):
         except KeyError:
             logger.warning(f"Warning: nuclear density for {target.name} not tabulated in Nuclear Data Table. Using symmetrized Fermi form factor instead.")
             fcoh = partial(nuclear_F1_Fsym_EM, A=target.A)
-        except:
+        except Exception:
             logger.warning(f"Warning: could not compute the nuclear form factor for {target.name}. Taking it to be vanishing.")
             fcoh = zero_func
 
@@ -194,7 +194,6 @@ def assign_form_factors(target):
 
     # Nucleons
     elif target.is_nucleon:
-
         target.F1_EM = partial(nucleon_F1_EM, tau3=target.tau3)  # Dirac FF
         target.F2_EM = partial(nucleon_F2_EM, tau3=target.tau3)  # Pauli FF
 
@@ -255,7 +254,6 @@ atomic_unit = 0.9314941024228  # mass of Carbon12 in GeV / 12
 with files("DarkNews.include.aux_data").joinpath("mass20_1.txt").open() as ame:
     # Read lines in file starting at line 36
     for line in islice(ame, 36, None):
-
         Z = int(line[12:15])
 
         if Z < 93:  # no support for heavier elements
@@ -369,7 +367,7 @@ def j1(z):
 
 def nuclear_F1_FHelmz_NC(Q2, A):
     Q = np.sqrt(Q2)
-    a = 0.523 * const.fm_to_GeV  # GeV^-1
+    a = 0.523 * const.fm_to_GeV  # noqa: F841  (Fermi diffuseness; unused by the Helm FF, kept for reference)
     s = 0.9 * const.fm_to_GeV  # fm to GeV^-1
     R = 3.9 * const.fm_to_GeV * (A / 40.0) ** (1.0 / 3.0)  # fm to GeV^-1
     return (3 * np.abs(j1(Q * R) / Q / R)) * np.exp(-Q * Q * s * s / 2)

@@ -1,12 +1,10 @@
-import numpy as np
+import logging
 import math
 
+import numpy as np
 from particle import literals as lp
 
-from DarkNews import const
-from DarkNews import pdg
-
-import logging
+from DarkNews import const, pdg
 
 logger = logging.getLogger("logger." + __name__)
 prettyprinter = logging.getLogger("prettyprinter." + __name__)
@@ -112,13 +110,13 @@ class HNLModel:
             # PDGID  =  59(particle spin code: 0-scalar 1-fermion 2-vector)(generation number)
             # GeV units in particle module!
             hnl = pdg.new_particle(
-                name=f"N{4+i}",
+                name=f"N{4 + i}",
                 pdgid=5914 + i,
-                latex_name=f"N_{{{4+i}}}",
+                latex_name=f"N_{{{4 + i}}}",
                 mass=self.hnl_masses[i],
             )
-            setattr(self, f"neutrino{4+i}", hnl)
-            self.nu_spectrum.append(getattr(self, f"neutrino{4+i}"))
+            setattr(self, f"neutrino{4 + i}", hnl)
+            self.nu_spectrum.append(getattr(self, f"neutrino{4 + i}"))
 
         self.HNL_spectrum = self.nu_spectrum[3:]
         self.n_nus = len(self.nu_spectrum)
@@ -132,7 +130,7 @@ class HNLModel:
 
         self.has_Zboson_coupling = np.any(self.c_aj[3:, :] != 0)
         if self.has_Zboson_coupling:
-            self._spectrum += f"\n\t{np.sum(self.c_aj[3:,:]!=0)} non-zero Z boson coupling(s) beyond the SM."
+            self._spectrum += f"\n\t{np.sum(self.c_aj[3:, :] != 0)} non-zero Z boson coupling(s) beyond the SM."
 
         self.has_vector_coupling = np.any(self.d_aj != 0)
         if self.has_vector_coupling:
@@ -143,7 +141,7 @@ class HNLModel:
                 mass=self.mzprime * 1e3,
                 latex_name="Z^\\prime",
             )
-            self._spectrum += f"\n\t{np.sum(self.d_aj!=0)} non-zero Z'-neutrino coupling(s)."
+            self._spectrum += f"\n\t{np.sum(self.d_aj != 0)} non-zero Z'-neutrino coupling(s)."
 
         self.has_scalar_coupling = np.any(self.s_aj != 0)
         if self.has_scalar_coupling:
@@ -154,11 +152,11 @@ class HNLModel:
                 mass=self.mhprime * 1e3,
                 latex_name="h^\\prime",
             )
-            self._spectrum += f"\n\t{np.sum(self.s_aj!=0)} non-zero h'-neutrino coupling(s)."
+            self._spectrum += f"\n\t{np.sum(self.s_aj != 0)} non-zero h'-neutrino coupling(s)."
 
         self.has_TMM = np.any(self.t_aj != 0)
         if self.has_TMM:
-            self._spectrum += f"\n\t{np.sum(self.t_aj!=0)} non-zero transition magnetic moment(s)."
+            self._spectrum += f"\n\t{np.sum(self.t_aj != 0)} non-zero transition magnetic moment(s)."
 
     def _set_vertices_common(self):
         # Set some vertices that are treated the same in all models:

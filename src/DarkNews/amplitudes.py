@@ -1,19 +1,21 @@
+import logging
+
 import numpy as np
 
-import logging
-logger = logging.getLogger('logger.' + __name__)
+logger = logging.getLogger("logger." + __name__)
 
 from DarkNews import const
-from DarkNews.const import Sqrt, MZBOSON, eQED
+from DarkNews.const import MZBOSON, Sqrt, eQED
+
 
 def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
-    """ 
+    """
     Computes the differential cross section for upscattering in cm2
 
     Args:
         x_phase_space (list): a list of arrays with [s,t,u] variables
         process (DarkNews.processes.UpscatteringProcess): object reprensenting a given upscattering process.
-        diagrams (list, optional): specify what diagrams to include. 
+        diagrams (list, optional): specify what diagrams to include.
                                     all -- returns a dictionary with all the separate contributions to the xsecs
                                     separating diagrams with Z', Z, S, etc.
 
@@ -39,7 +41,7 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
         ValueError: if HNL type not recognized
 
     Returns:
-        numpy.ndarray or dict: either an array with the differential xsec in cm2 at each phase-space point 
+        numpy.ndarray or dict: either an array with the differential xsec in cm2 at each phase-space point
                 or a dictioary of such values for each diagram.
     """
 
@@ -57,20 +59,20 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
     mzprime = process.mzprime
     MSCALAR = process.mhprime
 
-    k1k2 = (s - M ** 2) / 2
-    k1k3 = -(t - mHNL ** 2) / 2
-    k1k4 = (-u + M ** 2) / 2
-    k2k3 = (-u + M ** 2 + mHNL ** 2) / 2
-    k2k4 = (-t + M ** 2 + M ** 2) / 2
-    k3k4 = (s - M ** 2 - mHNL ** 2) / 2
+    k1k2 = (s - M**2) / 2
+    k1k3 = -(t - mHNL**2) / 2
+    k1k4 = (-u + M**2) / 2
+    k2k3 = (-u + M**2 + mHNL**2) / 2
+    k2k4 = (-t + M**2 + M**2) / 2
+    k3k4 = (s - M**2 - mHNL**2) / 2
 
-    k1vec = np.sqrt(s) / 2 * const.kallen_sqrt(1, 0.0, M ** 2 / s)
-    k3vec = np.sqrt(s) / 2 * const.kallen_sqrt(1, mHNL ** 2 / s, M ** 2 / s)
-    E1 = (s - M ** 2) / (2 * np.sqrt(s))
-    E2 = (s + M ** 2) / (2 * np.sqrt(s))
-    E3 = (s + mHNL ** 2 - M ** 2) / (2 * np.sqrt(s))
+    k1vec = np.sqrt(s) / 2 * const.kallen_sqrt(1, 0.0, M**2 / s)
+    k3vec = np.sqrt(s) / 2 * const.kallen_sqrt(1, mHNL**2 / s, M**2 / s)
+    E1 = (s - M**2) / (2 * np.sqrt(s))
+    E2 = (s + M**2) / (2 * np.sqrt(s))
+    E3 = (s + mHNL**2 - M**2) / (2 * np.sqrt(s))
     # E4 = (s + M**2 - mHNL**2)/(2*np.sqrt(s))
-    c3 = (t - (mHNL ** 2 - 2 * E1 * E3)) / (2 * k1vec * k3vec)
+    c3 = (t - (mHNL**2 - 2 * E1 * E3)) / (2 * k1vec * k3vec)
 
     # upscattered HNL helicity
     # k3s = 0
@@ -107,8 +109,8 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
     if target.is_nucleus:
         FFf1 = target.F1_EM(Q2)
         FFf2 = 0.0
-        FFga = 0.0
-        FFgp = 0.0
+        FFga = 0.0  # noqa: F841  (EM axial FF is identically zero; kept for documentation)
+        FFgp = 0.0  # noqa: F841  (EM pseudoscalar FF is identically zero; kept for documentation)
 
         FFNCf1 = target.F1_NC(Q2)
         FFNCf2 = 0.0
@@ -120,8 +122,8 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
     elif target.is_nucleon:
         FFf1 = target.F1_EM(Q2)
         FFf2 = target.F2_EM(Q2)
-        FFga = 0.0
-        FFgp = 0.0
+        FFga = 0.0  # noqa: F841  (EM axial FF is identically zero; kept for documentation)
+        FFgp = 0.0  # noqa: F841  (EM pseudoscalar FF is identically zero; kept for documentation)
 
         FFNCf1 = target.F1_NC(Q2)
         FFNCf2 = target.F2_NC(Q2)
@@ -499,13 +501,13 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
                 (dip) ** (2)
                 * (eQED) ** (2)
                 * (M) ** (-2)
-                * (((M) ** (4) + ((((mHNL) ** (2) + -1 * s)) ** (2) + -2 * (M) ** (2) * ((mHNL) ** (2) + s)))) ** (-1 / 2)
+                * ((M) ** (4) + (((mHNL) ** (2) + -1 * s) ** (2) + -2 * (M) ** (2) * ((mHNL) ** (2) + s))) ** (-1 / 2)
                 * (t) ** (-2)
                 * (
                     (FFf2) ** (2)
                     * t
                     * (
-                        (((M) ** (4) + ((((mHNL) ** (2) + -1 * s)) ** (2) + -2 * (M) ** (2) * ((mHNL) ** (2) + s)))) ** (1 / 2)
+                        ((M) ** (4) + (((mHNL) ** (2) + -1 * s) ** (2) + -2 * (M) ** (2) * ((mHNL) ** (2) + s))) ** (1 / 2)
                         * (
                             -4 * (M) ** (2) * (mHNL) ** (4)
                             + (
@@ -517,7 +519,7 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
                         * (
                             4 * (M) ** (2) * (mHNL) ** (4) * ((M) ** (2) + ((mHNL) ** (2) + -1 * s))
                             + (
-                                -4 * ((M) ** (2) + -1 * s) * (((M + -1 * mHNL)) ** (2) + -1 * s) * (((M + mHNL)) ** (2) + -1 * s) * t
+                                -4 * ((M) ** (2) + -1 * s) * ((M + -1 * mHNL) ** (2) + -1 * s) * ((M + mHNL) ** (2) + -1 * s) * t
                                 + (
                                     -1 * ((M) ** (2) + ((mHNL) ** (2) + -1 * s)) * ((mHNL) ** (2) + 4 * s) * (t) ** (2)
                                     + (-1 * (M) ** (2) + ((mHNL) ** (2) + s)) * (t) ** (3)
@@ -532,7 +534,7 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
                         * (M) ** (2)
                         * t
                         * (
-                            (((M) ** (4) + ((((mHNL) ** (2) + -1 * s)) ** (2) + -2 * (M) ** (2) * ((mHNL) ** (2) + s)))) ** (1 / 2)
+                            ((M) ** (4) + (((mHNL) ** (2) + -1 * s) ** (2) + -2 * (M) ** (2) * ((mHNL) ** (2) + s))) ** (1 / 2)
                             * (-2 * (mHNL) ** (4) + ((mHNL) ** (2) * t + (t) ** (2)))
                             + h
                             * (2 * (mHNL) ** (2) + -1 * t)
@@ -556,7 +558,7 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
                                     * (t) ** (2)
                                 )
                             )
-                            + (((M) ** (4) + ((((mHNL) ** (2) + -1 * s)) ** (2) + -2 * (M) ** (2) * ((mHNL) ** (2) + s)))) ** (1 / 2)
+                            + ((M) ** (4) + (((mHNL) ** (2) + -1 * s) ** (2) + -2 * (M) ** (2) * ((mHNL) ** (2) + s))) ** (1 / 2)
                             * (
                                 -2 * (M) ** (4) * t
                                 + (
@@ -1175,38 +1177,38 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
     if process.TheoryModel.has_vector_coupling:
         Lmunu_Hmunu["KinMix_SQR"] = Lmunu_Hmunu_KinMix_SQR
         Lmunu_Hmunu["KinMix_NC_inter"] = Lmunu_Hmunu_KinMix_NC_inter
-    
+
     if process.TheoryModel.is_mass_mixed:
         Lmunu_Hmunu["MassMix_SQR"] = Lmunu_Hmunu_MassMix_SQR
         Lmunu_Hmunu["MassMix_NC_inter"] = Lmunu_Hmunu_MassMix_NC_inter
-    
+
         if process.TheoryModel.has_vector_coupling:
             Lmunu_Hmunu["KinMix_MassMix_inter"] = Lmunu_Hmunu_KinMix_MassMix_inter
-    
+
     if process.TheoryModel.has_TMM:
         Lmunu_Hmunu["TMM_SQR"] = Lmunu_Hmunu_TMM_SQR
-    
+
     if process.TheoryModel.has_scalar_coupling:
         Lmunu_Hmunu["Scalar_SQR"] = Lmunu_Hmunu_Scalar_SQR
         Lmunu_Hmunu["Scalar_NC_inter"] = Lmunu_Hmunu_Scalar_NC_inter
-    
+
         if process.TheoryModel.has_vector_coupling:
             Lmunu_Hmunu["Scalar_KinMix_inter"] = Lmunu_Hmunu_Scalar_KinMix_inter
-    
+
         if process.TheoryModel.is_mass_mixed:
             Lmunu_Hmunu["Scalar_MassMix_inter"] = Lmunu_Hmunu_Scalar_MassMix_inter
 
     # phase space factors
-    phase_space = const.kallen_sqrt(1.0, M ** 2 / s, mHNL ** 2 / s) / (32 * np.pi ** 2)
+    phase_space = const.kallen_sqrt(1.0, M**2 / s, mHNL**2 / s) / (32 * np.pi**2)
     phase_space *= 2 * np.pi  # integrated over phi
 
     # flux factor in cross section
-    flux_factor = 1.0 / (s - M ** 2) / 2
+    flux_factor = 1.0 / (s - M**2) / 2
 
-    E1CM = (s - M ** 2) / 2.0 / np.sqrt(s)
-    E3CM = (s + mHNL ** 2 - M ** 2) / 2.0 / np.sqrt(s)
+    E1CM = (s - M**2) / 2.0 / np.sqrt(s)
+    E3CM = (s + mHNL**2 - M**2) / 2.0 / np.sqrt(s)
     p1CM = E1CM  # always assuming massless projectile
-    p3CM = np.sqrt(E3CM ** 2 - mHNL ** 2)
+    p3CM = np.sqrt(E3CM**2 - mHNL**2)
 
     # jacobian -- from angle to Q2
     physical_jacobian = 1.0 / 2.0 / p1CM / p3CM

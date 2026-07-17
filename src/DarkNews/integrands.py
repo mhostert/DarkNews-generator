@@ -1,14 +1,14 @@
-import numpy as np
-import vegas as vg
+import logging
 from collections import OrderedDict
 
-from DarkNews import Cfourvec as Cfv
-from DarkNews import phase_space
-from DarkNews import decay_rates as dr
-from DarkNews import amplitudes as amps
-from DarkNews import processes as proc
+import numpy as np
+import vegas as vg
 
-import logging
+from DarkNews import Cfourvec as Cfv
+from DarkNews import amplitudes as amps
+from DarkNews import decay_rates as dr
+from DarkNews import phase_space
+from DarkNews import processes as proc
 
 logger = logging.getLogger("logger." + __name__)
 prettyprinter = logging.getLogger("prettyprinter." + __name__)
@@ -157,7 +157,6 @@ class HNLDecay(vg.BatchIntegrand):
 
         ##############################################
         if isinstance(self.decay_case, proc.FermionDileptonDecay):
-
             if self.decay_case.vector_on_shell and self.decay_case.scalar_on_shell:
                 logger.error("Vector and scalar simultaneously on shell is not implemented.")
                 raise NotImplementedError("Feature not implemented.")
@@ -374,7 +373,6 @@ class UpscatteringHNLDecay(vg.BatchIntegrand):
 
         ##############################################
         if self.MC_case.decays_to_dilepton:
-
             if decay_case.vector_on_shell and decay_case.scalar_on_shell:
                 logger.error("Vector and scalar simultaneously on shell is not implemented.")
                 raise NotImplementedError("Feature not implemented.")
@@ -568,13 +566,11 @@ def get_momenta_from_vegas_samples(vsamples, MC_case):
     # decay processes
 
     if MC_case.decays_to_dilepton:
-
         mf = MC_case.decay_case.m_daughter
         mm = MC_case.decay_case.mm
         mp = MC_case.decay_case.mm
 
         if MC_case.decay_case.vector_on_shell or MC_case.decay_case.scalar_on_shell:
-
             if MC_case.decay_case.vector_on_shell and MC_case.decay_case.scalar_off_shell:
                 m_mediator = MC_case.decay_case.mzprime
             elif MC_case.decay_case.vector_off_shell and MC_case.decay_case.scalar_on_shell:
@@ -621,7 +617,6 @@ def get_momenta_from_vegas_samples(vsamples, MC_case):
             four_momenta["P_decay_ell_plus"] = P3LAB_decayZ
 
         elif MC_case.decay_case.vector_off_shell and MC_case.decay_case.scalar_off_shell:
-
             ########################
             # HNL decay
             N_decay_samples = {
@@ -652,7 +647,6 @@ def get_momenta_from_vegas_samples(vsamples, MC_case):
             four_momenta["P_decay_N_daughter"] = P4LAB_decay
 
     elif MC_case.decays_to_singlephoton:
-
         mf = MC_case.decay_case.m_daughter
 
         ########################
@@ -707,14 +701,12 @@ def get_decay_momenta_from_vegas_samples(vsamples, decay_case, PN_LAB):
     # DECAY PROCESSES
 
     if isinstance(decay_case, proc.FermionDileptonDecay):
-
         mh = decay_case.m_parent
         mf = decay_case.m_daughter
         mm = decay_case.mm
         mp = decay_case.mm
 
         if decay_case.vector_on_shell or decay_case.scalar_on_shell:
-
             if decay_case.vector_on_shell and decay_case.scalar_off_shell:
                 m_mediator = decay_case.mzprime
             elif decay_case.vector_off_shell and decay_case.scalar_on_shell:
@@ -759,7 +751,6 @@ def get_decay_momenta_from_vegas_samples(vsamples, decay_case, PN_LAB):
             four_momenta["P_decay_ell_plus"] = P3LAB_decayZ
 
         elif decay_case.vector_off_shell and decay_case.scalar_off_shell:
-
             ########################
             # HNL decay
             N_decay_samples = {
@@ -790,7 +781,6 @@ def get_decay_momenta_from_vegas_samples(vsamples, decay_case, PN_LAB):
             four_momenta["P_decay_N_daughter"] = P4LAB_decay
 
     elif isinstance(decay_case, proc.FermionSinglePhotonDecay):
-
         mh = decay_case.m_parent
         mf = decay_case.m_daughter
 

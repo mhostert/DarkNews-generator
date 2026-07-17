@@ -1,19 +1,15 @@
+import json
+import logging
+
 import numpy as np
 import vegas as vg
-import json
 
-from DarkNews import const
-from DarkNews import pdg
-from DarkNews import integrands
-from DarkNews import MC
-from DarkNews import model
+from DarkNews import MC, const, integrands, model, pdg
 from DarkNews import amplitudes as amps
-from DarkNews import phase_space as ps
 from DarkNews import decay_rates as dr
+from DarkNews import phase_space as ps
 
 from . import Cfourvec as Cfv
-
-import logging
 
 logger = logging.getLogger("logger." + __name__)
 
@@ -341,7 +337,6 @@ class FermionDileptonDecay:
             return dr.gamma_Ni_to_Nj_S(vertex_ij=self.Sih, mi=self.m_parent, mj=self.m_daughter, mS=self.mhprime, HNLtype=self.HNLtype)
             # * dr.gamma_S_to_ell_ell(vertex=self.TheoryModel.deS, mS=self.mhprime, m_ell=self.mm)
         elif self.vector_off_shell and self.scalar_off_shell:
-
             # We need to integraate the differential cross section
             batch_f = integrands.HNLDecay(dim=4, dec_case=self)
 

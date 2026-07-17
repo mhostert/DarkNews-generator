@@ -1,4 +1,4 @@
-""" Constant modules
+"""Constant modules
 
 Here are defined the most common constants used in DarkNews.
 

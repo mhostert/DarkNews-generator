@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-import pytest
 import os
 import sys
+
+import pytest
 
 from DarkNews import scripts
 

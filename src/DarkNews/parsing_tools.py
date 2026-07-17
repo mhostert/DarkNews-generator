@@ -1,6 +1,3 @@
-import argparse
-
-
 def add_common_bsm_arguments(parser, DEFAULTS):
 
     #### name of the generation and model
