@@ -1,6 +1,7 @@
 [build-system]
 requires = [
     "setuptools>=77",
+    "setuptools-scm>=8",
     "wheel",
     "Cython>=3.0.11",
     "numpy>=2.0",
@@ -69,8 +70,11 @@ dn_get_examples = "DarkNews.scripts:dn_get_examples"
 [tool.setuptools]
 zip-safe = false
 
-[tool.setuptools.dynamic]
-version = { attr = "DarkNews.__version__" }
+[tool.setuptools_scm]
+# The version is derived from git tags (vX.Y.Z). Between tags, builds get a
+# dev version like 0.4.10.dev3+g1a2b3c4. `fallback_version` is used when git
+# metadata is unavailable (e.g. building from a source zip with no .git).
+fallback_version = "0.0.0"
 
 [tool.setuptools.packages.find]
 where = ["src"]

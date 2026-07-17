@@ -1,4 +1,12 @@
-__version__ = "0.4.9"
+from importlib.metadata import PackageNotFoundError, version as _pkg_version
+
+try:
+    # Version is derived from git tags at build time via setuptools_scm and read
+    # back here from the installed package metadata.
+    __version__ = _pkg_version("DarkNews")
+except PackageNotFoundError:
+    # Running from an uninstalled source tree with no built metadata.
+    __version__ = "0.0.0+unknown"
 
 import sys
 
