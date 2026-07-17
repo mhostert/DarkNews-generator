@@ -26,6 +26,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Cython-generated C sources (regenerated at build time from the .pyx)
+src/DarkNews/Cfourvec.c
+
 # Distribution / packaging
 .Python
 build/
@@ -64,6 +67,7 @@ htmlcov/
 .coverage.*
 .cache
 nosetests.xml
+junit.xml
 coverage.html
 coverage.xml
 *.cover
