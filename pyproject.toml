@@ -93,6 +93,17 @@ where = ["src"]
 addopts = "--cov=DarkNews"
 testpaths = ["tests"]
 
+[tool.cibuildwheel]
+# Which interpreters to build for (see the CI matrix for the OS/arch dimension).
+build = "cp310-* cp311-* cp312-* cp313-*"
+skip = ["*-musllinux_i686", "*_i686"]
+build-frontend = "build"
+# Smoke-test each built wheel: install it and run the core suite. Optional-output
+# tests (parquet/hepmc) skip gracefully when their deps are absent, so we only
+# require pytest here; full-coverage testing lives in tests.yml (tox).
+test-requires = ["pytest"]
+test-command = "pytest {project}/tests -o addopts=''"
+
 [tool.ruff]
 line-length = 160
 target-version = "py310"

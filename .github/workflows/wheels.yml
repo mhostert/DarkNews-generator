@@ -1,8 +1,13 @@
-name: Build wheels
+name: Build & publish wheels
 
-# Build binary wheels + sdist so users don't have to compile the Cython
-# extension locally. Runs on tags and can be triggered manually. Publishing to
-# PyPI is intentionally left as a manual/opt-in step (see the commented job).
+# Build binary wheels + sdist so users don't compile the Cython extension
+# locally, and publish them to PyPI on tagged releases via Trusted Publishing
+# (OIDC -- no API tokens stored in the repo).
+#
+# Release flow:  git tag vX.Y.Z && git push origin vX.Y.Z
+#   -> builds the full wheel matrix + sdist, then publishes them to PyPI.
+# A manual run (workflow_dispatch) builds and uploads artifacts but does NOT
+# publish, so you can test the build without cutting a release.
 on:
   workflow_dispatch:
   push:
@@ -14,19 +19,18 @@ jobs:
     name: Wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, macos-14]
+        # Linux x86_64 (manylinux), macOS x86_64 (Intel), macOS arm64 (Apple Silicon).
+        os: [ubuntu-latest, macos-13, macos-14]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history so setuptools_scm can resolve the version
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.21
-        env:
-          # Skip CPython 3.9 and below, PyPy, and 32-bit/musl edge targets.
-          CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-*"
-          CIBW_SKIP: "*-musllinux_i686 *_i686"
-          CIBW_TEST_EXTRAS: "testing"
-          CIBW_TEST_COMMAND: "pytest {project}/tests -q"
+        uses: pypa/cibuildwheel@v4.1.0
+        # All cibuildwheel configuration lives in [tool.cibuildwheel] in pyproject.toml.
 
       - uses: actions/upload-artifact@v4
         with:
@@ -38,6 +42,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history so setuptools_scm can resolve the version
       - name: Build sdist
         run: pipx run build --sdist
       - uses: actions/upload-artifact@v4
@@ -45,18 +51,20 @@ jobs:
           name: sdist
           path: dist/*.tar.gz
 
-  # Uncomment to publish to PyPI on tagged releases once a trusted publisher /
-  # API token is configured in the repository settings.
-  #
-  # publish:
-  #   needs: [build_wheels, build_sdist]
-  #   runs-on: ubuntu-latest
-  #   environment: pypi
-  #   permissions:
-  #     id-token: write
-  #   steps:
-  #     - uses: actions/download-artifact@v4
-  #       with:
-  #         path: dist
-  #         merge-multiple: true
-  #     - uses: pypa/gh-action-pypi-publish@release/v1
+  publish:
+    name: Publish to PyPI
+    needs: [build_wheels, build_sdist]
+    runs-on: ubuntu-latest
+    # Only publish on tagged releases, never on manual/dispatch builds.
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    environment:
+      name: pypi
+      url: https://pypi.org/p/DarkNews
+    permissions:
+      id-token: write # required for Trusted Publishing (OIDC)
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true # flatten all wheels-* and sdist artifacts into dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
