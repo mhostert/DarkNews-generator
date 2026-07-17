@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-from pyparsing import ParseException
 import math
 
-from DarkNews import AssignmentParser
-from DarkNews import GenLauncher
+from pyparsing import ParseException
+
+from DarkNews import AssignmentParser, GenLauncher
 from DarkNews.ModelContainer import ModelContainer
 
 from .helpers import assert_all, soft_assert
@@ -24,9 +24,10 @@ def test_ModelContainer_default():
                     )
                 )
 
-    mc3p1 = ModelContainer(loglevel="error", m4=0.5)
-    mc3p2 = ModelContainer(loglevel="error", m4=0.5, m5=0.6)
-    mc3p3 = ModelContainer(loglevel="error", m4=0.5, m5=0.6, m6=0.7)
+    # smoke test: constructing each spectrum (3+1, 3+2, 3+3) must not raise
+    ModelContainer(loglevel="error", m4=0.5)
+    ModelContainer(loglevel="error", m4=0.5, m5=0.6)
+    ModelContainer(loglevel="error", m4=0.5, m5=0.6, m6=0.7)
 
 
 def test_input_parameter_files():
@@ -179,14 +180,14 @@ a_list = [
                 \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Nunc ullamcorper blandit nibh, vitae congue lacus convallis at.
 Donec interdum, ex et fermentum aliquam, ante magna convallis magna, et molestie quam quam et dolor.\",
-                c^2 * 3.2e-4 / sin(PI/7) + 
+                c^2 * 3.2e-4 / sin(PI/7) +
     12 * exp( -2 * abs(hbar) )
             ]
 
 
 sinx = sin(PI/3) - 8.
 
-a_multi_line_expression = c^2 * 3.2e-4 / sin(PI/7) + 
+a_multi_line_expression = c^2 * 3.2e-4 / sin(PI/7) +
     12 * exp( -2 * abs(hbar) )
 a_bool = True
 

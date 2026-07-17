@@ -13,33 +13,34 @@
 #
 # Copyright 2003-2019 by Paul McGuire
 #
-from pyparsing import (
-    Literal,
-    Word,
-    Group,
-    Forward,
-    alphas,
-    alphanums,
-    Regex,
-    ParseException,
-    CaselessKeyword,
-    Suppress,
-    delimitedList,
-    Or,
-    QuotedString,
-)
 import math
 import operator
+
+from pyparsing import (
+    CaselessKeyword,
+    Forward,
+    Group,
+    Literal,
+    Or,
+    ParseException,
+    QuotedString,
+    Regex,
+    Suppress,
+    Word,
+    alphanums,
+    alphas,
+    delimitedList,
+)
 
 
 class AssignmentParser:
     """
-        Parse an expression of the kind
-        var_z = 5 + exp(4*sin(PI/3)) + var_a
-        where it does both computation of the expression without calling eval,
-        and substitution with other variables (var_a), previously defined.
-        It stores the variables in a dictionary, which is passed by argument.
-        It is the same dictionary on which it does the lookup.
+    Parse an expression of the kind
+    var_z = 5 + exp(4*sin(PI/3)) + var_a
+    where it does both computation of the expression without calling eval,
+    and substitution with other variables (var_a), previously defined.
+    It stores the variables in a dictionary, which is passed by argument.
+    It is the same dictionary on which it does the lookup.
     """
 
     # map operator symbols to corresponding arithmetic operations
@@ -68,7 +69,7 @@ class AssignmentParser:
     }
 
     class ParsingError(Exception):
-        """ Deal with errors coming only from this parser """
+        """Deal with errors coming only from this parser"""
 
         pass
 
@@ -81,17 +82,17 @@ class AssignmentParser:
 
     def _BNF(self):
         """
-            It means Backus-Naur Form: this is the main definition of the grammar
-            expop    :: '^'
-            multop   :: '*' | '/'
-            addop    :: '+' | '-'
-            equalop  :: '='
-            integer  :: ['+' | '-'] '0'..'9'+
-            ident    :: [ a-zA-Z_ ][ a-zA-Z0-9_ ]*
-            atom     :: PI | E | real | fn '(' expr ')' | '(' expr ')'
-            factor   :: atom [ expop factor ]*
-            term     :: factor [ multop factor ]*
-            expr     :: variable equalop term [ addop term ]*
+        It means Backus-Naur Form: this is the main definition of the grammar
+        expop    :: '^'
+        multop   :: '*' | '/'
+        addop    :: '+' | '-'
+        equalop  :: '='
+        integer  :: ['+' | '-'] '0'..'9'+
+        ident    :: [ a-zA-Z_ ][ a-zA-Z0-9_ ]*
+        atom     :: PI | E | real | fn '(' expr ')' | '(' expr ')'
+        factor   :: atom [ expop factor ]*
+        term     :: factor [ multop factor ]*
+        expr     :: variable equalop term [ addop term ]*
         """
         if not self._bnf:
             # use CaselessKeyword for e and pi, to avoid accidentally matching
@@ -159,13 +160,13 @@ class AssignmentParser:
         return self._bnf
 
     def _insert_fn_argcount_tuple(self, t):
-        """ Parse action that replaces the function identifier with a (name, number of args, "function") tuple. """
+        """Parse action that replaces the function identifier with a (name, number of args, "function") tuple."""
         fn = t.pop(0)
         num_args = len(t[0])
         t.insert(0, (fn, num_args))
 
     def _insert_list_argcount_tuple(self, t):
-        """ Parse action that replaces the list found with a ("list", number of elements) tuple. """
+        """Parse action that replaces the list found with a ("list", number of elements) tuple."""
         num_args = len(t[0])
         t.insert(0, ("list", num_args))
 

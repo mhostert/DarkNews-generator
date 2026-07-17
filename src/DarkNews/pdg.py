@@ -1,11 +1,13 @@
-import numpy as np
 import logging
-logger = logging.getLogger('logger.' + __name__)
+
+import numpy as np
+
+logger = logging.getLogger("logger." + __name__)
 
 #####################################
 # particle names and props
 from particle import Particle
-from particle import literals as lp
+
 
 ################################################
 # auxiliary functions -- scikit-hep particles
@@ -106,15 +108,15 @@ Carbon12 = Particle.from_pdgid(1000060120)
 PDG code convention for new particles
 
 As advised by the PDG, we start the new particle system with 59. The full identifier is:
-    
+
      PDGID  =  59(particle spin code: 0-scalar 1-fermion 2-vector)(generation number)
 
 """
 
 
 def new_particle(name, pdgid, charge=0, mass=0, **kwargs):
-    return Particle(pdg_name=name, pdgid=pdgid, three_charge=3*charge, mass=mass, **kwargs)
-    """ 
+    return Particle(pdg_name=name, pdgid=pdgid, three_charge=3 * charge, mass=mass, **kwargs)
+    """
         Particle class definition:
             https://github.com/scikit-hep/particle/blob/dd3c71e0b4319f729533ff0fc2e1e8cfa49684dd/src/particle/particle/particle.py#L91
     """
@@ -124,7 +126,7 @@ def new_particle(name, pdgid, charge=0, mass=0, **kwargs):
 PDG code convention for new particles
 
 As advised by the PDG, we start the new system with 59. The full identifier is:
-    
+
      PDGID  =  59(particle spin code: 0-scalar 1-fermion 2-vector)(generation number)
 
 """
@@ -143,10 +145,10 @@ neutrino5 = new_particle(name="N5", pdgid=5915, latex_name="N_5")
 neutrino6 = new_particle(name="N6", pdgid=5916, latex_name="N_6")
 
 # dark photon
-zprime = new_particle(name="zprime", pdgid=5921, latex_name="Z^\prime")
+zprime = new_particle(name="zprime", pdgid=5921, latex_name=r"Z^\prime")
 
 # three kind of new scalar particles
-hprime = new_particle(name="hprime", pdgid=5901, latex_name="h^\prime")
+hprime = new_particle(name="hprime", pdgid=5901, latex_name=r"h^\prime")
 phi = new_particle(name="phi", pdgid=5902, latex_name="\varphi")
 alp = new_particle(name="alp", pdgid=5903, latex_name="a")
 

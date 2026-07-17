@@ -1,7 +1,8 @@
+import os
+import os.path
+
 import numpy as np
 from scipy import interpolate
-import os.path
-import os
 
 try:
     from importlib.resources import files
@@ -13,11 +14,9 @@ import logging
 logger = logging.getLogger("logger." + __name__)
 prettyprinter = logging.getLogger("prettyprinter." + __name__)
 
-from DarkNews import pdg
-from DarkNews import geom
-from DarkNews import const
-from DarkNews.nuclear_tools import NuclearTarget
+from DarkNews import const, geom, pdg
 from DarkNews.AssignmentParser import AssignmentParser
+from DarkNews.nuclear_tools import NuclearTarget
 
 
 class Detector:

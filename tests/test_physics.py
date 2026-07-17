@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-import pytest
 import platform
+
 import numpy as np
+import pytest
 
 import DarkNews as dn
 
-from .helpers import assert_all, soft_compare, soft_assert, close_enough
+from .helpers import assert_all, close_enough, soft_assert, soft_compare
 
 
 def is_macos_14():

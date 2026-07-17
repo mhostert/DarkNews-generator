@@ -1,7 +1,5 @@
-import pytest
-import random
 import numpy as np
-import os
+import pytest
 
 import DarkNews as dn
 from DarkNews import const
@@ -194,7 +192,7 @@ def light_DP_gen_all_outputs():
         hepevt_legacy=True,
         hepmc2=True,
         hepmc3=True,
-        **MODEL_KWARGS
+        **MODEL_KWARGS,
     )
     return gen.run()
 
@@ -219,7 +217,7 @@ def light_DP_gen_all_outputs_sparse():
         hepmc3=True,
         sparse=4,
         print_to_float32=True,
-        **MODEL_KWARGS
+        **MODEL_KWARGS,
     )
     return gen.run()
 
@@ -237,7 +235,7 @@ def gen_other_final_states():
         experiment="miniboone_fhc",
         loglevel="ERROR",
         seed=42,
-        **MODEL_KWARGS
+        **MODEL_KWARGS,
     )
     df_light = gen.run()
 
@@ -252,7 +250,7 @@ def gen_other_final_states():
         experiment="miniboone_fhc",
         loglevel="ERROR",
         seed=42,
-        **MODEL_KWARGS
+        **MODEL_KWARGS,
     )
     df_heavy = gen.run()
 
@@ -312,7 +310,7 @@ def gen_most_generic_model():
         loglevel="ERROR",
         seed=42,
         pandas=False,
-        **MOST_GENERIC_MODEL_KWARGS
+        **MOST_GENERIC_MODEL_KWARGS,
     )
     heavy_gen = GenLauncher(
         mzprime=1.0,
@@ -329,7 +327,7 @@ def gen_most_generic_model():
         loglevel="ERROR",
         seed=42,
         pandas=False,
-        **MOST_GENERIC_MODEL_KWARGS
+        **MOST_GENERIC_MODEL_KWARGS,
     )
 
     photon_gen = GenLauncher(
@@ -348,7 +346,7 @@ def gen_most_generic_model():
         loglevel="ERROR",
         seed=42,
         pandas=False,
-        **MOST_GENERIC_MODEL_KWARGS
+        **MOST_GENERIC_MODEL_KWARGS,
     )
 
     return light_gen.run(), heavy_gen.run(), photon_gen.run()

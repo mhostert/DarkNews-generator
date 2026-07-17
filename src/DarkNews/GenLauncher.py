@@ -1,13 +1,13 @@
+import logging
 import os
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 from particle import literals as lp
 
 import DarkNews as dn
 from DarkNews import configure_loggers
 from DarkNews.AssignmentParser import AssignmentParser
-
-import logging
 
 logger = logging.getLogger("logger.DarkNews")
 prettyprinter = logging.getLogger("prettyprinter.DarkNews")
@@ -180,12 +180,12 @@ GENERIC_MODEL_ARGS = [
 
 class GenLauncher:
     banner = r"""
-   ______           _        _   _                     
-   |  _  \         | |      | \ | |                    
-   | | | |__ _ _ __| | __   |  \| | _____      _____   
-   | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|  
-   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \  
-   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  
+   ______           _        _   _
+   |  _  \         | |      | \ | |
+   | | | |__ _ _ __| | __   |  \| | _____      _____
+   | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|
+   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \
+   |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/
    """
 
     # handle parameters that can assume only certain values
@@ -377,7 +377,7 @@ class GenLauncher:
                 f"""
                 Unweighted events requested.
                 This feature requires a large number of weighted events with respect to the requested number of hep-formatted events.
-                Currently: n_unweighted/n_eval = {self.unweighted_hep_events/self.neval*100}%.
+                Currently: n_unweighted/n_eval = {self.unweighted_hep_events / self.neval * 100}%.
                 """
             )
 
@@ -445,12 +445,8 @@ class GenLauncher:
             except KeyError:
                 continue
 
-            # check the value within the choices
-            # if parameter in self._choices.keys() and value not in self._choices[parameter]:
-            if parameter in self._choices.keys() and [
-                *parameter,
-                *self._choices[parameter],
-            ] == set([*parameter, *self._choices[parameter]]):
+            # check the value against the allowed choices
+            if parameter in self._choices and value not in self._choices[parameter]:
                 raise ValueError(
                     f"Parameter '{parameter}', invalid choice: {value}, (choose among " + ", ".join([f"{el}" for el in self._choices[parameter]]) + ")"
                 )
@@ -579,7 +575,7 @@ class GenLauncher:
             logger.warning(
                 f"""
                 Warning: number of entries with w_event_rate = 0 surpasses 1% of number of samples.
-                Found: {zero_entries.sum()/len(self.df.index)*100:.2f}%.
+                Found: {zero_entries.sum() / len(self.df.index) * 100:.2f}%.
                 Sampling is likely not convering or integrand is too sparse.
                 """
             )
@@ -649,7 +645,7 @@ class GenLauncher:
         self.df.attrs["data_path"] = self.data_path
 
         prettyprinter.info(
-            f"Generation successful\n\nTotal events predicted:\n({np.sum(self.df['w_event_rate']):.3g} +/- {np.sqrt(np.sum(self.df['w_event_rate']**2)):.3g}) events."
+            f"Generation successful\n\nTotal events predicted:\n({np.sum(self.df['w_event_rate']):.3g} +/- {np.sqrt(np.sum(self.df['w_event_rate'] ** 2)):.3g}) events."
         )
 
         ############################################################################
@@ -675,7 +671,7 @@ class GenLauncher:
         if self.make_summary_plots:
             logger.info("Making summary plots of the kinematics of the process...")
             try:
-                import matplotlib
+                import matplotlib  # noqa: F401  (availability probe before making plots)
             except ImportError:
                 logger.warning("Warning! Could not find matplotlib -- stopping the making of summary plots.")
             else:

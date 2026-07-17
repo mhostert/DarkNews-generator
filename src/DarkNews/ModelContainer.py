@@ -1,6 +1,7 @@
 import logging
 import logging.handlers
 import sys
+
 import numpy as np
 from particle import literals as lp
 
@@ -179,12 +180,11 @@ GENERIC_MODEL_ARGS = [
 
 
 class ModelContainer:
-
-    banner = r"""   ______           _        _   _                     
-   |  _  \         | |      | \ | |                    
-   | | | |__ _ _ __| | __   |  \| | _____      _____   
-   | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|  
-   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \  
+    banner = r"""   ______           _        _   _
+   |  _  \         | |      | \ | |
+   | | | |__ _ _ __| | __   |  \| | _____      _____
+   | | | / _  | ___| |/ /   | .   |/ _ \ \ /\ / / __|
+   | |/ / (_| | |  |   <    | |\  |  __/\ V  V /\__ \
    |___/ \__,_|_|  |_|\_\   \_| \_/\___| \_/\_/ |___/  """
 
     # handle parameters that can assume only certain values
@@ -445,7 +445,6 @@ class ModelContainer:
                         for nuclear_target in scope["NUCLEAR_TARGETS"]:
                             # scattering regime to use
                             for scattering_regime in scope["SCATTERING_REGIMES"]:
-
                                 # skip disallowed regimes
                                 if ((scattering_regime in ["n-el"]) and (nuclear_target.N < 1)) or (  # no neutrons
                                     (scattering_regime in ["coherent"]) and (not nuclear_target.is_nucleus)
@@ -460,7 +459,6 @@ class ModelContainer:
                                     continue
                                 else:
                                     for helicity in scope["HELICITIES"]:
-
                                         # Upscattering process
                                         ups_args = {
                                             "nuclear_target": nuclear_target,

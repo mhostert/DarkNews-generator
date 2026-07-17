@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 import argparse
-from DarkNews.GenLauncher import GenLauncher
-import DarkNews.parsing_tools as pt
 import os
-import subprocess
 import shutil
+import subprocess
 from pathlib import Path
+
+import DarkNews.parsing_tools as pt
+from DarkNews.GenLauncher import GenLauncher
 
 
 def dn_gen():

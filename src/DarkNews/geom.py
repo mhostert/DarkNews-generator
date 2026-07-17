@@ -1,7 +1,8 @@
 import numpy as np
-from DarkNews import const
-from DarkNews import Cfourvec as Cfv
 from numpy.random import choice
+
+from DarkNews import Cfourvec as Cfv
+from DarkNews import const
 
 try:
     from importlib.resources import files
@@ -56,7 +57,7 @@ def rotate_dataframe(df):
             df.loc[:, (particle, ["1", "2", "3"])] = rotate_similar_to(
                 df[particle].to_numpy().T[1:], df.P_projectile.to_numpy().T[1:], df.pos_scatt.to_numpy().T[1:] - df["pos_prod"].to_numpy().T
             ).T
-        except:
+        except Exception:
             continue
 
     return df
@@ -138,7 +139,7 @@ class Chisel:
 
         # initialize the ivory box
         if (box[:, 1] - box[:, 0] < 0).any():
-            raise ValueError(f"Box axis reversed, x_0 > x_1 for dimensions: {[i for i, x in enumerate(box[:,1] - box[:,0]) if x < 0 ]}.")
+            raise ValueError(f"Box axis reversed, x_0 > x_1 for dimensions: {[i for i, x in enumerate(box[:, 1] - box[:, 0]) if x < 0]}.")
         self.x = (box[0, 1] - box[0, 0]) * np.random.rand(nsamples) + box[0, 0]
         self.y = (box[1, 1] - box[1, 0]) * np.random.rand(nsamples) + box[1, 0]
         self.z = (box[2, 1] - box[2, 0]) * np.random.rand(nsamples) + box[2, 0]
@@ -306,7 +307,6 @@ def microboone_geometry(df):
     npoints = 0
     events = np.array(3 * [[]])
     while npoints < nsamples:
-
         new_detector = Chisel(nsamples=nsamples, box=detector_box)
         new_events = new_detector.events[:, new_detector.microboone_cryostat()]
         events = np.concatenate((events, new_events), axis=1)
@@ -367,7 +367,6 @@ def sbnd_geometry(df):
     npoints = 0
     events = np.array(3 * [[]])
     while npoints < nsamples:
-
         new_detector = Chisel(nsamples=nsamples, box=detector_box)
         new_events = new_detector.events[:, new_detector.rectangle(dx=dx_sbnd, dy=dy_sbnd, dz=dz_sbnd)]
         events = np.concatenate((events, new_events), axis=1)
@@ -412,7 +411,6 @@ def icarus_geometry(df):
     npoints = 0
     events = np.array(3 * [[]])
     while npoints < nsamples:
-
         new_detector = Chisel(nsamples=nsamples, box=detector_box)
         new_events = new_detector.events[:, new_detector.rectangle(dx=x_icarus, dy=y_icarus, dz=z_icarus)]
         events = np.concatenate((events, new_events), axis=1)
@@ -692,9 +690,9 @@ def sbnd_dirt_geometry(df):
     theta_nu = np.arccos(
         (df["pos_scatt", "3"] - df["pos_prod", "3"])
         / np.sqrt(
-            ((df["pos_scatt", "1"] - df["pos_prod", "1"])) ** 2
-            + ((df["pos_scatt", "2"] - df["pos_prod", "2"])) ** 2
-            + ((df["pos_scatt", "3"] - df["pos_prod", "3"])) ** 2
+            (df["pos_scatt", "1"] - df["pos_prod", "1"]) ** 2
+            + (df["pos_scatt", "2"] - df["pos_prod", "2"]) ** 2
+            + (df["pos_scatt", "3"] - df["pos_prod", "3"]) ** 2
         )
     )
 
@@ -727,7 +725,6 @@ def miniboone_geometry(df):
     npoints = 0
     events = np.array(3 * [[]])
     while npoints < nsamples:
-
         new_detector = Chisel(nsamples=nsamples, box=detector_box)
         new_events = new_detector.events[:, new_detector.sphere(radius=574.6)]
         events = np.concatenate((events, new_events), axis=1)

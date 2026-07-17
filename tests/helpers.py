@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-import traceback
+
 import numpy as np
 from numpy import random
 

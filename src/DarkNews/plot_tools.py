@@ -1,16 +1,14 @@
 import os
 import os.path
+
+import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import rc, rcParams
+from matplotlib.pyplot import cm
 
 from DarkNews import const
 from DarkNews import fourvec as fv
-
-import matplotlib
-
-import matplotlib.pyplot as plt
-from matplotlib import rc, rcParams
-
-from matplotlib.pyplot import cm
 
 ###########################
 fsize = 11

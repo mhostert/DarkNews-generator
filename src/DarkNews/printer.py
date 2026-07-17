@@ -1,15 +1,14 @@
 import os
-import pandas as pd
-import numpy as np
-import dill
-
 from pathlib import Path
+
+import dill
+import numpy as np
+import pandas as pd
 from particle import literals as lp
 
 import DarkNews as dn
-from DarkNews import const
-from DarkNews import pdg
 from DarkNews import Cfourvec as Cfv
+from DarkNews import const, pdg
 
 if dn.HAS_PYHEPMC3:
     import pyhepmc as hep
@@ -200,7 +199,6 @@ class Printer:
         """
 
         if not self._kinematics_in_np_arrays:
-
             if "pos_scatt" not in self.df_gen.columns:
                 p = "pos_scatt"
                 self.df_gen[[(p, "0"), (p, "1"), (p, "2"), (p, "3")]] = 0.0
@@ -464,7 +462,7 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
             if hep_unweight:
                 lines.append(f"{counter} {self.particles_per_event}\n")
             else:
-                lines.append(f"{counter} {self.particles_per_event} {self.df_gen['w_event_rate',''].to_numpy()[i]:.8E}\n")
+                lines.append(f"{counter} {self.particles_per_event} {self.df_gen['w_event_rate', ''].to_numpy()[i]:.8E}\n")
 
             if self.sparse < 4:
                 # scattering inital states
@@ -474,10 +472,10 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                         f" {self.projectile_flavor[i]}"
                         f" 0 0 0 0"
                         f" {print_in_order(self.pvec_projectile[i])}"
-                        f" {self.df_gen['P_projectile','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['P_projectile', '0'].to_numpy()[i]:.8E}"
                         f" {self.mass_projectile[i]:.8E}"
                         f" {print_in_order(self.pvec_pos_scatt[i])}"
-                        f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['pos_scatt', '0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
                 )
@@ -486,13 +484,13 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                 lines.append(
                     (  # Target
                         f"0 "
-                        f" {int(self.df_gen['target_pdgid',''].to_numpy()[i])}"
+                        f" {int(self.df_gen['target_pdgid', ''].to_numpy()[i])}"
                         f" 0 0 0 0"
                         f" {print_in_order(self.pvec_target[i])}"
-                        f" {self.df_gen['P_target','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['P_target', '0'].to_numpy()[i]:.8E}"
                         f" {self.mass_target[i]:.8E}"
                         f" {print_in_order(self.pvec_pos_scatt[i])}"
-                        f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['pos_scatt', '0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
                 )
@@ -505,10 +503,10 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                         f" {int(pdg.neutrino5.pdgid)}"
                         f" 0 0 0 0"
                         f" {print_in_order(self.pvec_decay_N_parent[i])}"
-                        f" {self.df_gen['P_decay_N_parent','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['P_decay_N_parent', '0'].to_numpy()[i]:.8E}"
                         f" {self.mass_decay_N_parent[i]:.8E}"
                         f" {print_in_order(self.pvec_pos_scatt[i])}"
-                        f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['pos_scatt', '0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
                 )
@@ -517,13 +515,13 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                 lines.append(
                     (  # recoiled target
                         f"0 "
-                        f" {int(self.df_gen['target_pdgid',''].to_numpy()[i])}"
+                        f" {int(self.df_gen['target_pdgid', ''].to_numpy()[i])}"
                         f" 0 0 0 0"
                         f" {print_in_order(self.pvec_recoil[i])}"
-                        f" {self.df_gen['P_recoil','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['P_recoil', '0'].to_numpy()[i]:.8E}"
                         f" {self.mass_recoil[i]:.8E}"
                         f" {print_in_order(self.pvec_pos_scatt[i])}"
-                        f" {self.df_gen['pos_scatt','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['pos_scatt', '0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
                 )
@@ -535,10 +533,10 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                         f" {int(pdg.nulight.pdgid)}"
                         f" 0 0 0 0"
                         f" {print_in_order(self.pvec_decay_N_daughter[i])}"
-                        f" {self.df_gen['P_decay_N_daughter','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['P_decay_N_daughter', '0'].to_numpy()[i]:.8E}"
                         f" {self.mass_decay_N_daughter[i]:.8E}"
                         f" {print_in_order(self.pvec_pos_decay[i])}"
-                        f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['pos_decay', '0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
                 )
@@ -551,10 +549,10 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                         f" {self.id_lepton_minus}"
                         f" 0 0 0 0"
                         f" {print_in_order(self.pvec_decay_ell_minus[i])}"
-                        f" {self.df_gen['P_decay_ell_minus','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['P_decay_ell_minus', '0'].to_numpy()[i]:.8E}"
                         f" {self.lepton_mass:.8E}"
                         f" {print_in_order(self.pvec_pos_decay[i])}"
-                        f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['pos_decay', '0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
                 )
@@ -564,10 +562,10 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                         f" {self.id_lepton_plus}"
                         f" 0 0 0 0"
                         f" {print_in_order(self.pvec_decay_ell_plus[i])}"
-                        f" {self.df_gen['P_decay_ell_plus','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['P_decay_ell_plus', '0'].to_numpy()[i]:.8E}"
                         f" {self.lepton_mass:.8E}"
                         f" {print_in_order(self.pvec_pos_decay[i])}"
-                        f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['pos_decay', '0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
                 )
@@ -579,10 +577,10 @@ Otherwise, please set hep_unweight=True and set the desired number of unweighted
                         f" {pdg.photon.pdgid}"
                         f" 0 0 0 0"
                         f" {print_in_order(self.pvec_decay_photon[i])}"
-                        f" {self.df_gen['P_decay_photon','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['P_decay_photon', '0'].to_numpy()[i]:.8E}"
                         f" 0"
                         f" {print_in_order(self.pvec_pos_decay[i])}"
-                        f" {self.df_gen['pos_decay','0'].to_numpy()[i]:.8E}"
+                        f" {self.df_gen['pos_decay', '0'].to_numpy()[i]:.8E}"
                         "\n"
                     )
                 )
