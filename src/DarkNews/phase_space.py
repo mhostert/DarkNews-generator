@@ -107,6 +107,72 @@ def upscattering_Q2min_s(Enu, mHNL, M):
 upscattering_Q2min = np.vectorize(upscattering_Q2min_s)
 
 
+# ######################
+# Deep inelastic scattering (DIS) kinematics
+#
+# Conventions and limits follow the appendix of Huang, Jana, Lindner, Rodejohann,
+# "Probing Heavy Sterile Neutrinos at Ultrahigh Energy Neutrino Telescopes via the
+# Dipole Portal" (arXiv:2204.xxxx). For nu -> N conversion off a parton carrying
+# momentum fraction x of a nucleon of mass M:
+#
+#   shat = 2 M Enu x + M^2 x^2          (parton-level Mandelstam s)
+#   Q2   = 2 M Enu x y                  (y = inelasticity / energy-loss fraction)
+#
+# x is the Bjorken variable, y the inelasticity. The paper further imposes a hard
+# cut Q2 > Q2_DIS_MIN (= 2 GeV^2) to stay in the DIS regime; that cut is applied by
+# the integrand, not here.
+
+
+def dis_shat(Enu, x, M):
+    """Parton-level Mandelstam s-hat = 2 M Enu x + (M x)^2."""
+    return 2 * M * Enu * x + (M * x) ** 2
+
+
+def dis_Q2(Enu, x, y, M):
+    """Momentum transfer Q2 = 2 M Enu x y in the DIS regime."""
+    return 2 * M * Enu * x * y
+
+
+def dis_xmin(Enu, mHNL, M, exact=True):
+    """Lower limit on the Bjorken x for nu -> N conversion.
+
+    Exact:        x_min = (Enu - sqrt(Enu^2 - mHNL^2)) / M
+    Approximate:  x_min = mHNL^2 / (2 M Enu)   (valid for mHNL^2 << 2 M Enu << Enu^2)
+    """
+    if exact:
+        # guard the sqrt: below threshold there is no allowed phase space
+        disc = Enu**2 - mHNL**2
+        return (Enu - np.sqrt(np.where(disc > 0, disc, 0.0))) / M
+    return mHNL**2 / (2 * M * Enu)
+
+
+def dis_ylimits(Enu, x, mHNL, M, exact=True):
+    """Return (y_min, y_max) for a given Bjorken x.
+
+    Exact limits (paper appendix), with lam = kallen(shat, mHNL, M x):
+
+        y_pm = [ (shat - M^2 x^2)(shat -/+ sqrt(lam) - M^2 x^2)
+                 - mHNL^2 (M^2 x^2 + shat) ] / [ 2 shat (shat - M^2 x^2) ]
+
+    Approximate limits (paper appendix):
+
+        y_min = mHNL^4 / (8 M Enu^3 x),   y_max = 1
+    """
+    if not exact:
+        return mHNL**4 / (8 * M * Enu**3 * x), np.ones_like(x)
+
+    shat = dis_shat(Enu, x, M)
+    Mx2 = (M * x) ** 2
+    # Kallen function lambda(shat, mHNL^2, (M x)^2); guard against tiny negatives
+    lam = (shat - (mHNL - M * x) ** 2) * (shat - (mHNL + M * x) ** 2)
+    sqrt_lam = np.sqrt(np.where(lam > 0, lam, 0.0))
+
+    denom = 2 * shat * (shat - Mx2)
+    ymin = ((shat - Mx2) * (shat - sqrt_lam - Mx2) - mHNL**2 * (Mx2 + shat)) / denom
+    ymax = ((shat - Mx2) * (shat + sqrt_lam - Mx2) - mHNL**2 * (Mx2 + shat)) / denom
+    return ymin, ymax
+
+
 # 1 --> 3 decays (decay mandelstam)
 def three_body_umax(m1, m2, m3, m4, t):
     return 1 / 4 * ((m1) ** (2) + ((m2) ** (2) + (-1 * (m3) ** (2) + -1 * (m4) ** (2)))) ** (2) * (t) ** (-1) + -1 * (

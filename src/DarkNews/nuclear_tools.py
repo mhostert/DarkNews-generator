@@ -107,6 +107,53 @@ class NuclearTarget:
     def get_constituent_nucleon(self, name):
         return self.BoundNucleon(self, name)
 
+    # partonic target for deep inelastic scattering
+    def get_constituent_quarks(self, pdf=None):
+        return self.PartonicContent(self, pdf=pdf)
+
+    class PartonicContent:
+        """Partonic (DIS) content of the nuclear target.
+
+        For deep inelastic scattering the neutrino resolves the quarks inside the
+        nucleons. We keep this object tied to the parent nucleus (it carries the
+        same Z, N, A) so the rest of DarkNews still treats the scattering as
+        happening "on the nucleus", but flag it as partonic so the DIS integrand
+        and the PDF-convolved cross section are used. The scattering mass scale is
+        the nucleon mass (partons carry a fraction x of it, handled in the
+        kinematics).
+
+        Args:
+            nucleus: the parent NuclearTarget.
+            pdf (DarkNews.pdf.PDFSet, optional): proton PDF set. Defaults to the
+                UnavailablePDF placeholder, which raises if evaluated.
+        """
+
+        def __init__(self, nucleus, pdf=None):
+            from DarkNews.pdf import UnavailablePDF
+
+            self.nucleus = nucleus
+            self.Z = nucleus.Z
+            self.N = nucleus.N
+            self.A = nucleus.A
+            self.charge = nucleus.Z
+            # DIS kinematics use the nucleon mass; the parton momentum fraction x
+            # is an integration variable applied on top of it.
+            self.mass = const.m_avg
+            self.name = f"partons_in_{nucleus.name}"
+
+            self.pdf = pdf if pdf is not None else UnavailablePDF()
+
+            self.is_hadron = True
+            self.is_nucleus = False
+            self.is_nucleon = False
+            self.is_proton = False
+            self.is_neutron = False
+            self.is_bound_nucleon = False
+            self.is_partonic = True
+
+            self.pdgid = nucleus.pdgid
+            self.tau3 = 0
+
     class BoundNucleon:
         """for scattering on bound nucleon in the nuclear target
 

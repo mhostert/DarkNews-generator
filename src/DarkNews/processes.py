@@ -68,7 +68,10 @@ class UpscatteringProcess:
         elif self.scattering_regime == "n-el":
             self.target_multiplicity = self.nuclear_target.N
         elif self.scattering_regime == "DIS":
-            self.target_multiplicity = self.nuclear_target.N * self.target.in_neutron + self.nuclear_target.Z * self.target.in_proton
+            # The DIS structure function (DarkNews.pdf.em_structure_function) already
+            # sums over the Z protons and N neutrons of the nucleus, so no extra
+            # constituent multiplicity is applied here.
+            self.target_multiplicity = 1
         else:
             logger.error(f"Scattering regime {self.scattering_regime} not supported.")
 
@@ -112,6 +115,12 @@ class UpscatteringProcess:
             self.Chad = TheoryModel.cneutronV
             self.Vhad = TheoryModel.dneutronV
             self.Shad = TheoryModel.dneutronS
+        elif getattr(self.target, "is_partonic", False):
+            # DIS: only the dipole (TMM) portal is implemented; the NC/kinetic-mixing/
+            # scalar hadronic couplings are not used by the partonic dipole xsec.
+            self.Chad = 0.0
+            self.Vhad = 0.0
+            self.Shad = 0.0
 
         # If three portal model, set mass-mixed vertex
         if isinstance(TheoryModel, model.ThreePortalModel):

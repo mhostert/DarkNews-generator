@@ -121,6 +121,7 @@ from DarkNews import const
 from DarkNews import fourvec
 from DarkNews import phase_space
 from DarkNews import parsing_tools
+from DarkNews import pdf
 
 # Experimental setups
 from DarkNews import detector

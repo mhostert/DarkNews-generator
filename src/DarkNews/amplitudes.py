@@ -1242,6 +1242,66 @@ def upscattering_dxsec_dQ2(x_phase_space, process, diagrams=["total"]):
         return diff_xsec_terms["total"]
 
 
+def dis_diff_xsec_dxdy(Enu, x, y, process):
+    """Dipole-portal deep-inelastic differential cross section d^2sigma/dx dy in cm^2.
+
+    Implements the parton-model result of Huang, Jana, Lindner, Rodejohann
+    (arXiv:2204.xxxx), appendix "Deep-inelastic scattering regime":
+
+        d^2sigma/dx dy = 2 M Enu x * dsigma_parton(x)/dt * sum_i e_i^2 q_i(x, Q2)
+
+    where the parton-level cross section dsigma_parton/dt is the elastic dipole
+    result with F1 = 1, F2 = 0 and the substitutions M -> M x, s -> shat:
+
+        dsigma_parton/dt = (2 alpha mu^2) / (t^2 (x^2 M^2 - shat)^2)
+            * [ -2 x^2 M^2 mHNL^4
+                - t^2 (2 shat - 2 x^2 M^2 - mHNL^2)
+                - t   (2 shat^2 - 4 x^2 M^2 shat - 2 mHNL^2 shat + 2 x^4 M^4 + mHNL^4) ] .
+
+    Here mu = process.Tij is DarkNews' dipole coupling (= mu_tr/2), consistent with
+    the elastic TMM_SQR diagram, alpha is the fine-structure constant, M the nucleon
+    mass, shat = 2 M Enu x + (M x)^2, and t = -Q2 = -2 M Enu x y. The quark-charge
+    weighted structure function sum_i e_i^2 q_i is summed over the Z protons and N
+    neutrons of the target via DarkNews.pdf.em_structure_function.
+
+    NOTE (validation pending): the overall dipole normalization is taken to match
+    the elastic TMM_SQR convention (mu = Tij). This still needs to be cross-checked
+    against the paper's Fig. 2/3 with a real PDF set before use in physics results.
+
+    Args:
+        Enu, x, y (array): neutrino energy [GeV], Bjorken x, inelasticity y.
+        process (DarkNews.processes.UpscatteringProcess): DIS-regime process whose
+            target carries Z, N and a .pdf (a DarkNews.pdf.PDFSet).
+
+    Returns:
+        numpy.ndarray: d^2sigma/dx dy in cm^2.
+    """
+    from DarkNews.pdf import em_structure_function
+
+    target = process.target
+    M = target.mass  # nucleon mass scale
+    mHNL = process.m_ups
+    mu = process.Tij  # dipole coupling (= mu_tr / 2), same convention as TMM_SQR
+    alpha = const.alphaQED
+
+    shat = 2 * M * Enu * x + (M * x) ** 2
+    Q2 = 2 * M * Enu * x * y
+    t = -Q2
+    Mx2 = (M * x) ** 2
+
+    # parton-level dipole dsigma/dt (elastic F1=1, F2=0 with M->Mx, s->shat)
+    num = -2 * Mx2 * mHNL**4 - t**2 * (2 * shat - 2 * Mx2 - mHNL**2) - t * (2 * shat**2 - 4 * Mx2 * shat - 2 * mHNL**2 * shat + 2 * Mx2**2 + mHNL**4)
+    den = t**2 * (Mx2 - shat) ** 2
+    dsigma_dt_parton = 2 * alpha * mu**2 / den * num
+
+    # charge-weighted parton density summed over nucleus (Z protons + N neutrons)
+    structure = em_structure_function(target.pdf, x, Q2, target.Z, target.N)
+
+    # d^2sigma/dx dy in GeV^-2, then convert to cm^2
+    d2sigma_dxdy = 2 * M * Enu * x * dsigma_dt_parton * structure
+    return d2sigma_dxdy * const.invGeV2_to_cm2
+
+
 # def trident_dxsec_dQ2(x_phase_space, process):
 #     '''
 #         Return the differential cross section for trident scattering in attobarns
