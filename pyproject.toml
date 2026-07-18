@@ -35,12 +35,13 @@ classifiers = [
 dependencies = [
     "dill",
     "numpy",
-    "scipy",
-    "pandas>=1.0",
+    # numpy-2-compatible floors (these versions all work with numpy 1.x too):
+    "scipy>=1.13.0",
+    "pandas>=2.2.2",
+    "matplotlib>=3.8.4",
     "vegas>=5.1.1",
     "Particle",
     "pyparsing",
-    "matplotlib",
 ]
 dynamic = ["version"]
 
@@ -49,14 +50,18 @@ Homepage = "https://github.com/mhostert/DarkNews-generator"
 Repository = "https://github.com/mhostert/DarkNews-generator"
 
 [project.optional-dependencies]
-parquet = ["pyarrow"]
-pyhepmc = ["pyhepmc>=2.7.1"]
+# Floors chosen so wheels exist for CPython 3.10-3.13 and the packages are
+# numpy-2 compatible: pyarrow>=18 (first with cp313 wheels), pyhepmc>=2.16.1
+# (first with cp312/cp313 wheels; older releases also trip on numpy>=2 via a
+# removed VisibleDeprecationWarning import).
+parquet = ["pyarrow>=18.0.0"]
+pyhepmc = ["pyhepmc>=2.16.1"]
 testing = [
     "pytest>=6.0",
     "pytest-cov>=2.0",
     "tox>=3.24",
-    "pyarrow",
-    "pyhepmc>=2.7.1",
+    "pyarrow>=18.0.0",
+    "pyhepmc>=2.16.1",
 ]
 dev = [
     "ruff>=0.6",
