@@ -79,6 +79,49 @@ class LHAPDFSet(PDFSet):
         return xfxQ2(int(pid), x, Q2)
 
 
+class PartonPDFSet(PDFSet):
+    """Adapter around the pure-Python ``parton`` package (recommended backend).
+
+    ``parton`` (https://github.com/DavidMStraub/parton) reads standard LHAPDF grid
+    files with no C++/LHAPDF or TensorFlow dependency. Install it and a set with::
+
+        pip install "DarkNews[dis]"        # or: pip install parton
+        python -m parton install CT18NNLO  # download a grid set once
+
+    Example:
+        >>> pdf = PartonPDFSet("CT18NNLO")
+    """
+
+    def __init__(self, name, member=0, pdfdir=None):
+        try:
+            import parton
+        except ImportError as exc:
+            raise ImportError(
+                "PartonPDFSet requires the 'parton' package. Install it with "
+                "`pip install \"DarkNews[dis]\"` (or `pip install parton`) and a PDF set "
+                "with `python -m parton install <name>`."
+            ) from exc
+        self.name = name
+        self._pdf = parton.mkPDF(name, member, pdfdir=pdfdir)
+
+    def xfxQ2(self, pid, x, Q2):
+        x = np.atleast_1d(np.asarray(x, dtype=float))
+        Q2 = np.atleast_1d(np.asarray(Q2, dtype=float))
+        x, Q2 = np.broadcast_arrays(x, Q2)
+        # parton 0.2.2 casts size-1 results with float(), which raises on numpy>=2.
+        # Pad scalar calls to size 2 and use grid=False for element-wise evaluation.
+        pad = x.size == 1
+        if pad:
+            x, Q2 = np.repeat(x, 2), np.repeat(Q2, 2)
+        res = np.asarray(self._pdf.xfxQ2(int(pid), x, Q2, grid=False), dtype=float)
+        return res[0] if pad else res
+
+
+def mkPDF(name, member=0, pdfdir=None):
+    """Return the recommended pure-Python PDF backend (a :class:`PartonPDFSet`)."""
+    return PartonPDFSet(name, member=member, pdfdir=pdfdir)
+
+
 class CallablePDF(PDFSet):
     """Wrap any callable ``f(pid, x, Q2) -> x*f(x, Q2)`` as a PDFSet."""
 

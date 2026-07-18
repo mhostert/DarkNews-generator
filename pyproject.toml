@@ -56,6 +56,9 @@ Repository = "https://github.com/mhostert/DarkNews-generator"
 # removed VisibleDeprecationWarning import).
 parquet = ["pyarrow>=18.0.0"]
 pyhepmc = ["pyhepmc>=2.16.1"]
+# Deep-inelastic scattering regime: pure-Python PDF evaluation (reads LHAPDF grids;
+# no C++/LHAPDF dependency). PDF sets are installed with `python -m parton install`.
+dis = ["parton>=0.2.2"]
 testing = [
     "pytest>=6.0",
     "pytest-cov>=2.0",
