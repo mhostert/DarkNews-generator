@@ -1,3 +1,4 @@
+import copy
 import logging
 
 import numpy as np
@@ -1300,6 +1301,122 @@ def dis_diff_xsec_dxdy(Enu, x, y, process):
     # d^2sigma/dx dy in GeV^-2, then convert to cm^2
     d2sigma_dxdy = 2 * M * Enu * x * dsigma_dt_parton * structure
     return d2sigma_dxdy * const.invGeV2_to_cm2
+
+
+# Quark weak quantum numbers, keyed by |PDG id|: weak isospin T3 and electric charge Q.
+_QUARK_T3 = {1: -0.5, 2: +0.5, 3: -0.5, 4: +0.5, 5: -0.5}  # d, u, s, c, b
+_QUARK_Q = {1: -1.0 / 3, 2: +2.0 / 3, 3: -1.0 / 3, 4: +2.0 / 3, 5: -1.0 / 3}
+
+
+def _quark_nc_couplings(pid):
+    """NC vector/axial couplings of a (anti)quark in DarkNews' F1_NC/F3_NC convention.
+
+    g_V = T3 - 2 Q sin^2(theta_W),  g_A = T3. These sum over the valence quarks to the
+    nucleon values returned by nuclear_tools.nucleon_F{1,3}_NC (e.g. g_V^p = 1/2 - 2 s2w).
+    For antiquarks the axial coupling flips sign.
+    """
+    q = abs(pid)
+    gV = _QUARK_T3[q] - 2 * _QUARK_Q[q] * const.s2w
+    gA = _QUARK_T3[q]
+    if pid < 0:
+        gA = -gA
+    return gV, gA
+
+
+class _StruckQuark:
+    """A point-like struck quark that poses as a nucleon target for the NC amplitude.
+
+    Exposes exactly the attributes ``upscattering_dxsec_dQ2`` reads: the NC form factors
+    become the quark's NC couplings (F1_NC = g_V, F3_NC = g_A, F2_NC = 0), and the mass is
+    the struck-parton mass x*M (may be an array over the phase-space batch).
+    """
+
+    def __init__(self, mass, gV, gA, charge):
+        self.mass = mass
+        self.Z = 0
+        self.is_nucleus = False
+        self.is_nucleon = True
+        self.is_proton = False
+        self.is_neutron = False
+        self._gV, self._gA, self._Q = gV, gA, charge
+
+    def F1_NC(self, Q2):
+        return self._gV
+
+    def F2_NC(self, Q2):
+        return 0.0
+
+    def F3_NC(self, Q2):
+        return self._gA
+
+    def F1_EM(self, Q2):
+        return self._Q  # unused by NC_SQR, provided for the (skipped) EM/TMM closures
+
+    def F2_EM(self, Q2):
+        return 0.0
+
+
+def dis_diff_xsec_dxdy_NC(Enu, x, y, process):
+    """Neutral-current (Z-mediated) deep-inelastic d^2sigma/dx dy in cm^2 for nu -> N.
+
+    The parton-level cross section reuses DarkNews' validated elastic ``NC_SQR`` matrix
+    element (which already includes the m_N mass terms) evaluated on a point-like struck
+    quark (F1_NC = g_V^q, F3_NC = g_A^q, mass = x M, s -> shat, t = -Q2), summed over quark
+    and antiquark flavors weighted by the PDFs of the Z protons and N neutrons.
+
+    DarkNews' NC amplitude is a contact (G_F) interaction -- exact at the low Q2 of the
+    elastic regimes, but at DIS scales the finite Z mass matters, so we multiply by the
+    propagator factor (M_Z^2 / (Q2 + M_Z^2))^2. The leptonic coupling is the process' own
+    NC coupling ``Cij`` (zero unless the model has active-heavy mixing).
+
+    NOTE (validation pending): like the dipole DIS, the absolute normalization and the
+    contact->propagator treatment still need validation against a reference calculation.
+
+    Args:
+        Enu, x, y (array): neutrino energy [GeV], Bjorken x, inelasticity y.
+        process (DarkNews.processes.UpscatteringProcess): DIS-regime process; its target
+            carries Z, N and a ``.pdf``.
+
+    Returns:
+        numpy.ndarray: d^2sigma/dx dy in cm^2.
+    """
+    target = process.target
+    M = target.mass  # nucleon mass scale
+    mHNL = process.m_ups
+    Z, N = target.Z, target.N
+    pdf = target.pdf
+
+    shat = 2 * M * Enu * x + (M * x) ** 2
+    Q2 = 2 * M * Enu * x * y
+    t = -Q2
+    Mx = M * x
+    uhat = 2 * Mx**2 + mHNL**2 - shat - t
+
+    # Restore the finite-Q2 Z propagator (DarkNews NC is a contact/G_F interaction).
+    propagator = (MZBOSON**2 / (Q2 + MZBOSON**2)) ** 2
+
+    total = np.zeros(np.broadcast(np.asarray(x, float), np.asarray(y, float)).shape)
+    for q in (1, 2, 3, 4, 5):
+        for pid in (q, -q):
+            gV, gA = _quark_nc_couplings(pid)
+            quark = _StruckQuark(mass=Mx, gV=gV, gA=gA, charge=_QUARK_Q[q] * np.sign(pid))
+
+            # Reuse the elastic NC amplitude at the parton level via a shallow clone.
+            proc_q = copy.copy(process)
+            proc_q.target = quark
+            proc_q.Chad = 1.0  # hadronic coupling is carried by the quark's F1_NC/F3_NC
+            proc_q.Vhad = proc_q.Shad = proc_q.Cprimehad = 0.0
+            dsigma_dQ2 = upscattering_dxsec_dQ2([shat, t, uhat], proc_q, diagrams=["NC_SQR"])
+
+            # parton density: Z protons + N neutrons (neutron by isospin, u<->d)
+            from DarkNews.pdf import _neutron_from_proton
+
+            fp = pdf.fxQ2(pid, x, Q2)
+            fn = pdf.fxQ2(_neutron_from_proton(pid), x, Q2)
+            total = total + (Z * fp + N * fn) * dsigma_dQ2 * propagator
+
+    # dQ2 -> dy jacobian
+    return 2 * M * Enu * x * total
 
 
 # def trident_dxsec_dQ2(x_phase_space, process):
