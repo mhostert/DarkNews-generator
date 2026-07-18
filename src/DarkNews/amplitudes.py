@@ -1369,8 +1369,9 @@ def dis_diff_xsec_dxdy_NC(Enu, x, y, process):
     propagator factor (M_Z^2 / (Q2 + M_Z^2))^2. The leptonic coupling is the process' own
     NC coupling ``Cij`` (zero unless the model has active-heavy mixing).
 
-    NOTE (validation pending): like the dipole DIS, the absolute normalization and the
-    contact->propagator treatment still need validation against a reference calculation.
+    Normalization has been calibrated against the SM: in the light-N, U_alpha4 = 1 limit
+    this reproduces the standard SM NC nu-nucleon DIS cross section, sigma/E_nu ~ 2e-39
+    cm^2/GeV per nucleon.
 
     Args:
         Enu, x, y (array): neutrino energy [GeV], Bjorken x, inelasticity y.
@@ -1404,7 +1405,11 @@ def dis_diff_xsec_dxdy_NC(Enu, x, y, process):
             # Reuse the elastic NC amplitude at the parton level via a shallow clone.
             proc_q = copy.copy(process)
             proc_q.target = quark
-            proc_q.Chad = 1.0  # hadronic coupling is carried by the quark's F1_NC/F3_NC
+            # Hadronic Z vertex coupling is (g/2c_W) * g_V,A^q: the quark charges g_V/g_A
+            # go into F1_NC/F3_NC, and Chad carries the weak-vertex factor g/2c_W (the
+            # leptonic Cij already includes its own g/2c_W). Calibrated to reproduce the
+            # SM NC nu-nucleon DIS cross section in the light-N, U=1 limit.
+            proc_q.Chad = const.gweak / 2 / const.cw
             proc_q.Vhad = proc_q.Shad = proc_q.Cprimehad = 0.0
             dsigma_dQ2 = upscattering_dxsec_dQ2([shat, t, uhat], proc_q, diagrams=["NC_SQR"])
 
