@@ -445,11 +445,16 @@ class GenLauncher:
             except KeyError:
                 continue
 
-            # check the value against the allowed choices
-            if parameter in self._choices and value not in self._choices[parameter]:
-                raise ValueError(
-                    f"Parameter '{parameter}', invalid choice: {value}, (choose among " + ", ".join([f"{el}" for el in self._choices[parameter]]) + ")"
-                )
+            # check the value against the allowed choices. Some parameters (e.g.
+            # nu_flavors) are list-valued, so validate each element in that case.
+            if parameter in self._choices:
+                allowed = self._choices[parameter]
+                to_check = value if isinstance(value, (list, tuple)) else [value]
+                invalid = [v for v in to_check if v not in allowed]
+                if invalid:
+                    raise ValueError(
+                        f"Parameter '{parameter}', invalid choice: {invalid}, (choose among " + ", ".join([f"{el}" for el in allowed]) + ")"
+                    )
 
             # set the parameter
             setattr(self, parameter, value)
