@@ -111,6 +111,14 @@ build-frontend = "build"
 # against the built wheel; without them those formats are skipped rather than
 # tested. Full-coverage testing (multiple Python versions) lives in tests.yml (tox).
 test-requires = ["pytest", "pyarrow>=18.0.0", "pyhepmc>=2.16.1"]
+
+[tool.cibuildwheel.macos]
+# Build both macOS architectures on the Apple Silicon runner: arm64 natively and
+# x86_64 by cross-compilation. This keeps Intel Mac users on binary wheels without
+# depending on the macos-13 Intel runner, whose queue stalls indefinitely.
+# Caveat: cibuildwheel cannot run the test suite against a cross-compiled wheel,
+# so the x86_64 wheels are built but not tested here (arm64 still is).
+archs = ["x86_64", "arm64"]
 test-command = "pytest {project}/tests -o addopts=''"
 
 [tool.ruff]
