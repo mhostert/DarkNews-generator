@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import math
+from pathlib import Path
 
 from pyparsing import ParseException
 
@@ -9,10 +10,16 @@ from DarkNews.ModelContainer import ModelContainer
 
 from .helpers import assert_all, soft_assert
 
+# Resolve the bundled parameter files relative to this file rather than the
+# working directory: cibuildwheel runs the suite from a temporary directory,
+# where a "tests/..." relative path does not exist.
+PARAM_FILE_3PORTAL = str(Path(__file__).parent / "test_parameter_file_3portal.txt")
+PARAM_FILE_GENERIC = str(Path(__file__).parent / "test_parameter_file_generic.txt")
+
 
 def test_ModelContainer_default():
-    mc = vars(ModelContainer(loglevel="error", param_file="tests/test_parameter_file_3portal.txt"))
-    gl = vars(GenLauncher(loglevel="error", param_file="tests/test_parameter_file_3portal.txt"))
+    mc = vars(ModelContainer(loglevel="error", param_file=PARAM_FILE_3PORTAL))
+    gl = vars(GenLauncher(loglevel="error", param_file=PARAM_FILE_3PORTAL))
 
     with assert_all() as assertions:
         for key, val in mc.items():
@@ -31,8 +38,8 @@ def test_ModelContainer_default():
 
 
 def test_input_parameter_files():
-    gen1 = GenLauncher(param_file="tests/test_parameter_file_3portal.txt", loglevel="ERROR")
-    gen2 = GenLauncher(param_file="tests/test_parameter_file_generic.txt", loglevel="ERROR")
+    gen1 = GenLauncher(param_file=PARAM_FILE_3PORTAL, loglevel="ERROR")
+    gen2 = GenLauncher(param_file=PARAM_FILE_GENERIC, loglevel="ERROR")
 
     assert gen1.bsm_model.epsilon == 1e-4
     assert gen2.bsm_model.ceV == 1e-4

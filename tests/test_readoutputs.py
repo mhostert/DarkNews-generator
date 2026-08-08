@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from DarkNews import HAS_PYHEPMC3
+from DarkNews import HAS_PYARROW, HAS_PYHEPMC3
 
 if HAS_PYHEPMC3:
     import pyhepmc.io as io
@@ -26,17 +26,27 @@ def test_output(light_DP_gen_all_outputs, light_DP_gen_all_outputs_sparse):
 
         assert gen_path
         assert os.path.isdir(gen_path)
-        file_formats = ["pandas_df.pckl", "pandas_df.parquet", "ndarray.npy", "HEPevt.dat"]
+        # parquet and HEPevt are only written when their optional backends are
+        # installed (see the conftest fixtures); pyarrow for parquet, pyhepmc for
+        # HEPevt (which goes through pyhepmc's WriterHEPEVT).
+        file_formats = ["pandas_df.pckl", "ndarray.npy"]
+        if HAS_PYARROW:
+            file_formats.append("pandas_df.parquet")
+        if HAS_PYHEPMC3:
+            file_formats.append("HEPevt.dat")
         for format in file_formats:
             assert os.path.isfile(Path(f"{gen_path}/{format}")), "Cannot find the generated datafile in the data_path attribute"
             assert os.access(Path(f"{gen_path}/{format}"), os.R_OK), "Cannot read the generated datafile in the data_path attribute"
 
         # loading information
         df_std = pd.read_pickle(Path(f"{gen_path}/pandas_df.pckl"))
-        df_pq = pd.read_parquet(Path(f"{gen_path}/pandas_df.parquet"), engine="pyarrow")
         nda = np.load(Path(f"{gen_path}/ndarray.npy"))
 
-        for df_pandas in [df_std, df_pq]:
+        dfs_to_check = [df_std]
+        if HAS_PYARROW:
+            dfs_to_check.append(pd.read_parquet(Path(f"{gen_path}/pandas_df.parquet"), engine="pyarrow"))
+
+        for df_pandas in dfs_to_check:
             # helicity only present in sparse format
             if "helicity" in df_pandas.columns.levels[0]:
                 # test that numpy array and dataframe formats save the same information

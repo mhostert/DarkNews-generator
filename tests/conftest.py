@@ -188,10 +188,12 @@ def light_DP_gen_all_outputs():
         seed=42,
         parquet=dn.HAS_PYARROW,
         numpy=True,
-        hepevt=True,
+        # hepevt is written through pyhepmc's WriterHEPEVT; only hepevt_legacy
+        # is written natively and so is always available.
+        hepevt=dn.HAS_PYHEPMC3,
         hepevt_legacy=True,
-        hepmc2=True,
-        hepmc3=True,
+        hepmc2=dn.HAS_PYHEPMC3,
+        hepmc3=dn.HAS_PYHEPMC3,
         **MODEL_KWARGS,
     )
     return gen.run()
@@ -209,12 +211,14 @@ def light_DP_gen_all_outputs_sparse():
         experiment="miniboone_fhc",
         loglevel="ERROR",
         seed=42,
-        parquet=True,
+        parquet=dn.HAS_PYARROW,
         numpy=True,
-        hepevt=True,
+        # hepevt is written through pyhepmc's WriterHEPEVT; only hepevt_legacy
+        # is written natively and so is always available.
+        hepevt=dn.HAS_PYHEPMC3,
         hepevt_legacy=True,
-        hepmc2=True,
-        hepmc3=True,
+        hepmc2=dn.HAS_PYHEPMC3,
+        hepmc3=dn.HAS_PYHEPMC3,
         sparse=4,
         print_to_float32=True,
         **MODEL_KWARGS,
