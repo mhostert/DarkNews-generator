@@ -21,8 +21,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Linux x86_64 (manylinux), macOS x86_64 (Intel), macOS arm64 (Apple Silicon).
-        os: [ubuntu-latest, macos-13, macos-14]
+        # Linux x86_64 (manylinux/musllinux), Linux aarch64, macOS x86_64 (Intel),
+        # macOS arm64 (Apple Silicon). The aarch64 runner is native (no QEMU), and
+        # is free for public repositories.
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-13, macos-14]
     steps:
       - uses: actions/checkout@v4
         with:
