@@ -383,10 +383,10 @@ class FermionDileptonDecay:
             # Ni (k1) --> ell-(k2)  ell+(k3)  Nj(k4)
 
             # t = m23^2
-            t = Cfv.dot4(Plepminus_LAB, Plepplus_LAB)
+            t = self.mm**2 + self.mp**2 + 2.0 * Cfv.dot4(Plepminus_LAB, Plepplus_LAB)
 
             # u = m24^2
-            u = Cfv.dot4(Plepminus_LAB, Pnu_LAB)
+            u = self.mm**2 + self.m_daughter**2 + 2.0 * Cfv.dot4(Plepminus_LAB, Pnu_LAB)
 
             # c3 = cosine of polar angle of k3
             # Boost ell+ to HNL rest frame
