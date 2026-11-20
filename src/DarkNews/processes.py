@@ -194,7 +194,7 @@ class UpscatteringProcess:
         """
         s = Enu * self.MA * 2 + self.MA**2
         physical = (Q2 > ps.upscattering_Q2min(Enu, self.m_ups, self.MA)) & (Q2 < ps.upscattering_Q2max(Enu, self.m_ups, self.MA))
-        u = 2 * self.MA**2 + self.m_ups - s + Q2
+        u = 2 * self.MA**2 + self.m_ups**2 - s + Q2
         diff_xsecs = amps.upscattering_dxsec_dQ2([s, -Q2, u], process=self, diagrams=diagrams)
         if type(diff_xsecs) is dict:
             return {key: diff_xsecs[key] * physical for key in diff_xsecs.keys()}
